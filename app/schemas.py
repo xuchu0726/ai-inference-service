@@ -15,3 +15,4 @@ class GenerateResponse(BaseModel):
     input_chars: int
     max_new_tokens: int
     thinking_budget: Optional[int] = None
+    backend: str
