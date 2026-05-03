@@ -1,6 +1,14 @@
 from app.backends.mock_backend import MockBackend
+from app.backends.transformers_backend import TransformersBackend
+from app.config import INFERENCE_BACKEND, MODEL_NAME
 
-backend = MockBackend()
+
+if INFERENCE_BACKEND == "transformers":
+    backend = TransformersBackend(model_name=MODEL_NAME)
+elif INFERENCE_BACKEND == "mock":
+    backend = MockBackend()
+else:
+    raise ValueError(f"Unsupported INFERENCE_BACKEND: {INFERENCE_BACKEND}")
 
 
 def generate_text(

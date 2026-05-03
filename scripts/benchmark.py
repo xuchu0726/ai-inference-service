@@ -9,7 +9,7 @@ OUTPUT_PATH = Path("results/thinking_budget_benchmark.csv")
 
 prompts = [
     "请用三句话解释什么是大模型推理。",
-    "请总结下面这段法律文本的核心风险点。",
+    "请总结下面这段法律文本的核心风险点：甲方有权单方面修改服务价格，乙方不得提前解除合同，否则需支付违约金。",
     "Explain KV Cache in LLM inference in simple terms.",
 ]
 
@@ -27,7 +27,13 @@ with OUTPUT_PATH.open("w", newline="", encoding="utf-8") as f:
             "status_code",
             "client_latency_seconds",
             "server_latency_seconds",
+            "backend",
+            "model_name",
+            "device",
             "input_chars",
+            "input_tokens",
+            "output_tokens",
+            "tokens_per_second",
             "max_new_tokens",
             "response",
         ],
@@ -46,7 +52,7 @@ with OUTPUT_PATH.open("w", newline="", encoding="utf-8") as f:
             }
 
             start = time.time()
-            response = requests.post(URL, json=payload, timeout=30)
+            response = requests.post(URL, json=payload, timeout=120)
             client_latency = time.time() - start
 
             data = response.json()
@@ -58,7 +64,13 @@ with OUTPUT_PATH.open("w", newline="", encoding="utf-8") as f:
                 "status_code": response.status_code,
                 "client_latency_seconds": round(client_latency, 6),
                 "server_latency_seconds": data.get("latency_seconds"),
+                "backend": data.get("backend"),
+                "model_name": data.get("model_name"),
+                "device": data.get("device"),
                 "input_chars": data.get("input_chars"),
+                "input_tokens": data.get("input_tokens"),
+                "output_tokens": data.get("output_tokens"),
+                "tokens_per_second": data.get("tokens_per_second"),
                 "max_new_tokens": data.get("max_new_tokens"),
                 "response": data.get("response"),
             }
