@@ -30,3 +30,6 @@ logs/
 .DS_Store
 
 results/
+# Python cache
+__pycache__/
+*.py[cod]
