@@ -1,0 +1,56 @@
+#!/bin/bash
+#PBS -N seed_4gpu_probe
+#PBS -q v1_gpu72
+#PBS -l select=1:ncpus=16:mem=256gb:ngpus=4
+#PBS -l walltime=00:20:00
+#PBS -j oe
+
+set -u
+
+cd "$PBS_O_WORKDIR"
+
+module purge
+module load tools/prod
+module load PyTorch/2.1.2-foss-2023a-CUDA-12.1.1
+
+echo "===== JOB INFO ====="
+echo "Job ID: ${PBS_JOBID:-unknown}"
+echo "Host: $(hostname)"
+echo "Workdir: $(pwd)"
+echo "Date: $(date)"
+
+echo
+echo "===== NVIDIA SMI ====="
+nvidia-smi || true
+
+echo
+echo "===== TORCH GPU CHECK ====="
+python - <<'PY'
+import torch
+
+print("torch:", torch.__version__)
+print("torch cuda version:", torch.version.cuda)
+print("cuda available:", torch.cuda.is_available())
+print("device count:", torch.cuda.device_count())
+
+if torch.cuda.is_available():
+    total = 0
+    for i in range(torch.cuda.device_count()):
+        props = torch.cuda.get_device_properties(i)
+        mem = props.total_memory / 1024**3
+        total += mem
+        free, total_mem = torch.cuda.mem_get_info(i)
+        print(f"GPU {i} name:", props.name)
+        print(f"GPU {i} total memory GB:", round(mem, 2))
+        print(f"GPU {i} free memory GB:", round(free / 1024**3, 2))
+
+    print("aggregate visible GPU memory GB:", round(total, 2))
+
+    for i in range(torch.cuda.device_count()):
+        x = torch.randn((1024, 1024), device=f"cuda:{i}")
+        y = x @ x
+        torch.cuda.synchronize(i)
+        print(f"GPU {i} matmul OK:", tuple(y.shape))
+PY
+
+echo "===== DONE ====="

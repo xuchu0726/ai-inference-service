@@ -5,7 +5,27 @@ __pycache__/
 
 .venv/
 venv/
+.venv-*/
+venvs/
 .env
+
+# Hugging Face / model cache
+
+hf_cache/
+
+.cache/
+
+models/
+
+# Logs and HPC outputs
+
+logs/
+
+*.o*
+
+*.e*
+
+*.pbs.*
 
 .DS_Store
 

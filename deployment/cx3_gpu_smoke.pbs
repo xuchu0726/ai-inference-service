@@ -1,0 +1,88 @@
+#!/bin/bash
+#PBS -N ai_inference_gpu_smoke
+#PBS -q v1_gpu72
+#PBS -l select=1:ncpus=4:mem=64gb:ngpus=1
+#PBS -l walltime=00:30:00
+#PBS -j oe
+
+set -u
+
+cd "$PBS_O_WORKDIR"
+
+echo "===== JOB INFO ====="
+echo "Job ID: ${PBS_JOBID:-unknown}"
+echo "Host: $(hostname)"
+echo "Workdir: $(pwd)"
+echo "Date: $(date)"
+
+echo
+echo "===== MODULE SETUP ====="
+module purge
+module load tools/prod
+module load PyTorch/2.1.2-foss-2023a-CUDA-12.1.1
+module list
+
+echo
+echo "===== NVIDIA SMI ====="
+nvidia-smi || true
+
+echo
+echo "===== PYTHON ====="
+which python || true
+python --version || true
+which python3 || true
+python3 --version || true
+
+echo
+echo "===== CUDA / TORCH CHECK ====="
+python - <<'PY'
+import sys
+import socket
+
+print("Hostname:", socket.gethostname())
+print("Python:", sys.version)
+
+try:
+    import torch
+
+    print("torch:", torch.__version__)
+    print("torch cuda version:", torch.version.cuda)
+    print("cuda available:", torch.cuda.is_available())
+
+    if not torch.cuda.is_available():
+        print("CUDA is not available from PyTorch.")
+        raise SystemExit(0)
+
+    print("device count:", torch.cuda.device_count())
+
+    for i in range(torch.cuda.device_count()):
+        props = torch.cuda.get_device_properties(i)
+        print(f"GPU {i} name:", props.name)
+        print(f"GPU {i} total memory GB:", round(props.total_memory / 1024**3, 2))
+
+    device = torch.device("cuda:0")
+
+    free_mem, total_mem = torch.cuda.mem_get_info(device)
+    print("cuda free memory before test GB:", round(free_mem / 1024**3, 2))
+    print("cuda total memory GB:", round(total_mem / 1024**3, 2))
+
+    x = torch.randn((2048, 2048), device=device)
+    y = torch.randn((2048, 2048), device=device)
+    torch.cuda.synchronize()
+
+    z = x @ y
+    torch.cuda.synchronize()
+
+    print("matmul shape:", tuple(z.shape))
+    print("GPU matmul: OK")
+
+    free_mem, total_mem = torch.cuda.mem_get_info(device)
+    print("cuda free memory after test GB:", round(free_mem / 1024**3, 2))
+    print("cuda total memory GB:", round(total_mem / 1024**3, 2))
+
+except Exception as e:
+    print("torch check failed:", repr(e))
+PY
+
+echo
+echo "===== DONE ====="
