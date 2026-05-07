@@ -283,9 +283,9 @@ BF16 / FP16 权重显存粗略估算：
 
 ---
 
-## 8. 和同类 PTA 任务的融合点
+## 8. 和同类 项目任务的融合点
 
-本项目吸收同类 AI Infra PTA 中的硬核能力点：
+本项目吸收同类 AI Infra 项目 中的硬核能力点：
 
 1. 云端在线推理服务部署
 2. 基准性能测试
@@ -324,3 +324,115 @@ BF16 / FP16 权重显存粗略估算：
 3. 扩展 vLLM benchmark
 4. 尝试 Seed-OSS-36B tensor parallel short-context smoke test
 5. 记录结果并更新 benchmark report
+
+---
+
+## 10. Seed-OSS-36B-Instruct official-aligned deployment path
+
+The target model for this project is:
+
+    ByteDance-Seed/Seed-OSS-36B-Instruct
+
+Qwen models are used only as baseline and smoke-test models. They are not the final target model.
+
+The deployment strategy is separated into two paths:
+
+1. Baseline serving path
+
+        Qwen2.5-7B / Qwen2.5-14B
+        -> vLLM
+        -> FastAPI + VLLMBackend
+        -> benchmark
+
+   Purpose:
+
+        Validate cloud GPU runtime, vLLM serving, FastAPI integration,
+        benchmark scripts, logs and result collection.
+
+2. Target Seed-OSS path
+
+        ByteDance-Seed/Seed-OSS-36B-Instruct
+        -> vLLM tensor parallel
+        -> FastAPI + VLLMBackend
+        -> short-context smoke test
+        -> long-context and performance benchmark later
+
+   Purpose:
+
+        Align with the 项目 target model and prepare for Seed-OSS long-context,
+        thinking-budget and performance optimization experiments.
+
+Seed-OSS-36B-Instruct is not launched with the same generic Qwen startup script. It uses a dedicated script:
+
+    deployment/cloud/run_vllm_seed_oss_36b_tp.sh
+
+This script includes Seed-specific vLLM options:
+
+    --enable-auto-tool-choice
+    --tool-call-parser seed_oss
+    --trust-remote-code
+
+It also exposes the following deployment variables:
+
+    MODEL_NAME
+    TENSOR_PARALLEL_SIZE
+    MAX_MODEL_LEN
+    MAX_NUM_BATCHED_TOKENS
+    GPU_MEMORY_UTILIZATION
+    DTYPE
+
+For first feasibility test, the recommended target is not 512K context. The first target is:
+
+    short-context Seed-OSS-36B-Instruct smoke test
+
+A conservative first run is:
+
+    TENSOR_PARALLEL_SIZE=2
+    MAX_MODEL_LEN=4096
+    MAX_NUM_BATCHED_TOKENS=8192
+    DTYPE=bfloat16
+
+The purpose is to verify:
+
+1. model access
+2. model download
+3. vLLM tensor parallel initialization
+4. /v1/models readiness
+5. FastAPI + VLLMBackend compatibility
+6. /generate response
+7. latency / tokens/s / GPU memory logging
+
+Only after this stage succeeds should the project increase:
+
+1. max_model_len
+2. max_num_batched_tokens
+3. concurrency
+4. benchmark scale
+5. long-context test length
+
+This avoids turning the first Seed-OSS deployment attempt into an uncontrolled 512K-context OOM test.
+
+---
+
+## 11. Seed-OSS thinking-budget API path
+
+The project already exposes thinking_budget in the FastAPI /generate request schema.
+
+For generic models, thinking_budget is recorded as an API-level parameter.
+
+For Seed-OSS-36B-Instruct, thinking_budget is model-native and should be passed through the vLLM OpenAI-compatible chat completion payload as:
+
+    chat_template_kwargs.thinking_budget
+
+The VLLMBackend has been updated so that Seed-OSS requests include:
+
+    "chat_template_kwargs": {
+        "thinking_budget": thinking_budget
+    }
+
+This behavior is enabled when:
+
+1. the model name contains Seed-OSS, or
+2. VLLM_ENABLE_SEED_THINKING_BUDGET=true
+
+This keeps the Qwen baseline path compatible while preparing the Seed-OSS target path.

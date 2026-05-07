@@ -20,7 +20,7 @@ CX3 是 Imperial College London 的高性能计算集群，通过 PBS 作业系�
     6. vLLM 安装后所依赖的 PyTorch CUDA 环境是否可用
     7. PyTorch 是否可以识别 NVIDIA GPU
 
-这一步对应 PTA 第一周和第二周任务中的基础推理环境准备部分，也为后续 vLLM serving、OpenAI-compatible API、多 GPU tensor parallel 和 Seed-OSS-36B 部署实验做前置验证。
+这一步对应 第 1 周项目和第二周任务中的基础推理环境准备部分，也为后续 vLLM serving、OpenAI-compatible API、多 GPU tensor parallel 和 Seed-OSS-36B 部署实验做前置验证。
 
 ---
 
@@ -34,7 +34,7 @@ CX3 是 Imperial College London 的高性能计算集群，通过 PBS 作业系�
     4. benchmark.py 记录 latency、tokens/s、input/output tokens
     5. analyze_benchmark.py 统计 P50 / P95 / error rate
 
-但 PTA 任务要求面向字节 Seed 系列模型，后续涉及：
+但 项目任务要求面向字节 Seed 系列模型，后续涉及：
 
     1. Seed-OSS-36B
     2. 长上下文推理
@@ -381,7 +381,7 @@ CX3 不适合作为长期 API 服务或最终高并发压测平台，但本次�
 
 因此，本项目已经具备在 CX3 上继续进行小模型 vLLM serving smoke test 的基础条件。
 
-但从最终 PTA 目标看，Seed-OSS-36B、多卡部署、长上下文、高并发压测和监控演示更适合迁移到云 GPU 平台完成。
+但从最终 项目 目标看，Seed-OSS-36B、多卡部署、长上下文、高并发压测和监控演示更适合迁移到云 GPU 平台完成。
 
 后续路线应明确为：
 

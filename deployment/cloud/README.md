@@ -301,11 +301,11 @@ The cloud deployment route supports the final AI Infra direction:
     -> monitoring
     -> failure analysis
 
-This is the main path for turning the PTA into a real LLM inference engineering project.
+This is the main path for turning the 项目 into a real LLM inference engineering project.
 
 ---
 
-## 7. Relationship to the 4-week PTA plan
+## 7. Relationship to the 4-week 项目 plan
 
 ### Week 1
 
@@ -375,3 +375,71 @@ Recommended cloud workflow:
     run benchmark
     save logs and results
     commit reproducible scripts and reports
+
+---
+
+## 9. Seed-OSS-36B-Instruct target-model deployment
+
+The target model for this 项目 project is:
+
+    ByteDance-Seed/Seed-OSS-36B-Instruct
+
+This is different from the Qwen baseline models used for low-risk serving validation.
+
+Model roles:
+
+| Model | Role |
+|---|---|
+| Qwen/Qwen2.5-1.5B-Instruct | Environment and serving smoke test |
+| Qwen/Qwen2.5-7B-Instruct / Qwen/Qwen2.5-14B-Instruct | Medium-size vLLM benchmark baseline |
+| ByteDance-Seed/Seed-OSS-36B-Instruct | Target model for Seed-OSS deployment and later long-context validation |
+
+Seed-OSS-36B-Instruct requires a separate vLLM startup path because it uses Seed-specific serving options.
+
+The target script is:
+
+    deployment/cloud/run_vllm_seed_oss_36b_tp.sh
+
+The low-resource TP=2 smoke-test wrapper is:
+
+    deployment/cloud/run_vllm_seed_oss_36b_tp2.sh
+
+The TP=2 script is experimental and should only be used for short-context feasibility checks. It is not the recommended full deployment configuration.
+
+Seed-OSS vLLM startup uses:
+
+    --enable-auto-tool-choice
+    --tool-call-parser seed_oss
+    --trust-remote-code
+    --tensor-parallel-size
+    --max-model-len
+    --max-num-batched-tokens
+    --gpu-memory-utilization
+    --dtype bfloat16
+
+For first short-context smoke test:
+
+    TENSOR_PARALLEL_SIZE=2 \
+    MAX_MODEL_LEN=4096 \
+    MAX_NUM_BATCHED_TOKENS=8192 \
+    bash deployment/cloud/run_vllm_seed_oss_36b_tp.sh
+
+For larger multi-GPU deployment, increase tensor parallel size and context length according to available GPU memory.
+
+---
+
+## 10. Seed-OSS thinking budget
+
+For generic models, the project records thinking_budget as an API-level field.
+
+For Seed-OSS-36B-Instruct, thinking_budget should be passed to vLLM through:
+
+    chat_template_kwargs.thinking_budget
+
+The VLLMBackend now supports Seed-OSS-specific payload construction. When the model name contains Seed-OSS, or when VLLM_ENABLE_SEED_THINKING_BUDGET=true, the request payload includes:
+
+    "chat_template_kwargs": {
+        "thinking_budget": <value>
+    }
+
+This keeps Qwen baseline compatibility while enabling Seed-OSS native thinking-budget control.

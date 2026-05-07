@@ -361,7 +361,7 @@ prompt → tokenizer → model.generate → decode → API response → benchmar
 
 ### Stage 5：Seed-OSS / 多模态扩展
 
-目标：对齐 PTA 原始任务书中的 Seed 模型、多模态和长上下文方向。
+目标：对齐 项目 原始任务书中的 Seed 模型、多模态和长上下文方向。
 
 计划探索：
 

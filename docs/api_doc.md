@@ -342,9 +342,9 @@ VLLMBackend 使用以下环境变量：
 
 ---
 
-## 10. 与 PTA 第 1 周要求的对应关系
+## 10. 与 第 1 周项目要求的对应关系
 
-| PTA 要求 | 当前 API 完成情况 |
+| 项目 要求 | 当前 API 完成情况 |
 |---|---|
 | 封装推理逻辑为 RESTful API | 已完成 FastAPI /generate |
 | 支持推理预算控制 | 已完成 thinking_budget 参数链路 |

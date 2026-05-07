@@ -26,7 +26,7 @@ CX3 是 Imperial College London 的高性能计算集群，通过 PBS 作业系�
 
 ---
 
-## 2. PTA 第 1 周任务中的 Seed-OSS 要求
+## 2. 第 1 周项目任务中的 Seed-OSS 要求
 
 第 1 周任务中与 Seed-OSS 相关的要求包括：
 
@@ -253,7 +253,7 @@ CX3 尝试目标不是长时间服务，而是：
 
 ## 8. GQA 与 Seed-OSS 推理效率说明
 
-PTA 第 1 周要求文档中说明 Seed-OSS 的 GQA 注意力机制。
+第 1 周项目要求文档中说明 Seed-OSS 的 GQA 注意力机制。
 
 GQA 即 Grouped Query Attention，核心思想是：
 
@@ -289,7 +289,7 @@ GQA 即 Grouped Query Attention，核心思想是：
 
 ## 9. 长上下文风险
 
-PTA 中提到 Seed-OSS 的长上下文能力。
+项目 中提到 Seed-OSS 的长上下文能力。
 
 长上下文推理的主要瓶颈是：
 
@@ -432,3 +432,240 @@ KV Cache 显存通常与以下因素相关：
 
     云 GPU:
         尽快尝试 Seed-OSS-36B 短上下文 smoke test，并逐步推进多卡部署、长上下文和压测。
+
+---
+
+## 13. Seed-OSS-36B-Instruct 目标模型确认
+
+本项目的目标模型应统一为：
+
+    ByteDance-Seed/Seed-OSS-36B-Instruct
+
+原因是本项目目标包括：
+
+    1. API serving
+    2. 文本生成
+    3. 指令跟随
+    4. reasoning-style 请求
+    5. thinking_budget 控制
+    6. 后续长上下文验证
+    7. 后续 benchmark 与性能优化
+
+因此，Instruct 版本更符合服务化推理场景。
+
+模型选择边界如下：
+
+| 模型 | 适用场景 | 是否作为本项目主部署目标 |
+|---|---|---|
+| Seed-OSS-36B-Base | 基座模型研究、下游训练或适配 | 否 |
+| Seed-OSS-36B-Base-woSyn | 合成数据影响研究、消融比较 | 否 |
+| Seed-OSS-36B-Instruct | 指令跟随、API 调用、文本生成、推理服务 | 是 |
+
+因此，后续脚本、文档和环境变量中的目标模型 ID 应统一为：
+
+    ByteDance-Seed/Seed-OSS-36B-Instruct
+
+Qwen 系列模型只作为 baseline / smoke test 模型，用于验证云 GPU、vLLM、FastAPI 和 benchmark 流程，不应被描述为最终目标模型。
+
+---
+
+## 14. Seed-OSS 专用 vLLM 部署路径
+
+当前项目主线仍然是：
+
+    FastAPI
+    -> VLLMBackend
+    -> vLLM OpenAI-compatible server
+    -> GPU model
+
+这个架构与 Seed-OSS-36B-Instruct 不冲突，不需要推倒重来。
+
+需要区分的是：
+
+    Qwen baseline 启动参数
+    Seed-OSS target-model 启动参数
+
+Qwen baseline 用于验证通用 vLLM serving 链路：
+
+    deployment/cloud/run_vllm_qwen_1_5b.sh
+
+Seed-OSS-36B-Instruct 使用专用启动脚本：
+
+    deployment/cloud/run_vllm_seed_oss_36b_tp.sh
+
+Seed-OSS 专用 vLLM 参数包括：
+
+    --enable-auto-tool-choice
+    --tool-call-parser seed_oss
+    --trust-remote-code
+    --tensor-parallel-size
+    --max-model-len
+    --max-num-batched-tokens
+    --gpu-memory-utilization
+    --dtype bfloat16
+
+其中：
+
+    --enable-auto-tool-choice
+    --tool-call-parser seed_oss
+    --trust-remote-code
+
+是 Seed-OSS-Instruct 路线中需要重点保留的模型特定参数。
+
+---
+
+## 15. TP2 脚本定位说明
+
+当前保留：
+
+    deployment/cloud/run_vllm_seed_oss_36b_tp2.sh
+
+但该脚本只作为低资源短上下文实验 wrapper，不是正式完整部署方案。
+
+它的定位是：
+
+    Experimental low-resource TP=2 smoke-test wrapper
+
+适用目标：
+
+    1. 验证模型访问
+    2. 验证模型下载
+    3. 验证 vLLM 是否能初始化
+    4. 验证短上下文 /v1/models readiness
+    5. 记录 OOM、依赖、显存或 tensor parallel 问题
+
+不应将 TP=2 描述为 Seed-OSS-36B-Instruct 的推荐完整部署配置。
+
+更正式的多卡部署应使用：
+
+    deployment/cloud/run_vllm_seed_oss_36b_tp.sh
+
+并根据实际 GPU 数量设置：
+
+    TENSOR_PARALLEL_SIZE=4
+    TENSOR_PARALLEL_SIZE=8
+
+或其他与云 GPU 资源匹配的 tensor parallel 配置。
+
+---
+
+## 16. thinking_budget 官方传参路径
+
+当前 FastAPI /generate 已经暴露：
+
+    thinking_budget
+
+对于 Qwen baseline，该字段主要作为 API-level 参数和 benchmark 变量记录。
+
+对于 Seed-OSS-36B-Instruct，该字段应作为模型原生推理预算控制参数传给 vLLM。
+
+Seed-OSS 路线下，thinking_budget 应通过 OpenAI-compatible chat completions payload 中的：
+
+    chat_template_kwargs.thinking_budget
+
+传入。
+
+因此，VLLMBackend 已按如下逻辑处理：
+
+    1. 如果模型名包含 Seed-OSS，启用 Seed-OSS thinking budget payload
+    2. 如果 VLLM_ENABLE_SEED_THINKING_BUDGET=true，也启用该 payload
+    3. 对 Seed-OSS 请求附加 chat_template_kwargs
+    4. 对 Qwen / generic baseline 请求不附加该字段，避免兼容性问题
+
+Seed-OSS 请求 payload 结构示意：
+
+    {
+        "model": "ByteDance-Seed/Seed-OSS-36B-Instruct",
+        "messages": [
+            {
+                "role": "user",
+                "content": "<prompt>"
+            }
+        ],
+        "temperature": 0.7,
+        "max_tokens": 128,
+        "chat_template_kwargs": {
+            "thinking_budget": 512
+        }
+    }
+
+该设计保证：
+
+    API 层不需要重写；
+    benchmark 脚本不需要重写；
+    Qwen baseline 不受影响；
+    Seed-OSS target path 可以使用模型原生 thinking budget。
+
+---
+
+## 17. 第一阶段 Seed-OSS 部署目标
+
+Seed-OSS-36B-Instruct 支持超长上下文，但第一阶段不应直接从 512K context 开始。
+
+第一阶段目标应设为：
+
+    Seed-OSS-36B-Instruct short-context smoke test
+
+优先验证：
+
+    1. 云 GPU 环境可用
+    2. vLLM 版本与模型兼容
+    3. 模型权重可下载
+    4. tensor parallel 可初始化
+    5. /v1/models readiness 可返回
+    6. FastAPI + VLLMBackend 可调用
+    7. /generate 可返回结果
+    8. latency / tokens/s / GPU memory 可记录
+
+推荐第一阶段参数：
+
+    MAX_MODEL_LEN=4096
+    MAX_NUM_BATCHED_TOKENS=8192
+    DTYPE=bfloat16
+
+在短上下文 smoke test 成功后，再逐步增加：
+
+    1. max_model_len
+    2. max_num_batched_tokens
+    3. concurrency
+    4. prompt length
+    5. benchmark request count
+    6. long-context test length
+
+这一路线可以避免第一次部署就直接进入不可控的长上下文 OOM 场景。
+
+---
+
+## 18. 当前项目路线结论更新
+
+当前项目路线不是从 Seed-OSS-36B-Instruct 退回到小模型。
+
+更准确的路线是：
+
+    Qwen baseline:
+        用于验证 vLLM serving、FastAPI、benchmark、日志和部署流程。
+
+    Seed-OSS target path:
+        用于后续目标模型部署、thinking_budget、长上下文和性能优化。
+
+当前 Qwen baseline 的价值在于排除以下基础问题：
+
+    1. 云 GPU 是否可用
+    2. CUDA / torch / vLLM 是否可用
+    3. FastAPI 是否可调用
+    4. VLLMBackend 请求格式是否正确
+    5. benchmark 是否能采集 latency / tokens/s / P50 / P95
+    6. 日志和结果是否能落盘
+
+这些问题一旦排除，后续切换到 Seed-OSS-36B-Instruct 时，主要变化集中在：
+
+    1. MODEL_NAME
+    2. tensor parallel size
+    3. max_model_len
+    4. max_num_batched_tokens
+    5. gpu_memory_utilization
+    6. dtype
+    7. Seed-specific vLLM flags
+    8. thinking_budget payload
+
+因此，当前基础工程工作与 Seed-OSS 目标模型不冲突，而是为 Seed-OSS 多卡部署做准备。
