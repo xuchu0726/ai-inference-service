@@ -1,5 +1,11 @@
 # CX3 GPU 环境验证记录
 
+## CX3 说明
+
+CX3 是 Imperial College London 的高性能计算集群，通过 PBS 作业系统申请 GPU/CPU/内存资源。本项目将 CX3 用作 GPU、CUDA、vLLM 和端到端推理链路验证平台；由于需要排队且运行结束后服务会释放，Seed-OSS-36B 的长期多卡部署和压测更适合迁移到云 GPU 平台。
+
+---
+
 ## 1. 文档目的
 
 本文档记录本项目在 Imperial CX3 上进行 GPU 环境验证的结果。

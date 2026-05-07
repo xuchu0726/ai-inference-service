@@ -1,0 +1,219 @@
+#!/bin/bash
+#PBS -N qwen_1_5b_vllm_fastapi_e2e
+#PBS -q v1_gpu72
+#PBS -l select=1:ncpus=4:mem=64gb:ngpus=1
+#PBS -l walltime=01:30:00
+#PBS -j oe
+
+set -u
+
+cd "$PBS_O_WORKDIR"
+
+module purge
+module load tools/prod
+module load Python/3.11.3-GCCcore-12.3.0
+module load CUDA/12.8.0
+
+source ~/venvs/vllm-cu121/bin/activate
+
+export HF_HOME="$PBS_O_WORKDIR/hf_cache"
+export TRANSFORMERS_CACHE="$HF_HOME/transformers"
+export HF_HUB_DISABLE_TELEMETRY=1
+
+export INFERENCE_BACKEND="vllm"
+export MODEL_NAME="Qwen/Qwen2.5-1.5B-Instruct"
+export VLLM_MODEL_NAME="Qwen/Qwen2.5-1.5B-Instruct"
+export VLLM_BASE_URL="http://127.0.0.1:8001/v1"
+export VLLM_TIMEOUT_SECONDS="300"
+
+# CX3/PBS exposes allocated GPUs as GPU UUIDs in CUDA_VISIBLE_DEVICES.
+# vLLM 0.11.2 may fail when parsing GPU UUIDs as integer device ids.
+# The probe confirmed that remapping to CUDA_VISIBLE_DEVICES=0 still exposes
+# only the allocated single L40S GPU inside this PBS job.
+export CUDA_DEVICE_ORDER=PCI_BUS_ID
+export CUDA_VISIBLE_DEVICES=0
+
+mkdir -p logs results
+
+echo "===== JOB INFO ====="
+echo "Job ID: ${PBS_JOBID:-unknown}"
+echo "Host: $(hostname)"
+echo "Workdir: $(pwd)"
+echo "Date: $(date)"
+
+echo
+echo "===== GPU BEFORE ====="
+nvidia-smi || true
+
+echo
+echo "===== PYTHON ENV CHECK ====="
+which python
+python --version
+
+python - <<'PY'
+import torch
+import vllm
+print("torch:", torch.__version__)
+print("torch cuda:", torch.version.cuda)
+print("cuda available:", torch.cuda.is_available())
+print("device count:", torch.cuda.device_count())
+if torch.cuda.is_available():
+    print("device name:", torch.cuda.get_device_name(0))
+print("vllm:", vllm.__version__)
+PY
+
+echo
+echo "===== START VLLM SERVER ====="
+python -m vllm.entrypoints.openai.api_server \
+  --model "$VLLM_MODEL_NAME" \
+  --max-model-len 4096 \
+  --gpu-memory-utilization 0.85 \
+  --host 127.0.0.1 \
+  --port 8001 \
+  > logs/qwen_1_5b_vllm_server.log 2>&1 &
+
+VLLM_PID=$!
+echo "vLLM PID: $VLLM_PID"
+
+echo
+echo "===== WAIT FOR VLLM SERVER ====="
+echo "Waiting for vLLM /v1/models to become available..."
+
+for i in $(seq 1 900); do
+  if ! kill -0 "$VLLM_PID" 2>/dev/null; then
+    echo "vLLM server exited early."
+    echo "===== VLLM SERVER LOG ====="
+    tail -n 250 logs/qwen_1_5b_vllm_server.log || true
+    exit 1
+  fi
+
+  python - <<'PYREADY' >/tmp/vllm_ready_check.out 2>/tmp/vllm_ready_check.err
+import json
+import urllib.request
+
+url = "http://127.0.0.1:8001/v1/models"
+with urllib.request.urlopen(url, timeout=5) as resp:
+    body = resp.read().decode("utf-8")
+    print("status:", resp.status)
+    print(body[:500])
+PYREADY
+
+  if [ $? -eq 0 ]; then
+    echo "vLLM server is ready at second $i"
+    cat /tmp/vllm_ready_check.out || true
+    break
+  fi
+
+  if [ $((i % 30)) -eq 0 ]; then
+    echo "Still waiting for vLLM at second $i"
+    tail -n 40 logs/qwen_1_5b_vllm_server.log || true
+  fi
+
+  if [ "$i" -eq 900 ]; then
+    echo "Timed out waiting for vLLM server readiness."
+    echo "===== VLLM SERVER LOG ====="
+    tail -n 250 logs/qwen_1_5b_vllm_server.log || true
+    kill "$VLLM_PID" || true
+    exit 1
+  fi
+
+  sleep 1
+done
+
+echo
+echo "===== VLLM SERVER LOG TAIL ====="
+tail -n 120 logs/qwen_1_5b_vllm_server.log || true
+
+echo
+echo "===== START FASTAPI SERVER ====="
+python -m uvicorn app.main:app \
+  --host 127.0.0.1 \
+  --port 8000 \
+  > logs/qwen_1_5b_fastapi_server.log 2>&1 &
+
+FASTAPI_PID=$!
+echo "FastAPI PID: $FASTAPI_PID"
+
+echo
+echo "===== WAIT FOR FASTAPI SERVER ====="
+for i in $(seq 1 120); do
+  if grep -q "Uvicorn running" logs/qwen_1_5b_fastapi_server.log || grep -q "Application startup complete" logs/qwen_1_5b_fastapi_server.log; then
+    echo "FastAPI server appears ready at second $i"
+    break
+  fi
+
+  if ! kill -0 "$FASTAPI_PID" 2>/dev/null; then
+    echo "FastAPI server exited early."
+    echo "===== FASTAPI LOG ====="
+    tail -n 160 logs/qwen_1_5b_fastapi_server.log || true
+    kill "$VLLM_PID" || true
+    exit 1
+  fi
+
+  sleep 1
+done
+
+echo
+echo "===== FASTAPI LOG TAIL ====="
+tail -n 80 logs/qwen_1_5b_fastapi_server.log || true
+
+echo
+echo "===== HEALTH CHECK ====="
+python - <<'PY'
+import urllib.request
+
+url = "http://127.0.0.1:8000/health"
+with urllib.request.urlopen(url, timeout=30) as resp:
+    body = resp.read().decode("utf-8")
+    print("status:", resp.status)
+    print("body:", body)
+PY
+
+echo
+echo "===== GENERATE REQUEST THROUGH FASTAPI -> VLLMBACKEND -> VLLM ====="
+python - <<'PY'
+import json
+import time
+import urllib.request
+
+url = "http://127.0.0.1:8000/generate"
+
+payload = {
+    "prompt": "请用三句话解释什么是大模型推理，并说明为什么 vLLM 适合做推理服务。",
+    "max_new_tokens": 128,
+    "temperature": 0.7,
+    "thinking_budget": 512
+}
+
+data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+req = urllib.request.Request(
+    url,
+    data=data,
+    headers={"Content-Type": "application/json"},
+    method="POST"
+)
+
+start = time.time()
+with urllib.request.urlopen(req, timeout=300) as resp:
+    body = resp.read().decode("utf-8")
+    latency = time.time() - start
+    print("status:", resp.status)
+    print("client_latency_seconds:", round(latency, 6))
+    print("body:")
+    print(body)
+
+    with open("results/qwen_1_5b_vllm_fastapi_e2e_response.json", "w", encoding="utf-8") as f:
+        f.write(body)
+PY
+
+echo
+echo "===== GPU AFTER REQUEST ====="
+nvidia-smi || true
+
+echo
+echo "===== STOP SERVERS ====="
+kill "$FASTAPI_PID" || true
+kill "$VLLM_PID" || true
+
+echo
+echo "===== DONE ====="

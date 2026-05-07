@@ -696,7 +696,7 @@ request_id
 10. 将实验结果整理为 benchmark report
 ```
 
-这标志着项目已经从 toy-level mock demo 进入真实 LLM inference service prototype 阶段，并开始具备基础性能分析能力。
+这标志着项目已经从 仅用于演示的 mock 原型 进入真实 LLM inference service prototype 阶段，并开始具备基础性能分析能力。
 
 下一步应继续推进：
 
