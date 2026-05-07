@@ -18,10 +18,27 @@ class VLLMBackend:
         base_url: str,
         model_name: str,
         timeout_seconds: float = 300,
+        enable_seed_thinking_budget: bool = False,
     ):
         self.base_url = base_url.rstrip("/")
         self.model_name = model_name
         self.timeout_seconds = timeout_seconds
+        self.enable_seed_thinking_budget = enable_seed_thinking_budget
+
+    def _should_use_seed_thinking_budget(self) -> bool:
+        return self.enable_seed_thinking_budget or "Seed-OSS" in self.model_name
+
+    def _normalize_seed_thinking_budget(self, thinking_budget: int | None) -> int | None:
+        if thinking_budget is None:
+            return None
+
+        # Seed-OSS thinking budget follows model-specific chat template behavior.
+        # Very small non-zero budgets are normalized to 0 to avoid unsupported
+        # low-budget configurations.
+        if 0 < thinking_budget < 512:
+            return 0
+
+        return thinking_budget
 
     def generate(
         self,
@@ -33,9 +50,6 @@ class VLLMBackend:
         start_time = time.time()
 
         # vLLM exposes an OpenAI-compatible chat completions API.
-        # For models that support thinking control natively, this field may need
-        # model-specific handling later. For now, we pass it through as metadata
-        # in our own API response and keep max_new_tokens as the actual generation cap.
         payload = {
             "model": self.model_name,
             "messages": [
@@ -47,6 +61,15 @@ class VLLMBackend:
             "max_tokens": max_new_tokens,
             "temperature": temperature,
         }
+
+        # Seed-OSS uses chat_template_kwargs for native thinking-budget control.
+        # Do not send this field to generic/Qwen models to avoid compatibility issues.
+        if self._should_use_seed_thinking_budget():
+            normalized_budget = self._normalize_seed_thinking_budget(thinking_budget)
+            if normalized_budget is not None:
+                payload["chat_template_kwargs"] = {
+                    "thinking_budget": normalized_budget,
+                }
 
         request_body = json.dumps(payload).encode("utf-8")
         request = urllib.request.Request(

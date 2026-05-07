@@ -21,3 +21,8 @@ VLLM_MODEL_NAME = os.getenv(
 VLLM_TIMEOUT_SECONDS = float(
     os.getenv("VLLM_TIMEOUT_SECONDS", "300")
 )
+
+VLLM_ENABLE_SEED_THINKING_BUDGET = (
+    os.getenv("VLLM_ENABLE_SEED_THINKING_BUDGET", "false").lower() == "true"
+)
+

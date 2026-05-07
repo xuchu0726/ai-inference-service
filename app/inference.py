@@ -7,6 +7,7 @@ from app.config import (
     VLLM_BASE_URL,
     VLLM_MODEL_NAME,
     VLLM_TIMEOUT_SECONDS,
+    VLLM_ENABLE_SEED_THINKING_BUDGET,
 )
 
 
@@ -17,6 +18,7 @@ elif INFERENCE_BACKEND == "vllm":
         base_url=VLLM_BASE_URL,
         model_name=VLLM_MODEL_NAME,
         timeout_seconds=VLLM_TIMEOUT_SECONDS,
+        enable_seed_thinking_budget=VLLM_ENABLE_SEED_THINKING_BUDGET,
     )
 elif INFERENCE_BACKEND == "mock":
     backend = MockBackend()
