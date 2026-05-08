@@ -1,0 +1,138 @@
+===== Seed-OSS FastAPI Benchmark Summary =====
+date: Fri May  8 11:18:14 UTC 2026
+model: ByteDance-Seed/Seed-OSS-36B-Instruct
+backend: FastAPI -> VLLMBackend -> vLLM OpenAI API
+gpu: 2x NVIDIA A100-SXM4-80GB
+tensor_parallel_size: 2
+dtype: bfloat16
+max_model_len: 4096
+thinking_budget: 512
+max_new_tokens: 128
+
+===== benchmark log =====
+===== BENCHMARK CONFIG =====
+url: http://127.0.0.1:8000/generate
+output: results/seed_oss_fastapi_benchmark_3req.csv
+concurrency: 1
+repeat: 3
+max_new_tokens: 128
+temperature: 0.7
+thinking_budgets: [512]
+total_requests: 12
+case_id=1 ok=True status=200 latency=3.364391 backend=vllm tokens/s=38.0967
+case_id=2 ok=True status=200 latency=3.353497 backend=vllm tokens/s=38.1917
+case_id=3 ok=True status=200 latency=3.352901 backend=vllm tokens/s=38.1975
+case_id=4 ok=True status=200 latency=3.349532 backend=vllm tokens/s=38.2354
+case_id=5 ok=True status=200 latency=3.348647 backend=vllm tokens/s=38.2453
+case_id=6 ok=True status=200 latency=3.347853 backend=vllm tokens/s=38.2531
+case_id=7 ok=True status=200 latency=3.34713 backend=vllm tokens/s=38.2553
+case_id=8 ok=True status=200 latency=3.347103 backend=vllm tokens/s=38.2553
+case_id=9 ok=True status=200 latency=3.346969 backend=vllm tokens/s=38.2619
+case_id=10 ok=True status=200 latency=3.347706 backend=vllm tokens/s=38.2485
+case_id=11 ok=True status=200 latency=3.348663 backend=vllm tokens/s=38.2386
+case_id=12 ok=True status=200 latency=3.345827 backend=vllm tokens/s=38.2693
+
+saved_csv: results/seed_oss_fastapi_benchmark_3req.csv
+===== VLLM BACKEND BENCHMARK SUMMARY =====
+total_requests: 12
+successful_requests: 12
+failed_requests: 0
+error_rate: 0.0
+client_latency_avg: 3.350018
+client_latency_p50: 3.34825
+client_latency_p95: 3.358399
+tokens_per_second_avg: 38.22905
+tokens_per_second_p50: 38.2469
+tokens_per_second_p95: 38.26523
+
+Note: this benchmark calls the non-streaming /generate API.
+TTFT requires a streaming endpoint and will be implemented separately.
+
+===== benchmark csv =====
+case_id,prompt_id,thinking_budget,concurrency,status_code,ok,client_latency_seconds,server_latency_seconds,backend,model_name,device,input_chars,input_tokens,output_tokens,tokens_per_second,max_new_tokens,response,error
+1,llm_inference_cn,512,1,200,True,3.364391,3.359869,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,36,118,128,38.0967,128,"<seed:think>
+用户现在需要我用三句话解释大模型推理，然后说明为什么vLLM适合做推理服务。首先得明确“大模型推理”的定义，得准确又简洁。大模型推理应该是指输入提示后，模型生成输出的过程吧？得提到输入、模型处理、输出，可能还要点出和训练的区别，训练是学参数，推理是用参数生成。
+<seed:cot_budget_reflect>I have used 129 tokens, and there are 383 tokens remaining for use.</seed:cot_budget_reflect>
+
+
+然后是三句话，第一句可能定义核心：大模型推理是利用",
+2,legal_summary_cn,512,1,200,True,3.353497,3.351517,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,52,125,128,38.1917,128,"<seed:think>
+用户现在需要总结这段法律文本的核心风险点，首先得拆解句子里的两个主要部分：第一个是甲方有权单方面修改服务价格，第二个是乙方不得提前解除合同否则付违约金。首先看甲方的修改价格权，这对乙方来说风险是啥？应该是价格变动的不确定性，乙方可能面临价格上涨的风险，没有协商机制，单方面修改意味着乙方只能被动接受，可能增加成本。
+<seed:cot_budget_reflect>I have used 129 tokens, and there are 383 tokens remaining for use.</seed:cot_budget_reflect>
+
+
+然后是乙方的解除限制，“不得提前解除”",
+3,kv_cache_en,512,1,200,True,3.352901,3.351001,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,92,119,128,38.1975,128,"<seed:think>
+Got it, let's tackle explaining KV Cache in LLM inference. First, I need to remember what KV Cache is—from what I recall, it's about storing key and value tensors from previous layers or tokens to avoid recomputing them. The user wants focus on latency, memory usage, and long-context serving, so I need to tie each part back to those.
+
+First, maybe start with the basics: how transformers work during inference. Autoregressive models generate tokens one by one, right? For each new token, you process all previous tokens through the attention layers.
+<seed:cot_budget_reflect>I have",
+4,seed_oss_planning_cn,512,1,200,True,3.349532,3.347682,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,53,127,128,38.2354,128,"<seed:think>
+用户现在需要从AI推理工程角度解释部署36B大模型时为什么需要多GPU、KV Cache管理和性能压测这三个点。首先得先回忆一下大模型推理的核心挑战，比如模型大小、计算量、内存限制这些，然后对应到每个技术点的作用。
+
+首先是多GPU。36B参数的模型，每个参数用FP16的话，大概是36B*2字节=72GB，单GPU的显存现在主流比如A100是80GB，但可能还要考虑其他开销，比如KV Cache、优化",
+5,llm_inference_cn,512,1,200,True,3.348647,3.346818,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,36,118,128,38.2453,128,"<seed:think>
+用户现在需要我用三句话解释大模型推理，然后说明为什么vLLM适合做推理服务。首先得明确“大模型推理”的定义，应该包括输入处理、模型计算、输出生成这几个核心步骤吧？得简洁，三句话，所以每句要点不同。
+<seed:cot_budget_reflect>I have used 131 tokens, and there are 381 tokens remaining for use.</seed:cot_budget_reflect>
+
+
+第一句可能讲什么是推理：大模型推理是指输入用户查询（如文本、图像）后，模型通过前向计算生成对应输出（如回答、生成内容）",
+6,legal_summary_cn,512,1,200,True,3.347853,3.346134,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,52,125,128,38.2531,128,"<seed:think>
+用户现在需要总结这段法律文本的核心风险点，首先得拆解句子里的两个主要部分：第一个是甲方有权单方面修改服务价格，第二个是乙方不得提前解除合同否则付违约金。首先看甲方的权利，单方面修改价格意味着乙方可能面临价格上涨的风险，没有协商的空间，这是对乙方成本的不确定性风险。
+<seed:cot_budget_reflect>I have used 133 tokens, and there are 379 tokens remaining for use.</seed:cot_budget_reflect>
+然后是乙方的义务，不得提前解除，否则违约金，这是乙方的合同解除限制风险，就是乙方如果想提前",
+7,kv_cache_en,512,1,200,True,3.34713,3.345937,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,92,119,128,38.2553,128,"<seed:think>
+Got it, let's tackle explaining KV Cache in LLM inference. First, I need to remember what KV Cache is—probably Key and Value cache from the attention mechanism. Right, transformers use self-attention, which for each token computes queries, keys, values. During generation, when you predict the next token, you don't want to recompute keys and values for all previous tokens every time, that's inefficient.
+<seed:cot_budget_reflect>I have used 130 tokens, and there are 382 tokens remaining for use.</seed:cot_budget_reflect>
+ So KV Cache stores those keys and values from previous steps to",
+8,seed_oss_planning_cn,512,1,200,True,3.347103,3.345946,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,53,127,128,38.2553,128,"<seed:think>
+用户现在需要从AI推理工程角度解释部署36B大模型时为什么需要多GPU、KV Cache管理和性能压测，这三个点得分别展开对吧？首先得回忆一下大模型推理的核心挑战，比如显存限制、计算效率、延迟吞吐量这些。首先多GPU，36B参数的模型，每个参数用FP16的话，参数大小是多少？
+<seed:cot_budget_reflect>I have used 133 tokens, and there are 379 tokens remaining for use.</seed:cot_budget_reflect>
+FP16是2字节，36B就是72GB，单卡",
+9,llm_inference_cn,512,1,200,True,3.346969,3.345365,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,36,118,128,38.2619,128,"<seed:think>
+用户现在需要我用三句话解释大模型推理，然后说明为什么vLLM适合做推理服务。首先得先明确“大模型推理”的定义，得准确又简洁。大模型推理应该是指输入提示后，模型生成输出的过程吧？得抓住核心：输入到输出的计算过程，可能涉及模型的前向计算、解码这些步骤？
+<seed:cot_budget_reflect>I have used 136 tokens, and there are 376 tokens remaining for use.</seed:cot_budget_reflect>
+
+
+然后是三句话，第一句可能定义是什么，第二句补充关键步骤，比如前向传播",
+10,legal_summary_cn,512,1,200,True,3.347706,3.346538,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,52,125,128,38.2485,128,"<seed:think>
+用户现在需要总结这段法律文本的核心风险点，首先得拆解句子里的两个主要条款：一是甲方单方面修改服务价格的权利，二是乙方不得提前解除合同且违约要付违约金。首先看甲方的修改价格权，这对乙方来说风险是啥？应该是乙方可能面临价格上涨的风险，没有协商权，被动接受价格变化，可能增加成本。
+<seed:cot_budget_reflect>I have used 128 tokens, and there are 384 tokens remaining for use.</seed:cot_budget_reflect>
+然后是乙方不得提前解除合同，否则付违约金，那乙方的风险就是合同",
+11,kv_cache_en,512,1,200,True,3.348663,3.347406,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,92,119,128,38.2386,128,"<seed:think>
+Got it, let's tackle explaining KV Cache in LLM inference. First, I need to remember what KV Cache is—from what I recall, it's about caching key and value states during autoregressive generation. The user wants focus on latency, memory usage, and long-context serving, so I should structure each of those points clearly.
+
+First, maybe start with a quick recap of how LLMs generate text autoregressively.
+<seed:cot_budget_reflect>I have used 128 tokens, and there are 384 tokens remaining for use.</seed:cot_budget_reflect>
+ Each token generation step requires attending to all previous tokens,",
+12,seed_oss_planning_cn,512,1,200,True,3.345827,3.344714,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,53,127,128,38.2693,128,"<seed:think>
+用户现在需要从AI推理工程角度解释部署36B大模型时为什么需要多GPU、KV Cache管理和性能压测，这三个点得一个个拆开说对吧。首先得回忆一下大模型推理的基础，比如模型参数大小、显存限制这些。首先36B参数，每个参数用FP16的话，大概是多少显存？FP16每个参数2字节，36B就是72GB？
+<seed:cot_budget_reflect>I have used 136 tokens, and there are 376 tokens remaining for use.</seed:cot_budget_reflect>
+但实际推理的时候不止参数，还有",
+
+===== current nvidia-smi =====
+Fri May  8 11:18:14 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:47:00.0 Off |                    0 |
+| N/A   30C    P0             73W /  400W |   75797MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:4E:00.0 Off |                    0 |
+| N/A   33C    P0             83W /  400W |   75797MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            2633      C   VLLM::Worker_TP0                      75788MiB |
+|    1   N/A  N/A            2634      C   VLLM::Worker_TP1                      75788MiB |
++-----------------------------------------------------------------------------------------+

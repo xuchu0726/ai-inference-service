@@ -1,0 +1,83 @@
+===== CLOUD VLLM SEED-OSS-36B-INSTRUCT SERVER =====
+MODEL_NAME=ByteDance-Seed/Seed-OSS-36B-Instruct
+HOST=0.0.0.0
+PORT=8001
+TENSOR_PARALLEL_SIZE=2
+MAX_MODEL_LEN=4096
+MAX_NUM_BATCHED_TOKENS=8192
+GPU_MEMORY_UTILIZATION=0.90
+DTYPE=bfloat16
+HF_HOME=/workspace/hf_cache
+
+===== NVIDIA SMI =====
+Fri May  8 10:43:03 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:47:00.0 Off |                    0 |
+| N/A   29C    P0             62W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:4E:00.0 Off |                    0 |
+| N/A   32C    P0             63W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== PYTHON / GPU / VLLM CHECK =====
+/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+python: 3.11.10 (main, Sep  7 2024, 18:35:41) [GCC 11.4.0]
+torch: 2.9.0+cu128
+torch cuda: 12.8
+cuda available: True
+device count: 2
+device 0: NVIDIA A100-SXM4-80GB
+device 1: NVIDIA A100-SXM4-80GB
+transformers: 4.57.6
+vllm: 0.11.2
+
+===== START VLLM SEED-OSS-36B-INSTRUCT SERVER =====
+/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+INFO 05-08 10:43:38 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=2048.
+[1;36m(APIServer pid=1529)[0;0m INFO 05-08 10:43:38 [api_server.py:1977] vLLM API server version 0.11.2
+[1;36m(APIServer pid=1529)[0;0m INFO 05-08 10:43:38 [utils.py:253] non-default args: {'model_tag': 'ByteDance-Seed/Seed-OSS-36B-Instruct', 'host': '0.0.0.0', 'port': 8001, 'enable_auto_tool_choice': True, 'tool_call_parser': 'seed_oss', 'model': 'ByteDance-Seed/Seed-OSS-36B-Instruct', 'trust_remote_code': True, 'dtype': 'bfloat16', 'max_model_len': 4096, 'tensor_parallel_size': 2, 'max_num_batched_tokens': 8192}
+[1;36m(APIServer pid=1529)[0;0m Traceback (most recent call last):
+[1;36m(APIServer pid=1529)[0;0m   File "/workspace/venvs/ai-inference-vllm/bin/vllm", line 6, in <module>
+[1;36m(APIServer pid=1529)[0;0m     sys.exit(main())
+[1;36m(APIServer pid=1529)[0;0m              ^^^^^^
+[1;36m(APIServer pid=1529)[0;0m   File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/vllm/entrypoints/cli/main.py", line 73, in main
+[1;36m(APIServer pid=1529)[0;0m     args.dispatch_function(args)
+[1;36m(APIServer pid=1529)[0;0m   File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/vllm/entrypoints/cli/serve.py", line 60, in cmd
+[1;36m(APIServer pid=1529)[0;0m     uvloop.run(run_server(args))
+[1;36m(APIServer pid=1529)[0;0m   File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/uvloop/__init__.py", line 92, in run
+[1;36m(APIServer pid=1529)[0;0m     return runner.run(wrapper())
+[1;36m(APIServer pid=1529)[0;0m            ^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=1529)[0;0m   File "/usr/lib/python3.11/asyncio/runners.py", line 118, in run
+[1;36m(APIServer pid=1529)[0;0m     return self._loop.run_until_complete(task)
+[1;36m(APIServer pid=1529)[0;0m            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=1529)[0;0m   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+[1;36m(APIServer pid=1529)[0;0m   File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/uvloop/__init__.py", line 48, in wrapper
+[1;36m(APIServer pid=1529)[0;0m     return await main
+[1;36m(APIServer pid=1529)[0;0m            ^^^^^^^^^^
+[1;36m(APIServer pid=1529)[0;0m   File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/vllm/entrypoints/openai/api_server.py", line 2023, in run_server
+[1;36m(APIServer pid=1529)[0;0m     listen_address, sock = setup_server(args)
+[1;36m(APIServer pid=1529)[0;0m                            ^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=1529)[0;0m   File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/vllm/entrypoints/openai/api_server.py", line 1995, in setup_server
+[1;36m(APIServer pid=1529)[0;0m     sock = create_server_socket(sock_addr)
+[1;36m(APIServer pid=1529)[0;0m            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=1529)[0;0m   File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/vllm/entrypoints/openai/api_server.py", line 1944, in create_server_socket
+[1;36m(APIServer pid=1529)[0;0m     sock.bind(addr)
+[1;36m(APIServer pid=1529)[0;0m OSError: [Errno 98] Address already in use

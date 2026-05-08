@@ -1,0 +1,331 @@
+===== date =====
+Fri May  8 11:35:16 UTC 2026
+
+===== services =====
+LISTEN 0      2048         0.0.0.0:8002       0.0.0.0:*    users:(("vllm",pid=1941,fd=26))            
+LISTEN 0      2048         0.0.0.0:8000       0.0.0.0:*    users:(("python",pid=4398,fd=11))          
+LISTEN 0      4096               *:8003             *:*    users:(("VLLM::Worker_TP",pid=2633,fd=63)) 
+
+===== fastapi health =====
+{"status":"ok"}
+===== fastapi metrics after enable =====
+# HELP python_gc_objects_collected_total Objects collected during gc
+# TYPE python_gc_objects_collected_total counter
+python_gc_objects_collected_total{generation="0"} 8315.0
+python_gc_objects_collected_total{generation="1"} 1359.0
+python_gc_objects_collected_total{generation="2"} 287.0
+# HELP python_gc_objects_uncollectable_total Uncollectable objects found during GC
+# TYPE python_gc_objects_uncollectable_total counter
+python_gc_objects_uncollectable_total{generation="0"} 0.0
+python_gc_objects_uncollectable_total{generation="1"} 0.0
+python_gc_objects_uncollectable_total{generation="2"} 0.0
+# HELP python_gc_collections_total Number of times this generation was collected
+# TYPE python_gc_collections_total counter
+python_gc_collections_total{generation="0"} 743.0
+python_gc_collections_total{generation="1"} 67.0
+python_gc_collections_total{generation="2"} 5.0
+# HELP python_info Python platform information
+# TYPE python_info gauge
+python_info{implementation="CPython",major="3",minor="11",patchlevel="10",version="3.11.10"} 1.0
+# HELP process_virtual_memory_bytes Virtual memory size in bytes.
+# TYPE process_virtual_memory_bytes gauge
+process_virtual_memory_bytes 7.878115328e+09
+# HELP process_resident_memory_bytes Resident memory size in bytes.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes 6.81660416e+08
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds 1.77823994706e+09
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total 9.48
+# HELP process_open_fds Number of open file descriptors.
+# TYPE process_open_fds gauge
+process_open_fds 15.0
+# HELP process_max_fds Maximum number of open file descriptors.
+# TYPE process_max_fds gauge
+process_max_fds 1024.0
+# HELP http_requests_total Total number of requests by method, status and handler.
+# TYPE http_requests_total counter
+http_requests_total{handler="/health",method="GET",status="2xx"} 1.0
+# HELP http_requests_created Total number of requests by method, status and handler.
+# TYPE http_requests_created gauge
+http_requests_created{handler="/health",method="GET",status="2xx"} 1.7782400332582848e+09
+# HELP http_request_size_bytes Content length of incoming requests by handler. Only value of header is respected. Otherwise ignored. No percentile calculated. 
+# TYPE http_request_size_bytes summary
+http_request_size_bytes_count{handler="/health"} 1.0
+http_request_size_bytes_sum{handler="/health"} 0.0
+# HELP http_request_size_bytes_created Content length of incoming requests by handler. Only value of header is respected. Otherwise ignored. No percentile calculated. 
+# TYPE http_request_size_bytes_created gauge
+http_request_size_bytes_created{handler="/health"} 1.7782400332583191e+09
+# HELP http_response_size_bytes Content length of outgoing responses by handler. Only value of header is respected. Otherwise ignored. No percentile calculated. 
+# TYPE http_response_size_bytes summary
+http_response_size_bytes_count{handler="/health"} 1.0
+http_response_size_bytes_sum{handler="/health"} 15.0
+# HELP http_response_size_bytes_created Content length of outgoing responses by handler. Only value of header is respected. Otherwise ignored. No percentile calculated. 
+# TYPE http_response_size_bytes_created gauge
+http_response_size_bytes_created{handler="/health"} 1.7782400332583551e+09
+# HELP http_request_duration_highr_seconds Latency with many buckets but no API specific labels. Made for more accurate percentile calculations. 
+# TYPE http_request_duration_highr_seconds histogram
+http_request_duration_highr_seconds_bucket{le="0.01"} 0.0
+http_request_duration_highr_seconds_bucket{le="0.025"} 1.0
+http_request_duration_highr_seconds_bucket{le="0.05"} 1.0
+http_request_duration_highr_seconds_bucket{le="0.075"} 1.0
+http_request_duration_highr_seconds_bucket{le="0.1"} 1.0
+http_request_duration_highr_seconds_bucket{le="0.25"} 1.0
+http_request_duration_highr_seconds_bucket{le="0.5"} 1.0
+http_request_duration_highr_seconds_bucket{le="0.75"} 1.0
+http_request_duration_highr_seconds_bucket{le="1.0"} 1.0
+http_request_duration_highr_seconds_bucket{le="1.5"} 1.0
+http_request_duration_highr_seconds_bucket{le="2.0"} 1.0
+http_request_duration_highr_seconds_bucket{le="2.5"} 1.0
+http_request_duration_highr_seconds_bucket{le="3.0"} 1.0
+http_request_duration_highr_seconds_bucket{le="3.5"} 1.0
+http_request_duration_highr_seconds_bucket{le="4.0"} 1.0
+http_request_duration_highr_seconds_bucket{le="4.5"} 1.0
+http_request_duration_highr_seconds_bucket{le="5.0"} 1.0
+http_request_duration_highr_seconds_bucket{le="7.5"} 1.0
+http_request_duration_highr_seconds_bucket{le="10.0"} 1.0
+http_request_duration_highr_seconds_bucket{le="30.0"} 1.0
+http_request_duration_highr_seconds_bucket{le="60.0"} 1.0
+http_request_duration_highr_seconds_bucket{le="+Inf"} 1.0
+
+===== fastapi metrics generate =====
+# HELP http_requests_total Total number of requests by method, status and handler.
+# TYPE http_requests_total counter
+http_requests_total{handler="/health",method="GET",status="2xx"} 1.0
+http_requests_total{handler="/metrics",method="GET",status="2xx"} 1.0
+http_requests_total{handler="/generate",method="POST",status="2xx"} 1.0
+http_requests_created{handler="/health",method="GET",status="2xx"} 1.7782400332582848e+09
+http_requests_created{handler="/generate",method="POST",status="2xx"} 1.7782401011692526e+09
+http_request_size_bytes_count{handler="/health"} 1.0
+http_request_size_bytes_sum{handler="/health"} 0.0
+http_request_size_bytes_count{handler="/generate"} 1.0
+http_request_size_bytes_sum{handler="/generate"} 267.0
+http_request_size_bytes_created{handler="/health"} 1.7782400332583191e+09
+http_request_size_bytes_created{handler="/generate"} 1.7782401011692731e+09
+http_response_size_bytes_count{handler="/health"} 1.0
+http_response_size_bytes_sum{handler="/health"} 15.0
+http_response_size_bytes_count{handler="/generate"} 1.0
+http_response_size_bytes_sum{handler="/generate"} 870.0
+http_response_size_bytes_created{handler="/health"} 1.7782400332583551e+09
+http_response_size_bytes_created{handler="/generate"} 1.7782401011692936e+09
+# HELP http_request_duration_highr_seconds Latency with many buckets but no API specific labels. Made for more accurate percentile calculations. 
+# TYPE http_request_duration_highr_seconds histogram
+http_request_duration_highr_seconds_bucket{le="0.01"} 1.0
+http_request_duration_highr_seconds_bucket{le="0.025"} 2.0
+http_request_duration_highr_seconds_bucket{le="0.05"} 2.0
+http_request_duration_highr_seconds_bucket{le="0.075"} 2.0
+http_request_duration_highr_seconds_bucket{le="0.1"} 2.0
+http_request_duration_highr_seconds_bucket{le="0.25"} 2.0
+http_request_duration_highr_seconds_bucket{le="0.5"} 2.0
+http_request_duration_highr_seconds_bucket{le="0.75"} 2.0
+http_request_duration_highr_seconds_bucket{le="1.0"} 2.0
+http_request_duration_highr_seconds_bucket{le="1.5"} 2.0
+http_request_duration_highr_seconds_bucket{le="2.0"} 2.0
+http_request_duration_highr_seconds_bucket{le="2.5"} 2.0
+http_request_duration_highr_seconds_bucket{le="3.0"} 2.0
+http_request_duration_highr_seconds_bucket{le="3.5"} 3.0
+http_request_duration_highr_seconds_bucket{le="4.0"} 3.0
+http_request_duration_highr_seconds_bucket{le="4.5"} 3.0
+http_request_duration_highr_seconds_bucket{le="5.0"} 3.0
+http_request_duration_highr_seconds_bucket{le="7.5"} 3.0
+http_request_duration_highr_seconds_bucket{le="10.0"} 3.0
+http_request_duration_highr_seconds_bucket{le="30.0"} 3.0
+http_request_duration_highr_seconds_bucket{le="60.0"} 3.0
+http_request_duration_highr_seconds_bucket{le="+Inf"} 3.0
+http_request_duration_highr_seconds_count 3.0
+http_request_duration_highr_seconds_sum 3.3774629356339574
+# HELP http_request_duration_highr_seconds_created Latency with many buckets but no API specific labels. Made for more accurate percentile calculations. 
+# TYPE http_request_duration_highr_seconds_created gauge
+http_request_duration_highr_seconds_created 1.7782399603549392e+09
+# HELP http_request_duration_seconds Latency with only few buckets by handler. Made to be only used if aggregation by handler is important. 
+# TYPE http_request_duration_seconds histogram
+http_request_duration_seconds_bucket{handler="/health",le="0.1",method="GET"} 1.0
+http_request_duration_seconds_bucket{handler="/health",le="0.5",method="GET"} 1.0
+http_request_duration_seconds_bucket{handler="/health",le="1.0",method="GET"} 1.0
+http_request_duration_seconds_bucket{handler="/health",le="+Inf",method="GET"} 1.0
+http_request_duration_seconds_count{handler="/health",method="GET"} 1.0
+http_request_duration_seconds_sum{handler="/health",method="GET"} 0.01011151634156704
+http_request_duration_seconds_bucket{handler="/metrics",le="0.1",method="GET"} 1.0
+http_request_duration_seconds_bucket{handler="/metrics",le="0.5",method="GET"} 1.0
+http_request_duration_seconds_bucket{handler="/metrics",le="1.0",method="GET"} 1.0
+http_request_duration_seconds_bucket{handler="/metrics",le="+Inf",method="GET"} 1.0
+http_request_duration_seconds_count{handler="/metrics",method="GET"} 1.0
+http_request_duration_seconds_sum{handler="/metrics",method="GET"} 0.0030023157596588135
+http_request_duration_seconds_bucket{handler="/generate",le="0.1",method="POST"} 0.0
+http_request_duration_seconds_bucket{handler="/generate",le="0.5",method="POST"} 0.0
+http_request_duration_seconds_bucket{handler="/generate",le="1.0",method="POST"} 0.0
+http_request_duration_seconds_bucket{handler="/generate",le="+Inf",method="POST"} 1.0
+http_request_duration_seconds_count{handler="/generate",method="POST"} 1.0
+http_request_duration_seconds_sum{handler="/generate",method="POST"} 3.3643491035327315
+# HELP http_request_duration_seconds_created Latency with only few buckets by handler. Made to be only used if aggregation by handler is important. 
+# TYPE http_request_duration_seconds_created gauge
+http_request_duration_seconds_created{handler="/health",method="GET"} 1.7782400332583828e+09
+http_request_duration_seconds_created{handler="/metrics",method="GET"} 1.7782400332712848e+09
+http_request_duration_seconds_created{handler="/generate",method="POST"} 1.778240101169328e+09
+
+===== vllm metrics =====
+# HELP python_gc_objects_collected_total Objects collected during gc
+# TYPE python_gc_objects_collected_total counter
+python_gc_objects_collected_total{generation="0"} 12263.0
+python_gc_objects_collected_total{generation="1"} 2202.0
+python_gc_objects_collected_total{generation="2"} 884.0
+# HELP python_gc_objects_uncollectable_total Uncollectable objects found during GC
+# TYPE python_gc_objects_uncollectable_total counter
+python_gc_objects_uncollectable_total{generation="0"} 0.0
+python_gc_objects_uncollectable_total{generation="1"} 0.0
+python_gc_objects_uncollectable_total{generation="2"} 0.0
+# HELP python_gc_collections_total Number of times this generation was collected
+# TYPE python_gc_collections_total counter
+python_gc_collections_total{generation="0"} 1658.0
+python_gc_collections_total{generation="1"} 150.0
+python_gc_collections_total{generation="2"} 11.0
+# HELP python_info Python platform information
+# TYPE python_info gauge
+python_info{implementation="CPython",major="3",minor="11",patchlevel="10",version="3.11.10"} 1.0
+# HELP process_virtual_memory_bytes Virtual memory size in bytes.
+# TYPE process_virtual_memory_bytes gauge
+process_virtual_memory_bytes 3.4371018752e+010
+# HELP process_resident_memory_bytes Resident memory size in bytes.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes 1.144520704e+09
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds 1.77823733844e+09
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total 25.82
+# HELP process_open_fds Number of open file descriptors.
+# TYPE process_open_fds gauge
+process_open_fds 51.0
+# HELP process_max_fds Maximum number of open file descriptors.
+# TYPE process_max_fds gauge
+process_max_fds 65535.0
+# HELP vllm:num_requests_running Number of requests in model execution batches.
+# TYPE vllm:num_requests_running gauge
+vllm:num_requests_running{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:num_requests_waiting Number of requests waiting to be processed.
+# TYPE vllm:num_requests_waiting gauge
+vllm:num_requests_waiting{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:engine_sleep_state Engine sleep state; awake = 0 means engine is sleeping; awake = 1 means engine is awake; weights_offloaded = 1 means sleep level 1; discard_all = 1 means sleep level 2.
+# TYPE vllm:engine_sleep_state gauge
+vllm:engine_sleep_state{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct",sleep_state="awake"} 1.0
+vllm:engine_sleep_state{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct",sleep_state="weights_offloaded"} 0.0
+vllm:engine_sleep_state{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct",sleep_state="discard_all"} 0.0
+# HELP vllm:kv_cache_usage_perc KV-cache usage. 1 means 100 percent usage.
+# TYPE vllm:kv_cache_usage_perc gauge
+vllm:kv_cache_usage_perc{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:prefix_cache_queries_total Prefix cache queries, in terms of number of queried tokens.
+# TYPE vllm:prefix_cache_queries_total counter
+vllm:prefix_cache_queries_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 3773.0
+# HELP vllm:prefix_cache_queries_created Prefix cache queries, in terms of number of queried tokens.
+# TYPE vllm:prefix_cache_queries_created gauge
+vllm:prefix_cache_queries_created{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 1.778238171236285e+09
+# HELP vllm:prefix_cache_hits_total Prefix cache hits, in terms of number of cached tokens.
+# TYPE vllm:prefix_cache_hits_total counter
+vllm:prefix_cache_hits_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 3072.0
+# HELP vllm:prefix_cache_hits_created Prefix cache hits, in terms of number of cached tokens.
+# TYPE vllm:prefix_cache_hits_created gauge
+vllm:prefix_cache_hits_created{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 1.778238171236305e+09
+# HELP vllm:external_prefix_cache_queries_total External prefix cache queries from KV connector cross-instance cache sharing, in terms of number of queried tokens.
+# TYPE vllm:external_prefix_cache_queries_total counter
+vllm:external_prefix_cache_queries_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:external_prefix_cache_queries_created External prefix cache queries from KV connector cross-instance cache sharing, in terms of number of queried tokens.
+# TYPE vllm:external_prefix_cache_queries_created gauge
+vllm:external_prefix_cache_queries_created{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 1.7782381712363222e+09
+# HELP vllm:external_prefix_cache_hits_total External prefix cache hits from KV connector cross-instance cache sharing, in terms of number of cached tokens.
+# TYPE vllm:external_prefix_cache_hits_total counter
+vllm:external_prefix_cache_hits_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:external_prefix_cache_hits_created External prefix cache hits from KV connector cross-instance cache sharing, in terms of number of cached tokens.
+# TYPE vllm:external_prefix_cache_hits_created gauge
+vllm:external_prefix_cache_hits_created{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 1.7782381712363417e+09
+# HELP vllm:mm_cache_queries_total Multi-modal cache queries, in terms of number of queried items.
+# TYPE vllm:mm_cache_queries_total counter
+vllm:mm_cache_queries_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:mm_cache_queries_created Multi-modal cache queries, in terms of number of queried items.
+# TYPE vllm:mm_cache_queries_created gauge
+vllm:mm_cache_queries_created{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 1.7782381712363605e+09
+
+===== smoke after metrics =====
+status: 200
+client_latency_seconds: 3.367006
+{
+  "response": "<seed:think>\n用户现在需要我用三句话解释大模型推理，然后说明为什么vLLM适合做推理服务。首先得明确“大模型推理”的定义，应该是输入prompt后，模型生成输出的过程吧？得抓住核心：模型根据输入产生响应，可能涉及计算过程。\n<seed:cot_budget_reflect>I have used 129 tokens, and there are 383 tokens remaining for use.</seed:cot_budget_reflect>\n然后三句话，得简洁，不能太复杂。第一句可能讲什么是推理，比如大模型推理是输入文本/指令后，模型通过计算生成输出的过程？第二",
+  "latency_seconds": 3.361803,
+  "input_chars": 36,
+  "max_new_tokens": 128,
+  "thinking_budget": 512,
+  "backend": "vllm",
+  "input_tokens": 118,
+  "output_tokens": 128,
+  "tokens_per_second": 38.0748,
+  "model_name": "ByteDance-Seed/Seed-OSS-36B-Instruct",
+  "device": "vllm_server"
+}
+
+===== gpu =====
+Fri May  8 11:35:16 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:47:00.0 Off |                    0 |
+| N/A   31C    P0             73W /  400W |   75797MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:4E:00.0 Off |                    0 |
+| N/A   34C    P0             83W /  400W |   75797MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            2633      C   VLLM::Worker_TP0                      75788MiB |
+|    1   N/A  N/A            2634      C   VLLM::Worker_TP1                      75788MiB |
++-----------------------------------------------------------------------------------------+
+
+===== artifacts =====
+logs/install_vllm.log
+logs/runpod_env_probe.txt
+logs/runpod_vllm_probe.txt
+logs/seed_oss_after_chat_smoke_256_nvidia_smi.txt
+logs/seed_oss_after_fastapi_smoke_nvidia_smi.txt
+logs/seed_oss_after_long_legal_summary_nvidia_smi.txt
+logs/seed_oss_after_vllm_ready_nvidia_smi.txt
+logs/seed_oss_artifact_inventory.txt
+logs/seed_oss_artifact_inventory_final.txt
+logs/seed_oss_budget_compare_summary.txt
+logs/seed_oss_e2e_success_evidence.txt
+logs/seed_oss_fastapi_benchmark_3req.log
+logs/seed_oss_fastapi_benchmark_summary.txt
+logs/seed_oss_fastapi_budget_compare.log
+logs/seed_oss_fastapi_launch.log
+logs/seed_oss_fastapi_launch_with_metrics.log
+logs/seed_oss_vllm_launch.log
+logs/seed_oss_vllm_launch_port8002.log
+logs/seed_oss_week1_final_inventory.txt
+logs/seed_oss_week1_metrics_final_evidence.txt
+results/cloud_smoke_test_response.json
+results/seed_oss_fastapi_benchmark_3req.csv
+results/seed_oss_fastapi_budget_compare.csv
+results/seed_oss_fastapi_health.json
+results/seed_oss_fastapi_health_after_metrics.json
+results/seed_oss_fastapi_metrics_generate_head.txt
+results/seed_oss_fastapi_metrics_head.txt
+results/seed_oss_fastapi_metrics_head_after_enable.txt
+results/seed_oss_fastapi_openapi.json
+results/seed_oss_fastapi_smoke_test.txt
+results/seed_oss_fastapi_smoke_test_after_metrics.txt
+results/seed_oss_long_legal_summary_512.json
+results/seed_oss_vllm_chat_smoke.json
+results/seed_oss_vllm_chat_smoke_256.json
+results/seed_oss_vllm_metrics_head.txt
+results/seed_oss_vllm_models.json
+results/seed_oss_vllm_openapi_head.txt

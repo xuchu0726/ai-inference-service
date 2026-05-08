@@ -1,0 +1,57 @@
+===== date =====
+Fri May  8 10:24:09 UTC 2026
+===== pwd =====
+/workspace/ai-inference-service
+===== git =====
+eee1872 统一项目文档表述并补充 Seed-OSS 目标路线
+4262dc0 对齐 Seed-OSS-36B-Instruct 官方 vLLM 部署配置
+4931a37 添加 Continuous Batching 调度模拟说明文档
+f159ccb 添加 Continuous Batching 调度模拟脚本
+1e5c8c9 添加 vLLM benchmark 报告模板
+===== python =====
+Python 3.11.10
+===== torch cuda probe =====
+torch: 2.11.0+cu130
+cuda available: True
+gpu count: 2
+0 NVIDIA A100-SXM4-80GB
+1 NVIDIA A100-SXM4-80GB
+===== nvidia-smi =====
+Fri May  8 10:24:13 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:47:00.0 Off |                    0 |
+| N/A   29C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:4E:00.0 Off |                    0 |
+| N/A   32C    P0             70W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+===== disk =====
+Filesystem                         Size  Used Avail Use% Mounted on
+overlay                             80G  2.6G   78G   4% /
+tmpfs                               64M     0   64M   0% /dev
+mfs#us-md-1.runpod.net:9421        334T  211T  124T  64% /workspace
+shm                                233G     0  233G   0% /dev/shm
+/dev/mapper/ubuntu--vg-ubuntu--lv  1.8T   22G  1.7T   2% /usr/bin/nvidia-smi
+/dev/mapper/vg_data-lv_data         28T  2.1T   26T   8% /etc/hosts
+tmpfs                              201G   11M  201G   1% /run/nvidia-persistenced/socket
+tmpfs                              4.0K  4.0K     0 100% /run/nvidia-ctk-hookd85c5e11-4479-48b8-9b64-c9a15f2fbbad
+tmpfs                             1002G     0 1002G   0% /proc/acpi
+tmpfs                             1002G     0 1002G   0% /proc/scsi
+tmpfs                             1002G     0 1002G   0% /sys/devices/virtual/powercap
+tmpfs                             1002G     0 1002G   0% /sys/firmware

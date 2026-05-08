@@ -1,0 +1,13 @@
+{
+  "response": "<seed:think>\n用户现在需要我用三句话解释大模型推理，然后说明为什么vLLM适合做推理服务。首先得明确“大模型推理”的定义，应该是输入prompt后，模型生成输出的过程吧？得抓住核心：模型根据输入产生响应，可能涉及计算过程。\n<seed:cot_budget_reflect>I have used 129 tokens, and there are 383 tokens remaining for use.</seed:cot_budget_reflect>\n然后三句话，得简洁，不能太复杂。第一句可能讲什么是推理，比如大模型推理是输入文本/指令后，模型通过计算生成输出的过程？第二",
+  "latency_seconds": 3.361803,
+  "input_chars": 36,
+  "max_new_tokens": 128,
+  "thinking_budget": 512,
+  "backend": "vllm",
+  "input_tokens": 118,
+  "output_tokens": 128,
+  "tokens_per_second": 38.0748,
+  "model_name": "ByteDance-Seed/Seed-OSS-36B-Instruct",
+  "device": "vllm_server"
+}

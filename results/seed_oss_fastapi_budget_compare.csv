@@ -1,0 +1,61 @@
+case_id,prompt_id,thinking_budget,concurrency,status_code,ok,client_latency_seconds,server_latency_seconds,backend,model_name,device,input_chars,input_tokens,output_tokens,tokens_per_second,max_new_tokens,response,error
+1,llm_inference_cn,512,1,200,True,3.365549,3.36108,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,36,118,128,38.083,128,"<seed:think>
+用户现在需要我用三句话解释大模型推理，然后说明为什么vLLM适合做推理服务。首先得明确“大模型推理”的定义，应该是输入提示后，模型生成输出的过程，可能要提到从输入处理到输出生成的流程，比如token化、上下文窗口、生成策略这些关键词？
+<seed:cot_budget_reflect>I have used 130 tokens, and there are 382 tokens remaining for use.</seed:cot_budget_reflect>
+
+
+然后是vLLM适合的原因，得回忆vLLM的核心优化点，比如连续批处理（continuous batching）、Paged",
+2,llm_inference_cn,1024,1,200,True,3.353654,3.352414,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,36,120,128,38.1814,128,"<seed:think>
+用户现在需要我用三句话解释大模型推理，然后说明为什么vLLM适合做推理服务。首先得明确“大模型推理”的定义，得准确又简洁。大模型推理应该是指输入提示后，模型生成输出的过程吧？得强调从输入到输出的计算，可能还要提到预训练后的应用阶段？
+
+然后是三句话的要求，不能太长。第一句可能需要定义核心：大模型推理是预训练语言模型在接收到输入文本（如问题、提示）后，通过计算生成对应输出（如回答、文本）的过程",
+3,legal_summary_cn,512,1,200,True,3.349532,3.348517,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,52,125,128,38.2259,128,"<seed:think>
+用户现在需要总结这段法律文本的核心风险点，首先得拆解句子里的两个主要部分：第一个是甲方有权单方面修改服务价格，第二个是乙方不得提前解除合同，否则付违约金。首先看甲方修改价格的部分，这对乙方来说风险是啥？应该是价格变动的不确定性，乙方可能面临价格上涨的风险，而且是甲方单方面的，没有协商，乙方只能接受吗？
+<seed:cot_budget_reflect>I have used 134 tokens, and there are 378 tokens remaining for use.</seed:cot_budget_reflect>
+然后第二个点，乙方不能提前解除合同，否则要付",
+4,legal_summary_cn,1024,1,200,True,3.349628,3.348345,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,52,127,128,38.2278,128,"<seed:think>
+用户现在需要总结这段法律文本的核心风险点，首先得拆解句子里的两个主要部分：第一个是甲方有权单方面修改服务价格，第二个是乙方不得提前解除合同，否则付违约金。首先看甲方的权利，单方面修改价格意味着乙方可能面临价格上涨的风险，没有协商的空间，可能增加成本。然后是乙方的限制，不得提前解除，而且解除要付违约金，这对乙方来说是合同解除的限制，一旦乙方想提前终止，就要承担违约责任，可能损失较大。
+<seed:cot_budget_reflect>I have used 257 tokens, and there are 7",
+5,kv_cache_en,512,1,200,True,3.346815,3.345335,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,92,119,128,38.2622,128,"<seed:think>
+Got it, let's tackle explaining KV Cache in LLM inference. First, I need to remember what KV Cache is—probably Key and Value cache from the attention mechanism. Right, in transformers, especially autoregressive models like LLMs, each layer has self-attention (and maybe cross-attention) that computes keys (K) and values (V) for each token. 
+
+So, during inference, when generating tokens one by one, the model processes the current input tokens plus the previously generated ones.
+<seed:cot_budget_reflect>I have used 128 tokens, and there are 384 tokens remaining for",
+6,kv_cache_en,1024,1,200,True,3.350409,3.349071,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,92,121,128,38.2196,128,"<seed:think>
+Got it, let's tackle explaining KV Cache in LLM inference. First, I need to remember what KV Cache is—from what I recall, it's about storing key and value tensors during autoregressive generation to avoid recomputing them. The user wants focus on latency, memory usage, and long-context serving, so I need to structure each of those points clearly.
+
+First, maybe start with a quick recap of how LLMs generate text autoregressively. Normally, for each token in the output, you process all previous tokens (including the input and generated ones) through the attention layers. The attention",
+7,seed_oss_planning_cn,512,1,200,True,3.346786,3.345111,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,53,127,128,38.2648,128,"<seed:think>
+用户现在需要从AI推理工程角度解释部署36B大模型时为什么需要多GPU、KV Cache管理和性能压测，这三个点得分别展开吧。首先得回忆一下大模型推理的核心挑战，比如显存限制、延迟和吞吐量、显存占用这些。首先多GPU，36B参数的模型，每个参数用float16的话，参数大小是36B*2字节=72GB，单GPU显存肯定不够，现在主流GPU比如A100是80GB，但可能还有其他开销，比如优化器状态？
+<seed:cot_budget_reflect>I",
+8,seed_oss_planning_cn,1024,1,200,True,3.349758,3.347948,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,53,129,128,38.2324,128,"<seed:think>
+用户现在需要从AI推理工程角度解释部署36B大模型时为什么需要多GPU、KV Cache管理和性能压测这三个点。首先得先回忆一下大模型推理的基本情况，36B参数的模型，现在主流GPU的显存比如A100是80G或者40G，单卡能不能装下？应该是不行的吧，比如36B的模型用float16的话，参数是36B*2字节=72GB，那80G的A100可能刚够，但推理的时候不止参数，",
+9,llm_inference_cn,512,1,200,True,3.348022,3.346365,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,36,118,128,38.2505,128,"<seed:think>
+用户现在需要我用三句话解释大模型推理，然后说明为什么vLLM适合做推理服务。首先得明确“大模型推理”的定义，应该包括输入处理、模型计算、输出生成这几个核心步骤吧？得简洁，三句话，所以每句要抓重点。
+<seed:cot_budget_reflect>I have used 130 tokens, and there are 382 tokens remaining for use.</seed:cot_budget_reflect>
+
+
+首先第一句，大模型推理应该是指输入用户查询后，模型进行处理并生成响应的过程？可能需要更准确，比如“大模型推理是将用户输入",
+10,llm_inference_cn,1024,1,200,True,3.347162,3.345468,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,36,120,128,38.2607,128,"<seed:think>
+用户现在需要我用三句话解释大模型推理，然后说明为什么vLLM适合做推理服务。首先得明确“大模型推理”的定义，得准确又简洁。大模型推理应该是指输入提示后，模型生成输出的过程吧？可能需要提到从输入到输出的计算流程，比如token处理、上下文窗口、生成策略这些关键词？
+
+首先第一句，大模型推理的核心动作，应该是输入文本转化为token，然后模型根据上下文和参数计算，逐步生成输出的过程？比如“大模型推理是指将用户输入的文本转化",
+11,legal_summary_cn,512,1,200,True,3.34741,3.345815,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,52,125,128,38.2567,128,"<seed:think>
+用户现在需要总结这段法律文本的核心风险点，首先得拆解句子里的两个主要部分：第一个是甲方有权单方面修改服务价格，第二个是乙方不得提前解除合同否则付违约金。首先看甲方的权利，单方面修改价格意味着乙方可能面临价格上涨的风险，没有协商的空间，这是对乙方成本的不确定性风险。
+<seed:cot_budget_reflect>I have used 129 tokens, and there are 383 tokens remaining for use.</seed:cot_budget_reflect>
+然后是乙方的义务，不得提前解除，否则违约金，这是乙方的合同解除限制风险，就是乙方如果想提前",
+12,legal_summary_cn,1024,1,200,True,3.348529,3.347086,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,52,127,128,38.2422,128,"<seed:think>
+用户现在需要总结这段法律文本的核心风险点，首先得拆解句子里的两个主要部分：第一个是甲方有权单方面修改服务价格，第二个是乙方不得提前解除合同否则付违约金。首先看甲方修改价格的部分，这对乙方来说风险是啥？应该是价格变动的不确定性，乙方可能面临价格上涨的风险，而且是甲方单方面就能改，没说协商或者提前通知吗？原文没提通知，所以可能连知情权都没保障，乙方只能被动接受，成本可能增加。然后第二个部分，乙方不能提前解除合同，否则付违约金，这就是",
+13,kv_cache_en,512,1,200,True,3.348416,3.346886,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,92,119,128,38.2445,128,"<seed:think>
+Got it, let's tackle explaining KV Cache in LLM inference. First, I need to remember what KV Cache is—from what I recall, it's about caching key and value tensors during autoregressive generation. The user wants focus on latency, memory usage, and long-context serving, so I should structure each of those points clearly.
+
+First, maybe start with a quick recap of how LLMs generate text autoregressively: each token is generated by attending to previous tokens, so for each step, the model computes queries (Q), keys (K), values (V) for the current layer, then",
+14,kv_cache_en,1024,1,200,True,3.350444,3.349329,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,92,121,128,38.2166,128,"<seed:think>
+Got it, let's tackle explaining KV Cache in LLM inference. First, I need to remember what KV Cache is—from what I recall, it's about caching key and value tensors during autoregressive generation. The user wants focus on latency, memory usage, and long-context serving, so I should structure each of those points clearly.
+
+First, maybe start with a quick recap of how LLMs generate text autoregressively. Normally, for each new token, you compute the attention over all previous tokens, which means re-computing keys and values for every step. That's inefficient. KV Cache",
+15,seed_oss_planning_cn,512,1,200,True,3.344943,3.344133,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,53,127,128,38.276,128,"<seed:think>
+用户现在需要从AI推理工程角度解释部署36B大模型时为什么需要多GPU、KV Cache管理和性能压测，这三个点得分别展开对吧？首先得回忆一下大模型推理的核心挑战，比如显存限制、延迟和吞吐量、成本这些。首先多GPU，36B模型本身参数量大，单卡显存肯定不够，比如现在A100是80G或者40G，36B的模型权重用FP16的话大概是多少？
+<seed:cot_budget_reflect>I have used 129 tokens, and there are 383",
+16,seed_oss_planning_cn,1024,1,200,True,3.344918,3.343496,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,53,129,128,38.2833,128,"<seed:think>
+用户现在需要从AI推理工程角度解释部署36B大模型时为什么需要多GPU、KV Cache管理和性能压测这三个点。首先得先回忆一下大模型推理的基本情况，36B参数的模型，现在的GPU显存比如A100是80G或者40G，单卡能不能装下？可能得先算一下模型的显存占用，比如FP16的话，每个参数是2字节，36B就是72G，那如果是A100 80G的话，可能刚好，但还要算上",

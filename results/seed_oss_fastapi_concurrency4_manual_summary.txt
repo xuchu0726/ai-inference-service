@@ -1,0 +1,26 @@
+Seed-OSS-36B-Instruct FastAPI + vLLM concurrency=4 benchmark manual summary
+
+Run status:
+- Total requests planned: 8
+- Successful request lines observed: 8
+- Failed HTTP requests observed: 0
+- All observed requests returned status=200
+- CSV write failed after benchmark completion due to OSError: [Errno 5] Input/output error
+- This is treated as an artifact-write failure, not an inference-service failure.
+
+Observed request latencies:
+case_id=3 latency=3.403984 tokens/s=37.6728
+case_id=1 latency=3.406035 tokens/s=37.6564
+case_id=2 latency=3.430081 tokens/s=37.3912
+case_id=4 latency=3.428993 tokens/s=37.3984
+case_id=5 latency=3.399905 tokens/s=37.6765
+case_id=6 latency=3.400071 tokens/s=37.6750
+case_id=8 latency=3.399341 tokens/s=37.7657
+case_id=7 latency=3.400377 tokens/s=37.7586
+
+Manual interpretation:
+- concurrency=4 was handled successfully by the service.
+- Latency remained around 3.40s per request.
+- Per-request generation throughput remained around 37.4-37.8 tokens/s.
+- Compared with concurrency=1/2, latency degradation was small.
+- Evidence should cite the log file rather than the missing CSV.

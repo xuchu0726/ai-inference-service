@@ -1,0 +1,56 @@
+===== files =====
+logs/install_vllm.log
+logs/runpod_env_probe.txt
+logs/runpod_vllm_probe.txt
+logs/seed_oss_after_chat_smoke_256_nvidia_smi.txt
+logs/seed_oss_after_fastapi_smoke_nvidia_smi.txt
+logs/seed_oss_after_vllm_ready_nvidia_smi.txt
+logs/seed_oss_artifact_inventory.txt
+logs/seed_oss_artifact_inventory_final.txt
+logs/seed_oss_budget_compare_summary.txt
+logs/seed_oss_e2e_success_evidence.txt
+logs/seed_oss_fastapi_benchmark_3req.log
+logs/seed_oss_fastapi_benchmark_summary.txt
+logs/seed_oss_fastapi_budget_compare.log
+logs/seed_oss_fastapi_launch.log
+logs/seed_oss_vllm_launch.log
+logs/seed_oss_vllm_launch_port8002.log
+results/cloud_smoke_test_response.json
+results/seed_oss_fastapi_benchmark_3req.csv
+results/seed_oss_fastapi_budget_compare.csv
+results/seed_oss_fastapi_health.json
+results/seed_oss_fastapi_smoke_test.txt
+results/seed_oss_vllm_chat_smoke.json
+results/seed_oss_vllm_chat_smoke_256.json
+results/seed_oss_vllm_models.json
+
+===== file sizes =====
+logs:
+total 152K
+-rw-rw-rw- 1 root root  52K May  8 10:40 install_vllm.log
+-rw-rw-rw- 1 root root 3.6K May  8 10:24 runpod_env_probe.txt
+-rw-rw-rw- 1 root root 3.2K May  8 10:42 runpod_vllm_probe.txt
+-rw-rw-rw- 1 root root 2.1K May  8 11:06 seed_oss_after_chat_smoke_256_nvidia_smi.txt
+-rw-rw-rw- 1 root root 2.1K May  8 11:13 seed_oss_after_fastapi_smoke_nvidia_smi.txt
+-rw-rw-rw- 1 root root 2.1K May  8 11:05 seed_oss_after_vllm_ready_nvidia_smi.txt
+-rw-rw-rw- 1 root root 2.3K May  8 11:18 seed_oss_artifact_inventory.txt
+-rw-rw-rw- 1 root root  968 May  8 11:22 seed_oss_artifact_inventory_final.txt
+-rw-rw-rw- 1 root root  16K May  8 11:21 seed_oss_budget_compare_summary.txt
+-rw-rw-rw- 1 root root 5.1K May  8 11:14 seed_oss_e2e_success_evidence.txt
+-rw-rw-rw- 1 root root 1.6K May  8 11:15 seed_oss_fastapi_benchmark_3req.log
+-rw-rw-rw- 1 root root  13K May  8 11:18 seed_oss_fastapi_benchmark_summary.txt
+-rw-rw-rw- 1 root root 1.9K May  8 11:20 seed_oss_fastapi_budget_compare.log
+-rw-rw-rw- 1 root root 2.2K May  8 11:20 seed_oss_fastapi_launch.log
+-rw-rw-rw- 1 root root 6.3K May  8 10:43 seed_oss_vllm_launch.log
+-rw-rw-rw- 1 root root  35K May  8 11:21 seed_oss_vllm_launch_port8002.log
+
+results:
+total 28K
+-rw-rw-rw- 1 root root  910 May  8 11:13 cloud_smoke_test_response.json
+-rw-rw-rw- 1 root root 8.8K May  8 11:15 seed_oss_fastapi_benchmark_3req.csv
+-rw-rw-rw- 1 root root  12K May  8 11:20 seed_oss_fastapi_budget_compare.csv
+-rw-rw-rw- 1 root root   15 May  8 11:13 seed_oss_fastapi_health.json
+-rw-rw-rw- 1 root root  956 May  8 11:13 seed_oss_fastapi_smoke_test.txt
+-rw-rw-rw- 1 root root 1.3K May  8 11:05 seed_oss_vllm_chat_smoke.json
+-rw-rw-rw- 1 root root 1.9K May  8 11:06 seed_oss_vllm_chat_smoke_256.json
+-rw-rw-rw- 1 root root  522 May  8 11:04 seed_oss_vllm_models.json

@@ -1,0 +1,374 @@
+===== date =====
+Fri May  8 11:53:10 UTC 2026
+
+===== git status =====
+M  app/main.py
+
+===== services =====
+LISTEN 0      2048         0.0.0.0:8002       0.0.0.0:*    users:(("vllm",pid=1941,fd=26))            
+LISTEN 0      2048         0.0.0.0:8000       0.0.0.0:*    users:(("python",pid=4398,fd=11))          
+LISTEN 0      4096               *:8003             *:*    users:(("VLLM::Worker_TP",pid=2633,fd=63)) 
+
+===== gpu =====
+Fri May  8 11:53:11 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:47:00.0 Off |                    0 |
+| N/A   30C    P0             73W /  400W |   75797MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:4E:00.0 Off |                    0 |
+| N/A   34C    P0             83W /  400W |   75797MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            2633      C   VLLM::Worker_TP0                      75788MiB |
+|    1   N/A  N/A            2634      C   VLLM::Worker_TP1                      75788MiB |
++-----------------------------------------------------------------------------------------+
+
+===== benchmark: concurrency 1 =====
+thinking_budgets: [512]
+total_requests: 12
+case_id=1 ok=True status=200 latency=3.364391 backend=vllm tokens/s=38.0967
+case_id=2 ok=True status=200 latency=3.353497 backend=vllm tokens/s=38.1917
+case_id=3 ok=True status=200 latency=3.352901 backend=vllm tokens/s=38.1975
+case_id=4 ok=True status=200 latency=3.349532 backend=vllm tokens/s=38.2354
+case_id=5 ok=True status=200 latency=3.348647 backend=vllm tokens/s=38.2453
+case_id=6 ok=True status=200 latency=3.347853 backend=vllm tokens/s=38.2531
+case_id=7 ok=True status=200 latency=3.34713 backend=vllm tokens/s=38.2553
+case_id=8 ok=True status=200 latency=3.347103 backend=vllm tokens/s=38.2553
+case_id=9 ok=True status=200 latency=3.346969 backend=vllm tokens/s=38.2619
+case_id=10 ok=True status=200 latency=3.347706 backend=vllm tokens/s=38.2485
+case_id=11 ok=True status=200 latency=3.348663 backend=vllm tokens/s=38.2386
+case_id=12 ok=True status=200 latency=3.345827 backend=vllm tokens/s=38.2693
+
+saved_csv: results/seed_oss_fastapi_benchmark_3req.csv
+===== VLLM BACKEND BENCHMARK SUMMARY =====
+total_requests: 12
+successful_requests: 12
+failed_requests: 0
+error_rate: 0.0
+client_latency_avg: 3.350018
+client_latency_p50: 3.34825
+client_latency_p95: 3.358399
+tokens_per_second_avg: 38.22905
+tokens_per_second_p50: 38.2469
+tokens_per_second_p95: 38.26523
+
+Note: this benchmark calls the non-streaming /generate API.
+TTFT requires a streaming endpoint and will be implemented separately.
+
+===== benchmark: budget compare =====
+case_id=3 ok=True status=200 latency=3.349532 backend=vllm tokens/s=38.2259
+case_id=4 ok=True status=200 latency=3.349628 backend=vllm tokens/s=38.2278
+case_id=5 ok=True status=200 latency=3.346815 backend=vllm tokens/s=38.2622
+case_id=6 ok=True status=200 latency=3.350409 backend=vllm tokens/s=38.2196
+case_id=7 ok=True status=200 latency=3.346786 backend=vllm tokens/s=38.2648
+case_id=8 ok=True status=200 latency=3.349758 backend=vllm tokens/s=38.2324
+case_id=9 ok=True status=200 latency=3.348022 backend=vllm tokens/s=38.2505
+case_id=10 ok=True status=200 latency=3.347162 backend=vllm tokens/s=38.2607
+case_id=11 ok=True status=200 latency=3.34741 backend=vllm tokens/s=38.2567
+case_id=12 ok=True status=200 latency=3.348529 backend=vllm tokens/s=38.2422
+case_id=13 ok=True status=200 latency=3.348416 backend=vllm tokens/s=38.2445
+case_id=14 ok=True status=200 latency=3.350444 backend=vllm tokens/s=38.2166
+case_id=15 ok=True status=200 latency=3.344943 backend=vllm tokens/s=38.276
+case_id=16 ok=True status=200 latency=3.344918 backend=vllm tokens/s=38.2833
+
+saved_csv: results/seed_oss_fastapi_budget_compare.csv
+===== VLLM BACKEND BENCHMARK SUMMARY =====
+total_requests: 16
+successful_requests: 16
+failed_requests: 0
+error_rate: 0.0
+client_latency_avg: 3.349498
+client_latency_p50: 3.348472
+client_latency_p95: 3.356628
+tokens_per_second_avg: 38.232975
+tokens_per_second_p50: 38.24335
+tokens_per_second_p95: 38.277825
+
+Note: this benchmark calls the non-streaming /generate API.
+TTFT requires a streaming endpoint and will be implemented separately.
+
+===== benchmark: concurrency 2 =====
+concurrency: 2
+repeat: 2
+max_new_tokens: 128
+temperature: 0.7
+thinking_budgets: [512]
+total_requests: 8
+case_id=2 ok=True status=200 latency=3.390037 backend=vllm tokens/s=37.8159
+case_id=1 ok=True status=200 latency=3.391462 backend=vllm tokens/s=37.8159
+case_id=3 ok=True status=200 latency=3.352464 backend=vllm tokens/s=38.2013
+case_id=4 ok=True status=200 latency=3.352705 backend=vllm tokens/s=38.1994
+case_id=6 ok=True status=200 latency=3.351992 backend=vllm tokens/s=38.2049
+case_id=5 ok=True status=200 latency=3.377846 backend=vllm tokens/s=37.9131
+case_id=7 ok=True status=200 latency=3.369359 backend=vllm tokens/s=38.0108
+case_id=8 ok=True status=200 latency=3.370429 backend=vllm tokens/s=37.9909
+
+saved_csv: results/seed_oss_fastapi_concurrency2.csv
+===== VLLM BACKEND BENCHMARK SUMMARY =====
+total_requests: 8
+successful_requests: 8
+failed_requests: 0
+error_rate: 0.0
+client_latency_avg: 3.369537
+client_latency_p50: 3.369894
+client_latency_p95: 3.390963
+tokens_per_second_avg: 38.019025
+tokens_per_second_p50: 38.00085
+tokens_per_second_p95: 38.20364
+
+Note: this benchmark calls the non-streaming /generate API.
+TTFT requires a streaming endpoint and will be implemented separately.
+
+===== benchmark: concurrency 4 retry =====
+===== BENCHMARK CONFIG =====
+url: http://127.0.0.1:8000/generate
+output: /tmp/seed_oss_fastapi_concurrency4_retry.csv
+concurrency: 4
+repeat: 2
+max_new_tokens: 128
+temperature: 0.7
+thinking_budgets: [512]
+total_requests: 8
+case_id=1 ok=True status=200 latency=3.407509 backend=vllm tokens/s=37.6536
+case_id=3 ok=True status=200 latency=3.40594 backend=vllm tokens/s=37.668
+case_id=4 ok=True status=200 latency=3.428756 backend=vllm tokens/s=37.3912
+case_id=2 ok=True status=200 latency=3.430701 backend=vllm tokens/s=37.3924
+case_id=5 ok=True status=200 latency=3.400045 backend=vllm tokens/s=37.6773
+case_id=6 ok=True status=200 latency=3.399796 backend=vllm tokens/s=37.6761
+case_id=7 ok=True status=200 latency=3.401883 backend=vllm tokens/s=37.6514
+case_id=8 ok=True status=200 latency=3.401346 backend=vllm tokens/s=37.6494
+
+saved_csv: /tmp/seed_oss_fastapi_concurrency4_retry.csv
+===== VLLM BACKEND BENCHMARK SUMMARY =====
+total_requests: 8
+successful_requests: 8
+failed_requests: 0
+error_rate: 0.0
+client_latency_avg: 3.409497
+client_latency_p50: 3.403912
+client_latency_p95: 3.43002
+tokens_per_second_avg: 37.594925
+tokens_per_second_p50: 37.6525
+tokens_per_second_p95: 37.67688
+
+Note: this benchmark calls the non-streaming /generate API.
+TTFT requires a streaming endpoint and will be implemented separately.
+
+===== metrics: FastAPI =====
+# HELP http_requests_total Total number of requests by method, status and handler.
+# TYPE http_requests_total counter
+http_requests_total{handler="/health",method="GET",status="2xx"} 1.0
+http_requests_total{handler="/metrics",method="GET",status="2xx"} 1.0
+http_requests_total{handler="/generate",method="POST",status="2xx"} 1.0
+http_requests_created{handler="/health",method="GET",status="2xx"} 1.7782400332582848e+09
+http_requests_created{handler="/generate",method="POST",status="2xx"} 1.7782401011692526e+09
+http_request_size_bytes_count{handler="/health"} 1.0
+http_request_size_bytes_sum{handler="/health"} 0.0
+http_request_size_bytes_count{handler="/generate"} 1.0
+http_request_size_bytes_sum{handler="/generate"} 267.0
+http_request_size_bytes_created{handler="/health"} 1.7782400332583191e+09
+http_request_size_bytes_created{handler="/generate"} 1.7782401011692731e+09
+http_response_size_bytes_count{handler="/health"} 1.0
+http_response_size_bytes_sum{handler="/health"} 15.0
+http_response_size_bytes_count{handler="/generate"} 1.0
+http_response_size_bytes_sum{handler="/generate"} 870.0
+http_response_size_bytes_created{handler="/health"} 1.7782400332583551e+09
+http_response_size_bytes_created{handler="/generate"} 1.7782401011692936e+09
+# HELP http_request_duration_highr_seconds Latency with many buckets but no API specific labels. Made for more accurate percentile calculations. 
+# TYPE http_request_duration_highr_seconds histogram
+http_request_duration_highr_seconds_bucket{le="0.01"} 1.0
+http_request_duration_highr_seconds_bucket{le="0.025"} 2.0
+http_request_duration_highr_seconds_bucket{le="0.05"} 2.0
+http_request_duration_highr_seconds_bucket{le="0.075"} 2.0
+http_request_duration_highr_seconds_bucket{le="0.1"} 2.0
+http_request_duration_highr_seconds_bucket{le="0.25"} 2.0
+http_request_duration_highr_seconds_bucket{le="0.5"} 2.0
+http_request_duration_highr_seconds_bucket{le="0.75"} 2.0
+http_request_duration_highr_seconds_bucket{le="1.0"} 2.0
+http_request_duration_highr_seconds_bucket{le="1.5"} 2.0
+http_request_duration_highr_seconds_bucket{le="2.0"} 2.0
+http_request_duration_highr_seconds_bucket{le="2.5"} 2.0
+http_request_duration_highr_seconds_bucket{le="3.0"} 2.0
+http_request_duration_highr_seconds_bucket{le="3.5"} 3.0
+http_request_duration_highr_seconds_bucket{le="4.0"} 3.0
+http_request_duration_highr_seconds_bucket{le="4.5"} 3.0
+http_request_duration_highr_seconds_bucket{le="5.0"} 3.0
+http_request_duration_highr_seconds_bucket{le="7.5"} 3.0
+http_request_duration_highr_seconds_bucket{le="10.0"} 3.0
+http_request_duration_highr_seconds_bucket{le="30.0"} 3.0
+http_request_duration_highr_seconds_bucket{le="60.0"} 3.0
+http_request_duration_highr_seconds_bucket{le="+Inf"} 3.0
+http_request_duration_highr_seconds_count 3.0
+http_request_duration_highr_seconds_sum 3.3774629356339574
+# HELP http_request_duration_highr_seconds_created Latency with many buckets but no API specific labels. Made for more accurate percentile calculations. 
+# TYPE http_request_duration_highr_seconds_created gauge
+http_request_duration_highr_seconds_created 1.7782399603549392e+09
+# HELP http_request_duration_seconds Latency with only few buckets by handler. Made to be only used if aggregation by handler is important. 
+# TYPE http_request_duration_seconds histogram
+http_request_duration_seconds_bucket{handler="/health",le="0.1",method="GET"} 1.0
+http_request_duration_seconds_bucket{handler="/health",le="0.5",method="GET"} 1.0
+http_request_duration_seconds_bucket{handler="/health",le="1.0",method="GET"} 1.0
+http_request_duration_seconds_bucket{handler="/health",le="+Inf",method="GET"} 1.0
+http_request_duration_seconds_count{handler="/health",method="GET"} 1.0
+http_request_duration_seconds_sum{handler="/health",method="GET"} 0.01011151634156704
+http_request_duration_seconds_bucket{handler="/metrics",le="0.1",method="GET"} 1.0
+http_request_duration_seconds_bucket{handler="/metrics",le="0.5",method="GET"} 1.0
+http_request_duration_seconds_bucket{handler="/metrics",le="1.0",method="GET"} 1.0
+http_request_duration_seconds_bucket{handler="/metrics",le="+Inf",method="GET"} 1.0
+http_request_duration_seconds_count{handler="/metrics",method="GET"} 1.0
+http_request_duration_seconds_sum{handler="/metrics",method="GET"} 0.0030023157596588135
+http_request_duration_seconds_bucket{handler="/generate",le="0.1",method="POST"} 0.0
+http_request_duration_seconds_bucket{handler="/generate",le="0.5",method="POST"} 0.0
+http_request_duration_seconds_bucket{handler="/generate",le="1.0",method="POST"} 0.0
+http_request_duration_seconds_bucket{handler="/generate",le="+Inf",method="POST"} 1.0
+http_request_duration_seconds_count{handler="/generate",method="POST"} 1.0
+http_request_duration_seconds_sum{handler="/generate",method="POST"} 3.3643491035327315
+# HELP http_request_duration_seconds_created Latency with only few buckets by handler. Made to be only used if aggregation by handler is important. 
+# TYPE http_request_duration_seconds_created gauge
+http_request_duration_seconds_created{handler="/health",method="GET"} 1.7782400332583828e+09
+http_request_duration_seconds_created{handler="/metrics",method="GET"} 1.7782400332712848e+09
+http_request_duration_seconds_created{handler="/generate",method="POST"} 1.778240101169328e+09
+
+===== metrics: vLLM =====
+# HELP python_gc_objects_collected_total Objects collected during gc
+# TYPE python_gc_objects_collected_total counter
+python_gc_objects_collected_total{generation="0"} 12263.0
+python_gc_objects_collected_total{generation="1"} 2202.0
+python_gc_objects_collected_total{generation="2"} 884.0
+# HELP python_gc_objects_uncollectable_total Uncollectable objects found during GC
+# TYPE python_gc_objects_uncollectable_total counter
+python_gc_objects_uncollectable_total{generation="0"} 0.0
+python_gc_objects_uncollectable_total{generation="1"} 0.0
+python_gc_objects_uncollectable_total{generation="2"} 0.0
+# HELP python_gc_collections_total Number of times this generation was collected
+# TYPE python_gc_collections_total counter
+python_gc_collections_total{generation="0"} 1658.0
+python_gc_collections_total{generation="1"} 150.0
+python_gc_collections_total{generation="2"} 11.0
+# HELP python_info Python platform information
+# TYPE python_info gauge
+python_info{implementation="CPython",major="3",minor="11",patchlevel="10",version="3.11.10"} 1.0
+# HELP process_virtual_memory_bytes Virtual memory size in bytes.
+# TYPE process_virtual_memory_bytes gauge
+process_virtual_memory_bytes 3.4371018752e+010
+# HELP process_resident_memory_bytes Resident memory size in bytes.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes 1.144520704e+09
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds 1.77823733844e+09
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total 25.82
+# HELP process_open_fds Number of open file descriptors.
+# TYPE process_open_fds gauge
+process_open_fds 51.0
+# HELP process_max_fds Maximum number of open file descriptors.
+# TYPE process_max_fds gauge
+process_max_fds 65535.0
+# HELP vllm:num_requests_running Number of requests in model execution batches.
+# TYPE vllm:num_requests_running gauge
+vllm:num_requests_running{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:num_requests_waiting Number of requests waiting to be processed.
+# TYPE vllm:num_requests_waiting gauge
+vllm:num_requests_waiting{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:engine_sleep_state Engine sleep state; awake = 0 means engine is sleeping; awake = 1 means engine is awake; weights_offloaded = 1 means sleep level 1; discard_all = 1 means sleep level 2.
+# TYPE vllm:engine_sleep_state gauge
+vllm:engine_sleep_state{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct",sleep_state="awake"} 1.0
+vllm:engine_sleep_state{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct",sleep_state="weights_offloaded"} 0.0
+vllm:engine_sleep_state{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct",sleep_state="discard_all"} 0.0
+# HELP vllm:kv_cache_usage_perc KV-cache usage. 1 means 100 percent usage.
+# TYPE vllm:kv_cache_usage_perc gauge
+vllm:kv_cache_usage_perc{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:prefix_cache_queries_total Prefix cache queries, in terms of number of queried tokens.
+# TYPE vllm:prefix_cache_queries_total counter
+vllm:prefix_cache_queries_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 3773.0
+# HELP vllm:prefix_cache_queries_created Prefix cache queries, in terms of number of queried tokens.
+# TYPE vllm:prefix_cache_queries_created gauge
+vllm:prefix_cache_queries_created{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 1.778238171236285e+09
+# HELP vllm:prefix_cache_hits_total Prefix cache hits, in terms of number of cached tokens.
+# TYPE vllm:prefix_cache_hits_total counter
+vllm:prefix_cache_hits_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 3072.0
+# HELP vllm:prefix_cache_hits_created Prefix cache hits, in terms of number of cached tokens.
+# TYPE vllm:prefix_cache_hits_created gauge
+vllm:prefix_cache_hits_created{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 1.778238171236305e+09
+# HELP vllm:external_prefix_cache_queries_total External prefix cache queries from KV connector cross-instance cache sharing, in terms of number of queried tokens.
+# TYPE vllm:external_prefix_cache_queries_total counter
+vllm:external_prefix_cache_queries_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:external_prefix_cache_queries_created External prefix cache queries from KV connector cross-instance cache sharing, in terms of number of queried tokens.
+# TYPE vllm:external_prefix_cache_queries_created gauge
+vllm:external_prefix_cache_queries_created{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 1.7782381712363222e+09
+# HELP vllm:external_prefix_cache_hits_total External prefix cache hits from KV connector cross-instance cache sharing, in terms of number of cached tokens.
+# TYPE vllm:external_prefix_cache_hits_total counter
+vllm:external_prefix_cache_hits_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:external_prefix_cache_hits_created External prefix cache hits from KV connector cross-instance cache sharing, in terms of number of cached tokens.
+# TYPE vllm:external_prefix_cache_hits_created gauge
+vllm:external_prefix_cache_hits_created{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 1.7782381712363417e+09
+# HELP vllm:mm_cache_queries_total Multi-modal cache queries, in terms of number of queried items.
+# TYPE vllm:mm_cache_queries_total counter
+vllm:mm_cache_queries_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:mm_cache_queries_created Multi-modal cache queries, in terms of number of queried items.
+# TYPE vllm:mm_cache_queries_created gauge
+vllm:mm_cache_queries_created{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 1.7782381712363605e+09
+
+===== artifacts =====
+logs/install_vllm.log
+logs/runpod_env_probe.txt
+logs/runpod_vllm_probe.txt
+logs/seed_oss_after_chat_smoke_256_nvidia_smi.txt
+logs/seed_oss_after_fastapi_smoke_nvidia_smi.txt
+logs/seed_oss_after_long_legal_summary_nvidia_smi.txt
+logs/seed_oss_after_vllm_ready_nvidia_smi.txt
+logs/seed_oss_artifact_inventory.txt
+logs/seed_oss_artifact_inventory_final.txt
+logs/seed_oss_budget_compare_summary.txt
+logs/seed_oss_e2e_success_evidence.txt
+logs/seed_oss_fastapi_benchmark_3req.log
+logs/seed_oss_fastapi_benchmark_summary.txt
+logs/seed_oss_fastapi_budget_compare.log
+logs/seed_oss_fastapi_concurrency2.log
+logs/seed_oss_fastapi_concurrency4.log
+logs/seed_oss_fastapi_concurrency4_retry.log
+logs/seed_oss_fastapi_launch.log
+logs/seed_oss_fastapi_launch_with_metrics.log
+logs/seed_oss_vllm_launch.log
+logs/seed_oss_vllm_launch_port8002.log
+logs/seed_oss_week1_final_after_metrics_commit.txt
+logs/seed_oss_week1_final_inventory.txt
+logs/seed_oss_week1_final_plus_concurrency_evidence.txt
+logs/seed_oss_week1_metrics_final_evidence.txt
+results/cloud_smoke_test_response.json
+results/seed_oss_fastapi_benchmark_3req.csv
+results/seed_oss_fastapi_budget_compare.csv
+results/seed_oss_fastapi_concurrency2.csv
+results/seed_oss_fastapi_concurrency4.csv
+results/seed_oss_fastapi_concurrency4_manual_summary.txt
+results/seed_oss_fastapi_concurrency4_request_lines.txt
+results/seed_oss_fastapi_concurrency4_retry.csv
+results/seed_oss_fastapi_health.json
+results/seed_oss_fastapi_health_after_metrics.json
+results/seed_oss_fastapi_metrics_generate_head.txt
+results/seed_oss_fastapi_metrics_head.txt
+results/seed_oss_fastapi_metrics_head_after_enable.txt
+results/seed_oss_fastapi_openapi.json
+results/seed_oss_fastapi_smoke_test.txt
+results/seed_oss_fastapi_smoke_test_after_metrics.txt
+results/seed_oss_long_legal_summary_512.json
+results/seed_oss_vllm_chat_smoke.json
+results/seed_oss_vllm_chat_smoke_256.json
+results/seed_oss_vllm_metrics_head.txt
+results/seed_oss_vllm_models.json
+results/seed_oss_vllm_openapi_head.txt

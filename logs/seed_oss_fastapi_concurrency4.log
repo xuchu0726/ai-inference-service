@@ -1,0 +1,25 @@
+===== BENCHMARK CONFIG =====
+url: http://127.0.0.1:8000/generate
+output: results/seed_oss_fastapi_concurrency4.csv
+concurrency: 4
+repeat: 2
+max_new_tokens: 128
+temperature: 0.7
+thinking_budgets: [512]
+total_requests: 8
+case_id=3 ok=True status=200 latency=3.403984 backend=vllm tokens/s=37.6728
+case_id=1 ok=True status=200 latency=3.406035 backend=vllm tokens/s=37.6564
+case_id=2 ok=True status=200 latency=3.430081 backend=vllm tokens/s=37.3912
+case_id=4 ok=True status=200 latency=3.428993 backend=vllm tokens/s=37.3984
+case_id=5 ok=True status=200 latency=3.399905 backend=vllm tokens/s=37.6765
+case_id=6 ok=True status=200 latency=3.400071 backend=vllm tokens/s=37.675
+case_id=8 ok=True status=200 latency=3.399341 backend=vllm tokens/s=37.7657
+case_id=7 ok=True status=200 latency=3.400377 backend=vllm tokens/s=37.7586
+Traceback (most recent call last):
+  File "/workspace/ai-inference-service/scripts/benchmark_vllm_backend.py", line 311, in <module>
+    main()
+  File "/workspace/ai-inference-service/scripts/benchmark_vllm_backend.py", line 303, in main
+    write_csv(output_path, rows)
+  File "/workspace/ai-inference-service/scripts/benchmark_vllm_backend.py", line 175, in write_csv
+    with path.open("w", newline="", encoding="utf-8") as f:
+OSError: [Errno 5] Input/output error

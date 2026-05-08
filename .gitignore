@@ -1,35 +1,35 @@
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-.venv/
-venv/
-.venv-*/
-venvs/
-.env
-
-# Hugging Face / model cache
-
-hf_cache/
-
-.cache/
-
-models/
-
-# Logs and HPC outputs
-
-logs/
-
-*.o*
-
-*.e*
-
-*.pbs.*
-
-.DS_Store
-
-results/
-# Python cache
+# Python
 __pycache__/
 *.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+venvs/
+.venv/
+env/
+
+# Runtime / local cache
+hf_cache/
+.cache/
+workspace/
+runpod-volume/
+
+# Model weights / binary artifacts
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.gguf
+*.onnx
+*.engine
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Large temporary outputs
+tmp/
+*.tmp

@@ -1,0 +1,72 @@
+===== date =====
+Fri May  8 11:14:02 UTC 2026
+===== git =====
+eee1872 统一项目文档表述并补充 Seed-OSS 目标路线
+4262dc0 对齐 Seed-OSS-36B-Instruct 官方 vLLM 部署配置
+4931a37 添加 Continuous Batching 调度模拟说明文档
+f159ccb 添加 Continuous Batching 调度模拟脚本
+1e5c8c9 添加 vLLM benchmark 报告模板
+===== vllm models =====
+{"object":"list","data":[{"id":"ByteDance-Seed/Seed-OSS-36B-Instruct","object":"model","created":1778238282,"owned_by":"vllm","root":"ByteDance-Seed/Seed-OSS-36B-Instruct","parent":null,"max_model_len":4096,"permission":[{"id":"modelperm-fe3f990a17c54d508861c14c872a51b4","object":"model_permission","created":1778238282,"allow_create_engine":false,"allow_sampling":true,"allow_logprobs":true,"allow_search_indices":false,"allow_view":true,"allow_fine_tuning":false,"organization":"*","group":null,"is_blocking":false}]}]}
+===== fastapi health =====
+{"status":"ok"}
+===== fastapi smoke test =====
+status: 200
+client_latency_seconds: 3.372987
+{
+  "response": "<seed:think>\n用户现在需要我用三句话解释大模型推理，然后说明为什么vLLM适合做推理服务。首先得明确“大模型推理”的定义，应该是输入查询后，模型生成输出的过程，可能要提到从输入处理到输出生成的流程，比如 tokenization、前向计算、生成策略这些关键点，但得简洁，三句话，所以不能太细。\n<seed:cot_budget_reflect>I have used 128 tokens, and there are 384 tokens remaining for use.</seed:cot_budget_reflect>\n\n\n首先第一句，大模型推理是指将用户输入（如文本、图像等）",
+  "latency_seconds": 3.368632,
+  "input_chars": 36,
+  "max_new_tokens": 128,
+  "thinking_budget": 512,
+  "backend": "vllm",
+  "input_tokens": 118,
+  "output_tokens": 128,
+  "tokens_per_second": 37.9976,
+  "model_name": "ByteDance-Seed/Seed-OSS-36B-Instruct",
+  "device": "vllm_server"
+}
+
+===== nvidia-smi =====
+Fri May  8 11:14:02 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:47:00.0 Off |                    0 |
+| N/A   30C    P0             73W /  400W |   75797MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:4E:00.0 Off |                    0 |
+| N/A   33C    P0             82W /  400W |   75797MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            2633      C   VLLM::Worker_TP0                      75788MiB |
+|    1   N/A  N/A            2634      C   VLLM::Worker_TP1                      75788MiB |
++-----------------------------------------------------------------------------------------+
+===== disk =====
+Filesystem                         Size  Used Avail Use% Mounted on
+overlay                             80G  7.8G   73G  10% /
+tmpfs                               64M     0   64M   0% /dev
+mfs#us-md-1.runpod.net:9421        334T  212T  122T  64% /workspace
+shm                                233G  152K  233G   1% /dev/shm
+/dev/mapper/ubuntu--vg-ubuntu--lv  1.8T   23G  1.7T   2% /usr/bin/nvidia-smi
+/dev/mapper/vg_data-lv_data         28T  2.0T   26T   7% /etc/hosts
+tmpfs                              201G   11M  201G   1% /run/nvidia-persistenced/socket
+tmpfs                              4.0K  4.0K     0 100% /run/nvidia-ctk-hookd85c5e11-4479-48b8-9b64-c9a15f2fbbad
+tmpfs                             1002G     0 1002G   0% /proc/acpi
+tmpfs                             1002G     0 1002G   0% /proc/scsi
+tmpfs                             1002G     0 1002G   0% /sys/devices/virtual/powercap
+tmpfs                             1002G     0 1002G   0% /sys/firmware
+===== cache =====
+68G	/workspace/hf_cache
+7.8G	/root/.cache

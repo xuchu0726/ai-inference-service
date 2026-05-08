@@ -1,0 +1,33 @@
+===== BENCHMARK CONFIG =====
+url: http://127.0.0.1:8000/generate
+output: results/seed_oss_fastapi_concurrency2.csv
+concurrency: 2
+repeat: 2
+max_new_tokens: 128
+temperature: 0.7
+thinking_budgets: [512]
+total_requests: 8
+case_id=2 ok=True status=200 latency=3.390037 backend=vllm tokens/s=37.8159
+case_id=1 ok=True status=200 latency=3.391462 backend=vllm tokens/s=37.8159
+case_id=3 ok=True status=200 latency=3.352464 backend=vllm tokens/s=38.2013
+case_id=4 ok=True status=200 latency=3.352705 backend=vllm tokens/s=38.1994
+case_id=6 ok=True status=200 latency=3.351992 backend=vllm tokens/s=38.2049
+case_id=5 ok=True status=200 latency=3.377846 backend=vllm tokens/s=37.9131
+case_id=7 ok=True status=200 latency=3.369359 backend=vllm tokens/s=38.0108
+case_id=8 ok=True status=200 latency=3.370429 backend=vllm tokens/s=37.9909
+
+saved_csv: results/seed_oss_fastapi_concurrency2.csv
+===== VLLM BACKEND BENCHMARK SUMMARY =====
+total_requests: 8
+successful_requests: 8
+failed_requests: 0
+error_rate: 0.0
+client_latency_avg: 3.369537
+client_latency_p50: 3.369894
+client_latency_p95: 3.390963
+tokens_per_second_avg: 38.019025
+tokens_per_second_p50: 38.00085
+tokens_per_second_p95: 38.20364
+
+Note: this benchmark calls the non-streaming /generate API.
+TTFT requires a streaming endpoint and will be implemented separately.

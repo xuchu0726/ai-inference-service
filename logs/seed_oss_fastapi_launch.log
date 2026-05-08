@@ -1,0 +1,49 @@
+===== START FASTAPI WITH VLLM BACKEND =====
+INFERENCE_BACKEND=vllm
+MODEL_NAME=ByteDance-Seed/Seed-OSS-36B-Instruct
+VLLM_MODEL_NAME=ByteDance-Seed/Seed-OSS-36B-Instruct
+VLLM_BASE_URL=http://127.0.0.1:8002/v1
+HOST=0.0.0.0
+PORT=8000
+INFO:     Started server process [4143]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:52568 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52584 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33440 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47844 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47858 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47866 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54464 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54466 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54480 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42884 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42894 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42896 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52896 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52908 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41570 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41578 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41586 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48052 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48060 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48076 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41200 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41202 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41214 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39658 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39660 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39668 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53482 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53488 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53504 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60520 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49330 - "GET /metrics HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:35198 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59114 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [4143]
+Terminated
