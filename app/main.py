@@ -1,9 +1,12 @@
 from fastapi import FastAPI, HTTPException
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from app.schemas import GenerateRequest, GenerateResponse
 from app.inference import generate_text
 
 app = FastAPI(title="AI Inference Service", version="0.1.0")
+
+Instrumentator().instrument(app).expose(app)
 
 
 @app.get("/health")
