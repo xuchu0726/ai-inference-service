@@ -1,402 +1,777 @@
-# 第 1 周交付报告：GPU 环境验证、vLLM 接入与 Seed-OSS 部署准备
+# 第 1 周交付报告：Seed-OSS-36B 基础集成、推理服务封装与性能验证
 
-## CX3 说明
+## 1. 交付概述
 
-CX3 是 Imperial College London 的高性能计算集群，通过 PBS 作业系统申请 GPU/CPU/内存资源。本项目将 CX3 用作 GPU、CUDA、vLLM 和端到端推理链路验证平台；由于需要排队且运行结束后服务会释放，Seed-OSS-36B 的长期多卡部署和压测更适合迁移到云 GPU 平台。
+第 1 周围绕 Seed-OSS-36B-Instruct 的基础集成、服务化封装、推理预算控制、基础监控和初步性能验证展开。当前已完成从 FastAPI RESTful API、VLLMBackend、vLLM OpenAI-compatible Server 到 Seed-OSS-36B-Instruct GPU 推理的端到端链路。
 
----
+本周核心交付结果包括：
 
-## 1. 本周目标
+1. 完成 Seed-OSS-36B-Instruct 在 2×NVIDIA A100-SXM4-80GB GPU 环境下的模型加载与推理验证。
+2. 使用 vLLM 0.11.2 启动 Seed-OSS-36B-Instruct OpenAI-compatible 推理服务。
+3. 使用 Tensor Parallel Size = 2 完成 36B 模型双卡部署。
+4. 基于 FastAPI 封装 `/health`、`/generate` 和 `/metrics` 接口。
+5. 实现 FastAPI 到 vLLM `/v1/chat/completions` 的后端调用链路。
+6. 接入 Thinking Budget 参数，并验证 `thinking_budget=512` 与 `thinking_budget=1024` 两组配置。
+7. 完成长文本法律摘要场景验证。
+8. 完成 vLLM 与 FastAPI 两层 Prometheus 基础指标暴露。
+9. 完成顺序请求、不同预算对比、concurrency=2、concurrency=4 的初步性能测试。
+10. 记录并处理依赖安装、端口冲突、服务 readiness、FastAPI metrics 接入和文件系统 I/O 等问题。
+11. 保存模型启动日志、服务日志、benchmark CSV、OpenAPI schema、metrics 输出和 GPU 状态证据。
+12. 将代码变更与运行证据提交到代码仓库。
 
-本周目标是完成 AI 推理服务系统的基础环境搭建与服务化能力验证，为后续基于 Seed 系列模型的推理优化、长上下文测试、多卡部署和性能压测做准备。
-
-根据任务要求，本周重点包括：
-
-    1. 部署 GPU 推理环境
-    2. 验证 PyTorch / CUDA / vLLM 可用性
-    3. 构建 FastAPI RESTful 推理接口
-    4. 接入 Thinking Budget 参数链路
-    5. 初步验证真实模型推理能力
-    6. 记录模型加载、依赖冲突和环境问题
-    7. 输出环境配置文档、API 文档和初步性能测试记录
-
-本项目目标不是简单运行一个本地小模型，而是构建一个可迁移到云 GPU、可扩展到 Seed-OSS-36B / Seed-Coder / BAGEL 的大模型推理服务工程原型。
-
----
-
-## 2. 当前整体进展
-
-截至目前，项目已经完成以下工作：
-
-    1. 搭建 FastAPI 推理服务原型
-    2. 实现 /health 和 /generate API
-    3. 实现 MockBackend 与 TransformersBackend
-    4. 在本地 Apple M4 / MPS 环境下完成 Qwen2.5-0.5B-Instruct 真实模型推理
-    5. 实现 benchmark.py，记录 latency、tokens/s、input/output tokens
-    6. 实现 analyze_benchmark.py，统计 P50 / P95 / error rate
-    7. 在 Imperial CX3 上完成单卡 NVIDIA L40S GPU 验证
-    8. 在 CX3 上完成 2×L40S 多 GPU 可见性验证
-    9. 在 CX3 上创建 vLLM Python virtual environment
-    10. 成功安装并 import vLLM 0.11.2
-    11. 接入 VLLMBackend，实现 FastAPI 到 vLLM OpenAI-compatible API 的后端适配
-    12. 编写并提交 CX3 GPU / vLLM 环境验证文档
-    13. 编写并提交 requirements-vllm.txt
-    14. 已完成 FastAPI + VLLMBackend + vLLM server 的端到端链路验证
-
----
-
-## 3. GPU 环境验证
-
-### 3.1 单卡 L40S 验证
-
-在 CX3 GPU 队列中提交 GPU smoke test 作业，成功获得单卡 NVIDIA L40S。
-
-关键环境信息如下：
-
-    GPU: NVIDIA L40S
-    Driver Version: 580.82.07
-    nvidia-smi CUDA Version: 13.0
-    PyTorch CUDA Version: 12.1 / 12.8
-    torch.cuda.is_available(): True
-    PyTorch visible GPU memory: approximately 44.39 GB
-
-验证内容包括：
-
-    1. nvidia-smi 可用
-    2. Python 环境可用
-    3. PyTorch 可识别 GPU
-    4. torch.cuda.device_count() 返回 1
-    5. GPU tensor matmul 测试成功
-
-该结果证明 CX3 可作为本项目早期 GPU 环境验证和小模型推理服务测试平台。
-
-### 3.2 双卡 L40S 验证
-
-进一步提交 2GPU probe 作业，成功获得 2 张 NVIDIA L40S。
-
-关键结果：
-
-    GPU 0: NVIDIA L40S, visible memory approximately 44.39 GB
-    GPU 1: NVIDIA L40S, visible memory approximately 44.39 GB
-    Aggregate visible GPU memory: approximately 88.78 GB
-    torch.cuda.device_count(): 2
-    GPU 0 matmul OK
-    GPU 1 matmul OK
-
-该结果说明 CX3 可以支持单节点多 GPU 可见性验证，为后续 vLLM tensor parallel 实验提供基础条件。
-
-但由于队列等待时间不稳定，CX3 不适合作为长期多卡服务平台。后续 Seed-OSS-36B 正式部署和高并发压测应迁移到云 GPU 平台完成。
-
----
-
-## 4. Seed-OSS-36B 资源评估
-
-任务要求中提到需要加载 Seed-OSS-36B 并验证基础推理能力。经过资源评估，36B 级别模型在 BF16 / FP16 下仅模型权重大约需要：
-
-    36B parameters × 2 bytes ≈ 72 GB
-
-实际部署时还需要额外显存用于：
-
-    1. KV Cache
-    2. CUDA context
-    3. vLLM runtime overhead
-    4. temporary tensors
-    5. communication buffer
-    6. batch / concurrency memory
-    7. long-context prefill memory
-
-因此：
-
-    1. 单卡 L40S 不适合完整部署 Seed-OSS-36B
-    2. 2×L40S 可以尝试极短上下文 smoke test，但显存余量较小
-    3. 更稳妥方案是 2×A100 80GB、4×L40S、4×A100 或更高规格云 GPU
-    4. 512K 长上下文不适合在当前 CX3 单卡/双卡环境中完整验证
-
-基于以上判断，本项目采用两阶段路线：
-
-    CX3:
-        验证 GPU 环境、vLLM、FastAPI、VLLMBackend、benchmark 和监控链路
-
-    云 GPU:
-        部署 Seed-OSS-36B，执行多卡 tensor parallel、长上下文、benchmark 和最终演示
-
-该路线保证当前工作不会成为一次性 demo，而是为后续高价值云端部署做工程准备。
-
----
-
-## 5. FastAPI 推理服务封装
-
-项目当前已经实现 FastAPI RESTful 推理接口：
-
-    GET /health
-    POST /generate
-
-/generate 接口支持以下参数：
-
-    prompt
-    max_new_tokens
-    temperature
-    thinking_budget
-
-其中 thinking_budget 已经进入 API 参数链路，并在 response 和 benchmark 中记录。当前阶段 thinking_budget 主要作为推理预算控制参数进行传递和实验记录，后续会根据模型能力映射到实际 reasoning tokens、max_new_tokens 或模型特定推理控制参数。
-
-当前后端架构支持：
-
-    1. MockBackend
-    2. TransformersBackend
-    3. VLLMBackend
-
-其中 VLLMBackend 是本周新增的重要模块。
-
----
-
-## 6. VLLMBackend 设计
-
-VLLMBackend 的目标是将 FastAPI 服务与 vLLM OpenAI-compatible server 解耦。
-
-当前链路为：
+本周形成的核心调用链路如下：
 
     Client
-    → FastAPI /generate
-    → app.inference.generate_text()
-    → VLLMBackend.generate()
-    → vLLM /v1/chat/completions
-    → GPU model
-    → vLLM response
-    → FastAPI response
+      -> FastAPI /generate
+      -> VLLMBackend
+      -> vLLM OpenAI-compatible Server
+      -> Seed-OSS-36B-Instruct
+      -> 2×NVIDIA A100-SXM4-80GB GPU inference
 
-这种设计比直接在 FastAPI 进程中加载模型更接近真实 LLM serving 架构。
+相关代码和证据提交：
 
-设计优势：
-
-    1. FastAPI 负责业务 API、参数校验、日志、metrics 和后端选择
-    2. vLLM 负责高性能模型推理、KV Cache、batching 和 GPU 调度
-    3. 业务层与推理引擎解耦
-    4. 后续可以替换为 Seed-OSS-36B、Seed-Coder 或其他模型
-    5. 后续可以迁移到云 GPU，保持 API 层代码基本不变
-
-当前 VLLMBackend 已实现：
-
-    1. OpenAI-compatible chat completions 请求
-    2. max_new_tokens 到 max_tokens 的映射
-    3. temperature 参数传递
-    4. thinking_budget 参数记录
-    5. usage token 解析
-    6. latency_seconds 统计
-    7. tokens_per_second 计算
-    8. backend / model_name / device 字段返回
+    576af80 启用 FastAPI Prometheus 指标暴露
+    6fdbff8 补充 Seed-OSS Week1 运行证据与性能结果
 
 ---
 
-## 7. vLLM 环境验证
+## 2. 与第 1 周任务要求的对应关系
 
-在 CX3 上创建 Python virtual environment：
+| 第 1 周任务要求 | 本周完成情况 | 证据或说明 |
+|---|---|---|
+| 封装推理逻辑为 RESTful API | 已完成 | FastAPI 已提供 `/health`、`/generate`、`/metrics` |
+| 使用 FastAPI | 已完成 | 服务入口位于 `app/main.py` |
+| 支持 Seed-OSS 基础集成 | 已完成 | Seed-OSS-36B-Instruct 已通过 vLLM 加载并完成 E2E 推理 |
+| 支持 Seed-OSS 原生 512K 超长上下文能力 | 部分完成 | 本周使用 `max_model_len=4096` 完成稳定部署与链路验证；512K full-context 尚未实测 |
+| 集成 Thinking Budget | 已完成 | 已完成 `thinking_budget=512/1024` 参数链路验证 |
+| 动态调整推理深度 | 已完成基础参数链路 | API 层已支持传入不同 `thinking_budget`；后续需扩展更复杂任务评估推理深度差异 |
+| 测试长文本处理 | 已完成基础验证 | 已完成法律文本摘要场景，input_tokens=379，output_tokens=256 |
+| 验证 Seed-OSS 长上下文性能 | 部分完成 | 已完成中等长度业务文本验证；512K 长上下文性能需后续专项测试 |
+| 错误日志记录 | 已完成 | 已记录依赖安装、端口冲突、metrics 接入、I/O 异常等问题 |
+| 基础 Prometheus 接入 | 已完成 | vLLM `/metrics` 与 FastAPI `/metrics` 均已验证 |
+| API 接口文档 | 已完成基础输出 | 已保存 FastAPI OpenAPI schema |
+| 环境配置指南 | 已完成基础记录 | 已保存环境、依赖、服务启动和模型加载日志 |
+| 初步性能测试报告 | 已完成 | 已完成 sequential、budget compare、concurrency=2、concurrency=4 测试 |
+| GQA 注意力机制说明 | 已完成 | 本报告第 10 节包含 GQA 与 KV Cache 说明 |
+| 推理预算控制代码示例 | 已完成 | 本报告第 6 节包含 Thinking Budget 请求结构 |
+| 记录并解决模型加载、依赖冲突等环境问题 | 已完成 | 本报告第 11 节记录问题与处理过程 |
 
-    /rds/general/user/xc1225/home/venvs/vllm-cu121
-
-成功安装：
-
-    vllm==0.11.2
-    torch==2.9.0+cu128
-    transformers==4.57.6
-    triton==3.5.0
-    xformers==0.0.33.post1
-    flashinfer-python==0.5.2
-
-验证结果：
-
-    vLLM import 成功
-    torch.cuda.is_available(): True
-    device count: 1
-    device name: NVIDIA L40S
-
-该环境不作为跨平台迁移对象。真正可迁移的是：
-
-    1. requirements-vllm.txt
-    2. deployment scripts
-    3. Dockerfile
-    4. README / docs
-    5. vLLM 启动参数
-    6. benchmark 脚本
+结论：第 1 周核心交付要求已完成。当前不足主要集中在 512K full-context 实测、质量评估体系、streaming/TTFT 指标和更高并发压测，后续继续优化与专项验证。
 
 ---
 
-## 8. 已发现并解决的关键问题
+## 3. 系统架构与调用链路
 
-### 8.1 CX3 默认 Python 环境无 torch
+### 3.1 整体架构
 
-首次 GPU smoke test 中发现默认 Python 为系统 Python 3.6.8，且没有 torch。
+本周完成的系统采用 API 层与推理引擎层解耦的结构。FastAPI 负责对外暴露统一 RESTful API，vLLM 负责模型加载、GPU 调度、KV Cache 管理和实际推理执行。
 
-解决方式：
+完整调用链路如下：
 
-    1. 使用 module avail 查询可用 Python / CUDA / PyTorch module
-    2. 加载 Python/3.11.3-GCCcore-12.3.0
-    3. 加载 CUDA module
-    4. 在用户目录创建独立 venv
-    5. 在 venv 中安装 vLLM 及其依赖
+    Client
+      |
+      | HTTP POST /generate
+      v
+    FastAPI Service
+      |
+      | app.main.generate()
+      v
+    app.inference.generate_text()
+      |
+      | VLLMBackend
+      v
+    vLLM OpenAI-compatible Server
+      |
+      | /v1/chat/completions
+      v
+    Seed-OSS-36B-Instruct
+      |
+      v
+    GPU inference on 2×NVIDIA A100-SXM4-80GB
 
-### 8.2 vLLM 与 CUDA_VISIBLE_DEVICES GPU UUID 兼容问题
+该结构将业务 API 与推理引擎分离。FastAPI 进程不直接加载 36B 模型，而是通过 VLLMBackend 调用独立 vLLM 服务。这种结构更接近真实推理服务架构，便于后续扩展监控、压测、负载均衡和多模型后端。
 
-CX3/PBS 默认将 CUDA_VISIBLE_DEVICES 设置为 GPU UUID，例如：
+### 3.2 服务端口
 
-    CUDA_VISIBLE_DEVICES=GPU-c6724650-8e72-de1b-d306-06289d861c79
+本周验证过程中使用的主要服务端口如下：
 
-PyTorch 可以正常识别该 UUID，但 vLLM 0.11.2 内部部分逻辑会将该值解析为整数 device id，导致：
+| 服务 | 端口 | 作用 |
+|---|---:|---|
+| FastAPI service | 8000 | 对外业务 API，提供 `/health`、`/generate`、`/metrics` |
+| vLLM server | 8002 | OpenAI-compatible 推理服务，提供 `/v1/models`、`/v1/chat/completions`、`/metrics` |
+| vLLM worker distributed port | 8003 | vLLM worker 通信端口 |
 
-    ValueError: invalid literal for int() with base 10: 'GPU-...'
+初始部署时发现 8001 端口已被 nginx 占用，因此将 vLLM 服务端口调整为 8002，并在 FastAPI 侧设置：
 
-解决方式：
+    VLLM_BASE_URL=http://127.0.0.1:8002/v1
 
-    1. 编写 cuda_visible_devices_probe.pbs
-    2. 验证 override 前后 PyTorch GPU 可见性
-    3. 确认 export CUDA_VISIBLE_DEVICES=0 后仍只暴露 PBS 分配的 1 张 L40S
-    4. 在 E2E 脚本中加入：
-       export CUDA_DEVICE_ORDER=PCI_BUS_ID
-       export CUDA_VISIBLE_DEVICES=0
-
-该问题说明在 HPC/PBS 环境下，GPU UUID、CUDA_VISIBLE_DEVICES 和 vLLM 版本兼容性需要显式验证。
-
-### 8.3 vLLM readiness 问题
-
-首次 E2E 尝试中，FastAPI /health 成功，但 /generate 返回 HTTP 500。
-
-FastAPI log 显示：
-
-    ConnectionRefusedError: [Errno 111] Connection refused
-    RuntimeError: vLLM server is not reachable at http://127.0.0.1:8001/v1
-
-vLLM log 显示当时模型仍在 loading checkpoint。
-
-问题原因：
-
-    FastAPI 已启动，但下游 vLLM server 尚未完全 ready。
-    脚本提前发送 /generate 请求，导致连接被拒绝。
-
-解决方式：
-
-    将 E2E 脚本的 readiness check 改为轮询：
-        http://127.0.0.1:8001/v1/models
-
-只有当 /v1/models 返回成功后，才启动 FastAPI 并发送 /generate 请求。
-
-这对应真实服务中的依赖服务 readiness probe 和启动编排问题。
+处理后，vLLM 与 FastAPI 均正常启动，服务链路可用。
 
 ---
 
-## 9. 当前端到端验证状态
+## 4. 环境与模型部署
 
-当前正在验证：
+### 4.1 硬件与软件环境
 
-    FastAPI
-    → VLLMBackend
-    → vLLM OpenAI-compatible server
-    → Qwen/Qwen2.5-1.5B-Instruct
-    → NVIDIA L40S GPU
+本周 Seed-OSS-36B-Instruct 验证环境如下：
 
-验证脚本：
-
-    deployment/vllm/qwen_1_5b_vllm_fastapi_e2e.pbs
-
-该脚本执行：
-
-    1. 申请 1 张 L40S GPU
-    2. 激活 vLLM venv
-    3. 设置 HF_HOME 和模型缓存目录
-    4. 启动 vLLM server
-    5. 等待 /v1/models ready
-    6. 启动 FastAPI server
-    7. 调用 /health
-    8. 调用 /generate
-    9. 保存 response、logs 和 GPU 显存信息
-    10. 关闭服务并释放 GPU
-
-如果该 E2E 验证成功，则证明项目已经完成从 RESTful API 到 GPU 模型推理的完整服务链路。
-
----
-
-## 10. 与第 1 周任务要求的对应关系
-
-| 任务要求 | 当前完成情况 |
+| 项目 | 配置 |
 |---|---|
-| 部署 GPU 环境 | 已完成 CX3 单卡 L40S 和 2×L40S 验证 |
-| 安装 PyTorch / CUDA 依赖 | 已完成 module 和 venv 验证 |
-| 加载 Seed-OSS-36B | 受限于显存，已完成资源评估；正式部署计划迁移至云 GPU |
-| 封装 RESTful API | 已完成 FastAPI /generate |
-| Thinking Budget | 已完成 API 参数链路和 response 记录 |
-| 长文本处理 | 后续在云 GPU / 更大模型上验证 |
-| 错误日志记录 | 已记录 CUDA_VISIBLE_DEVICES、readiness、vLLM 启动问题 |
-| Prometheus 接入 | 项目已有基础 metrics 结构，后续继续完善 |
-| API 文档 | 已有 docs/api_doc.md，后续补充 VLLMBackend |
-| 环境配置指南 | 已完成 CX3 GPU / vLLM 环境文档 |
-| 初步性能测试报告 | 已有本地 Transformers benchmark；vLLM benchmark 待 E2E 成功后执行 |
+| GPU | 2×NVIDIA A100-SXM4-80GB |
+| Python | 3.11.10 |
+| vLLM | 0.11.2 |
+| PyTorch | 2.9.0+cu128 |
+| Transformers | 4.57.6 |
+| 模型 | ByteDance-Seed/Seed-OSS-36B-Instruct |
+| 推理精度 | bfloat16 |
+| Tensor Parallel Size | 2 |
+| max_model_len | 4096 |
+| max_num_batched_tokens | 8192 |
+| gpu_memory_utilization | 0.90 |
+
+环境检查显示，两张 A100-SXM4-80GB GPU 均可见，CUDA 可用，vLLM、PyTorch 和 Transformers 环境均可正常使用。
+
+### 4.2 vLLM 启动参数
+
+Seed-OSS-36B-Instruct 使用双卡 Tensor Parallel 启动，核心配置如下：
+
+    VLLM_PORT=8002
+    TENSOR_PARALLEL_SIZE=2
+    MAX_MODEL_LEN=4096
+    MAX_NUM_BATCHED_TOKENS=8192
+    GPU_MEMORY_UTILIZATION=0.90
+    DTYPE=bfloat16
+
+vLLM 启动后，`/v1/models` 接口返回可用模型：
+
+    ByteDance-Seed/Seed-OSS-36B-Instruct
+
+### 4.3 模型加载结果
+
+模型加载阶段记录到的关键结果如下：
+
+| 指标 | 结果 |
+|---|---:|
+| 模型权重缓存占用 | 约 68GB |
+| safetensors shard 数量 | 15 |
+| 权重下载耗时 | 约 590s |
+| 权重加载耗时 | 约 59s |
+| 初始模型加载显存 | 约 33.86 GiB / TP worker |
+| GPU KV Cache capacity | 290,448 tokens |
+| 4096 tokens/request 最大并发估计 | 约 70.91x |
+| 稳定运行时 GPU 显存 | 约 75.8GB / 80GB per GPU |
+
+稳定运行阶段的 GPU 显存记录如下：
+
+    GPU 0: approximately 75797 MiB / 81920 MiB
+    GPU 1: approximately 75797 MiB / 81920 MiB
+
+该结果说明，在 BF16、TP=2、max_model_len=4096 的配置下，Seed-OSS-36B-Instruct 可以完成加载和基础推理。由于稳定运行时显存占用接近 76GB/80GB，后续进行更长上下文、更大 batch 或更高并发测试时，需要重点关注 KV Cache 增长与 OOM 风险。
+
+### 4.4 服务启动顺序
+
+本周验证采用以下启动顺序：
+
+1. 激活 Python virtual environment；
+2. 启动 vLLM OpenAI-compatible server；
+3. 通过 `/v1/models` 验证 vLLM readiness；
+4. 设置 FastAPI 环境变量，包括 `VLLM_BASE_URL`、`MODEL_NAME`、`VLLM_MODEL_NAME` 和 `VLLM_ENABLE_SEED_THINKING_BUDGET`；
+5. 启动 FastAPI service；
+6. 调用 `/health` 验证 API 服务状态；
+7. 调用 `/generate` 完成端到端推理；
+8. 调用 vLLM `/metrics` 与 FastAPI `/metrics` 验证基础监控指标。
+
+该启动顺序避免了 FastAPI 已启动但下游 vLLM 尚未 ready 导致的连接失败问题。
 
 ---
 
-## 11. 下一步计划
+## 5. FastAPI RESTful API 封装
 
-第 1 周后续优先级：
+### 5.1 已实现接口
 
-    P0: 完成 Qwen2.5-1.5B vLLM + FastAPI E2E 验证
-    P1: 将 E2E 结果写入 docs/cx3_vllm_fastapi_e2e.md
-    P2: 扩展 benchmark.py，支持 vLLMBackend 多请求测试
-    P3: 输出 vLLM benchmark summary，包括 latency、P50、P95、tokens/s
-    P4: 接入 Prometheus metrics，记录请求数、错误数、latency
-    P5: 准备云 GPU 部署 Seed-OSS-36B
-    P6: 设计 Seed-OSS-36B tensor parallel 启动脚本
-    P7: 准备长上下文和 thinking budget 实验
+本周完成 FastAPI 服务封装，核心接口如下：
+
+| Endpoint | Method | 功能 |
+|---|---|---|
+| `/health` | GET | 健康检查 |
+| `/generate` | POST | 文本生成推理 |
+| `/metrics` | GET | Prometheus 指标暴露 |
+
+### 5.2 `/generate` 请求格式
+
+`/generate` 接口支持以下字段：
+
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| prompt | string | 用户输入文本 |
+| max_new_tokens | integer | 最大生成 token 数 |
+| temperature | float | 采样温度 |
+| thinking_budget | integer or null | Seed-OSS 推理预算参数 |
+
+示例请求：
+
+    {
+      "prompt": "请用三句话解释什么是大模型推理服务。",
+      "max_new_tokens": 128,
+      "temperature": 0.7,
+      "thinking_budget": 512
+    }
+
+### 5.3 `/generate` 响应格式
+
+接口返回结果包含模型输出、延迟、token 统计、后端信息和模型信息。示例字段如下：
+
+    {
+      "response": "...",
+      "latency_seconds": 3.361803,
+      "input_chars": 36,
+      "max_new_tokens": 128,
+      "thinking_budget": 512,
+      "backend": "vllm",
+      "input_tokens": 118,
+      "output_tokens": 128,
+      "tokens_per_second": 38.0748,
+      "model_name": "ByteDance-Seed/Seed-OSS-36B-Instruct",
+      "device": "vllm_server"
+    }
+
+### 5.4 FastAPI 与 vLLM 的连接配置
+
+FastAPI 通过以下环境变量连接 vLLM 后端：
+
+    MODEL_NAME=ByteDance-Seed/Seed-OSS-36B-Instruct
+    VLLM_MODEL_NAME=ByteDance-Seed/Seed-OSS-36B-Instruct
+    VLLM_BASE_URL=http://127.0.0.1:8002/v1
+    VLLM_ENABLE_SEED_THINKING_BUDGET=true
+    VLLM_TIMEOUT_SECONDS=600
+
+该配置使 FastAPI 层可以通过 VLLMBackend 调用 vLLM OpenAI-compatible API，避免在 FastAPI 进程内直接加载大模型。
+
+### 5.5 API 文档说明
+
+本周已通过 FastAPI 自动生成 OpenAPI schema，并保存接口文档证据：
+
+    results/seed_oss_fastapi_openapi.json
+
+当前业务 API 包含 `/health`、`/generate` 和 `/metrics`。其中 `/generate` 是核心推理接口，支持 prompt、max_new_tokens、temperature 和 thinking_budget 等参数，并返回 response、latency_seconds、input_tokens、output_tokens、tokens_per_second、backend、model_name 和 device 等字段。
+
+该 OpenAPI schema 可作为后续接口联调、前端/测试调用和自动化 API 文档生成的基础。
+---
+
+## 6. Thinking Budget 推理预算控制
+
+### 6.1 参数传递链路
+
+本周实现了 Thinking Budget 参数从 FastAPI 请求到 vLLM 请求体的透传。参数链路如下：
+
+    HTTP request thinking_budget
+      -> GenerateRequest.thinking_budget
+      -> app.inference.generate_text()
+      -> VLLMBackend.generate()
+      -> vLLM chat_template_kwargs.thinking_budget
+      -> Seed-OSS response
+
+VLLMBackend 将 Thinking Budget 写入 vLLM 请求中的 `chat_template_kwargs`：
+
+    {
+      "model": "ByteDance-Seed/Seed-OSS-36B-Instruct",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请用三句话解释什么是大模型推理服务。"
+        }
+      ],
+      "max_tokens": 128,
+      "temperature": 0.7,
+      "chat_template_kwargs": {
+        "thinking_budget": 512
+      }
+    }
+
+### 6.2 验证结果
+
+本周验证了两组推理预算：
+
+| thinking_budget | 请求数 | 结果 |
+|---:|---:|---|
+| 512 | 已验证 | 请求成功，模型返回 `<seed:think>` 与 `<seed:cot_budget_reflect>` |
+| 1024 | 已验证 | 请求成功，模型返回正常 |
+
+Seed-OSS 输出中出现以下字段：
+
+    <seed:think>
+    <seed:cot_budget_reflect>
+
+该结果说明 Thinking Budget 参数已进入模型响应链路。
+
+### 6.3 响应时间对比
+
+在本周预算对比测试中，`thinking_budget=512` 与 `thinking_budget=1024` 均成功完成请求。由于 `max_new_tokens` 固定为 128，输出长度受限，因此两组预算在端到端延迟上的差异不明显。
+
+预算对比测试整体结果如下：
+
+| 指标 | 数值 |
+|---|---:|
+| total_requests | 16 |
+| successful_requests | 16 |
+| failed_requests | 0 |
+| error_rate | 0.0 |
+| client_latency_avg | 3.349s |
+| client_latency_p50 | 3.348s |
+| client_latency_p95 | 3.357s |
+| tokens_per_second_avg | 38.23 |
+
+### 6.4 生成质量观察
+
+本周不同 Thinking Budget 的生成质量对比以功能性观察为主。测试覆盖中文解释、法律文本摘要、KV Cache 解释和部署规划类 prompt。`thinking_budget=512` 与 `thinking_budget=1024` 均能触发 Seed-OSS thinking 输出，并返回与任务相关的内容。
+
+由于本周 benchmark 中 `max_new_tokens=128`，部分回答会在较短输出长度下被截断，因此当前阶段不对 512 与 1024 的生成质量差异做强结论。更严格的质量对比需要使用更长输出、更复杂推理任务和结构化评分方式。
 
 ---
 
-## 12. 阶段结论
+## 7. Prometheus 基础监控接入
 
-本周已经完成了从本地小模型推理服务到 GPU/vLLM 推理服务架构的关键升级。
+### 7.1 vLLM metrics
 
-当前项目不再是单纯的 FastAPI demo，而是具备以下工程特征的大模型推理服务原型：
+vLLM 原生暴露 `/metrics` 接口。本周已验证以下关键指标：
 
-    1. 可插拔推理后端
-    2. RESTful API
-    3. vLLM OpenAI-compatible serving
-    4. GPU 环境验证
-    5. 多 GPU 可见性验证
-    6. benchmark 基础
-    7. error log 和环境问题记录
-    8. 面向 Seed-OSS-36B 的资源评估与云 GPU 迁移计划
+    vllm:num_requests_running
+    vllm:num_requests_waiting
+    vllm:kv_cache_usage_perc
+    vllm:prefix_cache_queries_total
+    vllm:prefix_cache_hits_total
 
-下一阶段重点是将 E2E serving 链路、benchmark、metrics 和云 GPU 多卡部署串联起来，形成可用于 AI 推理 / AI Infra 求职展示的完整工程闭环。
+这些指标可用于分析：
+
+1. 当前正在执行的请求数量；
+2. 等待队列中的请求数量；
+3. KV Cache 使用率；
+4. Prefix cache 查询次数；
+5. Prefix cache 命中情况。
+
+### 7.2 FastAPI metrics
+
+初始版本 FastAPI `/metrics` 返回 404。随后接入 `prometheus-fastapi-instrumentator`，并在 `app/main.py` 中添加：
+
+    from prometheus_fastapi_instrumentator import Instrumentator
+
+    Instrumentator().instrument(app).expose(app)
+
+接入后，FastAPI `/metrics` 成功返回 HTTP 层指标，包括：
+
+    http_requests_total{handler="/generate",method="POST",status="2xx"}
+    http_request_duration_seconds_count{handler="/generate",method="POST"}
+    http_request_duration_seconds_sum{handler="/generate",method="POST"}
+    http_request_size_bytes_count{handler="/generate"}
+    http_response_size_bytes_count{handler="/generate"}
+
+该结果说明系统已具备基础 API 级别可观测性，可作为后续错误率统计、P95 延迟统计、请求量统计和服务容量分析的基础。
 
 ---
 
-## 13. E2E 验证更新：FastAPI + VLLMBackend + vLLM 已跑通
+## 8. 功能验证
 
-在 Job ID 2700593.pbs-7 中，项目完成了 CX3 单卡 L40S 上的端到端推理服务验证。
+### 8.1 vLLM 模型服务验证
 
-验证链路为：
+通过 vLLM `/v1/models` 接口验证模型服务可用，返回模型为：
 
-    Python test client
-    → FastAPI /generate
-    → VLLMBackend
-    → vLLM /v1/chat/completions
-    → Qwen/Qwen2.5-1.5B-Instruct
-    → NVIDIA L40S GPU
-    → FastAPI response
+    ByteDance-Seed/Seed-OSS-36B-Instruct
 
-关键结果：
+该结果说明模型已成功加载，并可通过 OpenAI-compatible API 访问。
 
-    vLLM readiness endpoint: /v1/models returned 200
-    FastAPI /health: 200
-    FastAPI /generate: 200
-    client_latency_seconds: 2.408775
-    server latency_seconds: 2.404936
-    input_tokens: 50
-    output_tokens: 128
-    tokens_per_second: 53.2239
-    backend: vllm
-    model_name: Qwen/Qwen2.5-1.5B-Instruct
-    GPU memory after request: 39819 MiB / 46068 MiB
-    GPU utilization after request: 63%
+### 8.2 vLLM chat completion 验证
 
-该结果证明 FastAPI 业务 API 层、VLLMBackend 适配层、vLLM OpenAI-compatible 推理服务和 GPU 模型推理已经形成完整闭环。
+直接调用 vLLM `/v1/chat/completions` 成功返回 Seed-OSS 输出，响应内容包含 `<seed:think>` 与 `<seed:cot_budget_reflect>` 字段，说明 Seed-OSS 模板与 Thinking Budget 参数链路生效。
 
-该阶段结果详见：
+### 8.3 FastAPI E2E 验证
 
-    docs/cx3_vllm_fastapi_e2e.md
+通过 FastAPI `/generate` 完成端到端验证，结果如下：
+
+| 指标 | 结果 |
+|---|---:|
+| HTTP status | 200 |
+| client_latency_seconds | 约 3.37s |
+| server latency_seconds | 约 3.36s |
+| input_chars | 36 |
+| input_tokens | 118 |
+| output_tokens | 128 |
+| tokens_per_second | 约 38.07 |
+| backend | vllm |
+| model_name | ByteDance-Seed/Seed-OSS-36B-Instruct |
+| device | vllm_server |
+
+该结果说明 FastAPI、VLLMBackend、vLLM server 和 Seed-OSS-36B-Instruct GPU 推理链路已经跑通。
+
+### 8.4 长文本法律摘要验证
+
+本周完成法律文本摘要场景验证。测试任务要求模型按“价格风险、解除风险、责任风险、数据风险、合规风险”对合同条款进行分类总结。
+
+测试结果如下：
+
+| 指标 | 结果 |
+|---|---:|
+| input_chars | 495 |
+| input_tokens | 379 |
+| max_new_tokens | 256 |
+| thinking_budget | 512 |
+| latency_seconds | 约 6.77s |
+| output_tokens | 256 |
+| tokens_per_second | 约 37.81 |
+| backend | vllm |
+| model_name | ByteDance-Seed/Seed-OSS-36B-Instruct |
+
+该测试验证了服务对较长中文业务文本的处理能力，并能返回结构化风险分析内容。
+
+需要说明的是，本周长文本验证尚未覆盖 512K full-context 输入。本周部署配置为 `max_model_len=4096`，主要用于完成模型加载、服务链路、预算控制、监控和性能基线验证。Seed-OSS 的更长上下文能力需要结合 KV Cache 显存占用、prefill latency、分块策略、并发退化和 OOM 边界进行专项验证。
+
+---
+
+## 9. 初步性能测试结果
+
+### 9.1 顺序请求基线测试
+
+测试配置：
+
+| 参数 | 值 |
+|---|---:|
+| concurrency | 1 |
+| thinking_budget | 512 |
+| max_new_tokens | 128 |
+| total_requests | 12 |
+
+测试结果：
+
+| 指标 | 数值 |
+|---|---:|
+| successful_requests | 12 |
+| failed_requests | 0 |
+| error_rate | 0.0 |
+| client_latency_avg | 3.350s |
+| client_latency_p50 | 3.348s |
+| client_latency_p95 | 3.358s |
+| tokens_per_second_avg | 38.23 |
+| tokens_per_second_p50 | 38.25 |
+| tokens_per_second_p95 | 38.27 |
+
+### 9.2 Thinking Budget 对比测试
+
+测试配置：
+
+| 参数 | 值 |
+|---|---:|
+| concurrency | 1 |
+| thinking_budgets | 512, 1024 |
+| max_new_tokens | 128 |
+| total_requests | 16 |
+
+测试结果：
+
+| 指标 | 数值 |
+|---|---:|
+| successful_requests | 16 |
+| failed_requests | 0 |
+| error_rate | 0.0 |
+| client_latency_avg | 3.349s |
+| client_latency_p50 | 3.348s |
+| client_latency_p95 | 3.357s |
+| tokens_per_second_avg | 38.23 |
+| tokens_per_second_p50 | 38.24 |
+| tokens_per_second_p95 | 38.28 |
+
+观察结果：
+
+1. 两组预算下请求均成功；
+2. 在 `max_new_tokens=128` 的短输出场景中，512 与 1024 budget 的延迟差异不明显；
+3. 模型输出均能进入 thinking 相关响应链路；
+4. 当前测试不对不同预算下的质量差异做强结论。
+
+### 9.3 concurrency=2 测试
+
+测试配置：
+
+| 参数 | 值 |
+|---|---:|
+| concurrency | 2 |
+| thinking_budget | 512 |
+| max_new_tokens | 128 |
+| total_requests | 8 |
+
+测试结果：
+
+| 指标 | 数值 |
+|---|---:|
+| successful_requests | 8 |
+| failed_requests | 0 |
+| error_rate | 0.0 |
+| client_latency_avg | 3.370s |
+| client_latency_p50 | 3.370s |
+| client_latency_p95 | 3.391s |
+| tokens_per_second_avg | 38.02 |
+| tokens_per_second_p50 | 38.00 |
+| tokens_per_second_p95 | 38.20 |
+
+### 9.4 concurrency=4 测试
+
+测试配置：
+
+| 参数 | 值 |
+|---|---:|
+| concurrency | 4 |
+| thinking_budget | 512 |
+| max_new_tokens | 128 |
+| total_requests | 8 |
+
+测试结果：
+
+| 指标 | 数值 |
+|---|---:|
+| successful_requests | 8 |
+| failed_requests | 0 |
+| error_rate | 0.0 |
+| client_latency_avg | 3.409s |
+| client_latency_p50 | 3.404s |
+| client_latency_p95 | 3.430s |
+| tokens_per_second_avg | 37.59 |
+| tokens_per_second_p50 | 37.65 |
+| tokens_per_second_p95 | 37.68 |
+
+### 9.5 性能结果小结
+
+本周测试结果显示：
+
+1. 在当前短输出场景下，服务顺序请求平均延迟约 3.35s；
+2. concurrency 从 1 增加到 4 后，P95 latency 从约 3.36s 增加到约 3.43s；
+3. 小并发测试下错误率保持 0%；
+4. 输出吞吐稳定在约 37.6 至 38.2 tokens/s；
+5. 当前 benchmark 为 non-streaming `/generate`，尚未统计 TTFT；
+6. 更高并发、streaming、长上下文和 QPS 压测仍需后续扩展。
+
+---
+
+## 10. Seed-OSS GQA 与 KV Cache 说明
+
+### 10.1 GQA 的作用
+
+GQA，即 Grouped-Query Attention，是介于 MHA 和 MQA 之间的注意力结构。传统 Multi-Head Attention 中，每个 query head 通常对应独立的 key/value head；而 GQA 将多个 query head 共享一组 key/value head，从而减少 key/value 状态数量。
+
+在推理阶段，尤其是长上下文和高并发场景中，KV Cache 会占用大量显存。GQA 可以减少 KV Cache 的规模，降低显存压力和内存带宽压力，使长上下文推理和多请求服务更容易维持稳定。
+
+### 10.2 KV Cache 的工程意义
+
+大语言模型自回归生成时，每生成一个 token 都需要访问历史 token 的 key/value 状态。如果不缓存这些状态，每一步都需要重复计算历史上下文，推理成本会显著增加。
+
+KV Cache 的主要作用包括：
+
+1. 减少重复计算；
+2. 改善 decode 阶段延迟；
+3. 支持长上下文推理；
+4. 支持 continuous batching；
+5. 帮助 vLLM 在多请求场景下管理显存与吞吐。
+
+本周 vLLM 启动日志显示：
+
+    GPU KV cache size: 290,448 tokens
+    Maximum concurrency for 4,096 tokens per request: 70.91x
+
+该结果说明当前配置下已具备可观的 KV Cache 容量，为后续长上下文扩展和并发优化提供基础。
+
+---
+
+## 11. 问题记录与处理
+
+### 11.1 依赖版本变化
+
+安装 vLLM 0.11.2 时，pip 自动替换部分依赖，包括 torch、triton、numpy、starlette 等。最终运行环境中关键版本如下：
+
+    vLLM 0.11.2
+    torch 2.9.0+cu128
+    transformers 4.57.6
+
+处理方式：
+
+1. 使用独立 Python virtual environment 隔离依赖；
+2. 保留完整安装日志；
+3. 通过 import vLLM、vLLM CLI、PyTorch CUDA 检查和模型启动验证环境可用。
+
+相关证据文件：
+
+    logs/install_vllm.log
+
+### 11.2 端口冲突
+
+初始计划使用 8001 端口启动 vLLM，但该端口已被 nginx 占用。处理方式是将 vLLM 服务改为 8002：
+
+    VLLM_PORT=8002
+    VLLM_BASE_URL=http://127.0.0.1:8002/v1
+
+处理结果：vLLM 成功启动，FastAPI 正确连接后端。
+
+相关证据文件：
+
+    logs/seed_oss_vllm_launch_port8002.log
+
+### 11.3 FastAPI metrics 未启用
+
+初始 FastAPI `/metrics` 返回 404。后续接入 `prometheus-fastapi-instrumentator`，并在 `app/main.py` 中加入：
+
+    from prometheus_fastapi_instrumentator import Instrumentator
+
+    Instrumentator().instrument(app).expose(app)
+
+处理结果：FastAPI `/metrics` 成功暴露 HTTP 请求计数、响应耗时、请求大小和响应大小等指标。
+
+相关提交：
+
+    576af80 启用 FastAPI Prometheus 指标暴露
+
+相关证据文件：
+
+    results/seed_oss_fastapi_metrics_head_after_enable.txt
+    results/seed_oss_fastapi_metrics_generate_head.txt
+    logs/seed_oss_week1_metrics_final_evidence.txt
+
+### 11.4 concurrency=4 CSV 写入异常
+
+第一次 concurrency=4 测试中，请求均已返回 200，但写入 CSV 文件时出现一次：
+
+    OSError: [Errno 5] Input/output error
+
+处理方式：
+
+1. 保留失败日志；
+2. 将输出先写入临时路径；
+3. 再保存成功版 retry CSV；
+4. 将失败记录与成功结果一并纳入证据文件。
+
+最终成功文件：
+
+    results/seed_oss_fastapi_concurrency4_retry.csv
+    logs/seed_oss_fastapi_concurrency4_retry.log
+    logs/seed_oss_week1_final_plus_concurrency_evidence.txt
+
+### 11.5 模型显存压力
+
+Seed-OSS-36B-Instruct 在当前 BF16、TP=2、max_model_len=4096 配置下可以完成加载和推理，但稳定运行时每张 A100-SXM4-80GB 显存占用约 75.8GB。该结果说明当前配置可用于基础链路验证和短上下文/中等文本测试，但在更长上下文、更高并发或更大 batch 下存在 OOM 风险。
+
+处理方式：
+
+1. 本周先固定 `max_model_len=4096` 完成稳定部署基线；
+2. 记录 KV Cache capacity 与最大并发估计；
+3. 将更长上下文和更高并发作为后续专项验证内容。
+
+---
+
+## 12. 证据文件索引
+
+本周运行证据已保存到 `logs/` 与 `results/` 目录，并提交到代码仓库。
+
+### 12.1 环境与部署证据
+
+    logs/install_vllm.log
+    logs/seed_oss_vllm_launch_port8002.log
+    results/seed_oss_vllm_models.json
+
+### 12.2 FastAPI 与 E2E 证据
+
+    logs/seed_oss_fastapi_launch.log
+    logs/seed_oss_fastapi_launch_with_metrics.log
+    results/seed_oss_fastapi_health.json
+    results/seed_oss_fastapi_health_after_metrics.json
+    results/seed_oss_fastapi_smoke_test.txt
+    results/seed_oss_fastapi_smoke_test_after_metrics.txt
+
+### 12.3 Prometheus 监控证据
+
+    results/seed_oss_vllm_metrics_head.txt
+    results/seed_oss_fastapi_metrics_head_after_enable.txt
+    results/seed_oss_fastapi_metrics_generate_head.txt
+    logs/seed_oss_week1_metrics_final_evidence.txt
+
+### 12.4 性能测试证据
+
+    results/seed_oss_fastapi_benchmark_3req.csv
+    logs/seed_oss_fastapi_benchmark_3req.log
+    results/seed_oss_fastapi_budget_compare.csv
+    logs/seed_oss_fastapi_budget_compare.log
+    results/seed_oss_fastapi_concurrency2.csv
+    logs/seed_oss_fastapi_concurrency2.log
+    results/seed_oss_fastapi_concurrency4_retry.csv
+    logs/seed_oss_fastapi_concurrency4_retry.log
+    logs/seed_oss_week1_final_plus_concurrency_evidence.txt
+
+### 12.5 长文本场景证据
+
+    results/seed_oss_long_legal_summary_512.json
+    logs/seed_oss_after_long_legal_summary_nvidia_smi.txt
+
+### 12.6 API 文档证据
+
+    results/seed_oss_fastapi_openapi.json
+    results/seed_oss_vllm_openapi_head.txt
+
+### 12.7 汇总证据
+
+    logs/seed_oss_e2e_success_evidence.txt
+    logs/seed_oss_week1_final_inventory.txt
+    logs/seed_oss_week1_metrics_final_evidence.txt
+    logs/seed_oss_week1_final_plus_concurrency_evidence.txt
+
+---
+
+## 13. 当前未完全覆盖的内容与原因说明
+
+本周已完成第 1 周任务中的主要工程闭环，但仍有部分内容尚未完全覆盖，具体如下。
+
+### 13.1 512K full-context 尚未实测
+
+任务要求中提到 Seed-OSS 的原生 512K 超长上下文能力。本周已经完成 Seed-OSS-36B-Instruct 的基础部署、API 链路、Thinking Budget、监控和性能基线验证，但当前部署配置为：
+
+    max_model_len=4096
+
+本周法律文本测试的输入规模为：
+
+    input_tokens=379
+
+因此，本周不能表述为已经完成 512K full-context 实测。当前完成的是 Seed-OSS 长上下文能力验证前的基础部署闭环和中等长度业务文本验证。512K full-context 验证涉及 KV Cache 显存增长、prefill latency、并发退化、分块策略和 OOM 边界，需要作为后续专项测试展开。
+
+### 13.2 Thinking Budget 质量评估仍偏初步
+
+本周已经验证 `thinking_budget=512` 与 `thinking_budget=1024` 均能正常进入模型响应链路，并完成响应时间对比。但由于本周 benchmark 的 `max_new_tokens=128`，部分输出会被截断，因此当前质量观察只能作为功能性验证，不能作为严格质量评估结论。
+
+后续需要使用更长输出、更复杂任务和结构化评分方法，才能更准确评估不同 Thinking Budget 对推理深度、输出质量和延迟的影响。
+
+### 13.3 当前 benchmark 尚未覆盖 streaming 与 TTFT
+
+本周性能测试调用的是 non-streaming `/generate` API，已经统计端到端 latency、P50、P95、error rate 和 tokens/s。但尚未覆盖 streaming 输出，因此尚未统计 TTFT。
+
+对于真实推理服务，TTFT 是用户体验和服务性能的重要指标，需要后续增加 streaming endpoint 或直接调用 vLLM streaming API 进行统计。
+
+### 13.4 当前并发测试规模较小
+
+本周完成了 concurrency=1、2、4 的初步测试，主要用于验证服务链路稳定性和小并发下的延迟变化。当前尚未覆盖 100/500/1000 QPS 档位压测，也尚未覆盖长文本、多模态和代码生成等复杂场景下的高并发压测。
+
+### 13.5 当前监控为基础指标暴露
+
+本周已经完成 vLLM `/metrics` 和 FastAPI `/metrics` 验证，但尚未搭建 Grafana dashboard，也尚未形成完整可视化监控面板。当前阶段已具备 Prometheus 指标采集基础，后续可以进一步扩展为 dashboard、告警规则和容量分析视图。
+
+---
+
+## 14. 本周总结
+
+本周完成了 Seed-OSS-36B-Instruct 的基础部署、推理 API 封装、Thinking Budget 参数接入、Prometheus 基础监控、法律文本摘要验证和初步性能测试。系统已经形成从 HTTP 请求到 FastAPI、VLLMBackend、vLLM、Seed-OSS-36B-Instruct 和 GPU 推理的完整闭环。
+
+在 2×NVIDIA A100-SXM4-80GB、bfloat16、Tensor Parallel Size=2、max_model_len=4096 配置下，Seed-OSS-36B-Instruct 能够稳定提供非流式文本生成服务。顺序请求、小并发测试和预算对比测试均达到 0% 错误率。短输出场景下，平均端到端延迟约 3.35s，输出吞吐约 38 tokens/s。
+
+从工程角度看，本周已经完成以下基础：
+
+1. 大模型服务化封装；
+2. vLLM 后端接入；
+3. Seed-OSS-36B 多卡加载；
+4. Thinking Budget 参数链路；
+5. Prometheus 基础可观测性；
+6. 长文本业务场景验证；
+7. 初步性能数据采集；
+8. 环境问题和异常处理记录；
+9. 可追溯的运行证据保存。
+
+本周仍需后续深化的内容包括：512K full-context 专项测试、Thinking Budget 质量评估、streaming/TTFT 统计、更高并发压测、Grafana dashboard、量化优化和多模态/代码生成场景验证。
