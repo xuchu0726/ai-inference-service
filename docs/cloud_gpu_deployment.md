@@ -1,3 +1,5 @@
+> 状态说明：本文档为早期 GPU 部署方案设计文档，记录部署路线和脚本规划。Week1 实际完成情况以 `docs/week1_delivery_report.md` 为准。
+
 # 云 GPU 部署方案：FastAPI + vLLM + Seed-OSS-36B
 
 ## 1. 文档目的

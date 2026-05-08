@@ -1,3 +1,5 @@
+> 状态说明：本文档记录早期本地 TransformersBackend / Qwen2.5-0.5B / Apple MPS benchmark。后续 Week1 已完成 Seed-OSS-36B-Instruct + vLLM + FastAPI 的 GPU benchmark，最新性能结论以 `docs/week1_delivery_report.md` 和 `results/seed_oss_*` 文件为准。
+
 # Benchmark Report
 
 ## 1. 实验目的

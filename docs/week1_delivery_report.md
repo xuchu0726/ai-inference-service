@@ -256,6 +256,7 @@ FastAPI 通过以下环境变量连接 vLLM 后端：
 当前业务 API 包含 `/health`、`/generate` 和 `/metrics`。其中 `/generate` 是核心推理接口，支持 prompt、max_new_tokens、temperature 和 thinking_budget 等参数，并返回 response、latency_seconds、input_tokens、output_tokens、tokens_per_second、backend、model_name 和 device 等字段。
 
 该 OpenAPI schema 可作为后续接口联调、前端/测试调用和自动化 API 文档生成的基础。
+
 ---
 
 ## 6. Thinking Budget 推理预算控制

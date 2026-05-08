@@ -1,3 +1,5 @@
+> 状态说明：本文档最初记录本地与 CX3 阶段 API 状态。Week1 后项目已进一步完成 ByteDance-Seed/Seed-OSS-36B-Instruct 的 vLLM 部署、FastAPI E2E 调用、Thinking Budget 参数链路和 `/metrics` 接入。最新交付状态以 `docs/week1_delivery_report.md` 为准。
+
 # API 接口文档
 
 ## 1. 文档目的

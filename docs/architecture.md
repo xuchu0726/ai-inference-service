@@ -1,3 +1,5 @@
+> 状态说明：本文档最初记录本地与 CX3 阶段架构。Week1 后项目已进一步完成 ByteDance-Seed/Seed-OSS-36B-Instruct 在 2×NVIDIA A100-SXM4-80GB 上的 vLLM tensor parallel 部署、FastAPI E2E 调用、Thinking Budget 参数链路、FastAPI/vLLM Prometheus metrics 和小并发 benchmark。最新交付状态以 `docs/week1_delivery_report.md` 为准。
+
 # 系统架构说明
 
 ## 1. 文档目的

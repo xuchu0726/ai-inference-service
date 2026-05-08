@@ -1,3 +1,5 @@
+> 状态说明：本文档为 vLLM benchmark 方法与字段模板。Seed-OSS-36B-Instruct 的 Week1 实测结果已整理在 `docs/week1_delivery_report.md`。
+
 # vLLMBackend Benchmark Report
 
 ## 1. 文档目的
