@@ -106,6 +106,18 @@ def main() -> None:
         if value is not None
     ]
 
+    benchmark_wall_times = [
+        value
+        for value in (to_float(r.get("benchmark_wall_time_seconds")) for r in rows)
+        if value is not None
+    ]
+
+    throughput_qps_values = [
+        value
+        for value in (to_float(r.get("throughput_qps")) for r in rows)
+        if value is not None
+    ]
+
     input_tokens = [
         value
         for value in (to_float(r.get("input_tokens")) for r in success_rows)
@@ -143,6 +155,16 @@ def main() -> None:
         "model_name_values": "|".join(models),
         "device_values": "|".join(devices),
     }
+
+    if benchmark_wall_times:
+        summary["benchmark_wall_time_seconds"] = round(max(benchmark_wall_times), 6)
+    else:
+        summary["benchmark_wall_time_seconds"] = None
+
+    if throughput_qps_values:
+        summary["throughput_qps"] = round(max(throughput_qps_values), 6)
+    else:
+        summary["throughput_qps"] = None
 
     summarize_values("client_latency_seconds", client_latencies, summary)
     summarize_values("server_latency_seconds", server_latencies, summary)

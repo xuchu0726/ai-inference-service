@@ -156,6 +156,8 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         "prompt_id",
         "thinking_budget",
         "concurrency",
+        "benchmark_wall_time_seconds",
+        "throughput_qps",
         "status_code",
         "ok",
         "client_latency_seconds",
@@ -195,7 +197,22 @@ def print_summary(rows: list[dict[str, Any]]) -> None:
         if r.get("tokens_per_second") is not None
     ]
 
+    wall_times = [
+        float(r["benchmark_wall_time_seconds"])
+        for r in rows
+        if r.get("benchmark_wall_time_seconds") is not None
+    ]
+    qps_values = [
+        float(r["throughput_qps"])
+        for r in rows
+        if r.get("throughput_qps") is not None
+    ]
+
     print("===== VLLM BACKEND BENCHMARK SUMMARY =====")
+    if wall_times:
+        print(f"benchmark_wall_time_seconds: {round(max(wall_times), 6)}")
+    if qps_values:
+        print(f"throughput_qps: {round(max(qps_values), 6)}")
     print(f"total_requests: {total}")
     print(f"successful_requests: {len(success)}")
     print(f"failed_requests: {len(failed)}")
@@ -269,6 +286,8 @@ def main() -> None:
 
     rows: list[dict[str, Any]] = []
 
+    benchmark_start = time.time()
+
     with ThreadPoolExecutor(max_workers=args.concurrency) as executor:
         futures = [
             executor.submit(
@@ -297,6 +316,13 @@ def main() -> None:
                 f"backend={row['backend']} "
                 f"tokens/s={row['tokens_per_second']}"
             )
+
+    benchmark_wall_time = time.time() - benchmark_start
+    throughput_qps = len(rows) / benchmark_wall_time if benchmark_wall_time > 0 else None
+
+    for row in rows:
+        row["benchmark_wall_time_seconds"] = round(benchmark_wall_time, 6)
+        row["throughput_qps"] = round(throughput_qps, 6) if throughput_qps is not None else None
 
     rows.sort(key=lambda x: x["case_id"])
     output_path = Path(args.output)
