@@ -68,8 +68,27 @@ Week1 结论：
 |---|---|
 | FastAPI | request count, request latency, status code |
 | vLLM | running requests, waiting requests, KV cache usage, prefix cache |
-| GPU | memory used, utilization |
+| GPU | memory used, utilization, memory utilization |
 | Benchmark | QPS, P50, P95, tokens/s, error_rate |
+
+本周新增监控采样脚本：
+
+| 脚本 | 作用 | 产出 |
+|---|---|---|
+| `scripts/sample_gpu_metrics.sh` | 使用 `nvidia-smi` 定时采样 GPU 显存、GPU utilization、memory utilization | `logs/week2_nvidia_smi_sampling.csv` |
+| `scripts/snapshot_vllm_metrics.py` | 抓取 vLLM `/metrics` 中的 running requests、waiting requests、KV Cache usage、prefix cache 指标 | `results/week2_vllm_metrics_snapshot.txt` |
+
+GPU 采样命令示例：
+
+    bash scripts/sample_gpu_metrics.sh logs/week2_nvidia_smi_sampling.csv 5
+
+vLLM metrics 快照命令示例：
+
+    python scripts/snapshot_vllm_metrics.py \
+      --url http://127.0.0.1:8002/metrics \
+      --output results/week2_vllm_metrics_snapshot.txt
+
+如果 Grafana dashboard 暂未完整启动，本周先使用 Prometheus metrics 快照、vLLM metrics 快照和 `nvidia-smi` 离线采样文件作为监控证据，并在后续报告中结合 CSV 和图表分析 GPU 利用率、显存瓶颈、KV Cache 压力和请求排队情况。
 
 ---
 
