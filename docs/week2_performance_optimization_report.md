@@ -341,3 +341,84 @@ Week1 实测中，Seed-OSS-36B-Instruct 在 BF16、TP=2、max_model_len=4096 下
 5. GSM8K 和代码生成验证结果；
 6. 当前资源下无法直接完成 FP32/512K 的原因与后续资源需求评估；
 7. 下一步向高可用、多模态和压测验收推进的计划。
+
+
+---
+
+## 6. Seed-OSS-36B 长上下文性能验证（RunPod 2×A100 80GB）
+
+### 6.1 实验环境
+
+本轮长上下文实验在 RunPod 云端 GPU 环境完成，核心配置如下：
+
+| Item | Value |
+|---|---|
+| GPU | 2 × NVIDIA A100-SXM4-80GB |
+| Serving engine | vLLM 0.11.2 |
+| Model | ByteDance-Seed/Seed-OSS-36B-Instruct |
+| Precision | BF16 |
+| Tensor parallel size | 2 |
+| max_model_len | 65536 |
+| FastAPI backend | VLLMBackend |
+| Thinking Budget | 512 |
+
+vLLM 启动日志显示：
+
+- `Using max model len 65536`
+- `GPU KV cache size: 290,448 tokens`
+- `Maximum concurrency for 65,536 tokens per request: 4.43x`
+- FastAPI `/health`、vLLM `/v1/models`、vLLM `/metrics` 均验证成功。
+
+### 6.2 长上下文梯度测试结果
+
+| Context | Input tokens | Output tokens | Client latency (s) | Server latency (s) | Tokens/s | Status | Note |
+|---|---:|---:|---:|---:|---:|---|---|
+| 8K | 7434 | 128 | 4.811523 | 4.796601 | 26.6856 | 200 / True | first-pass |
+| 16K | 15297 | 128 | 5.439229 | 5.435553 | 23.5487 | 200 / True | first-pass |
+| 32K | 30465 | 128 | 8.570771 | 8.566287 | 14.9423 | 200 / True | first-pass |
+| 56K | 56303 | 128 | 16.128279 | 16.122442 | 7.9392 | 200 / True | first-pass / cold-ish |
+| 61.9K | 61917 | 128 | 7.437081 | 7.432070 | 17.2227 | 200 / True | near-limit, cache-affected |
+
+### 6.3 结果分析
+
+8K、16K、32K、56K 的首次测试结果显示，随着输入 token 数从 7,434 增长到 56,303，client latency 从 4.81s 增长到 16.13s，tokens/s 从 26.69 下降到 7.94。这符合长上下文推理中 prefill 成本上升的预期。
+
+但 61.9K near-limit 测试出现了低于 56K 的 latency，不能直接解释为上下文越长性能越好。后续交替复测显示，56K 与 61.9K 在重复请求后 latency 均稳定在约 4.2s 左右，结合 vLLM `prefix_cache_hits_total` 与 `prefix_cache_queries_total` 的变化，可以判断该现象主要来自 prefix cache、warm state 和重复 prompt 结构。
+
+因此，本报告将长上下文结果分为两类解释：
+
+1. 首次梯度测试：用于观察上下文长度增长对 latency 和 tokens/s 的影响。
+2. 重复长文档测试：用于验证 vLLM prefix cache 对重复前缀场景的加速效果。
+
+### 6.4 Prefix Cache 复测结论
+
+复测前后 vLLM metrics 显示，prefix cache 查询与命中量显著增长。重复测试期间 prefix cache 命中率较高，说明相似长文本请求会明显受缓存状态影响。
+
+这对生产推理服务有直接意义：
+
+- 对重复系统 prompt、重复合同模板、重复知识库前缀的场景，prefix cache 可以降低重复 prefill 成本。
+- 对完全不同的长文档请求，不能用缓存命中后的 latency 代表冷启动长上下文性能。
+- 长上下文 benchmark 必须区分 cold prompt、warm prompt、prefix-cache-hit prompt，否则结果会被误读。
+
+
+### 6.5 Evidence 文件索引
+
+本节实验对应的原始证据已归档到 GitHub 仓库，主要文件如下：
+
+| Evidence | Path |
+|---|---|
+| 64K vLLM 启动日志 | `evidence/week2_64k_context/logs/week2_seed_oss_vllm_launch_64k.log` |
+| 64K vLLM 启动关键行 | `evidence/week2_64k_context/logs/week2_seed_oss_vllm_64k_key_startup_lines.txt` |
+| FastAPI 64K 日志 | `evidence/week2_64k_context/logs/week2_fastapi_vllm_64k.log` |
+| 8K context result | `evidence/week2_64k_context/results/week2_context_length_8k_on_64k_service.csv` |
+| 16K context result | `evidence/week2_64k_context/results/week2_context_length_16k_on_64k_service.csv` |
+| 32K context result | `evidence/week2_64k_context/results/week2_context_length_32k_on_64k_service.csv` |
+| 56K context result | `evidence/week2_64k_context/results/week2_context_length_64k_conservative_on_64k_service.csv` |
+| 61.9K near-limit result | `evidence/week2_64k_context/results/week2_context_length_64k_near_limit_on_64k_service.csv` |
+| Prefix cache repeat round 1 | `evidence/week2_64k_context/results/week2_context_repeat_r1_56k_then_64k.csv` |
+| Prefix cache repeat round 2 | `evidence/week2_64k_context/results/week2_context_repeat_r2_64k_then_56k.csv` |
+| Prefix cache repeat round 3 | `evidence/week2_64k_context/results/week2_context_repeat_r3_56k_then_64k.csv` |
+| Prefix cache before metrics | `evidence/week2_64k_context/results/week2_vllm_metrics_before_context_repeat_investigation.txt` |
+| Prefix cache after metrics | `evidence/week2_64k_context/results/week2_vllm_metrics_after_context_repeat_investigation.txt` |
+| GPU sampling log | `evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context.csv` |
+| 原始压缩证据包 | `artifacts/week2_64k_context_evidence_20260514_005638.tar.gz` |

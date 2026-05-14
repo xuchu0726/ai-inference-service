@@ -1,0 +1,9 @@
+# Week2 Seed-OSS 长上下文梯度测试汇总
+
+| Context | Input tokens | Output tokens | Client latency (s) | Server latency (s) | Tokens/s | Status | Note |
+|---|---:|---:|---:|---:|---:|---|---|
+| 8K | 7434 | 128 | 4.811523 | 4.796601 | 26.6856 | 200 / True | first-pass |
+| 16K | 15297 | 128 | 5.439229 | 5.435553 | 23.5487 | 200 / True | first-pass |
+| 32K | 30465 | 128 | 8.570771 | 8.566287 | 14.9423 | 200 / True | first-pass |
+| 56K | 56303 | 128 | 16.128279 | 16.122442 | 7.9392 | 200 / True | first-pass/cold-ish |
+| 61.9K | 61917 | 128 | 7.437081 | 7.43207 | 17.2227 | 200 / True | near-limit |
