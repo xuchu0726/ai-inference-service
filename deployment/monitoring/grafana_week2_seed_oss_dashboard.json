@@ -1,0 +1,88 @@
+{
+  "title": "Week2 Seed-OSS-36B Inference Service",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "5s",
+  "tags": ["seed-oss", "vllm", "fastapi", "week2"],
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "FastAPI Request Rate",
+      "gridPos": {"x": 0, "y": 0, "w": 12, "h": 8},
+      "targets": [
+        {
+          "expr": "sum(rate(http_requests_total[1m]))",
+          "legendFormat": "requests/s"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "FastAPI P95 Latency",
+      "gridPos": {"x": 12, "y": 0, "w": 12, "h": 8},
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_highr_seconds_bucket[1m])) by (le))",
+          "legendFormat": "p95 latency"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "vLLM Running / Waiting Requests",
+      "gridPos": {"x": 0, "y": 8, "w": 12, "h": 8},
+      "targets": [
+        {
+          "expr": "vllm:num_requests_running",
+          "legendFormat": "running"
+        },
+        {
+          "expr": "vllm:num_requests_waiting",
+          "legendFormat": "waiting"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "vLLM KV Cache Usage",
+      "gridPos": {"x": 12, "y": 8, "w": 12, "h": 8},
+      "targets": [
+        {
+          "expr": "vllm:kv_cache_usage_perc",
+          "legendFormat": "kv cache usage"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "vLLM Prefix Cache Queries / Hits",
+      "gridPos": {"x": 0, "y": 16, "w": 12, "h": 8},
+      "targets": [
+        {
+          "expr": "rate(vllm:prefix_cache_queries_total[1m])",
+          "legendFormat": "prefix queries/s"
+        },
+        {
+          "expr": "rate(vllm:prefix_cache_hits_total[1m])",
+          "legendFormat": "prefix hits/s"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "vLLM Prompt / Generation Tokens",
+      "gridPos": {"x": 12, "y": 16, "w": 12, "h": 8},
+      "targets": [
+        {
+          "expr": "rate(vllm:prompt_tokens_total[1m])",
+          "legendFormat": "prompt tokens/s"
+        },
+        {
+          "expr": "rate(vllm:generation_tokens_total[1m])",
+          "legendFormat": "generation tokens/s"
+        }
+      ]
+    }
+  ]
+}

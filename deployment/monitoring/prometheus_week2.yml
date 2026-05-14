@@ -1,0 +1,22 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: "fastapi-inference-service"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets:
+          - "127.0.0.1:8000"
+        labels:
+          service: "fastapi"
+          model: "ByteDance-Seed/Seed-OSS-36B-Instruct"
+
+  - job_name: "vllm-seed-oss"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets:
+          - "127.0.0.1:8002"
+        labels:
+          service: "vllm"
+          model: "ByteDance-Seed/Seed-OSS-36B-Instruct"
