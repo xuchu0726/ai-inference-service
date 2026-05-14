@@ -432,3 +432,36 @@ GitHub 版本管理
 ```text
 接入 Transformers 小模型后端，让项目从 mock 推理升级为真实模型推理。
 ```
+
+## Week2 RunPod Seed-OSS-36B Performance Evidence
+
+This repository includes a reproducible Week2 performance study for `ByteDance-Seed/Seed-OSS-36B-Instruct` deployed with FastAPI + VLLMBackend + vLLM on RunPod 2×A100-SXM4-80GB.
+
+Key results:
+
+- Serving stack: FastAPI + VLLMBackend + vLLM 0.11.2
+- Model: `ByteDance-Seed/Seed-OSS-36B-Instruct`
+- Precision: BF16
+- Tensor parallel size: 2
+- Long-context serving config: `max_model_len=65536`
+- Verified context levels: 8K, 16K, 32K, 56K, and 61.9K input tokens
+- Concurrency benchmark: 1 / 2 / 4 / 8 / 16 concurrent requests
+- Evidence preserved: logs, CSVs, metrics snapshots, nvidia-smi outputs, figures, and compressed artifacts
+
+Important reports and evidence:
+
+| Item | Path |
+|---|---|
+| Week2 performance report | `docs/week2_performance_optimization_report.md` |
+| Long-context summary | `docs/week2_context_gradient_summary.md` |
+| Prefix Cache investigation | `docs/week2_prefix_cache_investigation_summary.md` |
+| RunPod 64K evidence | `evidence/week2_64k_context/` |
+| Pre-32K evidence | `evidence/week2_pre_32k/` |
+| Evidence archives | `artifacts/` |
+| Performance figures | `figures/` |
+
+Engineering interpretation:
+
+- Concurrency testing shows QPS improves as concurrency increases from 1 to 16, while P50/P95 latency rises moderately and error rate remains 0.
+- First-pass long-context testing shows latency increases and output tokens/s decreases as input tokens grow from 7.4K to 56.3K, matching expected prefill cost growth.
+- The 61.9K near-limit result is treated separately because repeated long-document prompts are affected by vLLM prefix cache and warm state.
