@@ -412,6 +412,30 @@ vLLM 启动日志显示：
 | Long-context tokens/s first-pass | `figures/week2_context_tokens_per_second_first_pass_only.png` | 展示首次长上下文 tokens/s 下降趋势 |
 | Prefix cache repeat latency | `figures/week2_prefix_cache_repeat_latency.png` | 展示重复长文本请求在 prefix cache/warm state 下的 latency 变化 |
 
+
+### 6.7 关键图表
+
+#### 并发吞吐与延迟
+
+![QPS vs concurrency](../figures/week2_qps_vs_concurrency_report.png)
+
+![P50/P95 latency vs concurrency](../figures/week2_latency_p50_p95_vs_concurrency.png)
+
+![Tokens/s vs concurrency](../figures/week2_tokens_per_second_vs_concurrency_report.png)
+
+![Error rate vs concurrency](../figures/week2_error_rate_vs_concurrency_report.png)
+
+#### 长上下文首次梯度测试
+
+![Long-context latency first-pass](../figures/week2_context_latency_first_pass_only.png)
+
+![Long-context tokens/s first-pass](../figures/week2_context_tokens_per_second_first_pass_only.png)
+
+#### Prefix Cache 复测
+
+![Prefix cache repeat latency](../figures/week2_prefix_cache_repeat_latency.png)
+
+
 ## 7. 当前风险与处理策略
 
 | 风险 | 影响 | 处理策略 |
