@@ -422,3 +422,22 @@ vLLM 启动日志显示：
 | Prefix cache after metrics | `evidence/week2_64k_context/results/week2_vllm_metrics_after_context_repeat_investigation.txt` |
 | GPU sampling log | `evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context.csv` |
 | 原始压缩证据包 | `artifacts/week2_64k_context_evidence_20260514_005638.tar.gz` |
+
+
+### 6.6 报告图表索引
+
+本节实验图表已保存到 `figures/` 目录。图表使用原则如下：
+
+- 并发性能图使用 1/2/4/8/16 concurrency 的真实 FastAPI + vLLM benchmark summary。
+- 长上下文趋势图只使用 first-pass/cold-ish 数据点：8K、16K、32K、56K。
+- 61.9K near-limit 结果受到 prefix cache 与 warm state 影响，不并入 cold-ish 趋势图，而单独通过 prefix cache repeat 图解释。
+
+| Figure | Path | Purpose |
+|---|---|---|
+| QPS vs concurrency | `figures/week2_qps_vs_concurrency_report.png` | 展示 concurrency 提升带来的吞吐提升 |
+| P50/P95 latency vs concurrency | `figures/week2_latency_p50_p95_vs_concurrency.png` | 展示并发增加下的尾延迟变化 |
+| Tokens/s vs concurrency | `figures/week2_tokens_per_second_vs_concurrency_report.png` | 展示单请求生成速率随并发变化的 trade-off |
+| Error rate vs concurrency | `figures/week2_error_rate_vs_concurrency_report.png` | 展示并发测试下 error rate 保持 0 |
+| Long-context latency first-pass | `figures/week2_context_latency_first_pass_only.png` | 展示 8K/16K/32K/56K 首次长上下文 latency 趋势 |
+| Long-context tokens/s first-pass | `figures/week2_context_tokens_per_second_first_pass_only.png` | 展示首次长上下文 tokens/s 下降趋势 |
+| Prefix cache repeat latency | `figures/week2_prefix_cache_repeat_latency.png` | 展示重复长文本请求在 prefix cache/warm state 下的 latency 变化 |
