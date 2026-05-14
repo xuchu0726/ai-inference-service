@@ -315,36 +315,6 @@ Week1 实测中，Seed-OSS-36B-Instruct 在 BF16、TP=2、max_model_len=4096 下
 
 ---
 
-## 6. 当前风险与处理策略
-
-| 风险 | 影响 | 处理策略 |
-|---|---|---|
-| FP32 baseline 显存过高 | 无法按字面完成 FP32 vs INT8 | 使用 BF16 serving baseline，并说明 FP32 资源需求 |
-| INT8 路径不兼容 | 量化实验无法直接跑通 | 记录兼容性和失败日志，改用可支持方案 |
-| 32K/64K OOM | 长上下文实验失败 | 保留 OOM 边界，降低 context length |
-| 高并发 timeout | benchmark 失败率上升 | 保留失败样本，降低 concurrency 或增加 timeout |
-| Grafana 配置耗时 | 影响主实验 | 先完成 Prometheus + dashboard notes，再补 JSON |
-| GPU 成本过高 | 试错成本增加 | 先本地准备脚本和报告框架，再集中跑 GPU |
-
----
-
-## 7. 阶段结论模板
-
-本节将在 Week2 实验完成后填写。
-
-预期总结方向：
-
-1. Seed-OSS-36B-Instruct 在不同并发下的 QPS、P95 和 tokens/s 变化；
-2. 上下文长度增长对显存、KV Cache 和尾延迟的影响；
-3. BF16 baseline 与可落地量化方案的差异；
-4. Prometheus/Grafana 对性能瓶颈分析的作用；
-5. GSM8K 和代码生成验证结果；
-6. 当前资源下无法直接完成 FP32/512K 的原因与后续资源需求评估；
-7. 下一步向高可用、多模态和压测验收推进的计划。
-
-
----
-
 ## 6. Seed-OSS-36B 长上下文性能验证（RunPod 2×A100 80GB）
 
 ### 6.1 实验环境
@@ -441,3 +411,33 @@ vLLM 启动日志显示：
 | Long-context latency first-pass | `figures/week2_context_latency_first_pass_only.png` | 展示 8K/16K/32K/56K 首次长上下文 latency 趋势 |
 | Long-context tokens/s first-pass | `figures/week2_context_tokens_per_second_first_pass_only.png` | 展示首次长上下文 tokens/s 下降趋势 |
 | Prefix cache repeat latency | `figures/week2_prefix_cache_repeat_latency.png` | 展示重复长文本请求在 prefix cache/warm state 下的 latency 变化 |
+
+## 7. 当前风险与处理策略
+
+| 风险 | 影响 | 处理策略 |
+|---|---|---|
+| FP32 baseline 显存过高 | 无法按字面完成 FP32 vs INT8 | 使用 BF16 serving baseline，并说明 FP32 资源需求 |
+| INT8 路径不兼容 | 量化实验无法直接跑通 | 记录兼容性和失败日志，改用可支持方案 |
+| 32K/64K OOM | 长上下文实验失败 | 保留 OOM 边界，降低 context length |
+| 高并发 timeout | benchmark 失败率上升 | 保留失败样本，降低 concurrency 或增加 timeout |
+| Grafana 配置耗时 | 影响主实验 | 先完成 Prometheus + dashboard notes，再补 JSON |
+| GPU 成本过高 | 试错成本增加 | 先本地准备脚本和报告框架，再集中跑 GPU |
+
+---
+
+## 8. 阶段结论模板
+
+本节将在 Week2 实验完成后填写。
+
+预期总结方向：
+
+1. Seed-OSS-36B-Instruct 在不同并发下的 QPS、P95 和 tokens/s 变化；
+2. 上下文长度增长对显存、KV Cache 和尾延迟的影响；
+3. BF16 baseline 与可落地量化方案的差异；
+4. Prometheus/Grafana 对性能瓶颈分析的作用；
+5. GSM8K 和代码生成验证结果；
+6. 当前资源下无法直接完成 FP32/512K 的原因与后续资源需求评估；
+7. 下一步向高可用、多模态和压测验收推进的计划。
+
+
+---
