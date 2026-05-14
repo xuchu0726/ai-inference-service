@@ -433,35 +433,35 @@ GitHub 版本管理
 接入 Transformers 小模型后端，让项目从 mock 推理升级为真实模型推理。
 ```
 
-## Week2 RunPod Seed-OSS-36B Performance Evidence
+## Week2 RunPod Seed-OSS-36B 性能实验证据
 
-This repository includes a reproducible Week2 performance study for `ByteDance-Seed/Seed-OSS-36B-Instruct` deployed with FastAPI + VLLMBackend + vLLM on RunPod 2×A100-SXM4-80GB.
+本项目已完成 `ByteDance-Seed/Seed-OSS-36B-Instruct` 在真实云端 GPU 环境下的推理服务性能验证。服务架构采用 FastAPI + VLLMBackend + vLLM，部署环境为 RunPod 2×A100-SXM4-80GB。
 
-Key results:
+核心配置：
 
-- Serving stack: FastAPI + VLLMBackend + vLLM 0.11.2
-- Model: `ByteDance-Seed/Seed-OSS-36B-Instruct`
-- Precision: BF16
-- Tensor parallel size: 2
-- Long-context serving config: `max_model_len=65536`
-- Verified context levels: 8K, 16K, 32K, 56K, and 61.9K input tokens
-- Concurrency benchmark: 1 / 2 / 4 / 8 / 16 concurrent requests
-- Evidence preserved: logs, CSVs, metrics snapshots, nvidia-smi outputs, figures, and compressed artifacts
+- 推理服务架构：FastAPI + VLLMBackend + vLLM 0.11.2
+- 模型：`ByteDance-Seed/Seed-OSS-36B-Instruct`
+- 精度：BF16
+- Tensor Parallel Size：2
+- 长上下文服务配置：`max_model_len=65536`
+- 已验证上下文长度：8K、16K、32K、56K、61.9K input tokens
+- 并发测试范围：1 / 2 / 4 / 8 / 16 concurrent requests
+- 已保存证据：启动日志、benchmark CSV、metrics snapshot、nvidia-smi 输出、图表、压缩归档包
 
-Important reports and evidence:
+关键报告与证据路径：
 
-| Item | Path |
+| 内容 | 路径 |
 |---|---|
-| Week2 performance report | `docs/week2_performance_optimization_report.md` |
-| Long-context summary | `docs/week2_context_gradient_summary.md` |
-| Prefix Cache investigation | `docs/week2_prefix_cache_investigation_summary.md` |
-| RunPod 64K evidence | `evidence/week2_64k_context/` |
-| Pre-32K evidence | `evidence/week2_pre_32k/` |
-| Evidence archives | `artifacts/` |
-| Performance figures | `figures/` |
+| Week2 性能优化报告 | `docs/week2_performance_optimization_report.md` |
+| 长上下文梯度测试汇总 | `docs/week2_context_gradient_summary.md` |
+| Prefix Cache 复测分析 | `docs/week2_prefix_cache_investigation_summary.md` |
+| RunPod 64K 长上下文证据 | `evidence/week2_64k_context/` |
+| Pre-32K 阶段证据 | `evidence/week2_pre_32k/` |
+| 原始证据压缩包 | `artifacts/` |
+| 性能图表 | `figures/` |
 
-Engineering interpretation:
+工程结论：
 
-- Concurrency testing shows QPS improves as concurrency increases from 1 to 16, while P50/P95 latency rises moderately and error rate remains 0.
-- First-pass long-context testing shows latency increases and output tokens/s decreases as input tokens grow from 7.4K to 56.3K, matching expected prefill cost growth.
-- The 61.9K near-limit result is treated separately because repeated long-document prompts are affected by vLLM prefix cache and warm state.
+- 并发测试显示，concurrency 从 1 提升到 16 时，QPS 明显提升，P50/P95 latency 小幅上升，error rate 保持 0。
+- 长上下文首次梯度测试显示，input tokens 从 7.4K 增长到 56.3K 时，latency 上升、output tokens/s 下降，符合长上下文 prefill 成本增长预期。
+- 61.9K near-limit 测试结果单独解释，因为重复长文本 prompt 会受到 vLLM Prefix Cache 与 warm state 影响，不能直接作为冷启动长上下文性能点。
