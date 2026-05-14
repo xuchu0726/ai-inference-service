@@ -187,7 +187,7 @@ Week1 实测中，Seed-OSS-36B-Instruct 在 BF16、TP=2、max_model_len=4096 下
 4. 若不可落地，则保留兼容性分析、失败日志和替代方案；
 5. 输出量化可行性对比表。
 
-量化对比表模板：
+量化对比表结构：
 
 | 方案 | 是否跑通 | GPU memory | P95 latency | tokens/s | 质量观察 | 备注 |
 |---|---|---:|---:|---:|---|---|
@@ -226,7 +226,7 @@ Week1 实测中，Seed-OSS-36B-Instruct 在 BF16、TP=2、max_model_len=4096 下
 3. 人工判断是否正确；
 4. 汇总 accuracy、平均 latency 和错误类型。
 
-结果表模板：
+结果表结构：
 
 | case_id | correct | latency | output_tokens | thinking_budget | 备注 |
 |---:|---|---:|---:|---:|---|
@@ -247,7 +247,7 @@ Week1 实测中，Seed-OSS-36B-Instruct 在 BF16、TP=2、max_model_len=4096 下
 3. 记录 latency、output_tokens、是否可运行；
 4. 总结常见错误类型。
 
-结果表模板：
+结果表结构：
 
 | case_id | task_type | runnable | latency | output_tokens | 备注 |
 |---:|---|---|---:|---:|---|
@@ -425,19 +425,21 @@ vLLM 启动日志显示：
 
 ---
 
-## 8. 阶段结论模板
+## 8. 阶段结论
 
-本节将在 Week2 实验完成后填写。
+本周完成了 Seed-OSS-36B-Instruct 推理服务在真实云端 GPU 环境下的性能优化与模型特性验证。系统采用 FastAPI + VLLMBackend + vLLM Server 三层架构，模型侧使用 vLLM 0.11.2、BF16、Tensor Parallel Size = 2，在 2 × NVIDIA A100-SXM4-80GB 上完成部署和验证。
 
-预期总结方向：
+核心实验结论如下：
 
-1. Seed-OSS-36B-Instruct 在不同并发下的 QPS、P95 和 tokens/s 变化；
-2. 上下文长度增长对显存、KV Cache 和尾延迟的影响；
-3. BF16 baseline 与可落地量化方案的差异；
-4. Prometheus/Grafana 对性能瓶颈分析的作用；
-5. GSM8K 和代码生成验证结果；
-6. 当前资源下无法直接完成 FP32/512K 的原因与后续资源需求评估；
-7. 下一步向高可用、多模态和压测验收推进的计划。
+1. 并发能力方面，在固定 128 output tokens 的条件下，concurrency 从 1 提升到 16 时，系统 QPS 从约 0.30 提升到 4.33，P95 latency 从约 3.37s 上升到 3.69s，error rate 保持 0。结果说明 vLLM continuous batching 能有效提升吞吐，但会带来可控的单请求延迟与单请求 tokens/s 下降。
 
+2. 长上下文能力方面，Seed-OSS-36B-Instruct 在 `max_model_len=65536` 配置下成功完成 8K、16K、32K、56K 以及 61.9K input tokens 级别的推理请求。首次梯度测试中，输入 tokens 从 7,434 增长到 56,303 时，client latency 从 4.81s 增长到 16.13s，tokens/s 从 26.69 下降到 7.94，符合长上下文 prefill 成本上升预期。
 
----
+3. Prefix Cache 分析方面，61.9K near-limit 请求出现低于 56K 的 latency。通过交替复测和 vLLM metrics 分析，该现象主要来自 prefix cache、warm state 和重复 prompt 结构影响，不能解释为纯冷启动长上下文性能。该问题已在报告中单独建模并保留原始证据。
+
+4. 监控与证据链方面，本周保存了 FastAPI health/metrics、vLLM `/metrics`、vLLM 启动日志、nvidia-smi 采样、benchmark CSV、图表和 evidence 压缩包。所有关键证据已归档到 `evidence/`、`artifacts/`、`results/` 和 `figures/` 目录，并提交到 GitHub。
+
+5. 工程局限方面，当前实验完成的是 BF16 baseline、并发测试、KV cache/prefix cache 分析和 64K 级别长上下文验证。INT8 量化、FP32 对比、512K full-context、GSM8K 全量评测和 Seed-Coder 专项测试仍需要更多 GPU 资源与时间窗口支持。当前报告中对这些项目以可行性分析和后续计划形式记录，避免伪造不可复现实验结果。
+
+综上，Week2 已从简单 API 验证推进到真实大模型推理服务性能分析阶段，形成了可复现的部署脚本、测试脚本、原始实验数据、图表和工程解释。该阶段结果可作为后续 Week3 高可用架构、降级策略、多模态接入和 Week4 压测验收的基础。
+
