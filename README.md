@@ -452,6 +452,7 @@ GitHub 版本管理
 
 | 内容 | 路径 |
 |---|---|
+| Week2 交付摘要 | `docs/week2_delivery_summary.md` |
 | Week2 性能优化报告 | `docs/week2_performance_optimization_report.md` |
 | 长上下文梯度测试汇总 | `docs/week2_context_gradient_summary.md` |
 | Prefix Cache 复测分析 | `docs/week2_prefix_cache_investigation_summary.md` |
