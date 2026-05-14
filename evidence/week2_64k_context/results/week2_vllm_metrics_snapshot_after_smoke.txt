@@ -1,0 +1,16 @@
+timestamp: 2026-05-13 21:34:59
+url: http://127.0.0.1:8002/metrics
+
+===== selected vLLM metrics =====
+vllm:num_requests_running{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+vllm:num_requests_waiting{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+vllm:kv_cache_usage_perc{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+vllm:prefix_cache_queries_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 118.0
+vllm:prefix_cache_hits_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+
+===== target metric patterns =====
+vllm:num_requests_running
+vllm:num_requests_waiting
+vllm:kv_cache_usage_perc
+vllm:prefix_cache_queries_total
+vllm:prefix_cache_hits_total

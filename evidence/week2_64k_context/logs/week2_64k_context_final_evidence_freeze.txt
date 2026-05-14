@@ -1,0 +1,155 @@
+===== Week2 64K context final evidence freeze =====
+Thu May 14 00:56:23 UTC 2026
+===== git state =====
+ M results/cloud_smoke_test_response.json
+?? artifacts/
+?? logs/week2_16k_result_print.txt
+?? logs/week2_32k_result_print.txt
+?? logs/week2_64k_conservative_result_print.txt
+?? logs/week2_64k_context_final_evidence_freeze.txt
+?? logs/week2_64k_near_limit_result_print.txt
+?? logs/week2_8k_evidence_before_16k.txt
+?? logs/week2_concurrency_all_summary_print.txt
+?? logs/week2_concurrency_c1.log
+?? logs/week2_concurrency_c16.log
+?? logs/week2_concurrency_c1_c2_c4_c8_c16_summary_print.txt
+?? logs/week2_concurrency_c1_c2_c4_c8_summary_print.txt
+?? logs/week2_concurrency_c1_c2_c4_summary_print.txt
+?? logs/week2_concurrency_c2.log
+?? logs/week2_concurrency_c4.log
+?? logs/week2_concurrency_c8.log
+?? logs/week2_context_4k_all_summary_print.txt
+?? logs/week2_context_4k_calibrated_summary_print.txt
+?? logs/week2_context_8k_16k_32k_summary_before_64k.txt
+?? logs/week2_context_repeat_investigation_start.txt
+?? logs/week2_context_repeat_investigation_summary.txt
+?? logs/week2_fastapi.pid
+?? logs/week2_fastapi_64k.pid
+?? logs/week2_fastapi_vllm.log
+?? logs/week2_fastapi_vllm_64k.log
+?? logs/week2_fastapi_vllm_64k_tail_after_16k.txt
+?? logs/week2_fastapi_vllm_64k_tail_after_32k.txt
+?? logs/week2_fastapi_vllm_64k_tail_after_64k_conservative.txt
+?? logs/week2_fastapi_vllm_64k_tail_after_64k_near_limit.txt
+?? logs/week2_fastapi_vllm_64k_tail_after_8k.txt
+?? logs/week2_fastapi_vllm_64k_tail_after_context_repeat_investigation.txt
+?? logs/week2_fastapi_vllm_tail_before_32k.txt
+?? logs/week2_nvidia_smi_after_8k_on_64k_service.txt
+?? logs/week2_nvidia_smi_after_concurrency_c16.txt
+?? logs/week2_nvidia_smi_after_concurrency_c1_c2_c4.txt
+?? logs/week2_nvidia_smi_after_concurrency_c8.txt
+?? logs/week2_nvidia_smi_after_context_16k_on_64k_service.txt
+?? logs/week2_nvidia_smi_after_context_32k_on_64k_service.txt
+?? logs/week2_nvidia_smi_after_context_4k.txt
+?? logs/week2_nvidia_smi_after_context_4k_calibrated_3000chars.txt
+?? logs/week2_nvidia_smi_after_context_4k_calibrated_6000chars.txt
+?? logs/week2_nvidia_smi_after_context_4k_calibrated_final.txt
+?? logs/week2_nvidia_smi_after_context_64k_conservative_on_64k_service.txt
+?? logs/week2_nvidia_smi_after_context_64k_near_limit_on_64k_service.txt
+?? logs/week2_nvidia_smi_after_context_repeat_investigation.txt
+?? logs/week2_nvidia_smi_after_fastapi_64k_smoke.txt
+?? logs/week2_nvidia_smi_after_fastapi_smoke.txt
+?? logs/week2_nvidia_smi_after_vllm_64k_startup.txt
+?? logs/week2_nvidia_smi_after_vllm_ready.txt
+?? logs/week2_nvidia_smi_before_context_64k_on_64k_service.txt
+?? logs/week2_nvidia_smi_before_context_repeat_investigation.txt
+?? logs/week2_nvidia_smi_sampling.csv
+?? logs/week2_nvidia_smi_sampling_64k_context.csv
+?? logs/week2_nvidia_smi_sampling_64k_context_tail_after_32k.txt
+?? logs/week2_nvidia_smi_sampling_64k_context_tail_after_64k_conservative.txt
+?? logs/week2_nvidia_smi_sampling_64k_context_tail_after_64k_near_limit.txt
+?? logs/week2_nvidia_smi_sampling_tail_after_c16.txt
+?? logs/week2_nvidia_smi_sampling_tail_after_c1_c2_c4.txt
+?? logs/week2_nvidia_smi_sampling_tail_after_c8.txt
+?? logs/week2_nvidia_smi_sampling_tail_before_32k.txt
+?? logs/week2_pre_32k_evidence_freeze.txt
+?? logs/week2_pre_32k_nvidia_smi.txt
+?? logs/week2_result_file_inventory_before_32k.txt
+?? logs/week2_seed_oss_vllm.pid
+?? logs/week2_seed_oss_vllm_64k.pid
+?? logs/week2_seed_oss_vllm_64k_key_startup_lines.txt
+?? logs/week2_seed_oss_vllm_64k_tail_after_16k.txt
+?? logs/week2_seed_oss_vllm_64k_tail_after_32k.txt
+?? logs/week2_seed_oss_vllm_64k_tail_after_64k_conservative.txt
+?? logs/week2_seed_oss_vllm_64k_tail_after_64k_near_limit.txt
+?? logs/week2_seed_oss_vllm_64k_tail_after_8k.txt
+?? logs/week2_seed_oss_vllm_64k_tail_after_context_repeat_investigation.txt
+?? logs/week2_seed_oss_vllm_launch.log
+?? logs/week2_seed_oss_vllm_launch_64k.log
+?? logs/week2_seed_oss_vllm_launch_hfcache.log
+?? logs/week2_seed_oss_vllm_ready_tail.txt
+?? logs/week2_seed_oss_vllm_tail_before_32k.txt
+?? results/week2_concurrency_c1.csv
+?? results/week2_concurrency_c16.csv
+?? results/week2_concurrency_c16_summary.csv
+?? results/week2_concurrency_c1_summary.csv
+?? results/week2_concurrency_c2.csv
+?? results/week2_concurrency_c2_summary.csv
+?? results/week2_concurrency_c4.csv
+?? results/week2_concurrency_c4_summary.csv
+?? results/week2_concurrency_c8.csv
+?? results/week2_concurrency_c8_summary.csv
+?? results/week2_context_length_16k_on_64k_service.csv
+?? results/week2_context_length_32k_on_64k_service.csv
+?? results/week2_context_length_4k.csv
+?? results/week2_context_length_4k_calibrated_3000chars.csv
+?? results/week2_context_length_4k_calibrated_6000chars.csv
+?? results/week2_context_length_64k_conservative_on_64k_service.csv
+?? results/week2_context_length_64k_near_limit_on_64k_service.csv
+?? results/week2_context_length_8k_on_64k_service.csv
+?? results/week2_context_repeat_r1_56k_then_64k.csv
+?? results/week2_context_repeat_r2_64k_then_56k.csv
+?? results/week2_context_repeat_r3_56k_then_64k.csv
+?? results/week2_fastapi_64k_health.json
+?? results/week2_fastapi_64k_metrics_head.txt
+?? results/week2_fastapi_64k_smoke_test.txt
+?? results/week2_fastapi_health.json
+?? results/week2_fastapi_metrics_head.txt
+?? results/week2_fastapi_smoke_test.txt
+?? results/week2_pre_32k_fastapi_health.json
+?? results/week2_pre_32k_vllm_metrics_snapshot.txt
+?? results/week2_pre_32k_vllm_models.json
+?? results/week2_seed_oss_vllm_64k_metrics_head.txt
+?? results/week2_seed_oss_vllm_64k_models.json
+?? results/week2_seed_oss_vllm_models.json
+?? results/week2_vllm_64k_metrics_snapshot_after_smoke.txt
+?? results/week2_vllm_metrics_after_context_repeat_investigation.txt
+?? results/week2_vllm_metrics_before_context_repeat_investigation.txt
+?? results/week2_vllm_metrics_head.txt
+?? results/week2_vllm_metrics_snapshot_after_8k_on_64k_service.txt
+?? results/week2_vllm_metrics_snapshot_after_concurrency_c16.txt
+?? results/week2_vllm_metrics_snapshot_after_concurrency_c1_c2_c4.txt
+?? results/week2_vllm_metrics_snapshot_after_concurrency_c8.txt
+?? results/week2_vllm_metrics_snapshot_after_context_16k_on_64k_service.txt
+?? results/week2_vllm_metrics_snapshot_after_context_32k_on_64k_service.txt
+?? results/week2_vllm_metrics_snapshot_after_context_4k.txt
+?? results/week2_vllm_metrics_snapshot_after_context_4k_calibrated_3000chars.txt
+?? results/week2_vllm_metrics_snapshot_after_context_4k_calibrated_6000chars.txt
+?? results/week2_vllm_metrics_snapshot_after_context_4k_calibrated_final.txt
+?? results/week2_vllm_metrics_snapshot_after_context_64k_conservative_on_64k_service.txt
+?? results/week2_vllm_metrics_snapshot_after_context_64k_near_limit_on_64k_service.txt
+?? results/week2_vllm_metrics_snapshot_after_smoke.txt
+?? results/week2_vllm_metrics_snapshot_before_context_64k_on_64k_service.txt
+f2e4f05 新增 Week2 实验运行手册
+510eba5 新增 Week2 性能结果绘图脚本
+4363ae8 新增 Week2 数学推理与代码生成评测脚本
+5c1f64b 补充 Week2 量化优化方案
+23caefa 补充 Week2 动态 Batch 测试方案
+82263b3 新增 Week2 并发性能测试矩阵脚本
+e17e7d7 更新 Week2 报告监控采样说明
+84cc528 新增 Week2 GPU 与 vLLM 指标采样脚本
+===== service state =====
+root        4162    1368  0 May13 pts/1    00:00:00 bash deployment/cloud/run_vllm_seed_oss_36b_tp2.sh
+root        4165    1368  0 May13 pts/1    00:00:00 tail -f logs/week2_seed_oss_vllm_launch_64k.log
+root        4166    4162  0 May13 pts/1    00:00:00 bash deployment/cloud/run_vllm_seed_oss_36b_tp.sh
+root        4235    4166  0 May13 pts/1    00:00:22 /workspace/venvs/ai-inference-vllm/bin/python /workspace/venvs/ai-inference-vllm/bin/vllm serve ByteDance-Seed/Seed-OSS-36B-Instruct --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --max-model-len 65536 --max-num-batched-tokens 8192 --gpu-memory-utilization 0.90 --dtype bfloat16 --enable-auto-tool-choice --tool-call-parser seed_oss --trust-remote-code
+root        4376    4235  0 May13 pts/1    00:00:00 /workspace/venvs/ai-inference-vllm/bin/python -c from multiprocessing.resource_tracker import main;main(36)
+root        4511    4377 92 May13 pts/1    01:41:08 VLLM::Worker_TP0
+root        4512    4377 92 May13 pts/1    01:40:59 VLLM::Worker_TP1
+root        8635    3398  0 May13 pts/2    00:00:00 bash deployment/cloud/run_fastapi_vllm.sh
+root        8638    8635  0 May13 pts/2    00:00:09 python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+LISTEN 0      2048         0.0.0.0:8002       0.0.0.0:*    users:(("vllm",pid=4235,fd=26))            
+LISTEN 0      2048         0.0.0.0:8000       0.0.0.0:*    users:(("python",pid=8638,fd=11))          
+LISTEN 0      4096               *:8003             *:*    users:(("VLLM::Worker_TP",pid=4511,fd=63)) 
+===== vLLM 64K model info =====
+{"object":"list","data":[{"id":"ByteDance-Seed/Seed-OSS-36B-Instruct","object":"model","created":1778716193,"owned_by":"vllm","root":"ByteDance-Seed/Seed-OSS-36B-Instruct","parent":null,"max_model_len":65536,"permission":[{"id":"modelperm-bd2c25f560fd4bfe9172128301dd2c05","object":"model_permission","created":1778716193,"allow_create_engine":false,"allow_sampling":true,"allow_logprobs":true,"allow_search_indices":false,"allow_view":true,"allow_fine_tuning":false,"organization":"*","group":null,"is_blocking":false}]}]}

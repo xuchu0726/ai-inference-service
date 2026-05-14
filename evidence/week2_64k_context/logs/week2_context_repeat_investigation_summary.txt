@@ -1,0 +1,38 @@
+case_id,context_target,target_chars,actual_input_chars,status_code,ok,client_latency_seconds,server_latency_seconds,backend,model_name,device,input_tokens,output_tokens,tokens_per_second,max_new_tokens,thinking_budget,response_preview,error
+1,56k,100000,100058,200,True,4.226894,4.221611,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,56303,128,30.3202,128,512,"<seed:think>
+<seed:cot_budget_reflect>I have used 150 tokens, and there are 362 tokens remaining for use.</seed:cot_budget_reflect>
+</seed:think>### 结构化风险摘要
+
+
+#### **一、价格风险**  
+甲方有权根据市场情况单方调整服务价格，乙方需在收到通知后继续履行合同，可能面临价格上涨的风险，且无协商或抗辩空间。
+
+
+#### **二、解除风险**  
+- **乙方提前解除合同**：需承担违约责任，解除成本较高；  
+- **甲方调整服务的潜在影响**：甲方可基于服务稳定性等理由调整服务内容、访问权限、计费方式等",
+2,64k,110000,110058,200,True,4.266881,4.263268,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,61917,128,30.0239,128,512,"<seed:think>
+<seed:cot_budget_reflect>I have used 130 tokens, and there are 382 tokens remaining for use.</seed:cot_budget_reflect>
+合同文本。请在阅读后总结其中的价格风险、解除风险、责任风险、数据风险和合规风险。
+
+合同条款：甲方有权根据市场情况调整服务价格，乙方应在收到通知后继续履行合同。如乙方提前解除合同，应承担违约责任。甲方可以基于服务稳定性、安全合规和业务连续性需要，对服务内容、访问权限、数据处理流程和计费方式进行调整。乙方应保证提交数据来源合法，不得上传违反法律法规、侵犯第三方",
+case_id,context_target,target_chars,actual_input_chars,status_code,ok,client_latency_seconds,server_latency_seconds,backend,model_name,device,input_tokens,output_tokens,tokens_per_second,max_new_tokens,thinking_budget,response_preview,error
+1,64k,110000,110058,200,True,4.271117,4.266843,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,61917,128,29.9988,128,512,"<seed:think>
+<seed:cot_budget_reflect>I have used 133 tokens, and there are 379 tokens remaining for use.</seed:cot_budget_reflect>
+ contract文本。请在阅读后总结其中的价格风险、解除风险、责任风险、数据风险和合规风险。
+
+合同条款：甲方有权根据市场情况调整服务价格，乙方应在收到通知后继续履行合同。如乙方提前解除合同，应承担违约责任。甲方可以基于服务稳定性、安全合规和业务连续性需要，对服务内容、访问权限、数据处理流程和计费方式进行调整。乙方应保证提交数据来源合法，不得上传违反法律法规、侵犯第三方",
+2,56k,100000,100058,200,True,4.20228,4.199288,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,56303,128,30.4814,128,512,"<seed:think>
+Got it, let's tackle this problem. The user wants a structured risk summary from a contract text, focusing on five categories: price risk, termination risk, liability risk, data risk, and compliance risk. First, I need to recall the contract clauses provided repeatedly:
+
+1. **Price Risk**: The key point here is ""甲方有权根据市场情况调整服务价格，乙方应在收到通知后继续履行合同."" So甲方 (Party A) can adjust prices based on market conditions, and Party B has to keep performing after notice. That's a price risk for Part",
+case_id,context_target,target_chars,actual_input_chars,status_code,ok,client_latency_seconds,server_latency_seconds,backend,model_name,device,input_tokens,output_tokens,tokens_per_second,max_new_tokens,thinking_budget,response_preview,error
+1,56k,100000,100058,200,True,4.200365,4.196152,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,56303,128,30.5041,128,512,"<seed:think>
+Got it, let's tackle this problem. The user wants a structured risk summary from a contract text, focusing on five categories: price risk, termination risk, liability risk, data risk, and compliance risk. First, I need to recall what each of these risks entails.
+
+First, I'll read through the provided contract clauses carefully. The contract says: ""甲方有权根据市场情况调整服务价格，乙方应在收到通知后继续履行合同。"" That directly relates to price risk because甲方 (Party A) can change the price anytime based on market c",
+2,64k,110000,110058,200,True,4.261497,4.258515,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,61917,128,30.0574,128,512,"<seed:think>
+<seed:cot_budget_reflect>I have used 131 tokens, and there are 381 tokens remaining for use.</seed:cot_budget_reflect>
+合同文本。请在阅读后总结其中的价格风险、解除风险、责任风险、数据风险和合规风险。
+
+合同条款：甲方有权根据市场情况调整服务价格，乙方应在收到通知后继续履行合同。如乙方提前解除合同，应承担违约责任。甲方可以基于服务稳定性、安全合规和业务连续性需要，对服务内容、访问权限、数据处理流程和计费方式进行调整。乙方应保证提交数据来源合法，不得上传违反法律法规、侵犯第三方",

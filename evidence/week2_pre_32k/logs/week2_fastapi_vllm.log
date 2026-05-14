@@ -1,0 +1,150 @@
+nohup: ignoring input
+===== START FASTAPI WITH VLLM BACKEND =====
+INFERENCE_BACKEND=vllm
+MODEL_NAME=ByteDance-Seed/Seed-OSS-36B-Instruct
+VLLM_MODEL_NAME=ByteDance-Seed/Seed-OSS-36B-Instruct
+VLLM_BASE_URL=http://127.0.0.1:8002/v1
+HOST=0.0.0.0
+PORT=8000
+INFO:     Started server process [3294]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:49904 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49920 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54070 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37280 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37292 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54786 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54802 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54810 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54822 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39712 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39720 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39730 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39764 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39752 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39744 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42938 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42926 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42904 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42948 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42940 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42916 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42964 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42930 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38480 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38558 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38576 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38540 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38466 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38512 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38446 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38522 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38496 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38452 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38538 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38556 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38568 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38438 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38432 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38544 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59310 - "POST /generate HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/workspace/ai-inference-service/app/backends/vllm_backend.py", line 83, in generate
+    with urllib.request.urlopen(
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/urllib/request.py", line 216, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/urllib/request.py", line 525, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/urllib/request.py", line 634, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/urllib/request.py", line 563, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/urllib/request.py", line 496, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/lib/python3.11/urllib/request.py", line 643, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/uvicorn/protocols/http/httptools_impl.py", line 421, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/uvicorn/middleware/proxy_headers.py", line 56, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/fastapi/applications.py", line 1159, in __call__
+    await super().__call__(scope, receive, send)
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/starlette/applications.py", line 107, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/prometheus_fastapi_instrumentator/middleware.py", line 177, in __call__
+    raise exc
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/prometheus_fastapi_instrumentator/middleware.py", line 175, in __call__
+    await self.app(scope, receive, send_wrapper)
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/fastapi/routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/fastapi/routing.py", line 120, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/fastapi/routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/fastapi/routing.py", line 330, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/starlette/concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/anyio/to_thread.py", line 63, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 2518, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1002, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ai-inference-service/app/main.py", line 22, in generate
+    return generate_text(
+           ^^^^^^^^^^^^^^
+  File "/workspace/ai-inference-service/app/inference.py", line 35, in generate_text
+    return backend.generate(
+           ^^^^^^^^^^^^^^^^^
+  File "/workspace/ai-inference-service/app/backends/vllm_backend.py", line 92, in generate
+    raise RuntimeError(
+RuntimeError: vLLM request failed with HTTP 400: {"error":{"message":"This model's maximum context length is 4096 tokens. However, your request has 6870 input tokens. Please reduce the length of the input messages. None","type":"BadRequestError","param":null,"code":400}}
+INFO:     127.0.0.1:50680 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48802 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42454 - "GET /health HTTP/1.1" 200 OK

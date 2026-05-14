@@ -1,0 +1,20 @@
+===== 4K calibrated context baseline =====
+===== failed 12000 chars =====
+case_id,context_target,target_chars,actual_input_chars,status_code,ok,client_latency_seconds,server_latency_seconds,backend,model_name,device,input_tokens,output_tokens,tokens_per_second,max_new_tokens,thinking_budget,response_preview,error
+1,4k,12000,12058,500,False,0.063502,,,,,,,,256,512,,Internal Server Error
+===== 3000 chars success =====
+case_id,context_target,target_chars,actual_input_chars,status_code,ok,client_latency_seconds,server_latency_seconds,backend,model_name,device,input_tokens,output_tokens,tokens_per_second,max_new_tokens,thinking_budget,response_preview,error
+1,4k,3000,3058,200,True,3.707332,3.703895,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,1818,128,34.5582,128,512,"<seed:think>
+<seed:cot_budget_reflect>I have used 133 tokens, and there are 379 tokens remaining for use.</seed:cot_budget_reflect>
+源合法，不得上传违反法律法规、侵犯第三方权益或包含敏感信息的数据。双方应对商业秘密和用户数据承担保密义务。</seed:think>### 价格风险  
+甲方有权根据市场情况单方面调整服务价格，乙方需在收到通知后继续履行合同，可能面临价格上涨的成本增加风险，且调整机制未明确约束条件（如调整频率、幅度），乙方议价空间有限。
+
+
+### 解除风险  
+乙方提前解除合同需承担违约责任，但合同未明确甲方解除",
+===== 6000 chars success =====
+case_id,context_target,target_chars,actual_input_chars,status_code,ok,client_latency_seconds,server_latency_seconds,backend,model_name,device,input_tokens,output_tokens,tokens_per_second,max_new_tokens,thinking_budget,response_preview,error
+1,4k,6000,6058,200,True,3.740565,3.737143,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,3503,128,34.2508,128,512,"<seed:think>
+<seed:cot_budget_reflect>I have used 128 tokens, and there are 384 tokens remaining for use.</seed:cot_budget_reflect>
+务稳定性、安全合规和业务连续性需要，对服务内容、访问权限、数据处理流程和计费方式进行调整。乙方应保证提交数据来源合法，不得上传违反法律法规、侵犯第三方权益或包含敏感信息的数据。双方应对商业秘密和用户数据承担保密义务。</seed:think>### 价格风险  
+甲方有权根据市场情况单方面调整服务价格，乙方需在收到通知后继续履行合同，可能面临价格上涨的成本增加风险，且调价机制缺乏乙方协商或异议",
