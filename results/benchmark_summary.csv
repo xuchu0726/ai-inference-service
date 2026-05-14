@@ -1,0 +1,2 @@
+total_requests,successful_requests,failed_requests,error_rate,client_latency_avg,client_latency_p50,client_latency_p95,server_latency_avg,server_latency_p50,server_latency_p95,tokens_per_second_avg,tokens_per_second_p50,tokens_per_second_p95
+12,12,0,0.0,2.416457,2.540872,3.719141,2.156016,2.516544,2.772284,49.510625,50.4472,52.925195

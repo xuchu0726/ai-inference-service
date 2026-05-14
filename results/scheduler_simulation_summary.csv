@@ -1,0 +1,3 @@
+policy,num_requests,avg_wait_time,p50_wait_time,p95_wait_time,avg_latency,p50_latency,p95_latency,finish_time,gpu_busy_time,gpu_idle_time,gpu_utilization,output_tokens_per_time
+static_batching,64,6.741794,6.5828,13.857835,9.306294,9.1608,16.565035,21.0579,20.516,0.5419,0.974266,446.958149
+continuous_batching,64,4.526095,4.36518,9.618931,6.378265,6.31606,11.164498,15.53996,15.45836,0.0816,0.994749,605.664365

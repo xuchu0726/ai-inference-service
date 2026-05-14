@@ -1,0 +1,4 @@
+case_id,status_code,client_latency_seconds,server_latency_seconds,input_chars,max_new_tokens,thinking_budget,response
+1,200,0.008907,4.0531158447265625e-06,16,128,128,"[Mock Output] Received prompt with 16 characters. max_new_tokens=128, temperature=0.7, thinking_budget=128."
+2,200,0.001335,1.9073486328125e-06,18,128,128,"[Mock Output] Received prompt with 18 characters. max_new_tokens=128, temperature=0.7, thinking_budget=128."
+3,200,0.001188,1.1920928955078125e-06,50,128,128,"[Mock Output] Received prompt with 50 characters. max_new_tokens=128, temperature=0.7, thinking_budget=128."
