@@ -1,0 +1,5 @@
+{"case_id":"codegen_001","task":"Write a Python function add(a, b) that returns the sum of two numbers.","expected_keywords":["def add","return"]}
+{"case_id":"codegen_002","task":"Write a Python function is_even(n) that returns True if n is even and False otherwise.","expected_keywords":["def is_even","%","return"]}
+{"case_id":"codegen_003","task":"Write a Python function reverse_string(s) that returns the reversed string.","expected_keywords":["def reverse_string","return"]}
+{"case_id":"codegen_004","task":"Write a Python function factorial(n) using a loop.","expected_keywords":["def factorial","for","return"]}
+{"case_id":"codegen_005","task":"Write a Python function count_words(text) that returns the number of words in a string.","expected_keywords":["def count_words","split","return"]}

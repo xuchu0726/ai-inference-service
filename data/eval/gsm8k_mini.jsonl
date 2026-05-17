@@ -1,0 +1,5 @@
+{"case_id":"gsm8k_001","question":"There are 15 trees in a park. Workers plant 7 more trees, then cut down 4 old trees. How many trees are there now?","expected_answer":"18"}
+{"case_id":"gsm8k_002","question":"A shop sells notebooks for 3 dollars each. If Alice buys 8 notebooks and pays with a 30 dollar bill, how much change should she receive?","expected_answer":"6"}
+{"case_id":"gsm8k_003","question":"Tom has 12 apples. He gives half of them to his sister, then buys 9 more apples. How many apples does Tom have now?","expected_answer":"15"}
+{"case_id":"gsm8k_004","question":"A train travels 60 miles per hour for 2.5 hours. How many miles does it travel?","expected_answer":"150"}
+{"case_id":"gsm8k_005","question":"A class has 24 students. Three quarters of them passed the exam. How many students passed?","expected_answer":"18"}
