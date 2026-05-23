@@ -1,0 +1,6 @@
+case_id,task_type,status_code,ok,client_latency_seconds,server_latency_seconds,backend,model_name,device,input_tokens,output_tokens,tokens_per_second,max_new_tokens,thinking_budget,simple_correctness,response_preview,error
+codegen_001,codegen,200,True,0.540333,0.536809,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,121,19,35.3944,256,0,pass,"\n\n```python\ndef add(a, b):\n    return a + b\n```",
+codegen_002,codegen,200,True,0.613821,0.612745,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,124,23,37.536,256,0,pass,\n\n```python\ndef is_even(n):\n    return n % 2 == 0\n```,
+codegen_003,codegen,200,True,0.530288,0.52928,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,118,20,37.7872,256,0,pass,\n\n```python\ndef reverse_string(s):\n    return s[::-1]\n```,
+codegen_004,codegen,200,True,1.626559,1.624958,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,116,62,38.1548,256,0,pass,"\n\n```python\ndef factorial(n):\n    if n < 0:\n        raise ValueError(""n must be a non-negative integer"")\n    result = 1\n    for i in range(2, n + 1):\n        result *= i\n    return result\n```",
+codegen_005,codegen,200,True,0.50517,0.503569,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,122,19,37.7307,256,0,pass,\n\n```python\ndef count_words(text):\n    return len(text.split())\n```,
