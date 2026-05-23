@@ -275,3 +275,86 @@ Week2 要求使用 Prometheus + Grafana 分析 GPU 利用率和内存瓶颈。�
 当前项目已具备基础可观测性闭环：FastAPI metrics、vLLM metrics、GPU snapshot、GPU sampling、Prometheus 配置和 Grafana dashboard JSON。实验结果显示，Seed-OSS-36B-Instruct 在 2×A100 80GB BF16 TP=2 环境下的主要瓶颈是显存与 KV cache capacity，而不是单次请求期间的 GPU 计算利用率。
 
 该结论为后续量化优化、FP8 KV Cache、动态 batching、长上下文扩展和高可用服务治理提供了监控基础。
+
+---
+
+## 11. Week2 最终 Metrics Evidence 补充
+
+本节补充本轮最终完成的 GSM8K full benchmark、codegen mini eval 和 dynamic batching sweep 对应的可观测性 evidence。
+
+### 11.1 新增监控快照
+
+| 场景 | GPU snapshot | vLLM metrics | FastAPI metrics |
+|---|---|---|---|
+| GSM8K full benchmark | `logs/week2_nvidia_smi_after_gsm8k_full_budget0.txt` | `results/week2_vllm_metrics_after_gsm8k_full_budget0.txt` | `results/week2_fastapi_metrics_after_gsm8k_full_budget0.txt` |
+| Codegen mini eval | `logs/week2_nvidia_smi_after_codegen_mini_budget0.txt` | `results/week2_vllm_metrics_after_codegen_mini_budget0.txt` | `results/week2_fastapi_metrics_after_codegen_mini_budget0.txt` |
+| Dynamic batch sweep | `logs/week2_nvidia_smi_after_dynamic_batch_sweep.txt` | `results/week2_vllm_metrics_after_dynamic_batch_sweep.txt` | `results/week2_fastapi_metrics_after_dynamic_batch_sweep.txt` |
+
+这些文件用于证明每轮关键实验之后都保存了 GPU、vLLM 和 FastAPI 层面的状态快照，避免只保留 benchmark CSV 而缺少系统侧证据。
+
+### 11.2 GSM8K Full Benchmark 监控结论
+
+GSM8K full benchmark 共完成 1319 个样本，所有请求均通过 FastAPI `/generate` 成功返回，API error rate 为 0。
+
+关键性能结果：
+
+| 指标 | 结果 |
+|---|---:|
+| Total cases | 1319 |
+| API error rate | 0.0 |
+| Accuracy | 75.74% |
+| Client latency P50 | 5.51s |
+| Client latency P95 | 6.69s |
+| Average tokens/s | 38.30 |
+
+该实验说明服务在长时间顺序推理任务中保持稳定。GPU snapshot 显示，在 benchmark 完成后 vLLM worker 仍常驻占用显存，但 GPU utilization 回到 idle 状态。这符合 vLLM serving 的常驻模型服务模式：显存长期占用，计算利用率随请求变化。
+
+### 11.3 Codegen Mini Eval 监控结论
+
+Codegen mini eval 共完成 5 个 Python 函数生成任务，全部 API 请求成功，简单正确性检查为 5/5 passed。
+
+关键性能结果：
+
+| 指标 | 结果 |
+|---|---:|
+| Total cases | 5 |
+| API error rate | 0.0 |
+| Simple correctness | 5 / 5 passed |
+| Latency range | 0.505s – 1.627s |
+
+该实验请求较短，因此 latency 明显低于 GSM8K full benchmark。它用于验证同一套 FastAPI + VLLMBackend + vLLM 服务链路可以支持代码生成场景，而不是只支持自然语言摘要或数学推理。
+
+### 11.4 Dynamic Batch Sweep 监控结论
+
+Dynamic batch sweep 完成 concurrency=1/2/4/8/16 的测试，每个并发级别发送 40 个请求。
+
+关键性能结果：
+
+| Concurrency | QPS | P95 latency (s) | Error rate | Avg tokens/s |
+|---:|---:|---:|---:|---:|
+| 1 | 0.325 | 3.348 | 0.0 | 38.294 |
+| 2 | 0.659 | 3.320 | 0.0 | 38.586 |
+| 4 | 1.238 | 3.361 | 0.0 | 38.302 |
+| 8 | 2.368 | 3.400 | 0.0 | 37.868 |
+| 16 | 3.848 | 3.532 | 0.0 | 36.602 |
+
+该结果体现出 vLLM continuous batching 的系统行为：
+
+1. QPS 从 0.325 提升到 3.848，吞吐提升约 11.84×；
+2. P95 latency 从 3.348s 上升到 3.532s，仅增加约 5.5%；
+3. error rate 始终为 0；
+4. Avg tokens/s 小幅下降，说明高并发下单请求生成速率略有牺牲；
+5. 整体服务吞吐收益远大于尾延迟损失。
+
+### 11.5 对可观测性任务要求的回应
+
+结合原有 64K 长上下文、Prefix Cache 复测，以及本轮新增 GSM8K/codegen/dynamic batch evidence，当前可观测性闭环包括：
+
+1. FastAPI request / latency / process metrics；
+2. vLLM running requests、waiting requests、KV cache、Prefix Cache、token throughput metrics；
+3. nvidia-smi snapshot；
+4. benchmark CSV summary；
+5. 不同实验场景后的 metrics snapshot；
+6. 原始 evidence package 归档。
+
+当前仍未完成的是完整 Grafana 实机截图和长时间 Prometheus TSDB 留存。该部分应作为 Week3/Week4 运维可视化增强任务继续补齐。
