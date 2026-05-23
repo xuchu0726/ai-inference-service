@@ -51,6 +51,49 @@
 - 缓存命中后的 latency 不能代表 cold prompt 长上下文性能；
 - benchmark 必须区分 cold prompt、warm prompt、prefix-cache-hit prompt。
 
+### 3.4 GSM8K 全量评测
+
+完成 GSM8K test set 全量评测，通过 FastAPI `/generate` 接口调用 Seed-OSS-36B-Instruct。
+
+| 指标 | 结果 |
+|---|---:|
+| 总样本数 | 1319 |
+| API 成功样本数 | 1319 |
+| API 失败样本数 | 0 |
+| API error rate | 0.0 |
+| 可解析答案样本数 | 1319 |
+| 正确样本数 | 999 |
+| Accuracy | 75.74% |
+| Client latency P50 | 5.51s |
+| Client latency P95 | 6.69s |
+| Average tokens/s | 38.30 |
+| Average output tokens | 206.77 |
+
+该结果说明当前服务已经不只是 smoke test，而是具备真实任务级评测结果。GSM8K full benchmark 为 Seed-OSS-36B-Instruct 的数学推理能力、服务稳定性和端到端延迟提供了可量化基线。
+
+Evidence：
+
+- `results/week2_gsm8k_full_seed_oss_budget0_summary.csv`
+- `artifacts/week2_seed_oss_gsm8k_codegen_dynamic_batch_evidence_20260518_042845.tar.gz`
+
+### 3.5 代码生成 Mini Eval
+
+完成 5 个 Python 代码生成小样本验证。
+
+| 指标 | 结果 |
+|---|---:|
+| 总样本数 | 5 |
+| API 成功样本数 | 5 |
+| API 失败样本数 | 0 |
+| 简单正确性检查 | 5 / 5 passed |
+| Latency range | 0.505s – 1.627s |
+
+测试任务覆盖简单 Python 函数生成，包括加法、奇偶判断、字符串反转、阶乘和单词计数。该测试不能替代 HumanEval 或 MBPP，但可以作为 Seed-OSS-36B-Instruct 代码生成能力的轻量验证。
+
+Evidence：
+
+- `results/week2_codegen_mini_seed_oss_budget0.csv`
+
 ## 4. 关键产物路径
 
 | 内容 | 路径 |
@@ -65,7 +108,15 @@
 
 ## 5. 当前局限
 
-当前实验已完成 BF16 baseline、并发测试、64K 级别长上下文验证和 Prefix Cache 分析。INT8 量化、FP32 对比、512K full-context、GSM8K 全量评测、Seed-Coder 专项验证仍需要更多 GPU 资源和独立实验窗口支持。
+当前 Week2 已完成 BF16 baseline、并发测试、64K 级别长上下文验证、Prefix Cache 分析、GSM8K full 评测和代码生成 mini eval。
+
+仍未完成或需要后续补强的部分如下：
+
+1. FP32 serving 未完成实机验证。Seed-OSS-36B 在 2×A100 80GB 环境下 BF16 已接近显存上限，FP32 权重和 KV cache 会带来更高显存压力。
+2. INT8 / AWQ / GPTQ 量化 serving 未完成实机验证。当前缺少已验证兼容 Seed-OSS-36B 的量化权重和 vLLM 加载路径。
+3. 512K full-context 未完成实机验证。Week2 已完成 64K 级别服务配置，并验证最高约 61.9K input tokens 请求。
+4. 代码生成测试使用的是 Seed-OSS-36B-Instruct，不是专门的 Seed-Coder 模型。Seed-Coder 专项验证仍是后续任务。
+5. Grafana dashboard JSON 和 Prometheus 配置已准备，但本轮未保存完整 Grafana 实机截图。
 
 ## 6. 阶段结论
 
