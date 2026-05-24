@@ -268,7 +268,7 @@ Week1 实测中，Seed-OSS-36B-Instruct 在 BF16、TP=2、max_model_len=4096 下
 
 ## 5. 实验结果索引
 
-本节等待 Week2 实验执行后填入。
+本节索引 Week2 已完成实验结果与对应 evidence 路径。
 
 ### 5.1 并发 benchmark
 
@@ -463,116 +463,7 @@ vLLM 启动日志显示：
 
 4. 监控与证据链方面，本周保存了 FastAPI health/metrics、vLLM `/metrics`、vLLM 启动日志、nvidia-smi 采样、benchmark CSV、图表和 evidence 压缩包。所有关键证据已归档到 `evidence/`、`artifacts/`、`results/` 和 `figures/` 目录，并提交到 GitHub。
 
-5. 工程局限方面，当前实验完成的是 BF16 baseline、并发测试、KV cache/prefix cache 分析和 64K 级别长上下文验证。INT8 量化、FP32 对比、512K full-context 和 Seed-Coder 专项测试仍需要更多 GPU 资源、兼容量化权重或独立实验窗口支持。GSM8K full benchmark 和代码生成 mini eval 已在本轮补充完成。当前报告中对这些项目以可行性分析和后续计划形式记录，避免伪造不可复现实验结果。
+5. 工程局限方面，当前实验完成的是 BF16 baseline、并发测试、KV cache/prefix cache 分析、64K 级别长上下文验证、GSM8K full benchmark 和代码生成 mini eval。INT8 量化、FP32 对比、512K full-context 和 Seed-Coder 专项测试仍需要更多 GPU 资源、兼容量化权重或独立实验窗口支持。GSM8K full benchmark 和代码生成 mini eval 已在本轮补充完成。当前报告中对这些项目以可行性分析和后续计划形式记录，避免伪造不可复现实验结果。
 
 综上，Week2 已从简单 API 验证推进到真实大模型推理服务性能分析阶段，形成了可复现的部署脚本、测试脚本、原始实验数据、图表和工程解释。该阶段结果可作为后续 Week3 高可用架构、降级策略、多模态接入和 Week4 压测验收的基础。
 
----
-
-## 9. Week2 最终实测结果补充
-
-本节补充 RunPod 2×A100 80GB 环境下最终完成的 Week2 实测结果，用于统一主报告与最新 evidence 的口径。
-
-### 9.1 Dynamic Batching / Concurrency Sweep
-
-本轮正式并发测试通过 FastAPI `/generate` 接口调用 vLLM 后端完成，固定 `max_new_tokens=128`、`temperature=0.0`、`thinking_budget=0`，每个并发级别发送 40 个请求。
-
-| Concurrency | Requests | Error rate | QPS | Avg latency (s) | P50 latency (s) | P95 latency (s) | Avg tokens/s |
-|---:|---:|---:|---:|---:|---:|---:|---:|
-| 1 | 40 | 0.0 | 0.325 | 3.077 | 3.340 | 3.348 | 38.294 |
-| 2 | 40 | 0.0 | 0.659 | 3.033 | 3.313 | 3.320 | 38.586 |
-| 4 | 40 | 0.0 | 1.238 | 3.067 | 3.340 | 3.361 | 38.302 |
-| 8 | 40 | 0.0 | 2.368 | 3.098 | 3.379 | 3.400 | 37.868 |
-| 16 | 40 | 0.0 | 3.848 | 3.204 | 3.507 | 3.532 | 36.602 |
-
-核心结论：
-
-1. QPS 从 0.325 提升到 3.848，吞吐提升约 11.84×；
-2. P95 latency 从 3.348s 上升到 3.532s，增幅约 5.5%；
-3. error rate 全程保持 0；
-4. Avg tokens/s 从 38.294 下降到 36.602，说明高并发下单请求生成速率略有下降，但整体吞吐显著提升；
-5. 该结果体现 vLLM continuous batching 的核心 trade-off：用可控的单请求性能损失换取更高的整体服务吞吐。
-
-对应 evidence：
-
-| Evidence | Path |
-|---|---|
-| concurrency=1 summary | `results/week2_dynamic_batch_concurrency_1_summary.csv` |
-| concurrency=2 summary | `results/week2_dynamic_batch_concurrency_2_summary.csv` |
-| concurrency=4 summary | `results/week2_dynamic_batch_concurrency_4_summary.csv` |
-| concurrency=8 summary | `results/week2_dynamic_batch_concurrency_8_summary.csv` |
-| concurrency=16 summary | `results/week2_dynamic_batch_concurrency_16_summary.csv` |
-| GPU snapshot | `logs/week2_nvidia_smi_after_dynamic_batch_sweep.txt` |
-| vLLM metrics | `results/week2_vllm_metrics_after_dynamic_batch_sweep.txt` |
-| FastAPI metrics | `results/week2_fastapi_metrics_after_dynamic_batch_sweep.txt` |
-
-### 9.2 GSM8K Full Benchmark
-
-本轮完成 GSM8K test set 全量评测。该评测通过 FastAPI `/generate` 接口调用 Seed-OSS-36B-Instruct，固定 `max_new_tokens=256`、`temperature=0.0`、`thinking_budget=0`。
-
-| 指标 | 结果 |
-|---|---:|
-| Total cases | 1319 |
-| Successful API cases | 1319 |
-| Failed API cases | 0 |
-| API error rate | 0.0 |
-| Parseable answer cases | 1319 |
-| Correct cases | 999 |
-| Accuracy | 75.74% |
-| Client latency average | 5.40s |
-| Client latency P50 | 5.51s |
-| Client latency P95 | 6.69s |
-| Server latency average | 5.40s |
-| Server latency P50 | 5.51s |
-| Server latency P95 | 6.69s |
-| Average tokens/s | 38.30 |
-| Average output tokens | 206.77 |
-
-该结果提供了真实任务级数学推理基线，证明当前服务不只是完成单条 prompt smoke test，而是完成了完整数据集级别的能力验证。
-
-对应 evidence：
-
-| Evidence | Path |
-|---|---|
-| GSM8K full summary | `results/week2_gsm8k_full_seed_oss_budget0_summary.csv` |
-| GPU snapshot after GSM8K | `logs/week2_nvidia_smi_after_gsm8k_full_budget0.txt` |
-| vLLM metrics after GSM8K | `results/week2_vllm_metrics_after_gsm8k_full_budget0.txt` |
-| FastAPI metrics after GSM8K | `results/week2_fastapi_metrics_after_gsm8k_full_budget0.txt` |
-
-### 9.3 Code Generation Mini Eval
-
-本轮完成 5 个 Python 代码生成 mini eval，用于轻量验证 Seed-OSS-36B-Instruct 的基础代码生成能力。
-
-| 指标 | 结果 |
-|---|---:|
-| Total cases | 5 |
-| Successful API cases | 5 |
-| Failed API cases | 0 |
-| Simple correctness | 5 / 5 passed |
-| Latency range | 0.505s – 1.627s |
-
-该测试不能替代 HumanEval、MBPP 或 Seed-Coder 专项 benchmark，但可作为当前 FastAPI + vLLM 推理服务支持代码生成场景的基础 evidence。
-
-对应 evidence：
-
-| Evidence | Path |
-|---|---|
-| Codegen mini result | `results/week2_codegen_mini_seed_oss_budget0.csv` |
-| GPU snapshot after codegen | `logs/week2_nvidia_smi_after_codegen_mini_budget0.txt` |
-| vLLM metrics after codegen | `results/week2_vllm_metrics_after_codegen_mini_budget0.txt` |
-| FastAPI metrics after codegen | `results/week2_fastapi_metrics_after_codegen_mini_budget0.txt` |
-
-### 9.4 本轮最终交付判断
-
-结合长上下文、Prefix Cache、动态并发、GSM8K full benchmark 和 codegen mini eval，Week2 已经从“服务能跑”推进到“有可复现性能指标、有任务级质量基线、有资源瓶颈分析”的阶段。
-
-当前已经完成的高价值量化结果包括：
-
-1. 动态并发吞吐提升：QPS 0.325 → 3.848，提升约 11.84×；
-2. 尾延迟控制：P95 latency 3.348s → 3.532s，仅增加约 5.5%；
-3. 稳定性：并发 sweep、GSM8K full、codegen mini 的 API error rate 均为 0；
-4. 数学推理能力：GSM8K full accuracy 为 75.74%；
-5. 代码生成能力：5 个 mini codegen case 全部通过简单正确性检查；
-6. 长上下文边界：完成 64K 级别服务配置，并验证最高约 61.9K input tokens 请求。
-
-未完成项应继续如实记录为资源边界或后续优化方向，包括 FP32 serving、INT8/AWQ/GPTQ 量化 serving、FP8 KV Cache、512K full-context 和专门的 Seed-Coder benchmark。
