@@ -189,11 +189,12 @@ Week1 实测中，Seed-OSS-36B-Instruct 在 BF16、TP=2、max_model_len=4096 下
 
 量化对比表结构：
 
-| 方案 | 是否跑通 | GPU memory | P95 latency | tokens/s | 质量观察 | 备注 |
-|---|---|---:|---:|---:|---|---|
-| BF16 baseline | 是 | 待填 | 待填 | 待填 | 待填 | Week1/Week2 基线 |
-| INT8 | 待验证 | 待填 | 待填 | 待填 | 待填 | 依赖 vLLM/权重兼容 |
-| FP8/AWQ/GPTQ | 待验证 | 待填 | 待填 | 待填 | 待填 | 可落地替代方案 |
+| 方案 | 是否完成 | 当前结论 | 备注 |
+|---|---|---|---|
+| BF16 baseline | 已完成 | 已完成真实部署、长上下文、并发、GSM8K full 和 codegen mini eval | 当前主基线 |
+| FP32 serving | 未完成 | 当前 2×A100 80GB 环境显存风险高 | 作为后续资源可行性测试 |
+| INT8 / AWQ / GPTQ | 未完成 | 缺少已验证兼容量化权重和 vLLM loading path | 后续量化实验方向 |
+| FP8 KV Cache | 未完成 | 与长上下文 KV cache 显存优化强相关 | 后续优先级较高 |
 
 ---
 
@@ -226,11 +227,7 @@ Week1 实测中，Seed-OSS-36B-Instruct 在 BF16、TP=2、max_model_len=4096 下
 3. 人工判断是否正确；
 4. 汇总 accuracy、平均 latency 和错误类型。
 
-结果表结构：
-
-| case_id | correct | latency | output_tokens | thinking_budget | 备注 |
-|---:|---|---:|---:|---:|---|
-| 1 | 待填 | 待填 | 待填 | 512 | 待填 |
+本轮已完成 GSM8K full benchmark。最终结果为 1319 个样本全部 API 成功，正确 999 个，accuracy 为 75.74%，P50 latency 为 5.51s，P95 latency 为 6.69s。
 
 ---
 
@@ -247,11 +244,7 @@ Week1 实测中，Seed-OSS-36B-Instruct 在 BF16、TP=2、max_model_len=4096 下
 3. 记录 latency、output_tokens、是否可运行；
 4. 总结常见错误类型。
 
-结果表结构：
-
-| case_id | task_type | runnable | latency | output_tokens | 备注 |
-|---:|---|---|---:|---:|---|
-| 1 | Python function | 待填 | 待填 | 待填 | 待填 |
+本轮已完成 5 个 Python 代码生成 mini eval，全部 API 成功，并全部通过简单正确性检查。该测试用于轻量验证当前服务链路支持代码生成场景。
 
 ---
 
@@ -295,13 +288,13 @@ Week1 实测中，Seed-OSS-36B-Instruct 在 BF16、TP=2、max_model_len=4096 下
 
 计划文件：
 
-    results/week2_gsm8k_eval.csv
+    results/week2_gsm8k_full_seed_oss_budget0_summary.csv
 
 ### 5.5 代码生成
 
 计划文件：
 
-    results/week2_code_generation_eval.csv
+    results/week2_codegen_mini_seed_oss_budget0.csv
 
 ### 5.6 图表
 

@@ -185,7 +185,7 @@ Dashboard 覆盖以下面板：
 | vLLM Prefix Cache Queries / Hits | `rate(vllm:prefix_cache_queries_total[1m])`, `rate(vllm:prefix_cache_hits_total[1m])` |
 | vLLM Prompt / Generation Tokens | `rate(vllm:prompt_tokens_total[1m])`, `rate(vllm:generation_tokens_total[1m])` |
 
-当前 dashboard JSON 已通过 `python -m json.tool` 格式校验。由于本轮 RunPod GPU 服务已停止，Grafana dashboard 实机导入截图将在下一次 GPU 窗口补充。
+当前 dashboard JSON 已通过 `python -m json.tool` 格式校验。由于本轮 RunPod GPU 服务已停止，Grafana dashboard 实机导入截图将在 Week3/Week4 运维可视化阶段补充。
 
 ## 7. 资源瓶颈分析
 
@@ -257,7 +257,7 @@ Week2 要求使用 Prometheus + Grafana 分析 GPU 利用率和内存瓶颈。�
 2. 长时间运行的 Prometheus TSDB 数据保留；
 3. 多节点/多实例下的统一 dashboard。
 
-上述内容将在下一次 GPU 服务窗口继续补充。
+上述内容将在 Week3/Week4 运维可视化阶段继续补充。
 
 ## 9. 后续工作
 
