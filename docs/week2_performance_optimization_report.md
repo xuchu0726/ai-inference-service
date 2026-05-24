@@ -298,13 +298,15 @@ Week1 实测中，Seed-OSS-36B-Instruct 在 BF16、TP=2、max_model_len=4096 下
 
 ### 5.6 图表
 
-计划文件：
+已完成图表：
 
-    figures/week2_qps_vs_concurrency.png
-    figures/week2_p95_vs_concurrency.png
-    figures/week2_tokens_per_second_vs_concurrency.png
-    figures/week2_gpu_memory_vs_context.png
-    figures/week2_kv_cache_usage_vs_context.png
+    figures/week2_qps_vs_concurrency_report.png
+    figures/week2_latency_p50_p95_vs_concurrency.png
+    figures/week2_tokens_per_second_vs_concurrency_report.png
+    figures/week2_error_rate_vs_concurrency_report.png
+    figures/week2_context_latency_first_pass_only.png
+    figures/week2_context_tokens_per_second_first_pass_only.png
+    figures/week2_prefix_cache_repeat_latency.png
 
 ---
 
