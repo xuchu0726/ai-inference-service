@@ -1,0 +1,45 @@
+===== 日期 =====
+Mon May 25 15:55:19 UTC 2026
+
+===== Grafana 截图证据说明 =====
+截图文件：figures/week2_grafana_seed_oss_live_load_probe.png
+Dashboard 名称：Week2 Seed-OSS-36B Inference Service
+时间范围：Last 15 minutes
+负载来源：FastAPI /generate 接口真实请求负载
+负载参数：concurrency=2, repeat=10, max_new_tokens=128, thinking_budget=512
+
+===== 截图中观察到的指标 =====
+1. FastAPI Request Rate：API 请求速率在负载期间出现明显峰值。
+2. FastAPI P95 Latency：负载期间 P95 延迟出现明显变化，可用于观察尾延迟。
+3. vLLM Running / Waiting Requests：running requests 最高达到 2，说明 vLLM 正在处理并发请求；waiting requests 为 0，说明当前负载下没有明显排队。
+4. vLLM KV Cache Usage：KV cache usage 在推理期间出现非零变化，说明监控覆盖到了大模型推理中的核心缓存资源。
+5. vLLM Prefix Cache Queries / Hits：prefix cache 查询与命中指标出现变化，可用于观察缓存行为。
+6. vLLM Prompt / Generation Tokens：prompt tokens 与 generation tokens 出现增长，说明监控对象是真实 LLM 推理负载，而不是普通 HTTP 服务。
+
+===== 证据价值 =====
+该截图证明 Prometheus + Grafana 已经接入 FastAPI 与 vLLM，并且能在 Seed-OSS-36B 真实推理负载下展示请求速率、P95 延迟、并发请求、KV cache、prefix cache 和 token 相关指标。
+这项证据用于支撑 Week2 可观测性与资源瓶颈分析，不只是服务部署截图。
+
+===== 实测负载摘要 =====
+benchmark_wall_time_seconds: 66.327608
+throughput_qps: 0.603067
+total_requests: 40
+successful_requests: 40
+failed_requests: 0
+error_rate: 0.0
+client_latency_avg: 3.315458
+client_latency_p50: 3.30093
+client_latency_p95: 3.354685
+tokens_per_second_avg: 38.648695
+
+===== 截图文件 =====
+-rw-rw-rw- 1 root root 225K May 25 15:52 figures/week2_grafana_seed_oss_live_load_probe.png
+
+===== 负载测试文件 =====
+-rw-rw-rw- 1 root root 30K May 25 15:44 results/new_pod_grafana_load_probe_20260525.csv
+-rw-rw-rw- 1 root root 3.8K May 25 15:44 logs/new_pod_grafana_load_probe_20260525.log
+
+===== Prometheus / Grafana 证据文件 =====
+-rw-rw-rw- 1 root root 1.5K May 25 15:32 results/new_pod_prometheus_targets_after_wait_20260525.json
+-rw-rw-rw- 1 root root 81 May 25 15:35 results/new_pod_grafana_health_20260525.json
+-rw-rw-rw- 1 root root 380 May 25 15:37 results/new_pod_grafana_dashboard_search_20260525.json

@@ -1,0 +1,22 @@
+nohup: ignoring input
+time=2026-05-25T15:29:08.338Z level=INFO source=main.go:1544 msg="updated GOGC" old=100 new=75
+time=2026-05-25T15:29:08.340Z level=INFO source=main.go:676 msg="Updating GOMAXPROCS=54: determined from CPU quota" component=automaxprocs
+time=2026-05-25T15:29:08.342Z level=INFO source=memlimit.go:198 msg="GOMEMLIMIT is updated" component=automemlimit package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=225899996774 previous=9223372036854775807
+time=2026-05-25T15:29:09.196Z level=INFO source=main.go:718 msg="No time or size retention was set so using the default time retention" duration=15d
+time=2026-05-25T15:29:09.196Z level=INFO source=main.go:769 msg="Starting Prometheus Server" mode=server version="(version=3.5.3, branch=HEAD, revision=dcd3d551ced8b8dc14e0217f8cb14e547109cd5f)"
+time=2026-05-25T15:29:09.197Z level=INFO source=main.go:774 msg="operational information" build_context="(go=go1.25.9, platform=linux/amd64, user=root@469d897a302c, date=20260427-14:15:03, tags=netgo,builtinassets)" host_details="(Linux 6.5.0-28-generic #29~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Apr  4 14:39:20 UTC 2 x86_64 001e9202f217 (none))" fd_limits="(soft=1048575, hard=1048576)" vm_limits="(soft=unlimited, hard=unlimited)"
+time=2026-05-25T15:29:09.213Z level=INFO source=web.go:656 msg="Start listening for connections" component=web address=0.0.0.0:9090
+time=2026-05-25T15:29:09.215Z level=INFO source=main.go:1288 msg="Starting TSDB ..."
+time=2026-05-25T15:29:09.224Z level=INFO source=tls_config.go:347 msg="Listening on" component=web address=[::]:9090
+time=2026-05-25T15:29:09.225Z level=INFO source=tls_config.go:350 msg="TLS is disabled." component=web http2=false address=[::]:9090
+time=2026-05-25T15:29:09.238Z level=INFO source=head.go:657 msg="Replaying on-disk memory mappable chunks if any" component=tsdb
+time=2026-05-25T15:29:09.241Z level=INFO source=head.go:744 msg="On-disk memory mappable chunks replay completed" component=tsdb duration=122.93µs
+time=2026-05-25T15:29:09.241Z level=INFO source=head.go:752 msg="Replaying WAL, this may take a while" component=tsdb
+time=2026-05-25T15:29:09.259Z level=INFO source=head.go:825 msg="WAL segment loaded" component=tsdb segment=0 maxSegment=0 duration=16.012079ms
+time=2026-05-25T15:29:09.259Z level=INFO source=head.go:862 msg="WAL replay completed" component=tsdb checkpoint_replay_duration=1.472321ms wal_replay_duration=16.194429ms wbl_replay_duration=170ns chunk_snapshot_load_duration=0s mmap_chunk_replay_duration=122.93µs total_replay_duration=18.043411ms
+time=2026-05-25T15:29:09.264Z level=INFO source=main.go:1309 msg="filesystem information" fs_type=65735546
+time=2026-05-25T15:29:09.264Z level=INFO source=main.go:1312 msg="TSDB started"
+time=2026-05-25T15:29:09.264Z level=INFO source=main.go:1497 msg="Loading configuration file" filename=/workspace/ai-inference-service/deployment/monitoring/prometheus_week2.yml
+time=2026-05-25T15:29:09.267Z level=INFO source=main.go:1537 msg="Completed loading of configuration file" db_storage=2.95µs remote_storage=3.08µs web_handler=1.41µs query_engine=2.59µs scrape=1.32888ms scrape_sd=43.64µs notify=1.93µs notify_sd=1.48µs rules=3.24µs tracing=7.65µs filename=/workspace/ai-inference-service/deployment/monitoring/prometheus_week2.yml totalDuration=3.132352ms
+time=2026-05-25T15:29:09.267Z level=INFO source=main.go:1273 msg="Server is ready to receive web requests."
+time=2026-05-25T15:29:09.268Z level=INFO source=manager.go:176 msg="Starting rule manager..." component="rule manager"
