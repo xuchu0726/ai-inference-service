@@ -1,0 +1,124 @@
+===== 日期 =====
+Mon May 25 19:27:15 UTC 2026
+
+===== 长输出测试设置 =====
+MAX_NUM_BATCHED_TOKENS=32768
+CONCURRENCY=4
+REPEAT=5
+MAX_NEW_TOKENS=512
+THINKING_BUDGET=512
+测试目的：验证 32768 配置在长输出 decode-heavy 场景下的吞吐、延迟和稳定性。
+业务含义：该场景近似长文摘要、代码生成、分析报告生成等长输出请求。
+对照对象：8192 long-output 512 benchmark。
+
+===== benchmark 摘要 =====
+output: results/week2_batch_tokens_32768_long_output_512_benchmark_20260525.csv
+concurrency: 4
+repeat: 5
+max_new_tokens: 512
+temperature: 0.0
+thinking_budgets: [512]
+total_requests: 20
+case_id=2 ok=True status=200 latency=13.370233 backend=vllm tokens/s=29.5662
+case_id=4 ok=True status=200 latency=16.402929 backend=vllm tokens/s=31.2412
+case_id=1 ok=True status=200 latency=16.406997 backend=vllm tokens/s=31.238
+case_id=3 ok=True status=200 latency=16.405729 backend=vllm tokens/s=31.239
+case_id=6 ok=True status=200 latency=9.979983 backend=vllm tokens/s=38.3953
+case_id=5 ok=True status=200 latency=13.33459 backend=vllm tokens/s=38.4028
+case_id=8 ok=True status=200 latency=13.346433 backend=vllm tokens/s=38.3705
+case_id=7 ok=True status=200 latency=13.348146 backend=vllm tokens/s=38.3703
+case_id=10 ok=True status=200 latency=10.276285 backend=vllm tokens/s=38.4453
+case_id=9 ok=True status=200 latency=13.307139 backend=vllm tokens/s=38.483
+case_id=11 ok=True status=200 latency=13.276342 backend=vllm tokens/s=38.5755
+case_id=12 ok=True status=200 latency=13.276238 backend=vllm tokens/s=38.5755
+case_id=14 ok=True status=200 latency=9.842371 backend=vllm tokens/s=38.6217
+case_id=13 ok=True status=200 latency=13.251926 backend=vllm tokens/s=38.6432
+case_id=15 ok=True status=200 latency=13.250287 backend=vllm tokens/s=38.6524
+case_id=16 ok=True status=200 latency=13.251023 backend=vllm tokens/s=38.6527
+case_id=18 ok=True status=200 latency=9.922178 backend=vllm tokens/s=38.6099
+case_id=17 ok=True status=200 latency=13.251739 backend=vllm tokens/s=38.6443
+case_id=20 ok=True status=200 latency=13.21621 backend=vllm tokens/s=38.7537
+case_id=19 ok=True status=200 latency=13.218002 backend=vllm tokens/s=38.7522
+
+saved_csv: results/week2_batch_tokens_32768_long_output_512_benchmark_20260525.csv
+===== VLLM BACKEND BENCHMARK SUMMARY =====
+benchmark_wall_time_seconds: 69.50197
+throughput_qps: 0.287762
+total_requests: 20
+successful_requests: 20
+failed_requests: 0
+error_rate: 0.0
+client_latency_avg: 13.096739
+client_latency_p50: 13.264082
+client_latency_p95: 16.405792
+tokens_per_second_avg: 37.011635
+tokens_per_second_p50: 38.52925
+tokens_per_second_p95: 38.752275
+
+Note: this benchmark calls the non-streaming /generate API.
+TTFT requires a streaming endpoint and will be implemented separately.
+
+===== benchmark 后 GPU 状态 =====
+Mon May 25 19:27:15 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.195.03             Driver Version: 570.195.03     CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:4E:00.0 Off |                    0 |
+| N/A   27C    P0             84W /  400W |   74117MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:A1:00.0 Off |                    0 |
+| N/A   30C    P0             85W /  400W |   74117MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A           10736      C   VLLM::Worker_TP0                      74110MiB |
+|    1   N/A  N/A           10737      C   VLLM::Worker_TP1                      74110MiB |
++-----------------------------------------------------------------------------------------+
+
+===== benchmark 后 vLLM 指标 =====
+# HELP vllm:num_requests_running Number of requests in model execution batches.
+# TYPE vllm:num_requests_running gauge
+vllm:num_requests_running{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:num_requests_waiting Number of requests waiting to be processed.
+# TYPE vllm:num_requests_waiting gauge
+vllm:num_requests_waiting{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:kv_cache_usage_perc KV-cache usage. 1 means 100 percent usage.
+# TYPE vllm:kv_cache_usage_perc gauge
+vllm:kv_cache_usage_perc{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:prefix_cache_queries_total Prefix cache queries, in terms of number of queried tokens.
+# TYPE vllm:prefix_cache_queries_total counter
+vllm:prefix_cache_queries_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 2445.0
+# HELP vllm:prefix_cache_hits_total Prefix cache hits, in terms of number of cached tokens.
+# TYPE vllm:prefix_cache_hits_total counter
+vllm:prefix_cache_hits_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 2032.0
+# HELP vllm:prompt_tokens_total Number of prefill tokens processed.
+# TYPE vllm:prompt_tokens_total counter
+vllm:prompt_tokens_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 2445.0
+# HELP vllm:generation_tokens_total Number of generation tokens processed.
+# TYPE vllm:generation_tokens_total counter
+vllm:generation_tokens_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 9616.0
+
+===== 与 8192 长输出结果的初步对比 =====
+8192 long-output 512: QPS=0.302359, P50=13.223539s, P95=13.258162s, avg_tokens_per_second=38.714250, error_rate=0。
+32768 long-output 512: QPS=0.287762, P50=13.264082s, P95=16.405792s, avg_tokens_per_second=37.011635, error_rate=0。
+初步结论：32768 在长输出场景下没有延续短输出高并发场景中的优势，P95 明显高于 8192，吞吐和平均 tokens/s 也略低。
+工程解释：max_num_batched_tokens 不是越大越好。32768 能改善 short-output burst 场景中的调度容量和首批请求长尾，但在 long-output decode-heavy 场景下，decode 阶段主导总延迟，较大的 batch token budget 没有带来稳定收益，并可能降低调度稳定性或 KV cache headroom。
+推荐结论：32768 适合作为短输出高并发配置候选；8192 更适合作为长输出或混合 workload 下的保守配置。
+
+===== 文件证据 =====
+-rw-rw-rw- 1 root root 46K May 25 19:25 results/week2_batch_tokens_32768_long_output_512_benchmark_20260525.csv
+-rw-rw-rw- 1 root root 2.4K May 25 19:25 logs/week2_batch_tokens_32768_long_output_512_benchmark_20260525.log
+-rw-rw-rw- 1 root root 1.3K May 25 19:20 logs/week2_batch_tokens_32768_long_output_vllm_key_lines_20260525.txt
+-rw-rw-rw- 1 root root 523 May 25 19:20 results/week2_batch_tokens_32768_long_output_vllm_models_20260525.json
+-rw-rw-rw- 1 root root 585 May 25 19:20 results/week2_batch_tokens_32768_long_output_fastapi_health_debug_20260525.txt
+-rw-rw-rw- 1 root root 4.2K May 25 19:22 results/week2_batch_tokens_32768_long_output_fastapi_health_debug_retry_20260525.txt

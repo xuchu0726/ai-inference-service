@@ -1,0 +1,10 @@
+MAX_MODEL_LEN=65536
+MAX_NUM_BATCHED_TOKENS=32768
+INFO 05-25 17:54:48 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=2048.
+[1;36m(APIServer pid=8811)[0;0m INFO 05-25 17:54:48 [utils.py:253] non-default args: {'model_tag': 'ByteDance-Seed/Seed-OSS-36B-Instruct', 'host': '0.0.0.0', 'port': 8002, 'enable_auto_tool_choice': True, 'tool_call_parser': 'seed_oss', 'model': 'ByteDance-Seed/Seed-OSS-36B-Instruct', 'trust_remote_code': True, 'dtype': 'bfloat16', 'max_model_len': 65536, 'tensor_parallel_size': 2, 'max_num_batched_tokens': 32768}
+[1;36m(APIServer pid=8811)[0;0m INFO 05-25 17:54:53 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=32768.
+[1;36m(Worker_TP0 pid=9081)[0;0m INFO 05-25 18:02:24 [gpu_worker.py:359] Available KV cache memory: 33.48 GiB
+[1;36m(EngineCore_DP0 pid=8947)[0;0m INFO 05-25 18:02:24 [kv_cache_utils.py:1229] GPU KV cache size: 274,256 tokens
+[1;36m(EngineCore_DP0 pid=8947)[0;0m INFO 05-25 18:02:24 [kv_cache_utils.py:1234] Maximum concurrency for 65,536 tokens per request: 4.18x
+[1;36m(EngineCore_DP0 pid=8947)[0;0m INFO 05-25 18:02:24 [kv_cache_utils.py:1234] Maximum concurrency for 65,536 tokens per request: 4.18x
+[1;36m(APIServer pid=8811)[0;0m INFO:     Application startup complete.

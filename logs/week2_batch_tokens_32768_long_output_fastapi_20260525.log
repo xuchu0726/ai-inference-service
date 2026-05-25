@@ -1,0 +1,137 @@
+nohup: ignoring input
+===== START FASTAPI WITH VLLM BACKEND =====
+INFERENCE_BACKEND=vllm
+MODEL_NAME=ByteDance-Seed/Seed-OSS-36B-Instruct
+VLLM_MODEL_NAME=ByteDance-Seed/Seed-OSS-36B-Instruct
+VLLM_BASE_URL=http://127.0.0.1:8002/v1
+HOST=0.0.0.0
+PORT=8000
+/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+INFO:     Started server process [10942]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37352 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56026 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56030 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56034 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56010 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48248 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48238 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48266 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48262 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44456 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44444 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44460 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44472 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55952 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55948 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55966 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55972 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55980 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55978 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35600 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35590 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [10942]

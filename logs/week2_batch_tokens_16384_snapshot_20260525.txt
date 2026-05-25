@@ -1,0 +1,113 @@
+===== 日期 =====
+Mon May 25 17:48:51 UTC 2026
+
+===== batch token 设置 =====
+MAX_NUM_BATCHED_TOKENS=16384
+MAX_MODEL_LEN=65536
+TENSOR_PARALLEL_SIZE=2
+GPU_MEMORY_UTILIZATION=0.90
+DTYPE=bfloat16
+
+===== benchmark 摘要 =====
+case_id=14 ok=True status=200 latency=3.333658 backend=vllm tokens/s=38.4545
+case_id=15 ok=True status=200 latency=3.3331 backend=vllm tokens/s=38.4411
+case_id=16 ok=True status=200 latency=3.333588 backend=vllm tokens/s=38.4395
+case_id=17 ok=True status=200 latency=3.32943 backend=vllm tokens/s=38.4835
+case_id=19 ok=True status=200 latency=3.32949 backend=vllm tokens/s=38.4859
+case_id=18 ok=True status=200 latency=3.330187 backend=vllm tokens/s=38.4773
+case_id=20 ok=True status=200 latency=3.328772 backend=vllm tokens/s=38.4919
+case_id=21 ok=True status=200 latency=3.328893 backend=vllm tokens/s=38.4836
+case_id=22 ok=True status=200 latency=3.329847 backend=vllm tokens/s=38.4881
+case_id=23 ok=True status=200 latency=3.330472 backend=vllm tokens/s=38.4925
+case_id=24 ok=True status=200 latency=3.330367 backend=vllm tokens/s=38.4906
+case_id=25 ok=True status=200 latency=3.332025 backend=vllm tokens/s=38.4448
+case_id=27 ok=True status=200 latency=3.32958 backend=vllm tokens/s=38.4788
+case_id=26 ok=True status=200 latency=3.3316 backend=vllm tokens/s=38.4692
+case_id=28 ok=True status=200 latency=3.330654 backend=vllm tokens/s=38.4791
+case_id=29 ok=True status=200 latency=3.330808 backend=vllm tokens/s=38.4604
+case_id=31 ok=True status=200 latency=3.330548 backend=vllm tokens/s=38.4748
+case_id=30 ok=True status=200 latency=3.331936 backend=vllm tokens/s=38.466
+case_id=32 ok=True status=200 latency=3.330806 backend=vllm tokens/s=38.4761
+case_id=33 ok=True status=200 latency=3.328012 backend=vllm tokens/s=38.4892
+case_id=34 ok=True status=200 latency=3.328717 backend=vllm tokens/s=38.4888
+case_id=36 ok=True status=200 latency=3.329278 backend=vllm tokens/s=38.4745
+case_id=35 ok=True status=200 latency=3.330325 backend=vllm tokens/s=38.4857
+case_id=37 ok=True status=200 latency=3.324952 backend=vllm tokens/s=38.5196
+case_id=39 ok=True status=200 latency=3.324181 backend=vllm tokens/s=38.5377
+case_id=38 ok=True status=200 latency=3.326245 backend=vllm tokens/s=38.5386
+case_id=40 ok=True status=200 latency=3.324529 backend=vllm tokens/s=38.5443
+
+saved_csv: results/week2_batch_tokens_16384_benchmark_20260525.csv
+===== VLLM BACKEND BENCHMARK SUMMARY =====
+benchmark_wall_time_seconds: 36.973936
+throughput_qps: 1.081843
+total_requests: 40
+successful_requests: 40
+failed_requests: 0
+error_rate: 0.0
+client_latency_avg: 3.696181
+client_latency_p50: 3.330807
+client_latency_p95: 6.971001
+tokens_per_second_avg: 36.441668
+tokens_per_second_p50: 38.47185
+tokens_per_second_p95: 38.537745
+
+Note: this benchmark calls the non-streaming /generate API.
+TTFT requires a streaming endpoint and will be implemented separately.
+
+===== benchmark 后 GPU 状态 =====
+Mon May 25 17:48:51 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.195.03             Driver Version: 570.195.03     CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:4E:00.0 Off |                    0 |
+| N/A   29C    P0             85W /  400W |   75749MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:A1:00.0 Off |                    0 |
+| N/A   34C    P0             85W /  400W |   75749MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            8334      C   VLLM::Worker_TP0                      75742MiB |
+|    1   N/A  N/A            8335      C   VLLM::Worker_TP1                      75742MiB |
++-----------------------------------------------------------------------------------------+
+
+===== benchmark 后 vLLM 指标 =====
+# HELP vllm:num_requests_running Number of requests in model execution batches.
+# TYPE vllm:num_requests_running gauge
+vllm:num_requests_running{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:num_requests_waiting Number of requests waiting to be processed.
+# TYPE vllm:num_requests_waiting gauge
+vllm:num_requests_waiting{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:kv_cache_usage_perc KV-cache usage. 1 means 100 percent usage.
+# TYPE vllm:kv_cache_usage_perc gauge
+vllm:kv_cache_usage_perc{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:prefix_cache_queries_total Prefix cache queries, in terms of number of queried tokens.
+# TYPE vllm:prefix_cache_queries_total counter
+vllm:prefix_cache_queries_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 4890.0
+# HELP vllm:prefix_cache_hits_total Prefix cache hits, in terms of number of cached tokens.
+# TYPE vllm:prefix_cache_hits_total counter
+vllm:prefix_cache_hits_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 4272.0
+# HELP vllm:prompt_tokens_total Number of prefill tokens processed.
+# TYPE vllm:prompt_tokens_total counter
+vllm:prompt_tokens_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 4890.0
+# HELP vllm:generation_tokens_total Number of generation tokens processed.
+# TYPE vllm:generation_tokens_total counter
+vllm:generation_tokens_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 5120.0
+
+===== 文件证据 =====
+-rw-rw-rw- 1 root root 29K May 25 17:47 results/week2_batch_tokens_16384_benchmark_20260525.csv
+-rw-rw-rw- 1 root root 3.8K May 25 17:47 logs/week2_batch_tokens_16384_benchmark_20260525.log
+-rw-rw-rw- 1 root root 1.3K May 25 17:42 logs/week2_batch_tokens_16384_vllm_key_lines_20260525.txt
+-rw-rw-rw- 1 root root 523 May 25 17:42 results/week2_batch_tokens_16384_vllm_models_20260525.json
+-rw-rw-rw- 1 root root 749 May 25 17:45 results/week2_batch_tokens_16384_fastapi_health_debug_retry_20260525.txt

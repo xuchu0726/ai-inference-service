@@ -1,0 +1,20 @@
+*   Trying 127.0.0.1:8000...
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* Connected to 127.0.0.1 (127.0.0.1) port 8000 (#0)
+> GET /health HTTP/1.1
+> Host: 127.0.0.1:8000
+> User-Agent: curl/7.81.0
+> Accept: */*
+> 
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+< date: Mon, 25 May 2026 18:52:45 GMT
+< server: uvicorn
+< content-length: 15
+< content-type: application/json
+< 
+{ [15 bytes data]
+100    15  100    15    0     0   8103      0 --:--:-- --:--:-- --:--:-- 15000
+* Connection #0 to host 127.0.0.1 left intact
+{"status":"ok"}

@@ -1,0 +1,33 @@
+===== 日期 =====
+Mon May 25 19:30:11 UTC 2026
+
+===== 实验主题 =====
+Seed-OSS-36B-Instruct 在 2xA100 80GB 上的 vLLM max_num_batched_tokens 调优实验。
+
+===== 实验设计逻辑 =====
+第一阶段：用 4096/8192/16384/32768 做 coarse sweep，观察短输出 c4 场景下 batch token budget 对吞吐和尾延迟的影响。
+第二阶段：锁定 8192 和 32768 两个候选配置，在 short-output c8 场景下验证高并发突发请求表现。
+第三阶段：用 long-output 512 场景验证 32768 是否是全局最优，还是只适合短输出高并发场景。
+
+===== 关键结果 =====
+short-output c8: 32768 相比 8192，QPS 从 1.921471 提升到 2.371389，P95 从 7.350406s 降低到 3.415119s。
+long-output c4: 8192 相比 32768，QPS 从 0.287762 提升到 0.302359，P95 从 16.405792s 降低到 13.258162s。
+
+===== 工程解释 =====
+max_num_batched_tokens 不是越大越好。
+对于短输出高并发 burst，32768 提供更大的调度 token budget，能更好吸收首批并发请求，因此 P95 明显降低。
+对于长输出 decode-heavy workload，总延迟主要由 decode 阶段主导，32768 没有继续带来收益，反而出现更高 P95 和更低平均 tokens/s。
+同时，32768 的 KV cache headroom 低于 8192，因此不能盲目作为所有 workload 的默认配置。
+
+===== 推荐结论 =====
+短输出高并发请求：优先考虑 MAX_NUM_BATCHED_TOKENS=32768。
+长输出或混合 workload：优先考虑 MAX_NUM_BATCHED_TOKENS=8192，除非进一步长上下文/业务流量测试证明 32768 更合适。
+最终配置应按 workload profile 选择，而不是单纯追求单个 benchmark 下的最高 QPS。
+
+===== 证据文件 =====
+-rw-rw-rw- 1 root root 1.8K May 25 19:30 results/week2_batch_tokens_workload_summary_20260525.csv
+-rw-rw-rw- 1 root root 0 May 25 19:30 logs/week2_batch_tokens_workload_summary_print_20260525.txt
+-rw-rw-rw- 1 root root 7.3K May 25 19:07 logs/week2_batch_tokens_8192_long_output_512_snapshot_20260525.txt
+-rw-rw-rw- 1 root root 8.1K May 25 19:27 logs/week2_batch_tokens_32768_long_output_512_snapshot_20260525.txt
+-rw-rw-rw- 1 root root 7.1K May 25 18:55 logs/week2_batch_tokens_8192_c8_snapshot_20260525.txt
+-rw-rw-rw- 1 root root 3.8K May 25 18:32 logs/week2_batch_tokens_32768_c8_benchmark_20260525.log

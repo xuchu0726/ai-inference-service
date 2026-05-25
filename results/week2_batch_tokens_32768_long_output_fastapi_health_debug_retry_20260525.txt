@@ -1,0 +1,70 @@
+===== 日期 =====
+Mon May 25 19:22:35 UTC 2026
+
+===== FastAPI 日志 =====
+nohup: ignoring input
+===== START FASTAPI WITH VLLM BACKEND =====
+INFERENCE_BACKEND=vllm
+MODEL_NAME=ByteDance-Seed/Seed-OSS-36B-Instruct
+VLLM_MODEL_NAME=ByteDance-Seed/Seed-OSS-36B-Instruct
+VLLM_BASE_URL=http://127.0.0.1:8002/v1
+HOST=0.0.0.0
+PORT=8000
+/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+INFO:     Started server process [10942]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45974 - "GET /metrics HTTP/1.1" 200 OK
+
+===== 当前进程 =====
+root         121  0.0  0.0 323064 83640 ?        Sl   14:05   0:01 /usr/bin/python /usr/local/bin/jupyter-lab --allow-root --no-browser --port=8888 --ip=* --FileContentsManager.delete_to_trash=False --ServerApp.terminado_settings={"shell_command":["/bin/bash"]} --ServerApp.token=rfcopn25103m4603t5vz --ServerApp.allow_origin=* --ServerApp.preferred_dir=/workspace
+root       10466  3.8  0.0 11445808 728604 pts/1 Sl   19:09   0:29 /workspace/venvs/ai-inference-vllm/bin/python /workspace/venvs/ai-inference-vllm/bin/vllm serve ByteDance-Seed/Seed-OSS-36B-Instruct --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --max-model-len 65536 --max-num-batched-tokens 32768 --gpu-memory-utilization 0.90 --dtype bfloat16 --enable-auto-tool-choice --tool-call-parser seed_oss --trust-remote-code
+root       10601  0.0  0.0  17224  8160 pts/1    S    19:10   0:00 /workspace/venvs/ai-inference-vllm/bin/python -c from multiprocessing.resource_tracker import main;main(36)
+root       10937  0.0  0.0   4740  2040 pts/1    S    19:20   0:00 bash deployment/cloud/run_fastapi_vllm.sh
+root       10942 12.4  0.0 7669584 628320 pts/1  Sl   19:20   0:16 python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+===== 当前端口 =====
+LISTEN 0      2048         0.0.0.0:8002       0.0.0.0:*    users:(("vllm",pid=10466,fd=26))            
+LISTEN 0      2048         0.0.0.0:8000       0.0.0.0:*    users:(("python",pid=10942,fd=11))          
+LISTEN 0      4096               *:8003             *:*    users:(("VLLM::Worker_TP",pid=10736,fd=63)) 
+
+===== health retry =====
+*   Trying 127.0.0.1:8000...
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* Connected to 127.0.0.1 (127.0.0.1) port 8000 (#0)
+> GET /health HTTP/1.1
+> Host: 127.0.0.1:8000
+> User-Agent: curl/7.81.0
+> Accept: */*
+> 
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+< date: Mon, 25 May 2026 19:22:35 GMT
+< server: uvicorn
+< content-length: 15
+< content-type: application/json
+< 
+{ [15 bytes data]
+100    15  100    15    0     0   3529      0 --:--:-- --:--:-- --:--:--  3750
+* Connection #0 to host 127.0.0.1 left intact
+{"status":"ok"}
+===== 说明 =====
+本步骤用于确认 32768 long-output 实验前 FastAPI 是否完成启动。
+如果出现 Application startup complete、8000 端口监听、/health 返回 200，则可以继续跑 32768 long-output 512 benchmark。
+如果仍然 Connection refused，但日志没有 Traceback/Error，则继续等待，不要重启。

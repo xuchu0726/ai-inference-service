@@ -1,0 +1,67 @@
+===== BENCHMARK CONFIG =====
+url: http://127.0.0.1:8000/generate
+output: results/week2_batch_tokens_8192_c8_benchmark_20260525.csv
+concurrency: 8
+repeat: 10
+max_new_tokens: 128
+temperature: 0.0
+thinking_budgets: [512]
+total_requests: 40
+case_id=1 ok=True status=200 latency=7.322629 backend=vllm tokens/s=17.5098
+case_id=6 ok=True status=200 latency=7.344116 backend=vllm tokens/s=17.4581
+case_id=5 ok=True status=200 latency=7.346511 backend=vllm tokens/s=17.4613
+case_id=2 ok=True status=200 latency=7.350398 backend=vllm tokens/s=17.4476
+case_id=8 ok=True status=200 latency=7.345395 backend=vllm tokens/s=17.4592
+case_id=4 ok=True status=200 latency=7.350552 backend=vllm tokens/s=17.4463
+case_id=7 ok=True status=200 latency=7.346634 backend=vllm tokens/s=17.4578
+case_id=3 ok=True status=200 latency=7.351419 backend=vllm tokens/s=17.4479
+case_id=9 ok=True status=200 latency=3.356224 backend=vllm tokens/s=38.1623
+case_id=11 ok=True status=200 latency=3.360703 backend=vllm tokens/s=38.1282
+case_id=12 ok=True status=200 latency=3.36049 backend=vllm tokens/s=38.1486
+case_id=10 ok=True status=200 latency=3.362682 backend=vllm tokens/s=38.133
+case_id=16 ok=True status=200 latency=3.358892 backend=vllm tokens/s=38.1836
+case_id=13 ok=True status=200 latency=3.359938 backend=vllm tokens/s=38.1825
+case_id=15 ok=True status=200 latency=3.359826 backend=vllm tokens/s=38.1715
+case_id=14 ok=True status=200 latency=3.361176 backend=vllm tokens/s=38.1462
+case_id=17 ok=True status=200 latency=3.361417 backend=vllm tokens/s=38.109
+case_id=21 ok=True status=200 latency=3.358498 backend=vllm tokens/s=38.1626
+case_id=18 ok=True status=200 latency=3.362003 backend=vllm tokens/s=38.1368
+case_id=23 ok=True status=200 latency=3.359716 backend=vllm tokens/s=38.1759
+case_id=22 ok=True status=200 latency=3.360737 backend=vllm tokens/s=38.1808
+case_id=20 ok=True status=200 latency=3.366085 backend=vllm tokens/s=38.1546
+case_id=24 ok=True status=200 latency=3.363937 backend=vllm tokens/s=38.1437
+case_id=19 ok=True status=200 latency=3.366785 backend=vllm tokens/s=38.117
+case_id=25 ok=True status=200 latency=3.358589 backend=vllm tokens/s=38.1407
+case_id=27 ok=True status=200 latency=3.35193 backend=vllm tokens/s=38.2335
+case_id=26 ok=True status=200 latency=3.354358 backend=vllm tokens/s=38.2132
+case_id=30 ok=True status=200 latency=3.377645 backend=vllm tokens/s=37.9534
+case_id=31 ok=True status=200 latency=3.37918 backend=vllm tokens/s=37.9451
+case_id=28 ok=True status=200 latency=3.384939 backend=vllm tokens/s=37.9025
+case_id=29 ok=True status=200 latency=3.3866 backend=vllm tokens/s=37.8977
+case_id=32 ok=True status=200 latency=3.382024 backend=vllm tokens/s=37.9308
+case_id=33 ok=True status=200 latency=3.357296 backend=vllm tokens/s=38.1573
+case_id=35 ok=True status=200 latency=3.357188 backend=vllm tokens/s=38.1515
+case_id=34 ok=True status=200 latency=3.358582 backend=vllm tokens/s=38.1453
+case_id=37 ok=True status=200 latency=3.353556 backend=vllm tokens/s=38.2274
+case_id=40 ok=True status=200 latency=3.351856 backend=vllm tokens/s=38.2259
+case_id=38 ok=True status=200 latency=3.355853 backend=vllm tokens/s=38.2277
+case_id=39 ok=True status=200 latency=3.353472 backend=vllm tokens/s=38.2401
+case_id=36 ok=True status=200 latency=3.358541 backend=vllm tokens/s=38.1878
+
+saved_csv: results/week2_batch_tokens_8192_c8_benchmark_20260525.csv
+===== VLLM BACKEND BENCHMARK SUMMARY =====
+benchmark_wall_time_seconds: 20.81738
+throughput_qps: 1.921471
+total_requests: 40
+successful_requests: 40
+failed_requests: 0
+error_rate: 0.0
+client_latency_avg: 4.158959
+client_latency_p50: 3.360956
+client_latency_p95: 7.350406
+tokens_per_second_avg: 33.997605
+tokens_per_second_p50: 38.1445
+tokens_per_second_p95: 38.22799
+
+Note: this benchmark calls the non-streaming /generate API.
+TTFT requires a streaming endpoint and will be implemented separately.

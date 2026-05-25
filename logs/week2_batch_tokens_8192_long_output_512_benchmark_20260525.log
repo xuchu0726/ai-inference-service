@@ -1,0 +1,47 @@
+===== BENCHMARK CONFIG =====
+url: http://127.0.0.1:8000/generate
+output: results/week2_batch_tokens_8192_long_output_512_benchmark_20260525.csv
+concurrency: 4
+repeat: 5
+max_new_tokens: 512
+temperature: 0.0
+thinking_budgets: [512]
+total_requests: 20
+case_id=2 ok=True status=200 latency=11.219622 backend=vllm tokens/s=38.7155
+case_id=1 ok=True status=200 latency=13.235305 backend=vllm tokens/s=38.7204
+case_id=3 ok=True status=200 latency=13.258361 backend=vllm tokens/s=38.6454
+case_id=4 ok=True status=200 latency=13.258152 backend=vllm tokens/s=38.6468
+case_id=6 ok=True status=200 latency=11.184283 backend=vllm tokens/s=38.7254
+case_id=5 ok=True status=200 latency=13.223226 backend=vllm tokens/s=38.7271
+case_id=7 ok=True status=200 latency=13.223852 backend=vllm tokens/s=38.726
+case_id=8 ok=True status=200 latency=13.224037 backend=vllm tokens/s=38.7268
+case_id=10 ok=True status=200 latency=11.22078 backend=vllm tokens/s=38.6864
+case_id=9 ok=True status=200 latency=13.236557 backend=vllm tokens/s=38.6888
+case_id=11 ok=True status=200 latency=13.236767 backend=vllm tokens/s=38.6886
+case_id=12 ok=True status=200 latency=13.236813 backend=vllm tokens/s=38.6872
+case_id=14 ok=True status=200 latency=11.2093 backend=vllm tokens/s=38.7273
+case_id=13 ok=True status=200 latency=13.225452 backend=vllm tokens/s=38.7209
+case_id=15 ok=True status=200 latency=13.217141 backend=vllm tokens/s=38.7447
+case_id=16 ok=True status=200 latency=13.216775 backend=vllm tokens/s=38.7471
+case_id=18 ok=True status=200 latency=8.71622 backend=vllm tokens/s=38.6728
+case_id=17 ok=True status=200 latency=13.226724 backend=vllm tokens/s=38.7182
+case_id=19 ok=True status=200 latency=13.204405 backend=vllm tokens/s=38.7849
+case_id=20 ok=True status=200 latency=13.204584 backend=vllm tokens/s=38.7847
+
+saved_csv: results/week2_batch_tokens_8192_long_output_512_benchmark_20260525.csv
+===== VLLM BACKEND BENCHMARK SUMMARY =====
+benchmark_wall_time_seconds: 66.146434
+throughput_qps: 0.302359
+total_requests: 20
+successful_requests: 20
+failed_requests: 0
+error_rate: 0.0
+client_latency_avg: 12.598918
+client_latency_p50: 13.223539
+client_latency_p95: 13.258162
+tokens_per_second_avg: 38.71425
+tokens_per_second_p50: 38.72065
+tokens_per_second_p95: 38.78471
+
+Note: this benchmark calls the non-streaming /generate API.
+TTFT requires a streaming endpoint and will be implemented separately.

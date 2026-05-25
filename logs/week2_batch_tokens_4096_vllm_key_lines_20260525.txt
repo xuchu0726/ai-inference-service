@@ -1,0 +1,6 @@
+MAX_MODEL_LEN=65536
+MAX_NUM_BATCHED_TOKENS=4096
+INFO 05-25 16:36:29 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=2048.
+[1;36m(APIServer pid=6581)[0;0m INFO 05-25 16:36:29 [utils.py:253] non-default args: {'model_tag': 'ByteDance-Seed/Seed-OSS-36B-Instruct', 'host': '0.0.0.0', 'port': 8002, 'enable_auto_tool_choice': True, 'tool_call_parser': 'seed_oss', 'model': 'ByteDance-Seed/Seed-OSS-36B-Instruct', 'trust_remote_code': True, 'dtype': 'bfloat16', 'max_model_len': 65536, 'tensor_parallel_size': 2, 'max_num_batched_tokens': 4096}
+[1;36m(APIServer pid=6581)[0;0m INFO 05-25 16:36:33 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=4096.
+[1;36m(APIServer pid=6581)[0;0m INFO:     Application startup complete.
