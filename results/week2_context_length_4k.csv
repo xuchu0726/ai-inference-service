@@ -1,0 +1,2 @@
+case_id,context_target,target_chars,actual_input_chars,status_code,ok,client_latency_seconds,server_latency_seconds,backend,model_name,device,input_tokens,output_tokens,tokens_per_second,max_new_tokens,thinking_budget,response_preview,error
+1,4k,12000,12058,500,False,0.063502,,,,,,,,256,512,,Internal Server Error

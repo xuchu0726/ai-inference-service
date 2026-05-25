@@ -1,0 +1,15 @@
+status: 200
+client_latency_seconds: 4.382574
+{
+  "response": "<seed:think>\n用户现在需要我用三句话解释大模型推理，然后说明为什么vLLM适合做推理服务。首先得明确“大模型推理”的定义，应该包括输入处理、模型计算、输出生成这几个核心步骤吧？得简洁，三句话，所以每句要抓重点。\n<seed:cot_budget_reflect>I have used 128 tokens, and there are 384 tokens remaining for use.</seed:cot_budget_reflect>\n\n\n首先，大模型推理是指输入用户 query 或任务后，模型通过前向计算（比如 transformer 的 attention、feed-forward 层）处理输入，最终输出预测结果",
+  "latency_seconds": 4.374799,
+  "input_chars": 36,
+  "max_new_tokens": 128,
+  "thinking_budget": 512,
+  "backend": "vllm",
+  "input_tokens": 118,
+  "output_tokens": 128,
+  "tokens_per_second": 29.2585,
+  "model_name": "ByteDance-Seed/Seed-OSS-36B-Instruct",
+  "device": "vllm_server"
+}

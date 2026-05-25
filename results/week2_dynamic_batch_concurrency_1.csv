@@ -1,0 +1,252 @@
+case_id,prompt_id,thinking_budget,concurrency,benchmark_wall_time_seconds,throughput_qps,status_code,ok,client_latency_seconds,server_latency_seconds,backend,model_name,device,input_chars,input_tokens,output_tokens,tokens_per_second,max_new_tokens,response,error
+1,llm_inference_cn,0,1,123.070368,0.325017,200,True,3.37133,3.365571,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,36,104,128,38.0322,128,"### 三句话解释大模型推理  
+大模型推理是指输入文本、图像等数据后，大模型通过计算生成输出结果的过程，核心是高效调用模型参数完成任务（如生成文本、回答问题）。  
+推理需平衡速度、内存和成本，需解决长上下文处理、批量请求调度等挑战，直接影响用户体验和服务可用性。  
+它是大模型落地的关键环节，连接模型能力与实际应用，需适配多场景需求（如对话、搜索、创作）。  
+
+
+### vLLM适合做推理服务的原因  
+**高效显存利用**",
+2,legal_summary_cn,0,1,123.070368,0.325017,200,True,2.279337,2.277683,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,52,111,87,38.1967,128,"### 核心风险点总结  
+1. **甲方单方定价权风险**：甲方可单方面修改服务价格，乙方无协商或抗辩空间，可能面临价格不合理上涨的损失。  
+2. **乙方解约约束风险**：乙方不得提前解除合同，若需解约需支付违约金，丧失合同解除的自主权，可能因客观情况变化（如服务需求变更）被锁定在不利合同中。",
+3,kv_cache_en,0,1,123.070368,0.325017,200,True,3.348159,3.346231,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,92,105,128,38.252,128,"### KV Cache: Core Role in LLM Inference Optimization  
+
+
+#### **1. What is KV Cache?**  
+KV Cache (Key-Value Cache) stores the **key (K)** and **value (V)** tensors generated during the self-attention mechanism of LLMs during inference. These tensors are computed once per token in the input/prompt and reused for generating subsequent tokens, eliminating redundant recalculations.  
+
+
+#### **2. Impact on Latency**  
+Latency (time per token generation) is reduced by **avoiding redundant self-attention computations**:  
+- In standard self-attention, each",
+4,seed_oss_planning_cn,0,1,123.070368,0.325017,200,True,3.350009,3.347624,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,53,113,128,38.2361,128,"### 从AI推理工程角度说明部署36B大模型需多GPU、KV Cache管理和性能压测的原因
+
+
+#### **一、多GPU部署：解决单卡内存与算力限制**  
+36B参数的大模型（如LLaMA-2-36B）仅权重就需约**70GB内存**（FP16格式），远超单块GPU的显存上限（如NVIDIA A100 80GB显存仅能容纳权重，无空间处理推理时的中间激活和KV Cache）。即使采用量化技术（如INT8）",
+5,llm_inference_cn,0,1,123.070368,0.325017,200,True,3.340698,3.339048,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,36,104,128,38.3343,128,"### 三句话解释大模型推理  
+大模型推理是指输入文本、图像等数据后，大模型通过计算生成输出结果的过程，核心是高效调用模型参数完成任务（如生成文本、回答问题）。  
+推理需平衡速度与精度，需解决长上下文处理、显存占用大等问题，直接影响用户体验和系统成本。  
+它是大模型落地的关键环节，连接模型能力与实际应用（如聊天机器人、内容创作），需适配多场景需求（如低延迟交互、高吞吐量批量处理）。  
+
+
+### vLLM适合做推理",
+6,legal_summary_cn,0,1,123.070368,0.325017,200,True,2.276307,2.274393,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,52,111,87,38.252,128,"### 核心风险点总结  
+1. **甲方单方定价权风险**：甲方可单方面修改服务价格，乙方无协商或抗辩空间，可能面临价格不合理上涨的损失。  
+2. **乙方解约约束风险**：乙方不得提前解除合同，若需解约需支付违约金，丧失合同解除的自主权，可能因客观情况变化（如服务需求变更）被锁定在不利合同中。",
+7,kv_cache_en,0,1,123.070368,0.325017,200,True,3.345671,3.343702,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,92,105,128,38.2809,128,"### KV Cache: Core Role in LLM Inference Optimization  
+
+
+#### **1. What is KV Cache?**  
+KV Cache (Key-Value Cache) stores the **key (K)** and **value (V)** tensors generated during the self-attention mechanism of LLMs during inference. These tensors are computed once per token in the input/prompt and reused for generating subsequent tokens, eliminating redundant recalculations.  
+
+
+#### **2. Impact on Latency**  
+Latency (time per token generation) is reduced by **avoiding redundant self-attention computations**:  
+- In standard self-attention, each",
+8,seed_oss_planning_cn,0,1,123.070368,0.325017,200,True,3.340425,3.338284,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,53,113,128,38.3431,128,"### 从AI推理工程角度说明部署36B大模型需多GPU、KV Cache管理和性能压测的原因
+
+
+#### **一、多GPU部署：解决单卡内存与算力限制**  
+36B参数的大模型（如LLaMA-2-36B）仅权重就需约**70GB内存**（FP16格式），远超单块GPU的显存上限（如NVIDIA A100 80GB显存仅能容纳权重，无空间处理推理时的中间激活和KV Cache）。即使采用量化技术（如INT8）",
+9,llm_inference_cn,0,1,123.070368,0.325017,200,True,3.345521,3.343659,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,36,104,128,38.2814,128,"### 三句话解释大模型推理  
+大模型推理是指输入文本、图像等数据后，大模型通过计算生成输出结果的过程，核心是高效调用模型参数完成任务（如生成文本、回答问题）。  
+推理需平衡速度与精度，需解决长上下文处理、显存占用大等问题，直接影响用户体验和系统成本。  
+它是大模型落地的关键环节，连接模型能力与实际应用（如聊天机器人、内容创作），需适配多场景需求（如低延迟交互、高吞吐量批量处理）。  
+
+
+### vLLM适合做推理",
+10,legal_summary_cn,0,1,123.070368,0.325017,200,True,2.278036,2.276309,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,52,111,87,38.2198,128,"### 核心风险点总结  
+1. **甲方单方定价权风险**：甲方可单方面修改服务价格，乙方无协商或抗辩空间，可能面临价格不合理上涨的损失。  
+2. **乙方解约约束风险**：乙方不得提前解除合同，若需解约需支付违约金，丧失合同解除的自主权，可能因客观情况变化（如服务需求变更）被锁定在不利合同中。",
+11,kv_cache_en,0,1,123.070368,0.325017,200,True,3.346779,3.342613,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,92,105,128,38.2934,128,"### KV Cache: Core Role in LLM Inference Optimization  
+
+
+#### **1. What is KV Cache?**  
+KV Cache (Key-Value Cache) stores the **key (K)** and **value (V)** tensors generated during the self-attention mechanism of LLMs during inference. These tensors are computed once per token in the input/prompt and reused for generating subsequent tokens, eliminating redundant recalculations.  
+
+
+#### **2. Impact on Latency**  
+Latency (time per token generation) is reduced by **avoiding redundant self-attention computations**:  
+- In standard self-attention, each",
+12,seed_oss_planning_cn,0,1,123.070368,0.325017,200,True,3.34367,3.341612,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,53,113,128,38.3049,128,"### 从AI推理工程角度说明部署36B大模型需多GPU、KV Cache管理和性能压测的原因
+
+
+#### **一、多GPU部署：解决单卡内存与算力限制**  
+36B参数的大模型（如LLaMA-2-36B）仅权重就需约**70GB内存**（FP16格式），远超单块GPU的显存上限（如NVIDIA A100 80GB显存仅能容纳权重，无空间处理推理时的中间激活和KV Cache）。即使采用量化技术（如INT8）",
+13,llm_inference_cn,0,1,123.070368,0.325017,200,True,3.340221,3.338364,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,36,104,128,38.3421,128,"### 三句话解释大模型推理  
+大模型推理是指输入文本、图像等数据后，大模型通过计算生成输出结果的过程，核心是高效调用模型参数完成任务（如生成文本、回答问题）。  
+推理需平衡速度与精度，需解决长上下文处理、显存占用大等问题，直接影响用户体验和系统成本。  
+它是大模型落地的关键环节，连接模型能力与实际应用（如聊天机器人、内容创作），需适配多场景需求（如低延迟交互、高吞吐量批量处理）。  
+
+
+### vLLM适合做推理",
+14,legal_summary_cn,0,1,123.070368,0.325017,200,True,2.27318,2.27138,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,52,111,87,38.3027,128,"### 核心风险点总结  
+1. **甲方单方定价权风险**：甲方可单方面修改服务价格，乙方无协商或抗辩空间，可能面临价格不合理上涨的损失。  
+2. **乙方解约约束风险**：乙方不得提前解除合同，若需解约需支付违约金，丧失合同解除的自主权，可能因客观情况变化（如服务需求变更）被锁定在不利合同中。",
+15,kv_cache_en,0,1,123.070368,0.325017,200,True,3.340704,3.338878,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,92,105,128,38.3362,128,"### KV Cache: Core Role in LLM Inference Optimization  
+
+
+#### **1. What is KV Cache?**  
+KV Cache (Key-Value Cache) stores the **key (K)** and **value (V)** tensors generated during the self-attention mechanism of LLMs during inference. These tensors are computed once per token in the input/prompt and reused for generating subsequent tokens, eliminating redundant recalculations.  
+
+
+#### **2. Impact on Latency**  
+Latency (time per token generation) is reduced by **avoiding redundant self-attention computations**:  
+- In standard self-attention, each",
+16,seed_oss_planning_cn,0,1,123.070368,0.325017,200,True,3.343106,3.341604,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,53,113,128,38.305,128,"### 从AI推理工程角度说明部署36B大模型需多GPU、KV Cache管理和性能压测的原因
+
+
+#### **一、多GPU部署：解决单卡内存与算力限制**  
+36B参数的大模型（如LLaMA-2-36B）仅权重就需约**70GB内存**（FP16格式），远超单块GPU的显存上限（如NVIDIA A100 80GB显存仅能容纳权重，无空间处理推理时的中间激活和KV Cache）。即使采用量化技术（如INT8）",
+17,llm_inference_cn,0,1,123.070368,0.325017,200,True,3.344817,3.343255,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,36,104,128,38.286,128,"### 三句话解释大模型推理  
+大模型推理是指输入文本、图像等数据后，大模型通过计算生成输出结果的过程，核心是高效调用模型参数完成任务（如生成文本、回答问题）。  
+推理需平衡速度与精度，需解决长上下文处理、显存占用大等问题，直接影响用户体验和系统成本。  
+它是大模型落地的关键环节，连接模型能力与实际应用（如聊天机器人、内容创作），需适配多场景需求（如低延迟交互、高吞吐量批量处理）。  
+
+
+### vLLM适合做推理",
+18,legal_summary_cn,0,1,123.070368,0.325017,200,True,2.279606,2.277904,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,52,111,87,38.193,128,"### 核心风险点总结  
+1. **甲方单方定价权风险**：甲方可单方面修改服务价格，乙方无协商或抗辩空间，可能面临价格不合理上涨的损失。  
+2. **乙方解约约束风险**：乙方不得提前解除合同，若需解约需支付违约金，丧失合同解除的自主权，可能因客观情况变化（如服务需求变更）被锁定在不利合同中。",
+19,kv_cache_en,0,1,123.070368,0.325017,200,True,3.343761,3.341973,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,92,105,128,38.3007,128,"### KV Cache: Core Role in LLM Inference Optimization  
+
+
+#### **1. What is KV Cache?**  
+KV Cache (Key-Value Cache) stores the **key (K)** and **value (V)** tensors generated during the self-attention mechanism of LLMs during inference. These tensors are computed once per token in the input/prompt and reused for generating subsequent tokens, eliminating redundant recalculations.  
+
+
+#### **2. Impact on Latency**  
+Latency (time per token generation) is reduced by **avoiding redundant self-attention computations**:  
+- In standard self-attention, each",
+20,seed_oss_planning_cn,0,1,123.070368,0.325017,200,True,3.342892,3.341117,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,53,113,128,38.3105,128,"### 从AI推理工程角度说明部署36B大模型需多GPU、KV Cache管理和性能压测的原因
+
+
+#### **一、多GPU部署：解决单卡内存与算力限制**  
+36B参数的大模型（如LLaMA-2-36B）仅权重就需约**70GB内存**（FP16格式），远超单块GPU的显存上限（如NVIDIA A100 80GB显存仅能容纳权重，无空间处理推理时的中间激活和KV Cache）。即使采用量化技术（如INT8）",
+21,llm_inference_cn,0,1,123.070368,0.325017,200,True,3.344901,3.342755,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,36,104,128,38.2918,128,"### 三句话解释大模型推理  
+大模型推理是指输入文本、图像等数据后，大模型通过计算生成输出结果的过程，核心是高效调用模型参数完成任务（如生成文本、回答问题）。  
+推理需平衡速度与精度，需解决长上下文处理、显存占用大等问题，直接影响用户体验和系统成本。  
+它是大模型落地的关键环节，连接模型能力与实际应用（如聊天机器人、内容创作），需适配多场景需求（如低延迟交互、高吞吐量批量处理）。  
+
+
+### vLLM适合做推理",
+22,legal_summary_cn,0,1,123.070368,0.325017,200,True,2.276366,2.274479,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,52,111,87,38.2505,128,"### 核心风险点总结  
+1. **甲方单方定价权风险**：甲方可单方面修改服务价格，乙方无协商或抗辩空间，可能面临价格不合理上涨的损失。  
+2. **乙方解约约束风险**：乙方不得提前解除合同，若需解约需支付违约金，丧失合同解除的自主权，可能因客观情况变化（如服务需求变更）被锁定在不利合同中。",
+23,kv_cache_en,0,1,123.070368,0.325017,200,True,3.342067,3.340324,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,92,105,128,38.3196,128,"### KV Cache: Core Role in LLM Inference Optimization  
+
+
+#### **1. What is KV Cache?**  
+KV Cache (Key-Value Cache) stores the **key (K)** and **value (V)** tensors generated during the self-attention mechanism of LLMs during inference. These tensors are computed once per token in the input/prompt and reused for generating subsequent tokens, eliminating redundant recalculations.  
+
+
+#### **2. Impact on Latency**  
+Latency (time per token generation) is reduced by **avoiding redundant self-attention computations**:  
+- In standard self-attention, each",
+24,seed_oss_planning_cn,0,1,123.070368,0.325017,200,True,3.340468,3.338601,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,53,113,128,38.3394,128,"### 从AI推理工程角度说明部署36B大模型需多GPU、KV Cache管理和性能压测的原因
+
+
+#### **一、多GPU部署：解决单卡内存与算力限制**  
+36B参数的大模型（如LLaMA-2-36B）仅权重就需约**70GB内存**（FP16格式），远超单块GPU的显存上限（如NVIDIA A100 80GB显存仅能容纳权重，无空间处理推理时的中间激活和KV Cache）。即使采用量化技术（如INT8）",
+25,llm_inference_cn,0,1,123.070368,0.325017,200,True,3.340477,3.338275,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,36,104,128,38.3432,128,"### 三句话解释大模型推理  
+大模型推理是指输入文本、图像等数据后，大模型通过计算生成输出结果的过程，核心是高效调用模型参数完成任务（如生成文本、回答问题）。  
+推理需平衡速度与精度，需解决长上下文处理、显存占用大等问题，直接影响用户体验和系统成本。  
+它是大模型落地的关键环节，连接模型能力与实际应用（如聊天机器人、内容创作），需适配多场景需求（如低延迟交互、高吞吐量批量处理）。  
+
+
+### vLLM适合做推理",
+26,legal_summary_cn,0,1,123.070368,0.325017,200,True,2.276657,2.274609,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,52,111,87,38.2483,128,"### 核心风险点总结  
+1. **甲方单方定价权风险**：甲方可单方面修改服务价格，乙方无协商或抗辩空间，可能面临价格不合理上涨的损失。  
+2. **乙方解约约束风险**：乙方不得提前解除合同，若需解约需支付违约金，丧失合同解除的自主权，可能因客观情况变化（如服务需求变更）被锁定在不利合同中。",
+27,kv_cache_en,0,1,123.070368,0.325017,200,True,3.340292,3.338766,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,92,105,128,38.3375,128,"### KV Cache: Core Role in LLM Inference Optimization  
+
+
+#### **1. What is KV Cache?**  
+KV Cache (Key-Value Cache) stores the **key (K)** and **value (V)** tensors generated during the self-attention mechanism of LLMs during inference. These tensors are computed once per token in the input/prompt and reused for generating subsequent tokens, eliminating redundant recalculations.  
+
+
+#### **2. Impact on Latency**  
+Latency (time per token generation) is reduced by **avoiding redundant self-attention computations**:  
+- In standard self-attention, each",
+28,seed_oss_planning_cn,0,1,123.070368,0.325017,200,True,3.340253,3.338648,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,53,113,128,38.3389,128,"### 从AI推理工程角度说明部署36B大模型需多GPU、KV Cache管理和性能压测的原因
+
+
+#### **一、多GPU部署：解决单卡内存与算力限制**  
+36B参数的大模型（如LLaMA-2-36B）仅权重就需约**70GB内存**（FP16格式），远超单块GPU的显存上限（如NVIDIA A100 80GB显存仅能容纳权重，无空间处理推理时的中间激活和KV Cache）。即使采用量化技术（如INT8）",
+29,llm_inference_cn,0,1,123.070368,0.325017,200,True,3.344036,3.342001,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,36,104,128,38.3004,128,"### 三句话解释大模型推理  
+大模型推理是指输入文本、图像等数据后，大模型通过计算生成输出结果的过程，核心是高效调用模型参数完成任务（如生成文本、回答问题）。  
+推理需平衡速度与精度，需解决长上下文处理、显存占用大等问题，直接影响用户体验和系统成本。  
+它是大模型落地的关键环节，连接模型能力与实际应用（如聊天机器人、内容创作），需适配多场景需求（如低延迟交互、高吞吐量批量处理）。  
+
+
+### vLLM适合做推理",
+30,legal_summary_cn,0,1,123.070368,0.325017,200,True,2.274441,2.272583,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,52,111,87,38.2824,128,"### 核心风险点总结  
+1. **甲方单方定价权风险**：甲方可单方面修改服务价格，乙方无协商或抗辩空间，可能面临价格不合理上涨的损失。  
+2. **乙方解约约束风险**：乙方不得提前解除合同，若需解约需支付违约金，丧失合同解除的自主权，可能因客观情况变化（如服务需求变更）被锁定在不利合同中。",
+31,kv_cache_en,0,1,123.070368,0.325017,200,True,3.343659,3.341718,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,92,105,128,38.3036,128,"### KV Cache: Core Role in LLM Inference Optimization  
+
+
+#### **1. What is KV Cache?**  
+KV Cache (Key-Value Cache) stores the **key (K)** and **value (V)** tensors generated during the self-attention mechanism of LLMs during inference. These tensors are computed once per token in the input/prompt and reused for generating subsequent tokens, eliminating redundant recalculations.  
+
+
+#### **2. Impact on Latency**  
+Latency (time per token generation) is reduced by **avoiding redundant self-attention computations**:  
+- In standard self-attention, each",
+32,seed_oss_planning_cn,0,1,123.070368,0.325017,200,True,3.340207,3.338351,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,53,113,128,38.3423,128,"### 从AI推理工程角度说明部署36B大模型需多GPU、KV Cache管理和性能压测的原因
+
+
+#### **一、多GPU部署：解决单卡内存与算力限制**  
+36B参数的大模型（如LLaMA-2-36B）仅权重就需约**70GB内存**（FP16格式），远超单块GPU的显存上限（如NVIDIA A100 80GB显存仅能容纳权重，无空间处理推理时的中间激活和KV Cache）。即使采用量化技术（如INT8）",
+33,llm_inference_cn,0,1,123.070368,0.325017,200,True,3.339327,3.337509,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,36,104,128,38.352,128,"### 三句话解释大模型推理  
+大模型推理是指输入文本、图像等数据后，大模型通过计算生成输出结果的过程，核心是高效调用模型参数完成任务（如生成文本、回答问题）。  
+推理需平衡速度与精度，需解决长上下文处理、显存占用大等问题，直接影响用户体验和系统成本。  
+它是大模型落地的关键环节，连接模型能力与实际应用（如聊天机器人、内容创作），需适配多场景需求（如低延迟交互、高吞吐量批量处理）。  
+
+
+### vLLM适合做推理",
+34,legal_summary_cn,0,1,123.070368,0.325017,200,True,2.273316,2.27197,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,52,111,87,38.2928,128,"### 核心风险点总结  
+1. **甲方单方定价权风险**：甲方可单方面修改服务价格，乙方无协商或抗辩空间，可能面临价格不合理上涨的损失。  
+2. **乙方解约约束风险**：乙方不得提前解除合同，若需解约需支付违约金，丧失合同解除的自主权，可能因客观情况变化（如服务需求变更）被锁定在不利合同中。",
+35,kv_cache_en,0,1,123.070368,0.325017,200,True,3.339079,3.337915,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,92,105,128,38.3473,128,"### KV Cache: Core Role in LLM Inference Optimization  
+
+
+#### **1. What is KV Cache?**  
+KV Cache (Key-Value Cache) stores the **key (K)** and **value (V)** tensors generated during the self-attention mechanism of LLMs during inference. These tensors are computed once per token in the input/prompt and reused for generating subsequent tokens, eliminating redundant recalculations.  
+
+
+#### **2. Impact on Latency**  
+Latency (time per token generation) is reduced by **avoiding redundant self-attention computations**:  
+- In standard self-attention, each",
+36,seed_oss_planning_cn,0,1,123.070368,0.325017,200,True,3.337585,3.335975,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,53,113,128,38.3696,128,"### 从AI推理工程角度说明部署36B大模型需多GPU、KV Cache管理和性能压测的原因
+
+
+#### **一、多GPU部署：解决单卡内存与算力限制**  
+36B参数的大模型（如LLaMA-2-36B）仅权重就需约**70GB内存**（FP16格式），远超单块GPU的显存上限（如NVIDIA A100 80GB显存仅能容纳权重，无空间处理推理时的中间激活和KV Cache）。即使采用量化技术（如INT8）",
+37,llm_inference_cn,0,1,123.070368,0.325017,200,True,3.339798,3.338038,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,36,104,128,38.3459,128,"### 三句话解释大模型推理  
+大模型推理是指输入文本、图像等数据后，大模型通过计算生成输出结果的过程，核心是高效调用模型参数完成任务（如生成文本、回答问题）。  
+推理需平衡速度与精度，需解决长上下文处理、显存占用大等问题，直接影响用户体验和系统成本。  
+它是大模型落地的关键环节，连接模型能力与实际应用（如聊天机器人、内容创作），需适配多场景需求（如低延迟交互、高吞吐量批量处理）。  
+
+
+### vLLM适合做推理",
+38,legal_summary_cn,0,1,123.070368,0.325017,200,True,2.273674,2.272114,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,52,111,87,38.2903,128,"### 核心风险点总结  
+1. **甲方单方定价权风险**：甲方可单方面修改服务价格，乙方无协商或抗辩空间，可能面临价格不合理上涨的损失。  
+2. **乙方解约约束风险**：乙方不得提前解除合同，若需解约需支付违约金，丧失合同解除的自主权，可能因客观情况变化（如服务需求变更）被锁定在不利合同中。",
+39,kv_cache_en,0,1,123.070368,0.325017,200,True,3.34092,3.339413,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,92,105,128,38.3301,128,"### KV Cache: Core Role in LLM Inference Optimization  
+
+
+#### **1. What is KV Cache?**  
+KV Cache (Key-Value Cache) stores the **key (K)** and **value (V)** tensors generated during the self-attention mechanism of LLMs during inference. These tensors are computed once per token in the input/prompt and reused for generating subsequent tokens, eliminating redundant recalculations.  
+
+
+#### **2. Impact on Latency**  
+Latency (time per token generation) is reduced by **avoiding redundant self-attention computations**:  
+- In standard self-attention, each",
+40,seed_oss_planning_cn,0,1,123.070368,0.325017,200,True,3.341826,3.340411,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,53,113,128,38.3186,128,"### 从AI推理工程角度说明部署36B大模型需多GPU、KV Cache管理和性能压测的原因
+
+
+#### **一、多GPU部署：解决单卡内存与算力限制**  
+36B参数的大模型（如LLaMA-2-36B）仅权重就需约**70GB内存**（FP16格式），远超单块GPU的显存上限（如NVIDIA A100 80GB显存仅能容纳权重，无空间处理推理时的中间激活和KV Cache）。即使采用量化技术（如INT8）",

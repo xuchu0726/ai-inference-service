@@ -1,0 +1,83 @@
+===== freeze timestamp =====
+Wed May 13 22:31:55 UTC 2026
+===== git status =====
+ M results/cloud_smoke_test_response.json
+?? logs/week2_concurrency_c1.log
+?? logs/week2_concurrency_c16.log
+?? logs/week2_concurrency_c1_c2_c4_c8_c16_summary_print.txt
+?? logs/week2_concurrency_c1_c2_c4_c8_summary_print.txt
+?? logs/week2_concurrency_c1_c2_c4_summary_print.txt
+?? logs/week2_concurrency_c2.log
+?? logs/week2_concurrency_c4.log
+?? logs/week2_concurrency_c8.log
+?? logs/week2_context_4k_calibrated_summary_print.txt
+?? logs/week2_fastapi.pid
+?? logs/week2_fastapi_vllm.log
+?? logs/week2_nvidia_smi_after_concurrency_c16.txt
+?? logs/week2_nvidia_smi_after_concurrency_c1_c2_c4.txt
+?? logs/week2_nvidia_smi_after_concurrency_c8.txt
+?? logs/week2_nvidia_smi_after_context_4k.txt
+?? logs/week2_nvidia_smi_after_context_4k_calibrated_3000chars.txt
+?? logs/week2_nvidia_smi_after_context_4k_calibrated_6000chars.txt
+?? logs/week2_nvidia_smi_after_context_4k_calibrated_final.txt
+?? logs/week2_nvidia_smi_after_fastapi_smoke.txt
+?? logs/week2_nvidia_smi_after_vllm_ready.txt
+?? logs/week2_nvidia_smi_sampling.csv
+?? logs/week2_nvidia_smi_sampling_tail_after_c16.txt
+?? logs/week2_nvidia_smi_sampling_tail_after_c1_c2_c4.txt
+?? logs/week2_nvidia_smi_sampling_tail_after_c8.txt
+?? logs/week2_pre_32k_evidence_freeze.txt
+?? logs/week2_seed_oss_vllm.pid
+?? logs/week2_seed_oss_vllm_launch.log
+?? logs/week2_seed_oss_vllm_launch_hfcache.log
+?? logs/week2_seed_oss_vllm_ready_tail.txt
+?? results/week2_concurrency_c1.csv
+?? results/week2_concurrency_c16.csv
+?? results/week2_concurrency_c16_summary.csv
+?? results/week2_concurrency_c1_summary.csv
+?? results/week2_concurrency_c2.csv
+?? results/week2_concurrency_c2_summary.csv
+?? results/week2_concurrency_c4.csv
+?? results/week2_concurrency_c4_summary.csv
+?? results/week2_concurrency_c8.csv
+?? results/week2_concurrency_c8_summary.csv
+?? results/week2_context_length_4k.csv
+?? results/week2_context_length_4k_calibrated_3000chars.csv
+?? results/week2_context_length_4k_calibrated_6000chars.csv
+?? results/week2_fastapi_health.json
+?? results/week2_fastapi_metrics_head.txt
+?? results/week2_fastapi_smoke_test.txt
+?? results/week2_seed_oss_vllm_models.json
+?? results/week2_vllm_metrics_head.txt
+?? results/week2_vllm_metrics_snapshot_after_concurrency_c16.txt
+?? results/week2_vllm_metrics_snapshot_after_concurrency_c1_c2_c4.txt
+?? results/week2_vllm_metrics_snapshot_after_concurrency_c8.txt
+?? results/week2_vllm_metrics_snapshot_after_context_4k.txt
+?? results/week2_vllm_metrics_snapshot_after_context_4k_calibrated_3000chars.txt
+?? results/week2_vllm_metrics_snapshot_after_context_4k_calibrated_6000chars.txt
+?? results/week2_vllm_metrics_snapshot_after_context_4k_calibrated_final.txt
+?? results/week2_vllm_metrics_snapshot_after_smoke.txt
+f2e4f05 新增 Week2 实验运行手册
+510eba5 新增 Week2 性能结果绘图脚本
+4363ae8 新增 Week2 数学推理与代码生成评测脚本
+5c1f64b 补充 Week2 量化优化方案
+23caefa 补充 Week2 动态 Batch 测试方案
+===== running services =====
+root        2180     315  0 21:11 pts/0    00:00:00 bash deployment/cloud/run_vllm_seed_oss_36b_tp2.sh
+root        2183     315  0 21:11 pts/0    00:00:00 tail -f logs/week2_seed_oss_vllm_launch_hfcache.log
+root        2184    2180  0 21:11 pts/0    00:00:00 bash deployment/cloud/run_vllm_seed_oss_36b_tp.sh
+root        2253    2184  0 21:12 pts/0    00:00:21 /workspace/venvs/ai-inference-vllm/bin/python /workspace/venvs/ai-inference-vllm/bin/vllm serve ByteDance-Seed/Seed-OSS-36B-Instruct --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --max-model-len 4096 --max-num-batched-tokens 8192 --gpu-memory-utilization 0.90 --dtype bfloat16 --enable-auto-tool-choice --tool-call-parser seed_oss --trust-remote-code
+root        2392    2253  0 21:12 pts/0    00:00:00 /workspace/venvs/ai-inference-vllm/bin/python -c from multiprocessing.resource_tracker import main;main(36)
+root        2527    2393 93 21:12 pts/0    01:13:39 VLLM::Worker_TP0
+root        2528    2393 93 21:12 pts/0    01:13:33 VLLM::Worker_TP1
+root        3291    1368  0 21:25 pts/1    00:00:00 bash deployment/cloud/run_fastapi_vllm.sh
+root        3294    3291  0 21:25 pts/1    00:00:10 python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+root        3404    3398  0 21:34 pts/2    00:00:00 bash scripts/sample_gpu_metrics.sh logs/week2_nvidia_smi_sampling.csv 5
+===== ports =====
+LISTEN 0      2048         0.0.0.0:8002       0.0.0.0:*    users:(("vllm",pid=2253,fd=26))            
+LISTEN 0      2048         0.0.0.0:8000       0.0.0.0:*    users:(("python",pid=3294,fd=11))          
+LISTEN 0      4096               *:8003             *:*    users:(("VLLM::Worker_TP",pid=2527,fd=63)) 
+===== health/models/metrics =====
+
+
+===== current gpu =====

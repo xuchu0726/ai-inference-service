@@ -1,0 +1,18 @@
+nohup: ignoring input
+===== START FASTAPI WITH VLLM BACKEND =====
+INFERENCE_BACKEND=vllm
+MODEL_NAME=ByteDance-Seed/Seed-OSS-36B-Instruct
+VLLM_MODEL_NAME=ByteDance-Seed/Seed-OSS-36B-Instruct
+VLLM_BASE_URL=http://127.0.0.1:8002/v1
+HOST=0.0.0.0
+PORT=8000
+INFO:     Started server process [8638]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:39928 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39938 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49512 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35514 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42684 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52688 - "POST /generate HTTP/1.1" 200 OK

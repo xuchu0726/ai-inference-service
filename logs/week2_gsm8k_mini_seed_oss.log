@@ -1,0 +1,6 @@
+gsm8k_001 status=200 ok=True latency=7.551s correctness=pass
+gsm8k_002 status=200 ok=True latency=6.680s correctness=pass
+gsm8k_003 status=200 ok=True latency=6.685s correctness=pass
+gsm8k_004 status=200 ok=True latency=6.677s correctness=pass
+gsm8k_005 status=200 ok=True latency=6.685s correctness=pass
+saved_csv: results/week2_gsm8k_mini_seed_oss.csv

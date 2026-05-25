@@ -1,0 +1,6 @@
+codegen_001 status=200 ok=True latency=0.540s correctness=pass
+codegen_002 status=200 ok=True latency=0.614s correctness=pass
+codegen_003 status=200 ok=True latency=0.530s correctness=pass
+codegen_004 status=200 ok=True latency=1.627s correctness=pass
+codegen_005 status=200 ok=True latency=0.505s correctness=pass
+saved_csv: results/week2_codegen_mini_seed_oss_budget0.csv

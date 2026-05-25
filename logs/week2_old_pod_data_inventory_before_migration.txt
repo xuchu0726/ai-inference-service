@@ -1,0 +1,247 @@
+===== date =====
+Mon May 25 10:07:30 UTC 2026
+
+===== hostname =====
+6f8e45407fc8
+
+===== workspace dirs =====
+total 14M
+drwxrwxrwx 14 root root 2.0M May 17 19:52 ai-inference-service
+drwxrwxrwx 10 root root 2.0M May  8 10:24 ai-inference-service_broken_20260513_204208
+drwxrwxrwx  8 root root 2.9M May 13 21:04 hf_cache
+drwxrwxrwx  2 root root 991K May 17 19:52 runpod_local_backup_20260517_195226
+drwxrwxrwx  2 root root    1 May 25 10:07 runpod_migration_backup_20260525
+drwxrwxrwx  3 root root 2.9M May 17 20:33 venvs
+drwxrwxrwx  3 root root 2.9M May 17 20:33 venvs_backup
+
+===== workspace sizes =====
+57M	/workspace/ai-inference-service
+68G	/workspace/hf_cache
+5.1G	/workspace/venvs
+18G	/workspace/venvs_backup
+
+===== disk =====
+Filesystem                   Size  Used Avail Use% Mounted on
+mfs#us-md-1.runpod.net:9421  334T  248T   87T  75% /workspace
+
+===== git status =====
+ M results/cloud_smoke_test_response.json
+?? data/eval/gsm8k_test.jsonl
+?? logs/install_fastapi_root_venv.log
+?? logs/reinstall_base_requirements_clean_env.log
+?? logs/reinstall_vllm_root_venv.log
+?? logs/week2_16k_result_print.txt
+?? logs/week2_32k_result_print.txt
+?? logs/week2_64k_conservative_result_print.txt
+?? logs/week2_64k_context_file_inventory_final.txt
+?? logs/week2_64k_context_final_evidence_freeze.txt
+?? logs/week2_64k_near_limit_result_print.txt
+?? logs/week2_8k_evidence_before_16k.txt
+?? logs/week2_codegen_mini_seed_oss_budget0.log
+?? logs/week2_concurrency_all_summary_print.txt
+?? logs/week2_concurrency_c1.log
+?? logs/week2_concurrency_c16.log
+?? logs/week2_concurrency_c1_c2_c4_c8_c16_summary_print.txt
+?? logs/week2_concurrency_c1_c2_c4_c8_summary_print.txt
+?? logs/week2_concurrency_c1_c2_c4_summary_print.txt
+?? logs/week2_concurrency_c2.log
+?? logs/week2_concurrency_c4.log
+?? logs/week2_concurrency_c8.log
+?? logs/week2_context_4k_all_summary_print.txt
+?? logs/week2_context_4k_calibrated_summary_print.txt
+?? logs/week2_context_8k_16k_32k_64k_final_summary.txt
+?? logs/week2_context_8k_16k_32k_summary_before_64k.txt
+?? logs/week2_context_repeat_final_interpretation.txt
+?? logs/week2_context_repeat_investigation_start.txt
+?? logs/week2_context_repeat_investigation_summary.txt
+?? logs/week2_dynamic_batch_concurrency_1.log
+?? logs/week2_dynamic_batch_concurrency_16.log
+?? logs/week2_dynamic_batch_concurrency_16_analysis.log
+?? logs/week2_dynamic_batch_concurrency_1_analysis.log
+?? logs/week2_dynamic_batch_concurrency_2.log
+?? logs/week2_dynamic_batch_concurrency_2_analysis.log
+?? logs/week2_dynamic_batch_concurrency_4.log
+?? logs/week2_dynamic_batch_concurrency_4_analysis.log
+?? logs/week2_dynamic_batch_concurrency_8.log
+?? logs/week2_dynamic_batch_concurrency_8_analysis.log
+?? logs/week2_fastapi.pid
+?? logs/week2_fastapi_64k.pid
+?? logs/week2_fastapi_gsm8k_seed_oss.log
+?? logs/week2_fastapi_gsm8k_seed_oss.pid
+?? logs/week2_fastapi_vllm.log
+?? logs/week2_fastapi_vllm_64k.log
+?? logs/week2_fastapi_vllm_64k_tail_after_16k.txt
+?? logs/week2_fastapi_vllm_64k_tail_after_32k.txt
+?? logs/week2_fastapi_vllm_64k_tail_after_64k_conservative.txt
+?? logs/week2_fastapi_vllm_64k_tail_after_64k_near_limit.txt
+?? logs/week2_fastapi_vllm_64k_tail_after_8k.txt
+?? logs/week2_fastapi_vllm_64k_tail_after_context_repeat_investigation.txt
+?? logs/week2_fastapi_vllm_64k_tail_final.txt
+?? logs/week2_fastapi_vllm_tail_before_32k.txt
+?? logs/week2_gsm8k_diagnostic_budget0_10.log
+?? logs/week2_gsm8k_diagnostic_budget512_10.log
+?? logs/week2_gsm8k_full_seed_oss.log
+?? logs/week2_gsm8k_full_seed_oss_budget0.log
+?? logs/week2_gsm8k_full_seed_oss_budget0_resume.pid
+?? logs/week2_gsm8k_full_seed_oss_max768.log
+?? logs/week2_gsm8k_mini_seed_oss.log
+?? logs/week2_gsm8k_vllm_import_failure_diagnostic.txt
+?? logs/week2_nvidia_smi_after_64k_context_final.txt
+?? logs/week2_nvidia_smi_after_8k_on_64k_service.txt
+?? logs/week2_nvidia_smi_after_concurrency_c16.txt
+?? logs/week2_nvidia_smi_after_concurrency_c1_c2_c4.txt
+?? logs/week2_nvidia_smi_after_concurrency_c8.txt
+?? logs/week2_nvidia_smi_after_context_16k_on_64k_service.txt
+?? logs/week2_nvidia_smi_after_context_32k_on_64k_service.txt
+?? logs/week2_nvidia_smi_after_context_4k.txt
+?? logs/week2_nvidia_smi_after_context_4k_calibrated_3000chars.txt
+?? logs/week2_nvidia_smi_after_context_4k_calibrated_6000chars.txt
+?? logs/week2_nvidia_smi_after_context_4k_calibrated_final.txt
+?? logs/week2_nvidia_smi_after_context_64k_conservative_on_64k_service.txt
+?? logs/week2_nvidia_smi_after_context_64k_near_limit_on_64k_service.txt
+?? logs/week2_nvidia_smi_after_context_repeat_investigation.txt
+?? logs/week2_nvidia_smi_after_fastapi_64k_smoke.txt
+?? logs/week2_nvidia_smi_after_fastapi_smoke.txt
+?? logs/week2_nvidia_smi_after_gsm8k_mini_seed_oss.txt
+?? logs/week2_nvidia_smi_after_vllm_64k_startup.txt
+?? logs/week2_nvidia_smi_after_vllm_gsm8k_startup.txt
+?? logs/week2_nvidia_smi_after_vllm_ready.txt
+?? logs/week2_nvidia_smi_before_context_64k_on_64k_service.txt
+?? logs/week2_nvidia_smi_before_context_repeat_investigation.txt
+?? logs/week2_nvidia_smi_sampling.csv
+?? logs/week2_nvidia_smi_sampling_64k_context.csv
+?? logs/week2_nvidia_smi_sampling_64k_context_tail_after_32k.txt
+?? logs/week2_nvidia_smi_sampling_64k_context_tail_after_64k_conservative.txt
+?? logs/week2_nvidia_smi_sampling_64k_context_tail_after_64k_near_limit.txt
+?? logs/week2_nvidia_smi_sampling_64k_context_tail_final.txt
+?? logs/week2_nvidia_smi_sampling_tail_after_c16.txt
+?? logs/week2_nvidia_smi_sampling_tail_after_c1_c2_c4.txt
+?? logs/week2_nvidia_smi_sampling_tail_after_c8.txt
+?? logs/week2_nvidia_smi_sampling_tail_before_32k.txt
+?? logs/week2_old_pod_data_inventory_before_migration.txt
+?? logs/week2_pre_32k_evidence_freeze.txt
+?? logs/week2_pre_32k_nvidia_smi.txt
+?? logs/week2_prefix_cache_investigation_metrics_summary.txt
+?? logs/week2_result_file_inventory_before_32k.txt
+?? logs/week2_seed_oss_vllm.pid
+?? logs/week2_seed_oss_vllm_64k.pid
+?? logs/week2_seed_oss_vllm_64k_key_startup_lines.txt
+?? logs/week2_seed_oss_vllm_64k_tail_after_16k.txt
+?? logs/week2_seed_oss_vllm_64k_tail_after_32k.txt
+?? logs/week2_seed_oss_vllm_64k_tail_after_64k_conservative.txt
+?? logs/week2_seed_oss_vllm_64k_tail_after_64k_near_limit.txt
+?? logs/week2_seed_oss_vllm_64k_tail_after_8k.txt
+?? logs/week2_seed_oss_vllm_64k_tail_after_context_repeat_investigation.txt
+?? logs/week2_seed_oss_vllm_64k_tail_final.txt
+?? logs/week2_seed_oss_vllm_gsm8k_64k.log
+?? logs/week2_seed_oss_vllm_gsm8k_64k.pid
+?? logs/week2_seed_oss_vllm_gsm8k_64k_clean_env.log
+?? logs/week2_seed_oss_vllm_gsm8k_64k_clean_env.pid
+?? logs/week2_seed_oss_vllm_launch.log
+?? logs/week2_seed_oss_vllm_launch_64k.log
+?? logs/week2_seed_oss_vllm_launch_hfcache.log
+?? logs/week2_seed_oss_vllm_ready_tail.txt
+?? logs/week2_seed_oss_vllm_tail_before_32k.txt
+?? results/week2_concurrency_c1.csv
+?? results/week2_concurrency_c16.csv
+?? results/week2_concurrency_c16_summary.csv
+?? results/week2_concurrency_c1_summary.csv
+?? results/week2_concurrency_c2.csv
+?? results/week2_concurrency_c2_summary.csv
+?? results/week2_concurrency_c4.csv
+?? results/week2_concurrency_c4_summary.csv
+?? results/week2_concurrency_c8.csv
+?? results/week2_concurrency_c8_summary.csv
+?? results/week2_context_length_16k_on_64k_service.csv
+?? results/week2_context_length_32k_on_64k_service.csv
+?? results/week2_context_length_4k.csv
+?? results/week2_context_length_4k_calibrated_3000chars.csv
+?? results/week2_context_length_4k_calibrated_6000chars.csv
+?? results/week2_context_length_64k_conservative_on_64k_service.csv
+?? results/week2_context_length_64k_near_limit_on_64k_service.csv
+?? results/week2_context_length_8k_on_64k_service.csv
+?? results/week2_context_repeat_r1_56k_then_64k.csv
+?? results/week2_context_repeat_r2_64k_then_56k.csv
+?? results/week2_context_repeat_r3_56k_then_64k.csv
+?? results/week2_dynamic_batch_concurrency_1.csv
+?? results/week2_dynamic_batch_concurrency_16.csv
+?? results/week2_dynamic_batch_concurrency_2.csv
+?? results/week2_dynamic_batch_concurrency_4.csv
+?? results/week2_dynamic_batch_concurrency_8.csv
+?? results/week2_fastapi_64k_health.json
+?? results/week2_fastapi_64k_metrics_head.txt
+?? results/week2_fastapi_64k_smoke_test.txt
+?? results/week2_fastapi_health.json
+?? results/week2_fastapi_metrics_head.txt
+?? results/week2_fastapi_smoke_test.txt
+?? results/week2_gsm8k_diagnostic_budget0_10.csv
+?? results/week2_gsm8k_diagnostic_budget0_10_summary.csv
+?? results/week2_gsm8k_diagnostic_budget512_10.csv
+?? results/week2_gsm8k_diagnostic_budget512_10_summary.csv
+?? results/week2_gsm8k_fastapi_health.json
+?? results/week2_gsm8k_full_seed_oss.csv
+?? results/week2_gsm8k_full_seed_oss_budget0.csv
+?? results/week2_gsm8k_full_seed_oss_max768.csv
+?? results/week2_gsm8k_mini_seed_oss.csv
+?? results/week2_gsm8k_vllm_metrics_head.txt
+?? results/week2_gsm8k_vllm_models.json
+?? results/week2_pre_32k_fastapi_health.json
+?? results/week2_pre_32k_vllm_metrics_snapshot.txt
+?? results/week2_pre_32k_vllm_models.json
+?? results/week2_seed_oss_vllm_64k_metrics_head.txt
+?? results/week2_seed_oss_vllm_64k_models.json
+?? results/week2_seed_oss_vllm_models.json
+?? results/week2_vllm_64k_metrics_snapshot_after_smoke.txt
+?? results/week2_vllm_metrics_after_context_repeat_investigation.txt
+?? results/week2_vllm_metrics_before_context_repeat_investigation.txt
+?? results/week2_vllm_metrics_head.txt
+?? results/week2_vllm_metrics_snapshot_after_8k_on_64k_service.txt
+?? results/week2_vllm_metrics_snapshot_after_concurrency_c16.txt
+?? results/week2_vllm_metrics_snapshot_after_concurrency_c1_c2_c4.txt
+?? results/week2_vllm_metrics_snapshot_after_concurrency_c8.txt
+?? results/week2_vllm_metrics_snapshot_after_context_16k_on_64k_service.txt
+?? results/week2_vllm_metrics_snapshot_after_context_32k_on_64k_service.txt
+?? results/week2_vllm_metrics_snapshot_after_context_4k.txt
+?? results/week2_vllm_metrics_snapshot_after_context_4k_calibrated_3000chars.txt
+?? results/week2_vllm_metrics_snapshot_after_context_4k_calibrated_6000chars.txt
+?? results/week2_vllm_metrics_snapshot_after_context_4k_calibrated_final.txt
+?? results/week2_vllm_metrics_snapshot_after_context_64k_conservative_on_64k_service.txt
+?? results/week2_vllm_metrics_snapshot_after_context_64k_near_limit_on_64k_service.txt
+?? results/week2_vllm_metrics_snapshot_after_smoke.txt
+?? results/week2_vllm_metrics_snapshot_before_context_64k_on_64k_service.txt
+
+===== git log =====
+8a3a60f xuchu0726 <chuxu7678@gmail.com> | 保存 Week2 Seed-OSS GSM8K codegen 与动态并发实验结果
+ac8a156 xuchu0726 <chuxu7678@gmail.com> | 新增完整 GSM8K benchmark 脚本
+c577a04 xuchu0726 <chuxu7678@gmail.com> | 新增 Week2 GSM8K 与代码生成 mini eval 框架
+19fa564 xuchu0726 <chuxu7678@gmail.com> | 补充 Week2 可观测性与资源瓶颈分析报告
+7320c7e xuchu0726 <chuxu7678@gmail.com> | 新增 Week2 Prometheus 与 Grafana 监控配置
+0942ed0 xuchu0726 <chuxu7678@gmail.com> | 补充 Week2 量化优化可行性分析
+cf7e286 xuchu0726 <chuxu7678@gmail.com> | 补充 Seed-OSS 512K 长上下文可行性分析
+ca88692 xuchu0726 <chuxu7678@gmail.com> | 校准 PTA 仓库提交身份
+09b0921 ada-xc1225 <xc1225@ic.ac.uk> | 在 README 中补充 Week2 交付摘要入口
+c17be37 ada-xc1225 <xc1225@ic.ac.uk> | 新增 Week2 交付摘要
+
+===== artifacts =====
+total 490K
+-rw-rw-rw- 1 root root 101K May 17 19:52 week2_64k_context_evidence_20260514_005638.tar.gz
+-rw-rw-rw- 1 root root  40K May 17 19:52 week2_pre_32k_evidence_20260513_223156.tar.gz
+-rw-rw-rw- 1 root root 349K May 18 04:28 week2_seed_oss_gsm8k_codegen_dynamic_batch_evidence_20260518_042845.tar.gz
+
+===== key results =====
+-rw-rw-rw- 1 root root 485 May 18 00:54 results/week2_gsm8k_full_seed_oss_budget0_summary.csv
+-rw-rw-rw- 1 root root 1.3K May 18 04:21 results/week2_codegen_mini_seed_oss_budget0.csv
+-rw-rw-rw- 1 root root 1.1K May 18 04:27 results/week2_dynamic_batch_concurrency_16_summary.csv
+-rw-rw-rw- 1 root root 1.1K May 18 04:24 results/week2_dynamic_batch_concurrency_1_summary.csv
+-rw-rw-rw- 1 root root 1.1K May 18 04:26 results/week2_dynamic_batch_concurrency_2_summary.csv
+-rw-rw-rw- 1 root root 1.1K May 18 04:26 results/week2_dynamic_batch_concurrency_4_summary.csv
+-rw-rw-rw- 1 root root 1.1K May 18 04:26 results/week2_dynamic_batch_concurrency_8_summary.csv
+
+===== key figures =====
+-rw-rw-rw- 1 root root  67K May 17 19:52 figures/week2_context_latency_first_pass_only.png
+-rw-rw-rw- 1 root root  82K May 17 19:52 figures/week2_context_tokens_per_second_first_pass_only.png
+-rw-rw-rw- 1 root root  44K May 17 19:52 figures/week2_error_rate_vs_concurrency_report.png
+-rw-rw-rw- 1 root root  92K May 17 19:52 figures/week2_latency_p50_p95_vs_concurrency.png
+-rw-rw-rw- 1 root root 106K May 17 19:52 figures/week2_prefix_cache_repeat_latency.png
+-rw-rw-rw- 1 root root  65K May 17 19:52 figures/week2_qps_vs_concurrency_report.png
+-rw-rw-rw- 1 root root  81K May 17 19:52 figures/week2_tokens_per_second_vs_concurrency_report.png

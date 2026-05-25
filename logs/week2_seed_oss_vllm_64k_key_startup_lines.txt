@@ -1,0 +1,6 @@
+[1;36m(APIServer pid=4235)[0;0m INFO 05-13 23:05:25 [model.py:1745] Using max model len 65536
+[1;36m(Worker_TP0 pid=4511)[0;0m INFO 05-13 23:16:46 [gpu_worker.py:359] Available KV cache memory: 35.46 GiB
+[1;36m(EngineCore_DP0 pid=4377)[0;0m INFO 05-13 23:16:47 [kv_cache_utils.py:1229] GPU KV cache size: 290,448 tokens
+[1;36m(EngineCore_DP0 pid=4377)[0;0m INFO 05-13 23:16:47 [kv_cache_utils.py:1234] Maximum concurrency for 65,536 tokens per request: 4.43x
+[1;36m(EngineCore_DP0 pid=4377)[0;0m INFO 05-13 23:16:47 [kv_cache_utils.py:1234] Maximum concurrency for 65,536 tokens per request: 4.43x
+[1;36m(APIServer pid=4235)[0;0m INFO:     Application startup complete.

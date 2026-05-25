@@ -1,0 +1,31 @@
+===== BENCHMARK CONFIG =====
+url: http://127.0.0.1:8000/generate
+output: results/week2_concurrency_c1.csv
+concurrency: 1
+repeat: 1
+max_new_tokens: 128
+temperature: 0.7
+thinking_budgets: [512]
+total_requests: 4
+case_id=1 ok=True status=200 latency=3.374188 backend=vllm tokens/s=37.9989
+case_id=2 ok=True status=200 latency=3.353911 backend=vllm tokens/s=38.183
+case_id=3 ok=True status=200 latency=3.35725 backend=vllm tokens/s=38.139
+case_id=4 ok=True status=200 latency=3.349667 backend=vllm tokens/s=38.2324
+
+saved_csv: results/week2_concurrency_c1.csv
+===== VLLM BACKEND BENCHMARK SUMMARY =====
+benchmark_wall_time_seconds: 13.436417
+throughput_qps: 0.297698
+total_requests: 4
+successful_requests: 4
+failed_requests: 0
+error_rate: 0.0
+client_latency_avg: 3.358754
+client_latency_p50: 3.355581
+client_latency_p95: 3.371647
+tokens_per_second_avg: 38.138325
+tokens_per_second_p50: 38.161
+tokens_per_second_p95: 38.22499
+
+Note: this benchmark calls the non-streaming /generate API.
+TTFT requires a streaming endpoint and will be implemented separately.

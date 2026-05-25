@@ -1,0 +1,26 @@
+===== 日期 =====
+Mon May 25 16:24:13 UTC 2026
+
+===== 旧备份导入说明 =====
+来源：/workspace/old_backup_check/ai-inference-service
+目的：将旧 RunPod 中未进入当前新 Network Volume 的 Week2 实验证据补回当前项目。
+导入策略：只复制当前项目中不存在的文件，不覆盖当前新文件；删除 *.pid 临时进程文件。
+导入内容：logs、results、figures、artifacts 中的缺失 evidence 文件。
+未导入内容：hf_cache 模型权重、venv 虚拟环境、旧运行进程 pid 文件。
+
+===== 缺失文件列表统计 =====
+182 /workspace/old_backup_missing_from_current_20260525.txt
+
+===== 当前关键目录大小 =====
+4.3M	logs
+3.9M	results
+2.9M	figures
+1.5M	artifacts
+2.3M	docs
+
+===== 当前关键 Week2 文件示例 =====
+-rw-rw-rw- 1 root root 1.1M May 25 16:23 results/week2_gsm8k_full_seed_oss_budget0.csv
+-rw-rw-rw- 1 root root 1.1K May 25 14:12 results/week2_dynamic_batch_concurrency_16_summary.csv
+-rw-rw-rw- 1 root root 953 May 25 16:23 results/week2_context_length_64k_near_limit_on_64k_service.csv
+-rw-rw-rw- 1 root root 34K May 25 16:23 logs/week2_seed_oss_vllm_launch_64k.log
+-rw-rw-rw- 1 root root 349K May 25 14:12 artifacts/week2_seed_oss_gsm8k_codegen_dynamic_batch_evidence_20260518_042845.tar.gz
