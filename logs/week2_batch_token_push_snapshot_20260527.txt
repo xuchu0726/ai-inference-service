@@ -1,0 +1,44 @@
+===== 日期 =====
+2026年 5月26日 星期二 23时58分46秒 BST
+
+===== 本步骤目的 =====
+将本地 Batch-Token 调优闭环提交推送到 GitHub，并保存远端同步证据。
+
+===== 推送前 git 状态 =====
+位于分支 main
+您的分支领先 'origin/main' 共 1 个提交。
+  （使用 "git push" 来发布您的本地提交）
+
+未跟踪的文件:
+  （使用 "git add <文件>..." 以包含要提交的内容）
+	logs/week2_batch_token_push_snapshot_20260527.txt
+
+提交为空，但是存在尚未跟踪的文件（使用 "git add" 建立跟踪）
+
+===== 推送前最近 5 次提交 =====
+04641c7 补充 Week2 batch-token 调优报告与 workload-aware batching 证据
+af6b3af 补充 Week2 batch token workload 调优证据
+8ac0576 补充旧 Pod Week2 实验证据备份
+3114679 补充 Week2 Grafana 实机监控证据
+07e7f66 规范 Week2 剩余实验计划表述
+
+===== 执行 git push =====
+To https://github.com/xuchu0726/ai-inference-service.git
+   af6b3af..04641c7  main -> main
+
+===== 推送后 git 状态 =====
+位于分支 main
+您的分支与上游分支 'origin/main' 一致。
+
+未跟踪的文件:
+  （使用 "git add <文件>..." 以包含要提交的内容）
+	logs/week2_batch_token_push_snapshot_20260527.txt
+
+提交为空，但是存在尚未跟踪的文件（使用 "git add" 建立跟踪）
+
+===== 推送后最近 5 次提交 =====
+04641c7 补充 Week2 batch-token 调优报告与 workload-aware batching 证据
+af6b3af 补充 Week2 batch token workload 调优证据
+8ac0576 补充旧 Pod Week2 实验证据备份
+3114679 补充 Week2 Grafana 实机监控证据
+07e7f66 规范 Week2 剩余实验计划表述
