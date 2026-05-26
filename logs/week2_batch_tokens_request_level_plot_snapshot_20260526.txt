@@ -1,0 +1,23 @@
+===== 日期 =====
+2026年 5月26日 星期二 16时34分05秒 BST
+
+===== 本步骤目的 =====
+本步骤基于原始 benchmark CSV 生成 request-level 分析图，而不是只使用 summary CSV。
+目标是观察请求级 latency/tokens_per_second 分布，解释 P95 长尾、首批请求延迟和 workload-dependent batching 行为。
+
+===== 输入文件 =====
+results/week2_batch_tokens_8192_c8_benchmark_20260525.csv
+results/week2_batch_tokens_32768_c8_benchmark_20260525.csv
+results/week2_batch_tokens_8192_long_output_512_benchmark_20260525.csv
+results/week2_batch_tokens_32768_long_output_512_benchmark_20260525.csv
+
+===== 输出图表 =====
+-rw-r--r--  1 xc1225  staff    45K  5 26 16:33 figures/week2/week2_batch_tokens_long_c4_latency_boxplot.png
+-rw-r--r--  1 xc1225  staff    44K  5 26 16:33 figures/week2/week2_batch_tokens_short_c8_latency_boxplot.png
+-rw-r--r--  1 xc1225  staff    63K  5 26 16:33 figures/week2/week2_batch_tokens_short_c8_latency_scatter.png
+-rw-r--r--  1 xc1225  staff    46K  5 26 16:33 figures/week2/week2_batch_tokens_tokens_per_second_boxplot.png
+
+===== 工程意义 =====
+request-level latency boxplot 用于解释 P95 长尾，而不是只报告平均值。
+per-request latency scatter 用于观察 short-output c8 首批请求是否存在明显 tail latency。
+tokens/s distribution 用于观察 decode throughput 稳定性。

@@ -1,0 +1,53 @@
+===== 日期 =====
+2026年 5月26日 星期二 23时55分00秒 BST
+
+===== 本步骤目的 =====
+修正 Week2 交付摘要：补充 Batch-Token 专项调优内容，并移除 Grafana 旧描述。
+
+===== Batch-Token 内容检查 =====
+44:### 3.3 Batch-Token 专项调优
+50:- short-output c8 burst 场景下，32768 profile 相比 8192 将 QPS 从 1.921 提升到 2.371，并将 P95 latency 从 7.350s 降至 3.415s；
+51:- long-output c4 decode-heavy 场景下，8192 profile 更稳健，P95 latency 为 13.258s，而 32768 为 16.406s；
+58:- results/week2_batch_tokens_workload_summary_20260525.csv
+59:- figures/week2/batch_tokens/week2_batch_tokens_profile_decision.png
+119:| Batch-Token 调优专项报告 | docs/week2_batch_token_tuning_report.md |
+
+===== Grafana 旧描述检查 =====
+未发现 Grafana 旧描述。
+
+===== Grafana 新描述检查 =====
+137:5. Prometheus 配置、Grafana dashboard JSON 和一次 Grafana 实机导入/负载探测 evidence 已保存；后续仍可继续补充更完整的 dashboard、告警面板和长期监控截图。
+
+===== 当前 git 状态 =====
+位于分支 main
+您的分支与上游分支 'origin/main' 一致。
+
+尚未暂存以备提交的变更：
+  （使用 "git add <文件>..." 更新要提交的内容）
+  （使用 "git restore <文件>..." 丢弃工作区的改动）
+	修改：     docs/week2_batching_strategy.md
+	修改：     docs/week2_delivery_summary.md
+	修改：     docs/week2_performance_optimization_report.md
+	修改：     results/week2_batch_tokens_workload_summary_20260525.csv
+
+未跟踪的文件:
+  （使用 "git add <文件>..." 以包含要提交的内容）
+	docs/week2_batch_token_tuning_report.md
+	figures/week2/
+	logs/week2_batch_token_global_consistency_check_20260526.txt
+	logs/week2_batch_token_report_final_check_snapshot_20260526.txt
+	logs/week2_batch_token_report_polish_snapshot_20260526.txt
+	logs/week2_batch_token_review_bundle_20260526.txt
+	logs/week2_batch_tokens_csv_fix_and_plot_snapshot_20260526.txt
+	logs/week2_batch_tokens_enhanced_plot_snapshot_20260526.txt
+	logs/week2_batch_tokens_figure_reorg_snapshot_20260526.txt
+	logs/week2_batch_tokens_profile_decision_fix_snapshot_20260526.txt
+	logs/week2_batch_tokens_request_level_plot_snapshot_20260526.txt
+	logs/week2_batching_strategy_batch_token_update_snapshot_20260526.txt
+	logs/week2_delivery_summary_batch_token_update_snapshot_20260526.txt
+	logs/week2_main_report_batch_token_integration_snapshot_20260526.txt
+	results/week2_batch_tokens_short_c8_wave_latency_summary_20260526.csv
+	scripts/plot_week2_batch_token_request_level.py
+	scripts/plot_week2_batch_token_tuning.py
+
+修改尚未加入提交（使用 "git add" 和/或 "git commit -a"）

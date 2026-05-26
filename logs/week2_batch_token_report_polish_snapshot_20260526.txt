@@ -1,0 +1,58 @@
+===== 日期 =====
+2026年 5月26日 星期二 23时51分22秒 BST
+
+===== 本步骤目的 =====
+优化 batch-token 调优专项报告标题与术语表达，使其更符合中文项目技术报告口吻。
+重点修正：去除 Week2 标题作业感、中文化 dynamic batching 表述、弱化 runtime scheduler 过度表述、保留工程边界。
+
+===== 报告标题与章节 =====
+1:# Batch-Token 调优专项报告：Seed-OSS-36B 推理服务的 Workload-Aware Batching 分析
+3:## 1. 实验背景
+11:## 2. 实验环境
+31:## 3. 实验设计
+47:## 4. Short-output c4 基础扫描结果
+67:## 5. Short-output c8 Burst 场景分析
+98:## 6. Long-output c4 Decode-heavy 场景分析
+126:## 7. Workload-Aware Serving Profile 决策
+145:## 8. 动态批处理的工程边界说明
+160:## 9. 工程意义与后续扩展方向
+176:## 10. 局限性
+188:## 11. 结论
+201:## 12. Evidence 清单
+
+===== 不适合正式报告的字眼检查 =====
+未发现不适合正式报告的字眼。
+
+===== 关键边界表述检查 =====
+147:本实验完成的是 profile 级别的 batch-token 调优和 workload-aware serving profile 分析，不等同于完整的运行时动态批处理调度器。
+156:- 网关路由设计基础：为后续多 profile routing 和服务降级策略提供数据依据。
+158:因此，当前结论应表述为：已完成 workload-aware batching policy foundation，而不是已实现完整生产级运行时动态批处理调度。
+184:5. workload 来自项目内 benchmark 构造，不等同于真实线上流量；
+198:5. 对于生产化推理服务，更合理的动态批处理实现方式是多 serving profile 加网关路由，而不是运行时热修改单个 vLLM engine；
+199:6. 本实验为后续网关路由、服务降级、高可用架构和压测验证提供了数据基础。
+
+===== 当前 git 状态 =====
+位于分支 main
+您的分支与上游分支 'origin/main' 一致。
+
+尚未暂存以备提交的变更：
+  （使用 "git add <文件>..." 更新要提交的内容）
+  （使用 "git restore <文件>..." 丢弃工作区的改动）
+	修改：     results/week2_batch_tokens_workload_summary_20260525.csv
+
+未跟踪的文件:
+  （使用 "git add <文件>..." 以包含要提交的内容）
+	docs/week2_batch_token_tuning_report.md
+	figures/week2/
+	logs/week2_batch_token_report_polish_snapshot_20260526.txt
+	logs/week2_batch_token_review_bundle_20260526.txt
+	logs/week2_batch_tokens_csv_fix_and_plot_snapshot_20260526.txt
+	logs/week2_batch_tokens_enhanced_plot_snapshot_20260526.txt
+	logs/week2_batch_tokens_figure_reorg_snapshot_20260526.txt
+	logs/week2_batch_tokens_profile_decision_fix_snapshot_20260526.txt
+	logs/week2_batch_tokens_request_level_plot_snapshot_20260526.txt
+	results/week2_batch_tokens_short_c8_wave_latency_summary_20260526.csv
+	scripts/plot_week2_batch_token_request_level.py
+	scripts/plot_week2_batch_token_tuning.py
+
+修改尚未加入提交（使用 "git add" 和/或 "git commit -a"）

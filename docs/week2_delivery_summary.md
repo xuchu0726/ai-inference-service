@@ -41,7 +41,24 @@
 - 结果符合长上下文 prefill 成本上升预期；
 - 61.9K near-limit 测试受 Prefix Cache 与 warm state 影响，已单独复测并解释。
 
-### 3.3 Prefix Cache 复测
+### 3.3 Batch-Token 专项调优
+
+完成 vLLM max_num_batched_tokens 专项调优实验，覆盖 4096、8192、16384、32768 四组配置，并进一步比较 short-output burst 与 long-output decode-heavy 两类 workload。
+
+结论：
+
+- short-output c8 burst 场景下，32768 profile 相比 8192 将 QPS 从 1.921 提升到 2.371，并将 P95 latency 从 7.350s 降至 3.415s；
+- long-output c4 decode-heavy 场景下，8192 profile 更稳健，P95 latency 为 13.258s，而 32768 为 16.406s；
+- max_num_batched_tokens 不存在全局最优配置，应根据 workload 类型选择 serving profile；
+- 当前实验形成的是 profile 级别调优和 workload-aware batching policy foundation，不等同于完整生产级运行时动态批处理调度。
+
+Evidence：
+
+- docs/week2_batch_token_tuning_report.md
+- results/week2_batch_tokens_workload_summary_20260525.csv
+- figures/week2/batch_tokens/week2_batch_tokens_profile_decision.png
+
+### 3.4 Prefix Cache 复测
 
 针对 56K 与 61.9K latency 异常现象，进行了交替复测，并保存 vLLM metrics。
 
@@ -51,7 +68,7 @@
 - 缓存命中后的 latency 不能代表 cold prompt 长上下文性能；
 - benchmark 必须区分 cold prompt、warm prompt、prefix-cache-hit prompt。
 
-### 3.4 GSM8K 全量评测
+### 3.5 GSM8K 全量评测
 
 完成 GSM8K test set 全量评测，通过 FastAPI `/generate` 接口调用 Seed-OSS-36B-Instruct。
 
@@ -76,7 +93,7 @@ Evidence：
 - `results/week2_gsm8k_full_seed_oss_budget0_summary.csv`
 - `artifacts/week2_seed_oss_gsm8k_codegen_dynamic_batch_evidence_20260518_042845.tar.gz`
 
-### 3.5 代码生成 Mini Eval
+### 3.6 代码生成 Mini Eval
 
 完成 5 个 Python 代码生成小样本验证。
 
@@ -99,6 +116,7 @@ Evidence：
 | 内容 | 路径 |
 |---|---|
 | Week2 主性能报告 | docs/week2_performance_optimization_report.md |
+| Batch-Token 调优专项报告 | docs/week2_batch_token_tuning_report.md |
 | 长上下文汇总表 | docs/week2_context_gradient_summary.md |
 | Prefix Cache 分析 | docs/week2_prefix_cache_investigation_summary.md |
 | 64K RunPod 原始证据 | evidence/week2_64k_context/ |
@@ -116,7 +134,7 @@ Evidence：
 2. INT8 / AWQ / GPTQ 量化 serving 未完成实机验证。当前缺少已验证兼容 Seed-OSS-36B 的量化权重和 vLLM 加载路径。
 3. 512K full-context 未完成实机验证。Week2 已完成 64K 级别服务配置，并验证最高约 61.9K input tokens 请求。
 4. 代码生成测试使用的是 Seed-OSS-36B-Instruct，不是专门的 Seed-Coder 模型。Seed-Coder 专项验证仍是后续任务。
-5. Grafana dashboard JSON 和 Prometheus 配置已准备，但本轮未保存完整 Grafana 实机截图。
+5. Prometheus 配置、Grafana dashboard JSON 和一次 Grafana 实机导入/负载探测 evidence 已保存；后续仍可继续补充更完整的 dashboard、告警面板和长期监控截图。
 
 ## 6. 阶段结论
 

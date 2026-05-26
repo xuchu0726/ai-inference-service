@@ -133,6 +133,33 @@ vLLM metrics 快照命令示例：
 
 ---
 
+
+### 3.2.1 max_num_batched_tokens 专项调优
+
+在基础并发测试之后，本项目进一步对 vLLM 的 `max_num_batched_tokens` 参数进行了专项调优分析。该参数会影响 vLLM 调度阶段可容纳的 token budget，从而影响 batch formation、请求等待、吞吐和尾延迟。
+
+本轮实验覆盖 4096、8192、16384、32768 四组配置，并进一步区分 short-output burst 与 long-output decode-heavy 两类 workload。结果显示，`max_num_batched_tokens` 不存在对所有 workload 都最优的单一取值，应根据请求形态选择不同 serving profile。
+
+| Workload | 对比配置 | 关键结果 | 工程结论 |
+|---|---|---|---|
+| short_output_c8 burst | 8192 vs 32768 | QPS 1.921 提升至 2.371；P95 latency 7.350s 降至 3.415s | 短输出 burst 场景更适合 32768 profile |
+| long_output_c4 decode-heavy | 8192 vs 32768 | 8192 的 P95 latency 为 13.258s，32768 为 16.406s | 长输出或 mixed workload 更适合较保守的 8192 profile |
+
+该实验说明，生产化 dynamic batching 不应简单理解为运行时热修改单个 vLLM engine 参数。由于 `max_num_batched_tokens` 属于启动时调度参数，更合理的工程设计是维护多个 serving profile，并在网关层根据 workload 类型进行路由。
+
+专项报告路径：
+
+- `docs/week2_batch_token_tuning_report.md`
+
+相关 evidence：
+
+- `results/week2_batch_tokens_workload_summary_20260525.csv`
+- `results/week2_batch_tokens_short_c8_wave_latency_summary_20260526.csv`
+- `figures/week2/batch_tokens/week2_batch_tokens_profile_decision.png`
+- `figures/week2/batch_tokens/week2_batch_tokens_workload_qps_summary.png`
+- `figures/week2/batch_tokens/week2_batch_tokens_workload_p95_summary.png`
+
+
 ### 3.3 上下文长度梯度测试
 
 目标：

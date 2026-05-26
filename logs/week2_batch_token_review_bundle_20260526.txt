@@ -1,0 +1,1129 @@
+===== docs/week2_performance_optimization_report.md =====
+# 第 2 周性能优化报告：Seed-OSS-36B 推理服务性能分析与模型特性验证
+
+## 1. 本周目标
+
+第 2 周目标是在第 1 周已完成 Seed-OSS-36B-Instruct 基础部署、FastAPI 封装、vLLM 接入、Thinking Budget 参数链路和 Prometheus 基础监控的基础上，进一步推进推理服务的性能分析与优化验证。
+
+本周重点从“服务跑通”升级为“性能可观测、瓶颈可分析、优化有数据支撑”。
+
+核心工作包括：
+
+1. 使用 Prometheus + Grafana 分析推理服务指标、GPU 使用情况和内存瓶颈；
+2. 扩展并发性能测试，统计 QPS、P50/P95 latency、tokens/s 和 error_rate；
+3. 做上下文长度梯度测试，分析 context length 对显存、KV Cache、延迟和吞吐的影响；
+4. 评估 Seed-OSS-36B 量化优化路径，形成 BF16 baseline 与可落地量化方案的对比；
+5. 结合 GQA 与 KV Cache 机制解释长上下文和高并发下的性能变化；
+6. 补充 GSM8K 数学推理与代码生成场景验证；
+7. 完成 FAQ、API 错误码和边界情况说明，提升服务可维护性。
+
+---
+
+## 2. Week1 基线回顾
+
+第 1 周已完成以下基线能力：
+
+| 项目 | 当前状态 |
+|---|---|
+| 模型 | ByteDance-Seed/Seed-OSS-36B-Instruct |
+| 推理引擎 | vLLM 0.11.2 |
+| API 层 | FastAPI |
+| 后端适配 | VLLMBackend |
+| GPU | 2×NVIDIA A100-SXM4-80GB |
+| dtype | bfloat16 |
+| Tensor Parallel | TP=2 |
+| max_model_len | 4096 |
+| max_num_batched_tokens | 8192 |
+| FastAPI metrics | 已接入 |
+| vLLM metrics | 已验证 |
+| Thinking Budget | 512 / 1024 已验证 |
+| 初步并发测试 | concurrency=2 / 4 |
+| 稳定运行显存 | 约 75.8GB / 80GB per GPU |
+
+Week1 结论：
+
+1. Seed-OSS-36B-Instruct 已完成基础服务化部署；
+2. FastAPI + VLLMBackend + vLLM Server 架构可用；
+3. 当前 4K context 下 BF16 TP=2 配置可运行；
+4. 显存压力已经较高，后续长上下文和更高并发必须逐步测试；
+5. 512K full-context 不应直接硬冲，需要先做上下文长度梯度测试和资源边界分析。
+
+---
+
+## 3. Week2 交付范围
+
+本周交付分为 7 类。
+
+### 3.1 监控与可观测性
+
+目标：
+
+1. 配置 Prometheus scrape；
+2. 搭建或记录 Grafana dashboard；
+3. 展示 FastAPI、vLLM 和 GPU 相关指标；
+4. 为后续性能瓶颈分析提供数据来源。
+
+关注指标：
+
+| 类型 | 指标 |
+|---|---|
+| FastAPI | request count, request latency, status code |
+| vLLM | running requests, waiting requests, KV cache usage, prefix cache |
+| GPU | memory used, utilization, memory utilization |
+| Benchmark | QPS, P50, P95, tokens/s, error_rate |
+
+本周新增监控采样脚本：
+
+| 脚本 | 作用 | 产出 |
+|---|---|---|
+| `scripts/sample_gpu_metrics.sh` | 使用 `nvidia-smi` 定时采样 GPU 显存、GPU utilization、memory utilization | `logs/week2_nvidia_smi_sampling.csv` |
+| `scripts/snapshot_vllm_metrics.py` | 抓取 vLLM `/metrics` 中的 running requests、waiting requests、KV Cache usage、prefix cache 指标 | `results/week2_vllm_metrics_snapshot.txt` |
+
+GPU 采样命令示例：
+
+    bash scripts/sample_gpu_metrics.sh logs/week2_nvidia_smi_sampling.csv 5
+
+vLLM metrics 快照命令示例：
+
+    python scripts/snapshot_vllm_metrics.py \
+      --url http://127.0.0.1:8002/metrics \
+      --output results/week2_vllm_metrics_snapshot.txt
+
+如果 Grafana dashboard 暂未完整启动，本周先使用 Prometheus metrics 快照、vLLM metrics 快照和 `nvidia-smi` 离线采样文件作为监控证据，并在后续报告中结合 CSV 和图表分析 GPU 利用率、显存瓶颈、KV Cache 压力和请求排队情况。
+
+---
+
+### 3.2 并发 / Batch 性能测试
+
+目标：
+
+测试不同并发度下服务吞吐、尾延迟和稳定性变化。
+
+计划测试矩阵：
+
+| concurrency | max_new_tokens | thinking_budget | 说明 |
+|---:|---:|---:|---|
+| 1 | 128 | 512 | 单请求基线 |
+| 2 | 128 | 512 | 小并发 |
+| 4 | 128 | 512 | Week1 已验证，Week2 复测 |
+| 8 | 128 | 512 | 中等并发 |
+| 16 | 128 | 512 | 高阶尝试 |
+
+记录指标：
+
+1. total_requests；
+2. successful_requests；
+3. failed_requests；
+4. error_rate；
+5. QPS；
+6. client_latency_avg；
+7. client_latency_p50；
+8. client_latency_p95；
+9. tokens_per_second_avg；
+10. GPU memory；
+11. vLLM running/waiting requests；
+12. KV cache usage。
+
+预期图表：
+
+1. QPS vs concurrency；
+2. P95 latency vs concurrency；
+3. tokens/s vs concurrency；
+4. error_rate vs concurrency；
+5. GPU memory vs concurrency。
+
+---
+
+### 3.3 上下文长度梯度测试
+
+目标：
+
+回应 Week1 中 max_model_len=4096 与 Seed-OSS 原生 512K 能力差距较大的问题，用分阶段实验分析长上下文下的显存、延迟和稳定性边界。
+
+计划测试矩阵：
+
+| context length | 目标 |
+|---:|---|
+| 4K | Week1 基线复测 |
+| 8K | 低风险扩展 |
+| 16K | 中等长度扩展 |
+| 32K | 高阶尝试 |
+| 64K | 资源允许时尝试 |
+
+记录指标：
+
+1. input_tokens；
+2. output_tokens；
+3. max_model_len；
+4. latency；
+5. P50 / P95；
+6. tokens/s；
+7. GPU memory；
+8. KV cache usage；
+9. error_rate；
+10. 是否 OOM；
+11. 是否 timeout。
+
+说明：
+
+512K full-context 是 Seed-OSS 的目标能力，但直接进行 512K 测试会带来显著显存、prefill latency 和 OOM 风险。本周优先采用 4K/8K/16K/32K 梯度测试，用数据推导资源边界和后续 512K 专项测试所需条件。
+
+---
+
+### 3.4 量化优化可行性与对比
+
+任务书要求：
+
+    INT8 量化，对比 FP32 精度下的速度与显存占用。
+
+当前资源边界：
+
+Week1 实测中，Seed-OSS-36B-Instruct 在 BF16、TP=2、max_model_len=4096 下，2×A100 80GB 稳定运行时每张卡显存约 75.8GB/80GB。FP32 权重显存理论上约为 BF16 的 2 倍，因此 FP32 serving baseline 在当前资源下可能需要更多 GPU 或调整实验方案。
+
+本周实际方案：
+
+1. 以 BF16 作为实际 serving baseline；
+2. 调研 vLLM 对 Seed-OSS-36B 的 INT8 / FP8 / AWQ / GPTQ 支持情况；
+3. 若可落地，则运行量化版本并对比显存、P95、tokens/s；
+4. 若不可落地，则保留兼容性分析、失败日志和替代方案；
+5. 输出量化可行性对比表。
+
+量化对比表结构：
+
+| 方案 | 是否完成 | 当前结论 | 备注 |
+|---|---|---|---|
+| BF16 baseline | 已完成 | 已完成真实部署、长上下文、并发、GSM8K full 和 codegen mini eval | 当前主基线 |
+| FP32 serving | 未完成 | 当前 2×A100 80GB 环境显存风险高 | 作为后续资源可行性测试 |
+| INT8 / AWQ / GPTQ | 未完成 | 缺少已验证兼容量化权重和 vLLM loading path | 后续量化实验方向 |
+| FP8 KV Cache | 未完成 | 与长上下文 KV cache 显存优化强相关 | 后续优先级较高 |
+
+---
+
+### 3.5 KV Cache 与 GQA 分析
+
+目标：
+
+结合 Week2 的并发和上下文长度实验，解释 GQA 和 KV Cache 如何影响 Seed-OSS-36B 的推理性能。
+
+重点分析：
+
+1. GQA 如何减少 key/value head 数量；
+2. GQA 如何降低 KV Cache 显存压力；
+3. 上下文长度增长时 KV Cache usage 如何变化；
+4. concurrency 增加时 running/waiting requests 如何变化；
+5. P95 latency 上升是否来自排队、prefill、decode 或显存压力。
+
+---
+
+### 3.6 GSM8K 数学推理验证
+
+目标：
+
+验证 Seed-OSS-36B 在数学推理任务上的基本能力，并记录推理服务指标。
+
+计划：
+
+1. 选取 GSM8K 小样本；
+2. 记录 prompt、response、latency、output_tokens；
+3. 人工判断是否正确；
+4. 汇总 accuracy、平均 latency 和错误类型。
+
+本轮已完成 GSM8K full benchmark。最终结果为 1319 个样本全部 API 成功，正确 999 个，accuracy 为 75.74%，P50 latency 为 5.51s，P95 latency 为 6.69s。
+
+---
+
+### 3.7 代码生成验证
+
+目标：
+
+验证 Seed 模型在代码生成场景中的基础表现，为后续 Seed-Coder 或代码助手场景做准备。
+
+计划：
+
+1. 准备 5-10 个代码生成 prompt；
+2. 覆盖 Python 函数、数据处理、API 调用、错误修复等场景；
+3. 记录 latency、output_tokens、是否可运行；
+4. 总结常见错误类型。
+
+本轮已完成 5 个 Python 代码生成 mini eval，全部 API 成功，并全部通过简单正确性检查。该测试用于轻量验证当前服务链路支持代码生成场景。
+
+---
+
+## 4. Week2 新增文档
+
+为回应 Week1 反馈，本周新增：
+
+1. `docs/troubleshooting_faq.md`
+2. `docs/api_error_codes.md`
+
+这两份文档用于提升服务的可维护性和可排查性。
+
+---
+
+===== docs/week2_delivery_summary.md =====
+# Week2 交付摘要：Seed-OSS-36B 推理服务性能优化与长上下文验证
+
+## 1. 本周交付目标
+
+本周目标是在 Week1 Seed-OSS-36B-Instruct 基础部署与 API 封装的基础上，进一步完成真实 GPU 环境下的性能分析、并发测试、长上下文验证、Prefix Cache 分析和图表化交付。
+
+## 2. 核心环境
+
+| 项目 | 配置 |
+|---|---|
+| 云平台 | RunPod |
+| GPU | 2 × NVIDIA A100-SXM4-80GB |
+| 模型 | ByteDance-Seed/Seed-OSS-36B-Instruct |
+| 推理框架 | vLLM 0.11.2 |
+| API 服务 | FastAPI + VLLMBackend |
+| 精度 | BF16 |
+| Tensor Parallel Size | 2 |
+| 长上下文配置 | max_model_len=65536 |
+
+## 3. 已完成实验
+
+### 3.1 并发测试
+
+完成 concurrency = 1 / 2 / 4 / 8 / 16 的 FastAPI + vLLM benchmark。
+
+结论：
+
+- QPS 随并发提升而提升；
+- P50/P95 latency 小幅上升；
+- error rate 保持 0；
+- 体现 vLLM continuous batching 在吞吐提升与单请求延迟之间的 trade-off。
+
+### 3.2 长上下文测试
+
+完成 8K、16K、32K、56K、61.9K input tokens 级别的长上下文请求验证。
+
+结论：
+
+- 8K 到 56K 首次梯度测试中，latency 随 input tokens 增长而上升；
+- output tokens/s 随 input tokens 增长而下降；
+- 结果符合长上下文 prefill 成本上升预期；
+- 61.9K near-limit 测试受 Prefix Cache 与 warm state 影响，已单独复测并解释。
+
+### 3.3 Prefix Cache 复测
+
+针对 56K 与 61.9K latency 异常现象，进行了交替复测，并保存 vLLM metrics。
+
+结论：
+
+- 重复长文本请求下 prefix cache 命中显著；
+- 缓存命中后的 latency 不能代表 cold prompt 长上下文性能；
+- benchmark 必须区分 cold prompt、warm prompt、prefix-cache-hit prompt。
+
+### 3.4 GSM8K 全量评测
+
+完成 GSM8K test set 全量评测，通过 FastAPI `/generate` 接口调用 Seed-OSS-36B-Instruct。
+
+| 指标 | 结果 |
+|---|---:|
+| 总样本数 | 1319 |
+| API 成功样本数 | 1319 |
+| API 失败样本数 | 0 |
+| API error rate | 0.0 |
+| 可解析答案样本数 | 1319 |
+| 正确样本数 | 999 |
+| Accuracy | 75.74% |
+| Client latency P50 | 5.51s |
+| Client latency P95 | 6.69s |
+| Average tokens/s | 38.30 |
+| Average output tokens | 206.77 |
+
+该结果说明当前服务已经不只是 smoke test，而是具备真实任务级评测结果。GSM8K full benchmark 为 Seed-OSS-36B-Instruct 的数学推理能力、服务稳定性和端到端延迟提供了可量化基线。
+
+Evidence：
+
+- `results/week2_gsm8k_full_seed_oss_budget0_summary.csv`
+- `artifacts/week2_seed_oss_gsm8k_codegen_dynamic_batch_evidence_20260518_042845.tar.gz`
+
+### 3.5 代码生成 Mini Eval
+
+完成 5 个 Python 代码生成小样本验证。
+
+| 指标 | 结果 |
+|---|---:|
+| 总样本数 | 5 |
+| API 成功样本数 | 5 |
+| API 失败样本数 | 0 |
+| 简单正确性检查 | 5 / 5 passed |
+| Latency range | 0.505s – 1.627s |
+
+测试任务覆盖简单 Python 函数生成，包括加法、奇偶判断、字符串反转、阶乘和单词计数。该测试不能替代 HumanEval 或 MBPP，但可以作为 Seed-OSS-36B-Instruct 代码生成能力的轻量验证。
+
+Evidence：
+
+- `results/week2_codegen_mini_seed_oss_budget0.csv`
+
+## 4. 关键产物路径
+
+| 内容 | 路径 |
+|---|---|
+| Week2 主性能报告 | docs/week2_performance_optimization_report.md |
+| 长上下文汇总表 | docs/week2_context_gradient_summary.md |
+| Prefix Cache 分析 | docs/week2_prefix_cache_investigation_summary.md |
+| 64K RunPod 原始证据 | evidence/week2_64k_context/ |
+| Pre-32K 原始证据 | evidence/week2_pre_32k/ |
+| 原始压缩包 | artifacts/ |
+| 性能图表 | figures/ |
+
+## 5. 当前局限
+
+当前 Week2 已完成 BF16 baseline、并发测试、64K 级别长上下文验证、Prefix Cache 分析、GSM8K full 评测和代码生成 mini eval。
+
+仍未完成或需要后续补强的部分如下：
+
+1. FP32 serving 未完成实机验证。Seed-OSS-36B 在 2×A100 80GB 环境下 BF16 已接近显存上限，FP32 权重和 KV cache 会带来更高显存压力。
+2. INT8 / AWQ / GPTQ 量化 serving 未完成实机验证。当前缺少已验证兼容 Seed-OSS-36B 的量化权重和 vLLM 加载路径。
+3. 512K full-context 未完成实机验证。Week2 已完成 64K 级别服务配置，并验证最高约 61.9K input tokens 请求。
+4. 代码生成测试使用的是 Seed-OSS-36B-Instruct，不是专门的 Seed-Coder 模型。Seed-Coder 专项验证仍是后续任务。
+5. Grafana dashboard JSON 和 Prometheus 配置已准备，但本轮未保存完整 Grafana 实机截图。
+
+## 6. 阶段结论
+
+Week2 已经把项目从 API 可运行推进到真实大模型推理服务性能分析阶段。当前仓库具备可复现脚本、原始 evidence、CSV 结果、图表和正式性能报告，可作为后续 Week3 高可用架构、降级策略、多模态接入和 Week4 压测验收的基础。
+
+===== docs/week2_observability_report.md =====
+# Week2 Seed-OSS-36B 可观测性与资源瓶颈分析报告
+
+## 1. 背景
+
+Week2 性能优化任务要求使用 Prometheus 和 Grafana 等系统监控工具分析 AI 推理服务的 GPU 利用率、显存瓶颈、请求延迟、错误率和服务状态。
+
+当前项目已完成 Seed-OSS-36B-Instruct 在 RunPod 2×NVIDIA A100-SXM4-80GB 环境下的 BF16 serving baseline、并发 benchmark、64K 长上下文验证和 Prefix Cache 分析。本文总结本阶段已完成的可观测性接入、已保存的 metrics evidence、GPU 资源分析结论，以及后续 Grafana 面板实机验证计划。
+
+## 2. 服务架构
+
+本阶段推理服务采用三层结构：
+
+```text
+Client / Benchmark Script
+        |
+        v
+FastAPI /generate
+        |
+        v
+VLLMBackend
+        |
+        v
+vLLM OpenAI-Compatible Server
+        |
+        v
+Seed-OSS-36B-Instruct on 2×A100 80GB
+```
+
+关键端口：
+
+| Service | Port | Purpose |
+|---|---:|---|
+| FastAPI | 8000 | 对外 REST API，提供 `/health`、`/generate`、`/metrics` |
+| vLLM | 8002 | OpenAI-compatible inference server，提供 `/v1/models`、`/v1/chat/completions`、`/metrics` |
+| vLLM worker / internal | 8003 | vLLM distributed worker/internal communication |
+
+## 3. 已接入的 Metrics
+
+### 3.1 FastAPI Metrics
+
+FastAPI 已接入 Prometheus metrics，主要指标包括：
+
+| Metric | Meaning |
+|---|---|
+| `http_requests_total` | 请求总数，按 method/status/handler 聚合 |
+| `http_request_duration_highr_seconds_bucket` | 请求延迟 histogram，可用于计算 P50/P95 |
+| `http_request_size_bytes` | 请求体大小 |
+| `http_response_size_bytes` | 响应体大小 |
+| `process_resident_memory_bytes` | FastAPI 进程内存占用 |
+| `process_cpu_seconds_total` | FastAPI 进程 CPU 使用时间 |
+
+已保存 evidence：
+
+| Evidence | Path |
+|---|---|
+| FastAPI 64K metrics head | `evidence/week2_64k_context/results/week2_fastapi_64k_metrics_head.txt` |
+| FastAPI 64K health | `evidence/week2_64k_context/results/week2_fastapi_64k_health.json` |
+| FastAPI 64K log | `evidence/week2_64k_context/logs/week2_fastapi_vllm_64k.log` |
+
+### 3.2 vLLM Metrics
+
+vLLM 已暴露 Prometheus metrics，主要指标包括：
+
+| Metric | Meaning |
+|---|---|
+| `vllm:num_requests_running` | 当前正在执行的请求数 |
+| `vllm:num_requests_waiting` | 当前排队等待的请求数 |
+| `vllm:kv_cache_usage_perc` | KV cache 使用率 |
+| `vllm:prefix_cache_queries_total` | Prefix cache 查询 token 数 |
+| `vllm:prefix_cache_hits_total` | Prefix cache 命中 token 数 |
+| `vllm:prompt_tokens_total` | 累计 prefill/prompt tokens |
+| `vllm:generation_tokens_total` | 累计 generation tokens |
+| `vllm:num_preemptions_total` | 请求被抢占次数 |
+
+已保存 evidence：
+
+| Evidence | Path |
+|---|---|
+| vLLM 64K metrics head | `evidence/week2_64k_context/results/week2_seed_oss_vllm_64k_metrics_head.txt` |
+| vLLM 64K metrics after smoke | `evidence/week2_64k_context/results/week2_vllm_64k_metrics_snapshot_after_smoke.txt` |
+| vLLM metrics after 16K | `evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_16k_on_64k_service.txt` |
+| vLLM metrics after 32K | `evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_32k_on_64k_service.txt` |
+| vLLM metrics after 64K conservative | `evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_64k_conservative_on_64k_service.txt` |
+| vLLM metrics after 64K near-limit | `evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_64k_near_limit_on_64k_service.txt` |
+| Prefix cache before repeat | `evidence/week2_64k_context/results/week2_vllm_metrics_before_context_repeat_investigation.txt` |
+| Prefix cache after repeat | `evidence/week2_64k_context/results/week2_vllm_metrics_after_context_repeat_investigation.txt` |
+
+## 4. GPU 资源监控
+
+### 4.1 nvidia-smi Snapshot
+
+实验过程中保存了多次 `nvidia-smi` snapshot，用于观察模型加载后、推理请求后、长上下文请求后的 GPU 显存与利用率。
+
+关键观察：
+
+| Scenario | GPU memory | GPU utilization | Observation |
+|---|---:|---:|---|
+| vLLM 64K startup after load | ~75.8GB / 80GB per GPU | idle 0% when no request | 模型与 KV cache 预分配后显存接近上限 |
+| FastAPI/vLLM smoke request | ~75.8GB / 80GB per GPU | ~97–98% during inference | 两张 A100 都被 tensor parallel worker 使用 |
+| 16K / 32K / 64K context requests | ~75.8GB / 80GB per GPU | ~98% during request | 长上下文请求会使 GPU 进入高利用率状态 |
+| After request completion | ~75.8GB / 80GB per GPU | 0% when idle | 显存被 vLLM worker 持续占用，计算利用率随请求变化 |
+
+已保存 evidence：
+
+| Evidence | Path |
+|---|---|
+| GPU after 64K startup | `evidence/week2_64k_context/logs/week2_nvidia_smi_after_vllm_64k_startup.txt` |
+| GPU after 64K smoke | `evidence/week2_64k_context/logs/week2_nvidia_smi_after_fastapi_64k_smoke.txt` |
+| GPU after 16K context | `evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_16k_on_64k_service.txt` |
+| GPU after 32K context | `evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_32k_on_64k_service.txt` |
+| GPU after 64K conservative | `evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_64k_conservative_on_64k_service.txt` |
+| GPU after 64K near-limit | `evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_64k_near_limit_on_64k_service.txt` |
+
+### 4.2 nvidia-smi Sampling
+
+实验过程中还保存了连续采样 CSV：
+
+| Evidence | Path |
+|---|---|
+| Week2 GPU sampling | `evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context.csv` |
+| Tail after 32K | `evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context_tail_after_32k.txt` |
+| Tail after 64K conservative | `evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context_tail_after_64k_conservative.txt` |
+| Tail after 64K near-limit | `evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context_tail_after_64k_near_limit.txt` |
+
+该采样用于观察长上下文请求期间 GPU utilization 和 memory usage 的变化。
+
+## 5. Prometheus 配置
+
+本项目已新增 Week2 Prometheus scrape 配置：
+
+```text
+deployment/monitoring/prometheus_week2.yml
+```
+
+该配置包含两个 scrape target：
+
+| Job | Target | Purpose |
+|---|---|---|
+| `fastapi-inference-service` | `127.0.0.1:8000/metrics` | 采集 FastAPI 请求、延迟、进程状态 |
+| `vllm-seed-oss` | `127.0.0.1:8002/metrics` | 采集 vLLM request queue、KV cache、prefix cache、token throughput |
+
+配置文件：
+
+```yaml
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: "fastapi-inference-service"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets:
+          - "127.0.0.1:8000"
+        labels:
+          service: "fastapi"
+          model: "ByteDance-Seed/Seed-OSS-36B-Instruct"
+
+  - job_name: "vllm-seed-oss"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets:
+          - "127.0.0.1:8002"
+        labels:
+          service: "vllm"
+          model: "ByteDance-Seed/Seed-OSS-36B-Instruct"
+```
+
+## 6. Grafana Dashboard 配置
+
+本项目已新增 Week2 Grafana dashboard JSON：
+
+```text
+deployment/monitoring/grafana_week2_seed_oss_dashboard.json
+```
+
+Dashboard 覆盖以下面板：
+
+| Panel | Metric |
+|---|---|
+| FastAPI Request Rate | `sum(rate(http_requests_total[1m]))` |
+| FastAPI P95 Latency | `histogram_quantile(0.95, sum(rate(http_request_duration_highr_seconds_bucket[1m])) by (le))` |
+| vLLM Running / Waiting Requests | `vllm:num_requests_running`, `vllm:num_requests_waiting` |
+| vLLM KV Cache Usage | `vllm:kv_cache_usage_perc` |
+| vLLM Prefix Cache Queries / Hits | `rate(vllm:prefix_cache_queries_total[1m])`, `rate(vllm:prefix_cache_hits_total[1m])` |
+| vLLM Prompt / Generation Tokens | `rate(vllm:prompt_tokens_total[1m])`, `rate(vllm:generation_tokens_total[1m])` |
+
+当前 dashboard JSON 已通过 `python -m json.tool` 格式校验。由于本轮 RunPod GPU 服务已停止，Grafana dashboard 实机导入截图将在 Week3/Week4 运维可视化阶段补充。
+
+## 7. 资源瓶颈分析
+
+### 7.1 显存瓶颈
+
+Seed-OSS-36B-Instruct 在 BF16、TP=2、`max_model_len=65536` 配置下，每张 A100 80GB 显存占用约 75.8GB。这说明当前环境下显存余量非常有限。
+
+主要显存占用来源包括：
+
+1. BF16 模型权重；
+2. KV cache；
+3. CUDA graph；
+4. vLLM runtime overhead；
+5. tensor parallel worker 运行开销。
+
+当前 64K 服务启动日志显示：
+
+```text
+GPU KV cache size: 290,448 tokens
+Maximum concurrency for 65,536 tokens per request: 4.43x
+```
+
+该结果说明当前资源可以支撑 64K 级别长上下文服务，但对于 512K 单请求仍缺少 KV cache token capacity。该问题已在 `docs/week2_512k_feasibility_and_resource_analysis.md` 中单独分析。
+
+### 7.2 计算利用率
+
+nvidia-smi snapshot 显示，在实际推理请求期间，两张 A100 的 GPU utilization 可达到约 97–98%。当请求完成后，GPU utilization 回到 0%，但显存仍被 vLLM worker 持续占用。
+
+这说明：
+
+1. 推理期间 GPU 计算资源被有效使用；
+2. idle 阶段主要问题不是计算利用率，而是显存常驻占用；
+
+===== docs/week2_batching_strategy.md =====
+# Week2 Dynamic Batching / Batch Size 测试方案与实测结果
+
+## 1. 文档目的
+
+本文档记录 Week2 中对 vLLM dynamic batching / continuous batching 行为的测试方案与实测结果。
+
+在 vLLM serving 场景中，batch size 不是训练中的固定 batch_size。vLLM 会根据请求队列、KV cache、max_model_len、max_num_batched_tokens 和调度策略动态合并请求。因此，本项目用 concurrency sweep 观察吞吐、延迟和稳定性变化。
+
+核心指标包括：
+
+1. QPS；
+2. P50 latency；
+3. P95 latency；
+4. tokens/s；
+5. error_rate；
+6. GPU memory；
+7. vLLM running / waiting requests；
+8. KV cache usage。
+
+---
+
+## 2. 实验配置
+
+| 项目 | 配置 |
+|---|---|
+| 云平台 | RunPod |
+| GPU | 2 × NVIDIA A100-SXM4-80GB |
+| 模型 | ByteDance-Seed/Seed-OSS-36B-Instruct |
+| Serving engine | vLLM 0.11.2 |
+| API layer | FastAPI + VLLMBackend |
+| Precision | BF16 |
+| Tensor Parallel Size | 2 |
+| max_model_len | 65536 |
+| Endpoint | `http://127.0.0.1:8000/generate` |
+| max_new_tokens | 128 |
+| temperature | 0.0 |
+| thinking_budget | 0 |
+| Requests per setting | 40 |
+| Tested concurrency | 1 / 2 / 4 / 8 / 16 |
+
+---
+
+## 3. 实测结果
+
+| Concurrency | Requests | Error rate | QPS | Avg latency (s) | P50 latency (s) | P95 latency (s) | Avg tokens/s |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 40 | 0.0 | 0.325 | 3.077 | 3.340 | 3.348 | 38.294 |
+| 2 | 40 | 0.0 | 0.659 | 3.033 | 3.313 | 3.320 | 38.586 |
+| 4 | 40 | 0.0 | 1.238 | 3.067 | 3.340 | 3.361 | 38.302 |
+| 8 | 40 | 0.0 | 2.368 | 3.098 | 3.379 | 3.400 | 37.868 |
+| 16 | 40 | 0.0 | 3.848 | 3.204 | 3.507 | 3.532 | 36.602 |
+
+---
+
+## 4. 结果分析
+
+从 concurrency=1 到 concurrency=16，系统 QPS 从 0.325 提升到 3.848，吞吐提升约 11.84 倍。
+
+P95 latency 从 3.348s 上升到 3.532s，增幅约 5.5%。这说明并发提升显著提高了整体吞吐，同时只带来了可控的尾延迟增加。
+
+error rate 在所有并发设置下均为 0，说明当前 FastAPI + VLLMBackend + vLLM 服务链路在该测试范围内保持稳定。
+
+Avg tokens/s 从 38.294 下降到 36.602，说明更高并发下单请求生成速率略有下降。这是合理 trade-off：系统用少量单请求性能损失换取整体 QPS 大幅提升。
+
+---
+
+## 5. 工程结论
+
+本轮测试证明，vLLM continuous batching 能够在 Seed-OSS-36B-Instruct 服务中有效提升吞吐。
+
+当前最重要的量化结论是：
+
+1. concurrency=16 相比 concurrency=1，QPS 提升约 11.84×；
+2. P95 latency 仅增加约 5.5%；
+3. error rate 保持 0；
+4. tokens/s 小幅下降，体现吞吐与单请求速度之间的 trade-off。
+
+这说明当前服务已经不只是单请求 demo，而是具备基础在线 serving 性能分析能力。
+
+---
+
+## 6. Evidence 路径
+
+| Evidence | Path |
+|---|---|
+| concurrency=1 summary | `results/week2_dynamic_batch_concurrency_1_summary.csv` |
+| concurrency=2 summary | `results/week2_dynamic_batch_concurrency_2_summary.csv` |
+| concurrency=4 summary | `results/week2_dynamic_batch_concurrency_4_summary.csv` |
+| concurrency=8 summary | `results/week2_dynamic_batch_concurrency_8_summary.csv` |
+| concurrency=16 summary | `results/week2_dynamic_batch_concurrency_16_summary.csv` |
+| GPU snapshot | `logs/week2_nvidia_smi_after_dynamic_batch_sweep.txt` |
+| vLLM metrics | `results/week2_vllm_metrics_after_dynamic_batch_sweep.txt` |
+| FastAPI metrics | `results/week2_fastapi_metrics_after_dynamic_batch_sweep.txt` |
+| Evidence package | `artifacts/week2_seed_oss_gsm8k_codegen_dynamic_batch_evidence_20260518_042845.tar.gz` |
+
+---
+
+## 7. 后续计划
+
+本轮实验固定使用当前 64K 服务配置，没有额外重启服务测试不同 max_num_batched_tokens。后续若继续推进 batch 参数优化，应测试：
+
+1. max_num_batched_tokens = 4096；
+2. max_num_batched_tokens = 8192；
+3. max_num_batched_tokens = 16384；
+4. max_num_batched_tokens = 32768。
+
+每组需要记录启动日志、显存占用、QPS、P95 latency、tokens/s、error_rate 和 vLLM KV cache usage。
+
+===== results/week2_batch_tokens_workload_summary_20260525.csv =====
+scenario,max_num_batched_tokens,concurrency,repeat,max_new_tokens,thinking_budget,total_requests,successful_requests,error_rate,throughput_qps,latency_avg_s,latency_p50_s,latency_p95_s,tokens_per_second_avg,tokens_per_second_p50,tokens_per_second_p95,interpretation
+short_output_c4,4096,4,10,128,512,40,40,0.0,1.063007,3.761111,3.363341,7.343696,36.034245,38.08195,38.44723,低 batch-token budget 在短输出 burst 场景下表现较弱，首批请求尾延迟较高。
+short_output_c4,8192,4,10,128,512,40,40,0.0,1.090385,3.666178,3.336459,6.624607,36.487057,38.39895,38.432185,8192 相比 4096 改善了短输出场景下的吞吐和尾延迟。
+short_output_c4,16384,4,10,128,512,40,40,0.0,1.081843,3.696181,3.330807,6.971001,36.441668,38.47185,38.537745,16384 没有明显优于 8192 或 32768，体现出收益递减和 workload 噪声。
+short_output_c4,32768,4,10,128,512,40,40,0.0,1.101249,3.630953,3.331078,6.338876,36.655163,38.46785,38.52687,32768 在 short-output c4 sweep 中取得最高 QPS 和最低 P95。
+short_output_c8,8192,8,10,128,512,40,40,0.0,1.921471,4.158959,3.360956,7.350406,33.997605,38.1445,38.22799,8192 在 c8 短输出高并发场景下出现首批请求长尾，平均 tokens/s 较低。
+short_output_c8,32768,8,10,128,512,40,40,0.0,2.371389,3.37059,3.362666,3.415119,38.058503,38.1311,38.18478,32768 更能吸收短输出高并发 burst，请求 P95 明显降低。
+long_output_c4,8192,4,5,512,512,20,20,0.0,0.302359,12.598918,13.223539,13.258162,38.71425,38.72065,38.78471,8192 在长输出 decode-heavy workload 下更稳定，P50 与 P95 间隔较小。
+long_output_c4,32768,4,5,512,512,20,20,0.0,0.287762,13.096739,13.264082,16.405792,37.011635,38.52925,38.752275,32768 在长输出场景下没有延续短输出优势，P95 恶化且平均 tokens/s 降低。
+
+===== results/week2_batch_tokens_short_c8_wave_latency_summary_20260526.csv =====
+profile,wave,mean,max,min
+8192_c8,1,7.34470675,7.351419,7.322629
+8192_c8,2,3.359991375,3.362682,3.356224
+8192_c8,3,3.36239725,3.366785,3.358498
+8192_c8,4,3.371908125,3.3866,3.35193
+8192_c8,5,3.3557930000000002,3.358582,3.351856
+32768_c8,1,3.40646425,3.416703,3.383132
+32768_c8,2,3.362481625,3.364667,3.359054
+32768_c8,3,3.3616525,3.365952,3.358474
+32768_c8,4,3.36278825,3.366435,3.357213
+32768_c8,5,3.3595655,3.363932,3.356529
+
+===== scripts/plot_week2_batch_token_tuning.py =====
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+
+# 输入：Week2 batch token 调优实验的汇总 CSV。
+SUMMARY_PATH = Path("results/week2_batch_tokens_workload_summary_20260525.csv")
+
+# 输出：用于报告展示的图表目录。
+OUTPUT_DIR = Path("figures/week2/batch_tokens")
+
+
+def add_bar_labels(ax, values, fmt="{:.3f}"):
+    """在柱状图顶部标注数值。"""
+    for bar, value in zip(ax.patches, values):
+        ax.annotate(
+            fmt.format(value),
+            xy=(bar.get_x() + bar.get_width() / 2, bar.get_height()),
+            xytext=(0, 4),
+            textcoords="offset points",
+            ha="center",
+            va="bottom",
+            fontsize=9,
+        )
+
+
+def save_line_plot(df, x_col, y_col, title, ylabel, output_name, value_fmt="{:.3f}"):
+    """保存折线图，用于展示 sweep 趋势。"""
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    ax.plot(df[x_col], df[y_col], marker="o")
+    ax.set_xlabel("max_num_batched_tokens")
+    ax.set_ylabel(ylabel)
+    ax.set_title(title)
+    ax.grid(True, alpha=0.3)
+
+    for x, y in zip(df[x_col], df[y_col]):
+        ax.annotate(
+            value_fmt.format(y),
+            xy=(x, y),
+            xytext=(0, 8),
+            textcoords="offset points",
+            ha="center",
+            fontsize=9,
+        )
+
+    fig.tight_layout()
+    output_path = OUTPUT_DIR / output_name
+    fig.savefig(output_path, dpi=220)
+    plt.close(fig)
+    return output_path
+
+
+def save_bar_plot(df, y_col, title, ylabel, output_name, value_fmt="{:.3f}"):
+    """保存柱状图，用于展示候选配置对比。"""
+    fig, ax = plt.subplots(figsize=(7, 4.5))
+    values = df[y_col].tolist()
+    ax.bar(df["max_num_batched_tokens"].astype(str), values)
+    ax.set_xlabel("max_num_batched_tokens")
+    ax.set_ylabel(ylabel)
+    ax.set_title(title)
+    add_bar_labels(ax, values, value_fmt)
+
+    fig.tight_layout()
+    output_path = OUTPUT_DIR / output_name
+    fig.savefig(output_path, dpi=220)
+    plt.close(fig)
+    return output_path
+
+
+def save_workload_p95_summary(df):
+    """保存 P95 综合对比图，突出不同 workload 下的推荐配置差异。"""
+    selected = df[df["scenario"].isin(["short_output_c8", "long_output_c4"])].copy()
+    selected["label"] = (
+        selected["scenario"]
+        + "\n"
+        + selected["max_num_batched_tokens"].astype(str)
+    )
+
+    fig, ax = plt.subplots(figsize=(8.5, 4.8))
+    values = selected["latency_p95_s"].tolist()
+    ax.bar(selected["label"], values)
+    ax.set_ylabel("P95 latency (s)")
+    ax.set_title("P95 latency shows workload-dependent batching behavior")
+    add_bar_labels(ax, values, "{:.3f}")
+
+    ax.text(
+        0.5,
+        -0.22,
+        "Short-output c8 favors 32768; long-output c4 is more stable with 8192.",
+        transform=ax.transAxes,
+        ha="center",
+        fontsize=10,
+    )
+
+    fig.tight_layout()
+    output_path = OUTPUT_DIR / "week2_batch_tokens_workload_p95_summary.png"
+    fig.savefig(output_path, dpi=220, bbox_inches="tight")
+    plt.close(fig)
+    return output_path
+
+
+def save_workload_qps_summary(df):
+    """保存 QPS 综合对比图，突出吞吐差异。"""
+    selected = df[df["scenario"].isin(["short_output_c8", "long_output_c4"])].copy()
+    selected["label"] = (
+        selected["scenario"]
+        + "\n"
+        + selected["max_num_batched_tokens"].astype(str)
+    )
+
+    fig, ax = plt.subplots(figsize=(8.5, 4.8))
+    values = selected["throughput_qps"].tolist()
+    ax.bar(selected["label"], values)
+    ax.set_ylabel("Throughput (QPS)")
+    ax.set_title("Throughput comparison across workload profiles")
+    add_bar_labels(ax, values, "{:.3f}")
+
+    ax.text(
+        0.5,
+        -0.22,
+        "32768 improves short-output burst throughput but does not improve long-output throughput.",
+        transform=ax.transAxes,
+        ha="center",
+        fontsize=10,
+    )
+
+    fig.tight_layout()
+    output_path = OUTPUT_DIR / "week2_batch_tokens_workload_qps_summary.png"
+    fig.savefig(output_path, dpi=220, bbox_inches="tight")
+    plt.close(fig)
+    return output_path
+
+
+def save_decision_table_figure(df):
+    """保存策略结论图，用于报告中直接展示推荐 serving profile。"""
+    short_c8_8192 = df[(df["scenario"] == "short_output_c8") & (df["max_num_batched_tokens"] == 8192)].iloc[0]
+    short_c8_32768 = df[(df["scenario"] == "short_output_c8") & (df["max_num_batched_tokens"] == 32768)].iloc[0]
+    long_c4_8192 = df[(df["scenario"] == "long_output_c4") & (df["max_num_batched_tokens"] == 8192)].iloc[0]
+    long_c4_32768 = df[(df["scenario"] == "long_output_c4") & (df["max_num_batched_tokens"] == 32768)].iloc[0]
+
+    short_qps_gain = (short_c8_32768["throughput_qps"] / short_c8_8192["throughput_qps"] - 1) * 100
+    short_p95_drop = (1 - short_c8_32768["latency_p95_s"] / short_c8_8192["latency_p95_s"]) * 100
+    long_qps_drop = (1 - long_c4_32768["throughput_qps"] / long_c4_8192["throughput_qps"]) * 100
+    long_p95_increase = (long_c4_32768["latency_p95_s"] / long_c4_8192["latency_p95_s"] - 1) * 100
+
+    lines = [
+        "Workload-aware batching decision",
+        "",
+        f"Short-output c8: 32768 vs 8192",
+        f"- QPS: {short_c8_32768['throughput_qps']:.3f} vs {short_c8_8192['throughput_qps']:.3f}  (+{short_qps_gain:.1f}%)",
+        f"- P95: {short_c8_32768['latency_p95_s']:.3f}s vs {short_c8_8192['latency_p95_s']:.3f}s  (-{short_p95_drop:.1f}%)",
+        f"- Recommended profile: short_output_burst -> 32768",
+        "",
+        f"Long-output c4: 8192 vs 32768",
+        f"- QPS: {long_c4_8192['throughput_qps']:.3f} vs {long_c4_32768['throughput_qps']:.3f}  (+{long_qps_drop:.1f}% for 8192)",
+        f"- P95: {long_c4_8192['latency_p95_s']:.3f}s vs {long_c4_32768['latency_p95_s']:.3f}s  (-{long_p95_increase:.1f}% for 8192)",
+        f"- Recommended profile: long_output_or_mixed -> 8192",
+    ]
+
+    fig, ax = plt.subplots(figsize=(9, 5.5))
+    ax.axis("off")
+    ax.text(
+        0.02,
+        0.98,
+        "\n".join(lines),
+        va="top",
+        ha="left",
+        fontsize=12,
+        family="monospace",
+    )
+
+    fig.tight_layout()
+    output_path = OUTPUT_DIR / "week2_batch_tokens_profile_decision.png"
+    fig.savefig(output_path, dpi=220, bbox_inches="tight")
+    plt.close(fig)
+    return output_path
+
+
+def main():
+    if not SUMMARY_PATH.exists():
+        raise FileNotFoundError(f"找不到实验汇总文件：{SUMMARY_PATH}")
+
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+    df = pd.read_csv(SUMMARY_PATH)
+
+    short_c4 = df[df["scenario"] == "short_output_c4"].sort_values(
+        "max_num_batched_tokens"
+    )
+    short_c8 = df[df["scenario"] == "short_output_c8"].sort_values(
+        "max_num_batched_tokens"
+    )
+    long_c4 = df[df["scenario"] == "long_output_c4"].sort_values(
+        "max_num_batched_tokens"
+    )
+
+    generated = []
+
+    # 基础图：coarse sweep 趋势。
+    generated.append(
+        save_line_plot(
+            short_c4,
+            "max_num_batched_tokens",
+            "throughput_qps",
+            "Short-output c4 throughput sweep",
+            "Throughput (QPS)",
+            "week2_batch_tokens_short_c4_qps.png",
+        )
+    )
+    generated.append(
+        save_line_plot(
+            short_c4,
+            "max_num_batched_tokens",
+            "latency_p95_s",
+            "Short-output c4 P95 latency sweep",
+            "P95 latency (s)",
+            "week2_batch_tokens_short_c4_p95.png",
+        )
+    )
+
+    # 基础图：候选配置对比。
+    generated.append(
+        save_bar_plot(
+            short_c8,
+            "throughput_qps",
+            "Short-output c8 throughput comparison",
+            "Throughput (QPS)",
+            "week2_batch_tokens_short_c8_qps.png",
+        )
+    )
+    generated.append(
+        save_bar_plot(
+            short_c8,
+            "latency_p95_s",
+            "Short-output c8 P95 latency comparison",
+            "P95 latency (s)",
+            "week2_batch_tokens_short_c8_p95.png",
+        )
+    )
+    generated.append(
+        save_bar_plot(
+            long_c4,
+            "throughput_qps",
+            "Long-output c4 throughput comparison",
+            "Throughput (QPS)",
+            "week2_batch_tokens_long_c4_qps.png",
+        )
+    )
+    generated.append(
+        save_bar_plot(
+            long_c4,
+            "latency_p95_s",
+            "Long-output c4 P95 latency comparison",
+            "P95 latency (s)",
+            "week2_batch_tokens_long_c4_p95.png",
+        )
+    )
+
+    # 报告图：综合结论和 profile 决策。
+
+===== scripts/plot_week2_batch_token_request_level.py =====
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+
+OUTPUT_DIR = Path("figures/week2/batch_tokens")
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+FILES = {
+    "8192_c8": Path("results/week2_batch_tokens_8192_c8_benchmark_20260525.csv"),
+    "32768_c8": Path("results/week2_batch_tokens_32768_c8_benchmark_20260525.csv"),
+}
+
+
+def find_column(df, candidates):
+    for name in candidates:
+        if name in df.columns:
+            return name
+    raise KeyError(f"找不到候选列：{candidates}，当前列：{list(df.columns)}")
+
+
+def load_data():
+    frames = []
+    for label, path in FILES.items():
+        df = pd.read_csv(path)
+        df["profile"] = label
+        frames.append(df)
+    return pd.concat(frames, ignore_index=True)
+
+
+def plot_per_request_latency(df, latency_col):
+    fig, ax = plt.subplots(figsize=(9, 4.8))
+
+    for profile, marker in [("8192_c8", "o"), ("32768_c8", "x")]:
+        sub = df[df["profile"] == profile].sort_values("case_id")
+        ax.plot(sub["case_id"], sub[latency_col], marker=marker, label=profile)
+
+    ax.axvspan(1, 8, alpha=0.15)
+    ax.text(4.5, ax.get_ylim()[1] * 0.96, "first wave", ha="center", fontsize=10)
+
+    ax.set_xlabel("case_id")
+    ax.set_ylabel("Latency (s)")
+    ax.set_title("32768 reduces first-wave tail latency under short-output c8")
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+
+    output_path = OUTPUT_DIR / "week2_batch_tokens_short_c8_first_wave_latency.png"
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=220)
+    plt.close(fig)
+    return output_path
+
+
+def plot_wave_latency(df, latency_col):
+    rows = []
+
+    for profile in ["8192_c8", "32768_c8"]:
+        sub = df[df["profile"] == profile].sort_values("case_id").copy()
+        sub["wave"] = ((sub["case_id"] - 1) // 8) + 1
+
+        grouped = sub.groupby("wave")[latency_col].agg(["mean", "max"]).reset_index()
+        grouped["profile"] = profile
+        rows.append(grouped)
+
+    wave_df = pd.concat(rows, ignore_index=True)
+
+    fig, ax = plt.subplots(figsize=(8, 4.8))
+
+    for profile, marker in [("8192_c8", "o"), ("32768_c8", "x")]:
+        sub = wave_df[wave_df["profile"] == profile]
+        ax.plot(sub["wave"], sub["mean"], marker=marker, label=f"{profile} mean")
+        ax.plot(sub["wave"], sub["max"], marker=marker, linestyle="--", label=f"{profile} max")
+
+    ax.set_xlabel("request wave, 8 concurrent requests per wave")
+    ax.set_ylabel("Latency (s)")
+    ax.set_title("Wave-level latency shows burst handling difference")
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+
+    output_path = OUTPUT_DIR / "week2_batch_tokens_short_c8_wave_latency.png"
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=220)
+    plt.close(fig)
+    return output_path
+
+
+def save_wave_summary(df, latency_col):
+    rows = []
+
+    for profile in ["8192_c8", "32768_c8"]:
+        sub = df[df["profile"] == profile].sort_values("case_id").copy()
+        sub["wave"] = ((sub["case_id"] - 1) // 8) + 1
+        grouped = sub.groupby("wave")[latency_col].agg(["mean", "max", "min"]).reset_index()
+        grouped.insert(0, "profile", profile)
+        rows.append(grouped)
+
+    summary = pd.concat(rows, ignore_index=True)
+    output_path = Path("results/week2_batch_tokens_short_c8_wave_latency_summary_20260526.csv")
+    summary.to_csv(output_path, index=False)
+    return output_path
+
+
+def main():
+    df = load_data()
+    latency_col = find_column(df, ["latency", "client_latency", "latency_seconds", "client_latency_seconds"])
+
+    generated = [
+        plot_per_request_latency(df, latency_col),
+        plot_wave_latency(df, latency_col),
+    ]
+
+    summary_path = save_wave_summary(df, latency_col)
+
+    print("===== 已生成 request-level 图表 =====")
+    for path in generated:
+        print(path)
+
+    print("===== 已生成 wave summary =====")
+    print(summary_path)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,82 @@
+===== 日期 =====
+2026年 5月26日 星期二 23时54分22秒 BST
+
+===== 本步骤目的 =====
+对 Batch-Token 调优相关文档做全局一致性检查。
+检查范围：专项报告、主性能报告、batching strategy、交付摘要。
+检查重点：章节接入、路径存在、旧描述残留、禁用字眼、关键数据一致。
+
+===== 1. 相关文档文件存在性 =====
+存在: docs/week2_batch_token_tuning_report.md
+存在: docs/week2_performance_optimization_report.md
+存在: docs/week2_batching_strategy.md
+存在: docs/week2_delivery_summary.md
+
+===== 2. 禁用字眼检查 =====
+未发现不适合正式报告的字眼。
+
+===== 3. Batch-Token 专项报告引用检查 =====
+docs/week2_performance_optimization_report.md:152:- `docs/week2_batch_token_tuning_report.md`
+docs/week2_batching_strategy.md:104:- `docs/week2_batch_token_tuning_report.md`
+
+===== 4. 核心数据一致性检查 =====
+docs/week2_batch_token_tuning_report.md:73:| 8192 | 1.921 | 3.361 | 7.350 | 33.998 | 0.0 |
+docs/week2_batch_token_tuning_report.md:74:| 32768 | 2.371 | 3.363 | 3.415 | 38.059 | 0.0 |
+docs/week2_batch_token_tuning_report.md:80:| QPS | 1.921 | 2.371 | 提升约 23.4% |
+docs/week2_batch_token_tuning_report.md:81:| P95 latency | 7.350s | 3.415s | 降低约 53.5% |
+docs/week2_batch_token_tuning_report.md:104:| 8192 | 0.302 | 13.224 | 13.258 | 38.714 | 0.0 |
+docs/week2_batch_token_tuning_report.md:105:| 32768 | 0.288 | 13.264 | 16.406 | 37.012 | 0.0 |
+docs/week2_batch_token_tuning_report.md:112:| P95 latency | 13.258s | 16.406s | 32768 高约 23.7% |
+docs/week2_batch_token_tuning_report.md:132:| short_output_burst | 32768 | QPS 提升约 23.4%，P95 latency 降低约 53.5%，首波请求长尾明显改善 |
+docs/week2_batch_token_tuning_report.md:195:2. short-output c8 burst 场景中，32768 profile 相比 8192 将 QPS 从 1.921 提升到 2.371，并将 P95 latency 从 7.350s 降低到 3.415s；
+docs/week2_batch_token_tuning_report.md:196:3. long-output c4 decode-heavy 场景中，8192 profile 更稳健，P95 latency 为 13.258s，而 32768 为 16.406s；
+docs/week2_performance_optimization_report.md:145:| short_output_c8 burst | 8192 vs 32768 | QPS 1.921 提升至 2.371；P95 latency 7.350s 降至 3.415s | 短输出 burst 场景更适合 32768 profile |
+docs/week2_performance_optimization_report.md:146:| long_output_c4 decode-heavy | 8192 vs 32768 | 8192 的 P95 latency 为 13.258s，32768 为 16.406s | 长输出或 mixed workload 更适合较保守的 8192 profile |
+docs/week2_batching_strategy.md:110:| short_output_c8 burst | 8192 vs 32768 | QPS 1.921 提升至 2.371；P95 latency 7.350s 降至 3.415s | 短输出 burst 场景更适合 32768 profile |
+docs/week2_batching_strategy.md:111:| long_output_c4 decode-heavy | 8192 vs 32768 | 8192 的 P95 latency 为 13.258s，32768 为 16.406s | 长输出或 mixed workload 更适合较保守的 8192 profile |
+
+===== 5. 旧描述残留检查 =====
+docs/week2_delivery_summary.md:119:5. Grafana dashboard JSON 和 Prometheus 配置已准备，但本轮未保存完整 Grafana 实机截图。
+
+===== 6. 关键 evidence 文件存在性 =====
+存在: results/week2_batch_tokens_workload_summary_20260525.csv
+存在: results/week2_batch_tokens_short_c8_wave_latency_summary_20260526.csv
+存在: figures/week2/batch_tokens/week2_batch_tokens_profile_decision.png
+存在: figures/week2/batch_tokens/week2_batch_tokens_workload_qps_summary.png
+存在: figures/week2/batch_tokens/week2_batch_tokens_workload_p95_summary.png
+存在: logs/week2_batch_token_report_final_check_snapshot_20260526.txt
+存在: logs/week2_main_report_batch_token_integration_snapshot_20260526.txt
+存在: logs/week2_batching_strategy_batch_token_update_snapshot_20260526.txt
+缺失: logs/week2_delivery_summary_batch_token_update_snapshot_20260526.txt
+
+===== 7. 当前 git 状态 =====
+位于分支 main
+您的分支与上游分支 'origin/main' 一致。
+
+尚未暂存以备提交的变更：
+  （使用 "git add <文件>..." 更新要提交的内容）
+  （使用 "git restore <文件>..." 丢弃工作区的改动）
+	修改：     docs/week2_batching_strategy.md
+	修改：     docs/week2_performance_optimization_report.md
+	修改：     results/week2_batch_tokens_workload_summary_20260525.csv
+
+未跟踪的文件:
+  （使用 "git add <文件>..." 以包含要提交的内容）
+	docs/week2_batch_token_tuning_report.md
+	figures/week2/
+	logs/week2_batch_token_global_consistency_check_20260526.txt
+	logs/week2_batch_token_report_final_check_snapshot_20260526.txt
+	logs/week2_batch_token_report_polish_snapshot_20260526.txt
+	logs/week2_batch_token_review_bundle_20260526.txt
+	logs/week2_batch_tokens_csv_fix_and_plot_snapshot_20260526.txt
+	logs/week2_batch_tokens_enhanced_plot_snapshot_20260526.txt
+	logs/week2_batch_tokens_figure_reorg_snapshot_20260526.txt
+	logs/week2_batch_tokens_profile_decision_fix_snapshot_20260526.txt
+	logs/week2_batch_tokens_request_level_plot_snapshot_20260526.txt
+	logs/week2_batching_strategy_batch_token_update_snapshot_20260526.txt
+	logs/week2_main_report_batch_token_integration_snapshot_20260526.txt
+	results/week2_batch_tokens_short_c8_wave_latency_summary_20260526.csv
+	scripts/plot_week2_batch_token_request_level.py
+	scripts/plot_week2_batch_token_tuning.py
+
+修改尚未加入提交（使用 "git add" 和/或 "git commit -a"）

@@ -1,0 +1,38 @@
+===== 日期 =====
+2026年 5月26日 星期二 23时42分06秒 BST
+
+===== 本步骤目的 =====
+修正 week2_batch_tokens_profile_decision.png 中 long-output P95 百分比表述。
+原问题：图中容易把 32768 相对 8192 的 P95 恶化幅度误写成 8192 的下降幅度。
+修正后表达：32768 is +X% higher，避免报告和面试中被数据口径追问。
+
+===== 修正后的脚本关键行 =====
+152:        f"- P95: {short_c8_32768['latency_p95_s']:.3f}s vs {short_c8_8192['latency_p95_s']:.3f}s  (-{short_p95_drop:.1f}%)",
+157:        f"- P95: {long_c4_8192['latency_p95_s']:.3f}s vs {long_c4_32768['latency_p95_s']:.3f}s  (32768 is +{long_p95_increase:.1f}% higher)",
+
+===== 重新生成的关键图表 =====
+-rw-r--r--  1 xc1225  staff    90K  5 26 23:41 figures/week2/batch_tokens/week2_batch_tokens_profile_decision.png
+
+===== 当前 git 状态 =====
+位于分支 main
+您的分支与上游分支 'origin/main' 一致。
+
+尚未暂存以备提交的变更：
+  （使用 "git add <文件>..." 更新要提交的内容）
+  （使用 "git restore <文件>..." 丢弃工作区的改动）
+	修改：     results/week2_batch_tokens_workload_summary_20260525.csv
+
+未跟踪的文件:
+  （使用 "git add <文件>..." 以包含要提交的内容）
+	figures/week2/
+	logs/week2_batch_token_review_bundle_20260526.txt
+	logs/week2_batch_tokens_csv_fix_and_plot_snapshot_20260526.txt
+	logs/week2_batch_tokens_enhanced_plot_snapshot_20260526.txt
+	logs/week2_batch_tokens_figure_reorg_snapshot_20260526.txt
+	logs/week2_batch_tokens_profile_decision_fix_snapshot_20260526.txt
+	logs/week2_batch_tokens_request_level_plot_snapshot_20260526.txt
+	results/week2_batch_tokens_short_c8_wave_latency_summary_20260526.csv
+	scripts/plot_week2_batch_token_request_level.py
+	scripts/plot_week2_batch_token_tuning.py
+
+修改尚未加入提交（使用 "git add" 和/或 "git commit -a"）

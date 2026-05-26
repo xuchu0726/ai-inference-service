@@ -1,0 +1,66 @@
+===== 日期 =====
+2026年 5月26日 星期二 23时53分52秒 BST
+
+===== 本步骤目的 =====
+更新 Week2 batching strategy 文档，消除旧版“后续再测试 4096/8192/16384/32768”的过期描述。
+当前文档应反映 batch-token 专项调优已完成，并引用专项报告。
+
+===== 更新后第 7 节及后续内容 =====
+## 7. max_num_batched_tokens 补充调优实验
+
+在基础 concurrency sweep 之后，本项目进一步完成了 vLLM `max_num_batched_tokens` 专项调优实验，覆盖 4096、8192、16384、32768 四组配置，并进一步比较 short-output burst 与 long-output decode-heavy 两类 workload。
+
+专项报告见：
+
+- `docs/week2_batch_token_tuning_report.md`
+
+核心结果如下：
+
+| Workload | 对比配置 | 关键结果 | 工程结论 |
+|---|---|---|---|
+| short_output_c8 burst | 8192 vs 32768 | QPS 1.921 提升至 2.371；P95 latency 7.350s 降至 3.415s | 短输出 burst 场景更适合 32768 profile |
+| long_output_c4 decode-heavy | 8192 vs 32768 | 8192 的 P95 latency 为 13.258s，32768 为 16.406s | 长输出或 mixed workload 更适合较保守的 8192 profile |
+
+该结果说明，`max_num_batched_tokens` 不存在对所有 workload 都最优的单一取值。更合理的工程方案是维护 workload-aware serving profile，并在后续网关层根据请求类型、输出长度和运行时指标进行路由。
+
+当前结论应表述为 profile 级别的 batch-token 调优和 workload-aware batching policy foundation，不应表述为已经实现完整生产级运行时动态批处理调度器。
+
+## 8. 后续计划
+
+后续可在当前实验基础上继续推进：
+
+1. 实现轻量级 workload classification 与 routing policy abstraction；
+2. 在资源允许时测试更多 max_num_seqs、GPU memory utilization 和 prefix cache 配置；
+3. 将 batch-token profile 结论接入 Week3 的网关路由、降级策略和高可用设计；
+4. 在 Week4 压测中继续验证不同 workload profile 下的 QPS、P95/P99 latency、error_rate 和资源边界。
+
+===== 当前 git 状态 =====
+位于分支 main
+您的分支与上游分支 'origin/main' 一致。
+
+尚未暂存以备提交的变更：
+  （使用 "git add <文件>..." 更新要提交的内容）
+  （使用 "git restore <文件>..." 丢弃工作区的改动）
+	修改：     docs/week2_batching_strategy.md
+	修改：     docs/week2_performance_optimization_report.md
+	修改：     results/week2_batch_tokens_workload_summary_20260525.csv
+
+未跟踪的文件:
+  （使用 "git add <文件>..." 以包含要提交的内容）
+	docs/week2_batch_token_tuning_report.md
+	figures/week2/
+	logs/week2_batch_token_report_final_check_snapshot_20260526.txt
+	logs/week2_batch_token_report_polish_snapshot_20260526.txt
+	logs/week2_batch_token_review_bundle_20260526.txt
+	logs/week2_batch_tokens_csv_fix_and_plot_snapshot_20260526.txt
+	logs/week2_batch_tokens_enhanced_plot_snapshot_20260526.txt
+	logs/week2_batch_tokens_figure_reorg_snapshot_20260526.txt
+	logs/week2_batch_tokens_profile_decision_fix_snapshot_20260526.txt
+	logs/week2_batch_tokens_request_level_plot_snapshot_20260526.txt
+	logs/week2_batching_strategy_batch_token_update_snapshot_20260526.txt
+	logs/week2_main_report_batch_token_integration_snapshot_20260526.txt
+	results/week2_batch_tokens_short_c8_wave_latency_summary_20260526.csv
+	scripts/plot_week2_batch_token_request_level.py
+	scripts/plot_week2_batch_token_tuning.py
+
+修改尚未加入提交（使用 "git add" 和/或 "git commit -a"）

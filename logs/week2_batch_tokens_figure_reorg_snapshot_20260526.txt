@@ -1,0 +1,37 @@
+===== 日期 =====
+2026年 5月26日 星期二 17时06分44秒 BST
+
+===== 本步骤目的 =====
+本步骤用于整理 Week2 batch-token tuning 图表目录。
+旧 Week2 性能图已被 docs/week2_performance_optimization_report.md 引用，因此暂不移动，避免破坏已有报告路径。
+新生成的 batch-token 图统一移动到 figures/week2/batch_tokens/。
+
+===== 当前 batch-token 图表 =====
+figures/week2/batch_tokens/week2_batch_tokens_long_c4_latency_boxplot.png
+figures/week2/batch_tokens/week2_batch_tokens_long_c4_p95.png
+figures/week2/batch_tokens/week2_batch_tokens_long_c4_qps.png
+figures/week2/batch_tokens/week2_batch_tokens_profile_decision.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c4_p95.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c4_qps.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_first_wave_latency.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_latency_boxplot.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_latency_scatter.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_p95.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_qps.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_wave_latency.png
+figures/week2/batch_tokens/week2_batch_tokens_tokens_per_second_boxplot.png
+figures/week2/batch_tokens/week2_batch_tokens_workload_p95_summary.png
+figures/week2/batch_tokens/week2_batch_tokens_workload_qps_summary.png
+
+===== 已更新脚本 =====
+11:OUTPUT_DIR = Path("figures/week2/batch_tokens")
+48:    output_path = OUTPUT_DIR / output_name
+65:    output_path = OUTPUT_DIR / output_name
+97:    output_path = OUTPUT_DIR / "week2_batch_tokens_workload_p95_summary.png"
+129:    output_path = OUTPUT_DIR / "week2_batch_tokens_workload_qps_summary.png"
+174:    output_path = OUTPUT_DIR / "week2_batch_tokens_profile_decision.png"
+184:    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+7:OUTPUT_DIR = Path("figures/week2/batch_tokens")
+8:OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+48:    output_path = OUTPUT_DIR / "week2_batch_tokens_short_c8_first_wave_latency.png"
+81:    output_path = OUTPUT_DIR / "week2_batch_tokens_short_c8_wave_latency.png"

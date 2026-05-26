@@ -95,13 +95,30 @@ Avg tokens/s 从 38.294 下降到 36.602，说明更高并发下单请求生成�
 
 ---
 
-## 7. 后续计划
+## 7. max_num_batched_tokens 补充调优实验
 
-本轮实验固定使用当前 64K 服务配置，没有额外重启服务测试不同 max_num_batched_tokens。后续若继续推进 batch 参数优化，应测试：
+在基础 concurrency sweep 之后，本项目进一步完成了 vLLM `max_num_batched_tokens` 专项调优实验，覆盖 4096、8192、16384、32768 四组配置，并进一步比较 short-output burst 与 long-output decode-heavy 两类 workload。
 
-1. max_num_batched_tokens = 4096；
-2. max_num_batched_tokens = 8192；
-3. max_num_batched_tokens = 16384；
-4. max_num_batched_tokens = 32768。
+专项报告见：
 
-每组需要记录启动日志、显存占用、QPS、P95 latency、tokens/s、error_rate 和 vLLM KV cache usage。
+- `docs/week2_batch_token_tuning_report.md`
+
+核心结果如下：
+
+| Workload | 对比配置 | 关键结果 | 工程结论 |
+|---|---|---|---|
+| short_output_c8 burst | 8192 vs 32768 | QPS 1.921 提升至 2.371；P95 latency 7.350s 降至 3.415s | 短输出 burst 场景更适合 32768 profile |
+| long_output_c4 decode-heavy | 8192 vs 32768 | 8192 的 P95 latency 为 13.258s，32768 为 16.406s | 长输出或 mixed workload 更适合较保守的 8192 profile |
+
+该结果说明，`max_num_batched_tokens` 不存在对所有 workload 都最优的单一取值。更合理的工程方案是维护 workload-aware serving profile，并在后续网关层根据请求类型、输出长度和运行时指标进行路由。
+
+当前结论应表述为 profile 级别的 batch-token 调优和 workload-aware batching policy foundation，不应表述为已经实现完整生产级运行时动态批处理调度器。
+
+## 8. 后续计划
+
+后续可在当前实验基础上继续推进：
+
+1. 实现轻量级 workload classification 与 routing policy abstraction；
+2. 在资源允许时测试更多 max_num_seqs、GPU memory utilization 和 prefix cache 配置；
+3. 将 batch-token profile 结论接入 Week3 的网关路由、降级策略和高可用设计；
+4. 在 Week4 压测中继续验证不同 workload profile 下的 QPS、P95/P99 latency、error_rate 和资源边界。

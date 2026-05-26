@@ -1,0 +1,139 @@
+===== 日期 =====
+2026年 5月26日 星期二 23时58分07秒 BST
+
+===== 本步骤目的 =====
+补充暂存 staged review 日志，并在提交前做最终 staged 文件检查。
+
+===== 当前 git status =====
+位于分支 main
+您的分支与上游分支 'origin/main' 一致。
+
+要提交的变更：
+  （使用 "git restore --staged <文件>..." 以取消暂存）
+	新文件：   docs/week2_batch_token_tuning_report.md
+	修改：     docs/week2_batching_strategy.md
+	修改：     docs/week2_delivery_summary.md
+	修改：     docs/week2_performance_optimization_report.md
+	新文件：   figures/week2/batch_tokens/week2_batch_tokens_long_c4_latency_boxplot.png
+	新文件：   figures/week2/batch_tokens/week2_batch_tokens_long_c4_p95.png
+	新文件：   figures/week2/batch_tokens/week2_batch_tokens_long_c4_qps.png
+	新文件：   figures/week2/batch_tokens/week2_batch_tokens_profile_decision.png
+	新文件：   figures/week2/batch_tokens/week2_batch_tokens_short_c4_p95.png
+	新文件：   figures/week2/batch_tokens/week2_batch_tokens_short_c4_qps.png
+	新文件：   figures/week2/batch_tokens/week2_batch_tokens_short_c8_first_wave_latency.png
+	新文件：   figures/week2/batch_tokens/week2_batch_tokens_short_c8_latency_boxplot.png
+	新文件：   figures/week2/batch_tokens/week2_batch_tokens_short_c8_latency_scatter.png
+	新文件：   figures/week2/batch_tokens/week2_batch_tokens_short_c8_p95.png
+	新文件：   figures/week2/batch_tokens/week2_batch_tokens_short_c8_qps.png
+	新文件：   figures/week2/batch_tokens/week2_batch_tokens_short_c8_wave_latency.png
+	新文件：   figures/week2/batch_tokens/week2_batch_tokens_tokens_per_second_boxplot.png
+	新文件：   figures/week2/batch_tokens/week2_batch_tokens_workload_p95_summary.png
+	新文件：   figures/week2/batch_tokens/week2_batch_tokens_workload_qps_summary.png
+	新文件：   logs/week2_batch_token_global_consistency_check_20260526.txt
+	新文件：   logs/week2_batch_token_global_consistency_check_after_fix_20260526.txt
+	新文件：   logs/week2_batch_token_pre_commit_review_20260526.txt
+	新文件：   logs/week2_batch_token_report_final_check_snapshot_20260526.txt
+	新文件：   logs/week2_batch_token_report_polish_snapshot_20260526.txt
+	新文件：   logs/week2_batch_token_review_bundle_20260526.txt
+	新文件：   logs/week2_batch_token_staged_review_20260526.txt
+	新文件：   logs/week2_batch_tokens_csv_fix_and_plot_snapshot_20260526.txt
+	新文件：   logs/week2_batch_tokens_enhanced_plot_snapshot_20260526.txt
+	新文件：   logs/week2_batch_tokens_figure_reorg_snapshot_20260526.txt
+	新文件：   logs/week2_batch_tokens_profile_decision_fix_snapshot_20260526.txt
+	新文件：   logs/week2_batch_tokens_request_level_plot_snapshot_20260526.txt
+	新文件：   logs/week2_batching_strategy_batch_token_update_snapshot_20260526.txt
+	新文件：   logs/week2_delivery_summary_batch_token_update_snapshot_20260526.txt
+	新文件：   logs/week2_main_report_batch_token_integration_snapshot_20260526.txt
+	新文件：   results/week2_batch_tokens_short_c8_wave_latency_summary_20260526.csv
+	修改：     results/week2_batch_tokens_workload_summary_20260525.csv
+	新文件：   scripts/plot_week2_batch_token_request_level.py
+	新文件：   scripts/plot_week2_batch_token_tuning.py
+
+未跟踪的文件:
+  （使用 "git add <文件>..." 以包含要提交的内容）
+	logs/week2_batch_token_final_staged_check_20260526.txt
+
+
+===== staged 文件数量 =====
+      38
+
+===== staged 文件列表 =====
+docs/week2_batch_token_tuning_report.md
+docs/week2_batching_strategy.md
+docs/week2_delivery_summary.md
+docs/week2_performance_optimization_report.md
+figures/week2/batch_tokens/week2_batch_tokens_long_c4_latency_boxplot.png
+figures/week2/batch_tokens/week2_batch_tokens_long_c4_p95.png
+figures/week2/batch_tokens/week2_batch_tokens_long_c4_qps.png
+figures/week2/batch_tokens/week2_batch_tokens_profile_decision.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c4_p95.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c4_qps.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_first_wave_latency.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_latency_boxplot.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_latency_scatter.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_p95.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_qps.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_wave_latency.png
+figures/week2/batch_tokens/week2_batch_tokens_tokens_per_second_boxplot.png
+figures/week2/batch_tokens/week2_batch_tokens_workload_p95_summary.png
+figures/week2/batch_tokens/week2_batch_tokens_workload_qps_summary.png
+logs/week2_batch_token_global_consistency_check_20260526.txt
+logs/week2_batch_token_global_consistency_check_after_fix_20260526.txt
+logs/week2_batch_token_pre_commit_review_20260526.txt
+logs/week2_batch_token_report_final_check_snapshot_20260526.txt
+logs/week2_batch_token_report_polish_snapshot_20260526.txt
+logs/week2_batch_token_review_bundle_20260526.txt
+logs/week2_batch_token_staged_review_20260526.txt
+logs/week2_batch_tokens_csv_fix_and_plot_snapshot_20260526.txt
+logs/week2_batch_tokens_enhanced_plot_snapshot_20260526.txt
+logs/week2_batch_tokens_figure_reorg_snapshot_20260526.txt
+logs/week2_batch_tokens_profile_decision_fix_snapshot_20260526.txt
+logs/week2_batch_tokens_request_level_plot_snapshot_20260526.txt
+logs/week2_batching_strategy_batch_token_update_snapshot_20260526.txt
+logs/week2_delivery_summary_batch_token_update_snapshot_20260526.txt
+logs/week2_main_report_batch_token_integration_snapshot_20260526.txt
+results/week2_batch_tokens_short_c8_wave_latency_summary_20260526.csv
+results/week2_batch_tokens_workload_summary_20260525.csv
+scripts/plot_week2_batch_token_request_level.py
+scripts/plot_week2_batch_token_tuning.py
+
+===== staged diff 统计 =====
+ docs/week2_batch_token_tuning_report.md            |  224 ++++
+ docs/week2_batching_strategy.md                    |   31 +-
+ docs/week2_delivery_summary.md                     |   26 +-
+ docs/week2_performance_optimization_report.md      |   27 +
+ .../week2_batch_tokens_long_c4_latency_boxplot.png |  Bin 0 -> 45623 bytes
+ .../week2_batch_tokens_long_c4_p95.png             |  Bin 0 -> 48174 bytes
+ .../week2_batch_tokens_long_c4_qps.png             |  Bin 0 -> 51107 bytes
+ .../week2_batch_tokens_profile_decision.png        |  Bin 0 -> 92151 bytes
+ .../week2_batch_tokens_short_c4_p95.png            |  Bin 0 -> 88982 bytes
+ .../week2_batch_tokens_short_c4_qps.png            |  Bin 0 -> 91560 bytes
+ ...k2_batch_tokens_short_c8_first_wave_latency.png |  Bin 0 -> 86490 bytes
+ ...week2_batch_tokens_short_c8_latency_boxplot.png |  Bin 0 -> 45436 bytes
+ ...week2_batch_tokens_short_c8_latency_scatter.png |  Bin 0 -> 64909 bytes
+ .../week2_batch_tokens_short_c8_p95.png            |  Bin 0 -> 45084 bytes
+ .../week2_batch_tokens_short_c8_qps.png            |  Bin 0 -> 44909 bytes
+ .../week2_batch_tokens_short_c8_wave_latency.png   |  Bin 0 -> 105287 bytes
+ ...eek2_batch_tokens_tokens_per_second_boxplot.png |  Bin 0 -> 46727 bytes
+ .../week2_batch_tokens_workload_p95_summary.png    |  Bin 0 -> 72111 bytes
+ .../week2_batch_tokens_workload_qps_summary.png    |  Bin 0 -> 68198 bytes
+ ...tch_token_global_consistency_check_20260526.txt |   82 ++
+ ...global_consistency_check_after_fix_20260526.txt |   88 ++
+ ...eek2_batch_token_pre_commit_review_20260526.txt |  256 +++++
+ ..._token_report_final_check_snapshot_20260526.txt |   84 ++
+ ...batch_token_report_polish_snapshot_20260526.txt |   58 +
+ logs/week2_batch_token_review_bundle_20260526.txt  | 1129 ++++++++++++++++++++
+ logs/week2_batch_token_staged_review_20260526.txt  |  136 +++
+ ...h_tokens_csv_fix_and_plot_snapshot_20260526.txt |   28 +
+ ...atch_tokens_enhanced_plot_snapshot_20260526.txt |   27 +
+ ...batch_tokens_figure_reorg_snapshot_20260526.txt |   37 +
+ ...kens_profile_decision_fix_snapshot_20260526.txt |   38 +
+ ...tokens_request_level_plot_snapshot_20260526.txt |   23 +
+ ...rategy_batch_token_update_snapshot_20260526.txt |   66 ++
+ ...ummary_batch_token_update_snapshot_20260526.txt |   53 +
+ ...t_batch_token_integration_snapshot_20260526.txt |   66 ++
+ ...kens_short_c8_wave_latency_summary_20260526.csv |   11 +
+ ...eek2_batch_tokens_workload_summary_20260525.csv |   18 +-
+ scripts/plot_week2_batch_token_request_level.py    |  124 +++
+ scripts/plot_week2_batch_token_tuning.py           |  271 +++++
+ 38 files changed, 2883 insertions(+), 20 deletions(-)

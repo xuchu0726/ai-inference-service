@@ -1,9 +1,9 @@
 scenario,max_num_batched_tokens,concurrency,repeat,max_new_tokens,thinking_budget,total_requests,successful_requests,error_rate,throughput_qps,latency_avg_s,latency_p50_s,latency_p95_s,tokens_per_second_avg,tokens_per_second_p50,tokens_per_second_p95,interpretation
-short_output_c4,4096,4,10,128,512,40,40,0.0,1.063007,3.761111,3.363341,7.343696,36.034245,38.081950,38.447230,Low batch-token budget shows weaker burst handling and high first-wave tail latency.
-short_output_c4,8192,4,10,128,512,40,40,0.0,1.090385,3.666178,3.336459,6.624607,36.487057,38.398950,38.432185,Moderate setting improves short-output throughput and tail latency over 4096.
-short_output_c4,16384,4,10,128,512,40,40,0.0,1.081843,3.696181,3.330807,6.971001,36.441668,38.471850,38.537745,Intermediate high setting does not clearly dominate; shows workload noise and diminishing returns.
-short_output_c4,32768,4,10,128,512,40,40,0.0,1.101249,3.630953,3.331078,6.338876,36.655163,38.467850,38.526870,Aggressive setting gives the best short-output c4 result among the sweep.
-short_output_c8,8192,8,10,128,512,40,40,0.0,1.921471,4.158959,3.360956,7.350406,33.997605,38.144500,38.227990,At c8, 8192 suffers from first-wave tail latency and lower average token throughput.
-short_output_c8,32768,8,10,128,512,40,40,0.0,2.371389,3.370590,3.362666,3.415119,38.058503,38.131100,38.184780,32768 absorbs short-output burst better and sharply reduces P95 under c8.
-long_output_c4,8192,4,5,512,512,20,20,0.0,0.302359,12.598918,13.223539,13.258162,38.714250,38.720650,38.784710,8192 is stable for long-output decode-heavy workload with tight P50-P95 gap.
-long_output_c4,32768,4,5,512,512,20,20,0.0,0.287762,13.096739,13.264082,16.405792,37.011635,38.529250,38.752275,32768 does not retain its short-output advantage; P95 worsens under long-output workload.
+short_output_c4,4096,4,10,128,512,40,40,0.0,1.063007,3.761111,3.363341,7.343696,36.034245,38.08195,38.44723,低 batch-token budget 在短输出 burst 场景下表现较弱，首批请求尾延迟较高。
+short_output_c4,8192,4,10,128,512,40,40,0.0,1.090385,3.666178,3.336459,6.624607,36.487057,38.39895,38.432185,8192 相比 4096 改善了短输出场景下的吞吐和尾延迟。
+short_output_c4,16384,4,10,128,512,40,40,0.0,1.081843,3.696181,3.330807,6.971001,36.441668,38.47185,38.537745,16384 没有明显优于 8192 或 32768，体现出收益递减和 workload 噪声。
+short_output_c4,32768,4,10,128,512,40,40,0.0,1.101249,3.630953,3.331078,6.338876,36.655163,38.46785,38.52687,32768 在 short-output c4 sweep 中取得最高 QPS 和最低 P95。
+short_output_c8,8192,8,10,128,512,40,40,0.0,1.921471,4.158959,3.360956,7.350406,33.997605,38.1445,38.22799,8192 在 c8 短输出高并发场景下出现首批请求长尾，平均 tokens/s 较低。
+short_output_c8,32768,8,10,128,512,40,40,0.0,2.371389,3.37059,3.362666,3.415119,38.058503,38.1311,38.18478,32768 更能吸收短输出高并发 burst，请求 P95 明显降低。
+long_output_c4,8192,4,5,512,512,20,20,0.0,0.302359,12.598918,13.223539,13.258162,38.71425,38.72065,38.78471,8192 在长输出 decode-heavy workload 下更稳定，P50 与 P95 间隔较小。
+long_output_c4,32768,4,5,512,512,20,20,0.0,0.287762,13.096739,13.264082,16.405792,37.011635,38.52925,38.752275,32768 在长输出场景下没有延续短输出优势，P95 恶化且平均 tokens/s 降低。

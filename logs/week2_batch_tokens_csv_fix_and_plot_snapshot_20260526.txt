@@ -1,0 +1,28 @@
+===== 日期 =====
+2026年 5月26日 星期二 15时31分15秒 BST
+
+===== 问题 =====
+首次运行绘图脚本时报 pandas ParserError。原因是 CSV interpretation 字段中包含逗号，但没有正确引用。
+
+===== 修复方式 =====
+使用 Python csv.writer 重新生成 results/week2_batch_tokens_workload_summary_20260525.csv，避免手动 heredoc 粘贴导致字段错位。
+
+===== 验证结果 =====
+CSV shape: (8, 17)
+          scenario  max_num_batched_tokens  throughput_qps  latency_p95_s
+0  short_output_c4                    4096        1.063007       7.343696
+1  short_output_c4                    8192        1.090385       6.624607
+2  short_output_c4                   16384        1.081843       6.971001
+3  short_output_c4                   32768        1.101249       6.338876
+4  short_output_c8                    8192        1.921471       7.350406
+5  short_output_c8                   32768        2.371389       3.415119
+6   long_output_c4                    8192        0.302359      13.258162
+7   long_output_c4                   32768        0.287762      16.405792
+
+===== 生成图表 =====
+-rw-r--r--  1 xc1225  staff    36K  5 26 15:30 figures/week2/week2_batch_tokens_long_c4_p95.png
+-rw-r--r--  1 xc1225  staff    40K  5 26 15:30 figures/week2/week2_batch_tokens_long_c4_qps.png
+-rw-r--r--  1 xc1225  staff    66K  5 26 15:30 figures/week2/week2_batch_tokens_short_c4_p95.png
+-rw-r--r--  1 xc1225  staff    68K  5 26 15:30 figures/week2/week2_batch_tokens_short_c4_qps.png
+-rw-r--r--  1 xc1225  staff    35K  5 26 15:30 figures/week2/week2_batch_tokens_short_c8_p95.png
+-rw-r--r--  1 xc1225  staff    36K  5 26 15:30 figures/week2/week2_batch_tokens_short_c8_qps.png

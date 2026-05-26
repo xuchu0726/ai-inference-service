@@ -1,0 +1,27 @@
+===== 日期 =====
+2026年 5月26日 星期二 15时37分14秒 BST
+
+===== 本步骤目的 =====
+本步骤对 Week2 batch-token tuning 图表进行增强。原始基础图过于简单，只能展示数值差异，无法直接表达工程结论。
+增强后的图表加入数值标注、workload 综合对比和 serving profile 决策图。
+
+===== 新增重点图表 =====
+figures/week2/week2_batch_tokens_workload_p95_summary.png
+figures/week2/week2_batch_tokens_workload_qps_summary.png
+figures/week2/week2_batch_tokens_profile_decision.png
+
+===== 工程结论 =====
+short-output c8 场景下，32768 相比 8192 提高 QPS 并显著降低 P95 latency，适合作为 short_output_burst profile。
+long-output c4 场景下，8192 相比 32768 更稳定，P95 latency 更低，适合作为 long_output_or_mixed profile。
+该结论支撑 workload-aware batching policy，而不是机械选择最大 max_num_batched_tokens。
+
+===== 当前图表文件 =====
+-rw-r--r--  1 xc1225  staff    47K  5 26 15:35 figures/week2/week2_batch_tokens_long_c4_p95.png
+-rw-r--r--  1 xc1225  staff    50K  5 26 15:35 figures/week2/week2_batch_tokens_long_c4_qps.png
+-rw-r--r--  1 xc1225  staff    89K  5 26 15:35 figures/week2/week2_batch_tokens_profile_decision.png
+-rw-r--r--  1 xc1225  staff    87K  5 26 15:35 figures/week2/week2_batch_tokens_short_c4_p95.png
+-rw-r--r--  1 xc1225  staff    89K  5 26 15:35 figures/week2/week2_batch_tokens_short_c4_qps.png
+-rw-r--r--  1 xc1225  staff    44K  5 26 15:35 figures/week2/week2_batch_tokens_short_c8_p95.png
+-rw-r--r--  1 xc1225  staff    44K  5 26 15:35 figures/week2/week2_batch_tokens_short_c8_qps.png
+-rw-r--r--  1 xc1225  staff    70K  5 26 15:35 figures/week2/week2_batch_tokens_workload_p95_summary.png
+-rw-r--r--  1 xc1225  staff    67K  5 26 15:35 figures/week2/week2_batch_tokens_workload_qps_summary.png

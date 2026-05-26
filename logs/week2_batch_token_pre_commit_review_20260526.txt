@@ -1,0 +1,256 @@
+===== 日期 =====
+2026年 5月26日 星期二 23时56分02秒 BST
+
+===== 本步骤目的 =====
+提交前检查本轮 Batch-Token 调优相关改动。
+重点确认：只提交本轮专项报告、图表、脚本、结果 CSV、检查日志和相关文档更新。
+
+===== 1. 当前 git status =====
+位于分支 main
+您的分支与上游分支 'origin/main' 一致。
+
+尚未暂存以备提交的变更：
+  （使用 "git add <文件>..." 更新要提交的内容）
+  （使用 "git restore <文件>..." 丢弃工作区的改动）
+	修改：     docs/week2_batching_strategy.md
+	修改：     docs/week2_delivery_summary.md
+	修改：     docs/week2_performance_optimization_report.md
+	修改：     results/week2_batch_tokens_workload_summary_20260525.csv
+
+未跟踪的文件:
+  （使用 "git add <文件>..." 以包含要提交的内容）
+	docs/week2_batch_token_tuning_report.md
+	figures/week2/
+	logs/week2_batch_token_global_consistency_check_20260526.txt
+	logs/week2_batch_token_global_consistency_check_after_fix_20260526.txt
+	logs/week2_batch_token_pre_commit_review_20260526.txt
+	logs/week2_batch_token_report_final_check_snapshot_20260526.txt
+	logs/week2_batch_token_report_polish_snapshot_20260526.txt
+	logs/week2_batch_token_review_bundle_20260526.txt
+	logs/week2_batch_tokens_csv_fix_and_plot_snapshot_20260526.txt
+	logs/week2_batch_tokens_enhanced_plot_snapshot_20260526.txt
+	logs/week2_batch_tokens_figure_reorg_snapshot_20260526.txt
+	logs/week2_batch_tokens_profile_decision_fix_snapshot_20260526.txt
+	logs/week2_batch_tokens_request_level_plot_snapshot_20260526.txt
+	logs/week2_batching_strategy_batch_token_update_snapshot_20260526.txt
+	logs/week2_delivery_summary_batch_token_update_snapshot_20260526.txt
+	logs/week2_main_report_batch_token_integration_snapshot_20260526.txt
+	results/week2_batch_tokens_short_c8_wave_latency_summary_20260526.csv
+	scripts/plot_week2_batch_token_request_level.py
+	scripts/plot_week2_batch_token_tuning.py
+
+修改尚未加入提交（使用 "git add" 和/或 "git commit -a"）
+
+===== 2. 已修改文件 diff 统计 =====
+ docs/week2_batching_strategy.md                    | 31 +++++++++++++++++-----
+ docs/week2_delivery_summary.md                     | 26 +++++++++++++++---
+ docs/week2_performance_optimization_report.md      | 27 +++++++++++++++++++
+ ...eek2_batch_tokens_workload_summary_20260525.csv | 18 ++++++-------
+ 4 files changed, 82 insertions(+), 20 deletions(-)
+
+===== 3. 已修改文档 diff 摘要 =====
+diff --git a/docs/week2_batching_strategy.md b/docs/week2_batching_strategy.md
+index c5e74de..8c7965e 100644
+--- a/docs/week2_batching_strategy.md
++++ b/docs/week2_batching_strategy.md
+@@ -95,13 +95,30 @@ Avg tokens/s 从 38.294 下降到 36.602，说明更高并发下单请求生成
+ 
+ ---
+ 
+-## 7. 后续计划
++## 7. max_num_batched_tokens 补充调优实验
+ 
+-本轮实验固定使用当前 64K 服务配置，没有额外重启服务测试不同 max_num_batched_tokens。后续若继续推进 batch 参数优化，应测试：
++在基础 concurrency sweep 之后，本项目进一步完成了 vLLM `max_num_batched_tokens` 专项调优实验，覆盖 4096、8192、16384、32768 四组配置，并进一步比较 short-output burst 与 long-output decode-heavy 两类 workload。
+ 
+-1. max_num_batched_tokens = 4096；
+-2. max_num_batched_tokens = 8192；
+-3. max_num_batched_tokens = 16384；
+-4. max_num_batched_tokens = 32768。
++专项报告见：
+ 
+-每组需要记录启动日志、显存占用、QPS、P95 latency、tokens/s、error_rate 和 vLLM KV cache usage。
++- `docs/week2_batch_token_tuning_report.md`
++
++核心结果如下：
++
++| Workload | 对比配置 | 关键结果 | 工程结论 |
++|---|---|---|---|
++| short_output_c8 burst | 8192 vs 32768 | QPS 1.921 提升至 2.371；P95 latency 7.350s 降至 3.415s | 短输出 burst 场景更适合 32768 profile |
++| long_output_c4 decode-heavy | 8192 vs 32768 | 8192 的 P95 latency 为 13.258s，32768 为 16.406s | 长输出或 mixed workload 更适合较保守的 8192 profile |
++
++该结果说明，`max_num_batched_tokens` 不存在对所有 workload 都最优的单一取值。更合理的工程方案是维护 workload-aware serving profile，并在后续网关层根据请求类型、输出长度和运行时指标进行路由。
++
++当前结论应表述为 profile 级别的 batch-token 调优和 workload-aware batching policy foundation，不应表述为已经实现完整生产级运行时动态批处理调度器。
++
++## 8. 后续计划
++
++后续可在当前实验基础上继续推进：
++
++1. 实现轻量级 workload classification 与 routing policy abstraction；
++2. 在资源允许时测试更多 max_num_seqs、GPU memory utilization 和 prefix cache 配置；
++3. 将 batch-token profile 结论接入 Week3 的网关路由、降级策略和高可用设计；
++4. 在 Week4 压测中继续验证不同 workload profile 下的 QPS、P95/P99 latency、error_rate 和资源边界。
+diff --git a/docs/week2_delivery_summary.md b/docs/week2_delivery_summary.md
+index a65e4f2..5c0c3ce 100644
+--- a/docs/week2_delivery_summary.md
++++ b/docs/week2_delivery_summary.md
+@@ -41,7 +41,24 @@
+ - 结果符合长上下文 prefill 成本上升预期；
+ - 61.9K near-limit 测试受 Prefix Cache 与 warm state 影响，已单独复测并解释。
+ 
+-### 3.3 Prefix Cache 复测
++### 3.3 Batch-Token 专项调优
++
++完成 vLLM max_num_batched_tokens 专项调优实验，覆盖 4096、8192、16384、32768 四组配置，并进一步比较 short-output burst 与 long-output decode-heavy 两类 workload。
++
++结论：
++
++- short-output c8 burst 场景下，32768 profile 相比 8192 将 QPS 从 1.921 提升到 2.371，并将 P95 latency 从 7.350s 降至 3.415s；
++- long-output c4 decode-heavy 场景下，8192 profile 更稳健，P95 latency 为 13.258s，而 32768 为 16.406s；
++- max_num_batched_tokens 不存在全局最优配置，应根据 workload 类型选择 serving profile；
++- 当前实验形成的是 profile 级别调优和 workload-aware batching policy foundation，不等同于完整生产级运行时动态批处理调度。
++
++Evidence：
++
++- docs/week2_batch_token_tuning_report.md
++- results/week2_batch_tokens_workload_summary_20260525.csv
++- figures/week2/batch_tokens/week2_batch_tokens_profile_decision.png
++
++### 3.4 Prefix Cache 复测
+ 
+ 针对 56K 与 61.9K latency 异常现象，进行了交替复测，并保存 vLLM metrics。
+ 
+@@ -51,7 +68,7 @@
+ - 缓存命中后的 latency 不能代表 cold prompt 长上下文性能；
+ - benchmark 必须区分 cold prompt、warm prompt、prefix-cache-hit prompt。
+ 
+-### 3.4 GSM8K 全量评测
++### 3.5 GSM8K 全量评测
+ 
+ 完成 GSM8K test set 全量评测，通过 FastAPI `/generate` 接口调用 Seed-OSS-36B-Instruct。
+ 
+@@ -76,7 +93,7 @@ Evidence：
+ - `results/week2_gsm8k_full_seed_oss_budget0_summary.csv`
+ - `artifacts/week2_seed_oss_gsm8k_codegen_dynamic_batch_evidence_20260518_042845.tar.gz`
+ 
+-### 3.5 代码生成 Mini Eval
++### 3.6 代码生成 Mini Eval
+ 
+ 完成 5 个 Python 代码生成小样本验证。
+ 
+@@ -99,6 +116,7 @@ Evidence：
+ | 内容 | 路径 |
+ |---|---|
+ | Week2 主性能报告 | docs/week2_performance_optimization_report.md |
++| Batch-Token 调优专项报告 | docs/week2_batch_token_tuning_report.md |
+ | 长上下文汇总表 | docs/week2_context_gradient_summary.md |
+ | Prefix Cache 分析 | docs/week2_prefix_cache_investigation_summary.md |
+ | 64K RunPod 原始证据 | evidence/week2_64k_context/ |
+@@ -116,7 +134,7 @@ Evidence：
+ 2. INT8 / AWQ / GPTQ 量化 serving 未完成实机验证。当前缺少已验证兼容 Seed-OSS-36B 的量化权重和 vLLM 加载路径。
+ 3. 512K full-context 未完成实机验证。Week2 已完成 64K 级别服务配置，并验证最高约 61.9K input tokens 请求。
+ 4. 代码生成测试使用的是 Seed-OSS-36B-Instruct，不是专门的 Seed-Coder 模型。Seed-Coder 专项验证仍是后续任务。
+-5. Grafana dashboard JSON 和 Prometheus 配置已准备，但本轮未保存完整 Grafana 实机截图。
++5. Prometheus 配置、Grafana dashboard JSON 和一次 Grafana 实机导入/负载探测 evidence 已保存；后续仍可继续补充更完整的 dashboard、告警面板和长期监控截图。
+ 
+ ## 6. 阶段结论
+ 
+diff --git a/docs/week2_performance_optimization_report.md b/docs/week2_performance_optimization_report.md
+index 1b48065..2f681e7 100644
+--- a/docs/week2_performance_optimization_report.md
++++ b/docs/week2_performance_optimization_report.md
+@@ -133,6 +133,33 @@ vLLM metrics 快照命令示例：
+ 
+ ---
+ 
++
++### 3.2.1 max_num_batched_tokens 专项调优
++
++在基础并发测试之后，本项目进一步对 vLLM 的 `max_num_batched_tokens` 参数进行了专项调优分析。该参数会影响 vLLM 调度阶段可容纳的 token budget，从而影响 batch formation、请求等待、吞吐和尾延迟。
++
++本轮实验覆盖 4096、8192、16384、32768 四组配置，并进一步区分 short-output burst 与 long-output decode-heavy 两类 workload。结果显示，`max_num_batched_tokens` 不存在对所有 workload 都最优的单一取值，应根据请求形态选择不同 serving profile。
++
++| Workload | 对比配置 | 关键结果 | 工程结论 |
++|---|---|---|---|
++| short_output_c8 burst | 8192 vs 32768 | QPS 1.921 提升至 2.371；P95 latency 7.350s 降至 3.415s | 短输出 burst 场景更适合 32768 profile |
++| long_output_c4 decode-heavy | 8192 vs 32768 | 8192 的 P95 latency 为 13.258s，32768 为 16.406s | 长输出或 mixed workload 更适合较保守的 8192 profile |
++
++该实验说明，生产化 dynamic batching 不应简单理解为运行时热修改单个 vLLM engine 参数。由于 `max_num_batched_tokens` 属于启动时调度参数，更合理的工程设计是维护多个 serving profile，并在网关层根据 workload 类型进行路由。
++
++专项报告路径：
++
++- `docs/week2_batch_token_tuning_report.md`
++
++相关 evidence：
++
++- `results/week2_batch_tokens_workload_summary_20260525.csv`
++- `results/week2_batch_tokens_short_c8_wave_latency_summary_20260526.csv`
++- `figures/week2/batch_tokens/week2_batch_tokens_profile_decision.png`
++- `figures/week2/batch_tokens/week2_batch_tokens_workload_qps_summary.png`
++- `figures/week2/batch_tokens/week2_batch_tokens_workload_p95_summary.png`
++
++
+ ### 3.3 上下文长度梯度测试
+ 
+ 目标：
+
+===== 4. workload summary CSV diff 摘要 =====
+diff --git a/results/week2_batch_tokens_workload_summary_20260525.csv b/results/week2_batch_tokens_workload_summary_20260525.csv
+index df6f232..3207da5 100644
+--- a/results/week2_batch_tokens_workload_summary_20260525.csv
++++ b/results/week2_batch_tokens_workload_summary_20260525.csv
+@@ -1,9 +1,9 @@
+-scenario,max_num_batched_tokens,concurrency,repeat,max_new_tokens,thinking_budget,total_requests,successful_requests,error_rate,throughput_qps,latency_avg_s,latency_p50_s,latency_p95_s,tokens_per_second_avg,tokens_per_second_p50,tokens_per_second_p95,interpretation
+-short_output_c4,4096,4,10,128,512,40,40,0.0,1.063007,3.761111,3.363341,7.343696,36.034245,38.081950,38.447230,Low batch-token budget shows weaker burst handling and high first-wave tail latency.
+-short_output_c4,8192,4,10,128,512,40,40,0.0,1.090385,3.666178,3.336459,6.624607,36.487057,38.398950,38.432185,Moderate setting improves short-output throughput and tail latency over 4096.
+-short_output_c4,16384,4,10,128,512,40,40,0.0,1.081843,3.696181,3.330807,6.971001,36.441668,38.471850,38.537745,Intermediate high setting does not clearly dominate; shows workload noise and diminishing returns.
+-short_output_c4,32768,4,10,128,512,40,40,0.0,1.101249,3.630953,3.331078,6.338876,36.655163,38.467850,38.526870,Aggressive setting gives the best short-output c4 result among the sweep.
+-short_output_c8,8192,8,10,128,512,40,40,0.0,1.921471,4.158959,3.360956,7.350406,33.997605,38.144500,38.227990,At c8, 8192 suffers from first-wave tail latency and lower average token throughput.
+-short_output_c8,32768,8,10,128,512,40,40,0.0,2.371389,3.370590,3.362666,3.415119,38.058503,38.131100,38.184780,32768 absorbs short-output burst better and sharply reduces P95 under c8.
+-long_output_c4,8192,4,5,512,512,20,20,0.0,0.302359,12.598918,13.223539,13.258162,38.714250,38.720650,38.784710,8192 is stable for long-output decode-heavy workload with tight P50-P95 gap.
+-long_output_c4,32768,4,5,512,512,20,20,0.0,0.287762,13.096739,13.264082,16.405792,37.011635,38.529250,38.752275,32768 does not retain its short-output advantage; P95 worsens under long-output workload.
++scenario,max_num_batched_tokens,concurrency,repeat,max_new_tokens,thinking_budget,total_requests,successful_requests,error_rate,throughput_qps,latency_avg_s,latency_p50_s,latency_p95_s,tokens_per_second_avg,tokens_per_second_p50,tokens_per_second_p95,interpretation
++short_output_c4,4096,4,10,128,512,40,40,0.0,1.063007,3.761111,3.363341,7.343696,36.034245,38.08195,38.44723,低 batch-token budget 在短输出 burst 场景下表现较弱，首批请求尾延迟较高。
++short_output_c4,8192,4,10,128,512,40,40,0.0,1.090385,3.666178,3.336459,6.624607,36.487057,38.39895,38.432185,8192 相比 4096 改善了短输出场景下的吞吐和尾延迟。
++short_output_c4,16384,4,10,128,512,40,40,0.0,1.081843,3.696181,3.330807,6.971001,36.441668,38.47185,38.537745,16384 没有明显优于 8192 或 32768，体现出收益递减和 workload 噪声。
++short_output_c4,32768,4,10,128,512,40,40,0.0,1.101249,3.630953,3.331078,6.338876,36.655163,38.46785,38.52687,32768 在 short-output c4 sweep 中取得最高 QPS 和最低 P95。
++short_output_c8,8192,8,10,128,512,40,40,0.0,1.921471,4.158959,3.360956,7.350406,33.997605,38.1445,38.22799,8192 在 c8 短输出高并发场景下出现首批请求长尾，平均 tokens/s 较低。
++short_output_c8,32768,8,10,128,512,40,40,0.0,2.371389,3.37059,3.362666,3.415119,38.058503,38.1311,38.18478,32768 更能吸收短输出高并发 burst，请求 P95 明显降低。
++long_output_c4,8192,4,5,512,512,20,20,0.0,0.302359,12.598918,13.223539,13.258162,38.71425,38.72065,38.78471,8192 在长输出 decode-heavy workload 下更稳定，P50 与 P95 间隔较小。
++long_output_c4,32768,4,5,512,512,20,20,0.0,0.287762,13.096739,13.264082,16.405792,37.011635,38.52925,38.752275,32768 在长输出场景下没有延续短输出优势，P95 恶化且平均 tokens/s 降低。
+
+===== 5. 未跟踪文件列表 =====
+docs/week2_batch_token_tuning_report.md
+figures/week2/batch_tokens/week2_batch_tokens_long_c4_latency_boxplot.png
+figures/week2/batch_tokens/week2_batch_tokens_long_c4_p95.png
+figures/week2/batch_tokens/week2_batch_tokens_long_c4_qps.png
+figures/week2/batch_tokens/week2_batch_tokens_profile_decision.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c4_p95.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c4_qps.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_first_wave_latency.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_latency_boxplot.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_latency_scatter.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_p95.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_qps.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_wave_latency.png
+figures/week2/batch_tokens/week2_batch_tokens_tokens_per_second_boxplot.png
+figures/week2/batch_tokens/week2_batch_tokens_workload_p95_summary.png
+figures/week2/batch_tokens/week2_batch_tokens_workload_qps_summary.png
+logs/week2_batch_token_global_consistency_check_20260526.txt
+logs/week2_batch_token_global_consistency_check_after_fix_20260526.txt
+logs/week2_batch_token_pre_commit_review_20260526.txt
+logs/week2_batch_token_report_final_check_snapshot_20260526.txt
+logs/week2_batch_token_report_polish_snapshot_20260526.txt
+logs/week2_batch_token_review_bundle_20260526.txt
+logs/week2_batch_tokens_csv_fix_and_plot_snapshot_20260526.txt
+logs/week2_batch_tokens_enhanced_plot_snapshot_20260526.txt
+logs/week2_batch_tokens_figure_reorg_snapshot_20260526.txt
+logs/week2_batch_tokens_profile_decision_fix_snapshot_20260526.txt
+logs/week2_batch_tokens_request_level_plot_snapshot_20260526.txt
+logs/week2_batching_strategy_batch_token_update_snapshot_20260526.txt
+logs/week2_delivery_summary_batch_token_update_snapshot_20260526.txt
+logs/week2_main_report_batch_token_integration_snapshot_20260526.txt
+results/week2_batch_tokens_short_c8_wave_latency_summary_20260526.csv
+scripts/plot_week2_batch_token_request_level.py
+scripts/plot_week2_batch_token_tuning.py
