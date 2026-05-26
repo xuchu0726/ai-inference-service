@@ -1,0 +1,137 @@
+===== 日期 =====
+2026年 5月27日 星期三 00时03分34秒 BST
+
+===== 本步骤目的 =====
+清理量化相关文档中的学生化/任务书化表达，保留真实边界：BF16 已实测，FP32/INT8 尚未实测。
+
+===== 量化文档标题结构 =====
+
+----- docs/week2_quantization_feasibility_report.md -----
+1:# Seed-OSS-36B 量化优化可行性分析与实验计划
+3:## 1. 背景
+9:## 2. 当前 BF16 Baseline
+36:## 3. FP32 Baseline 可行性分析
+69:## 4. INT8 量化可行性分析
+82:## 5. 当前量化任务完成度与资源边界
+94:## 6. 量化路线对比
+96:### 6.1 Weight Quantization
+107:### 6.2 KV Cache Quantization
+125:## 7. TurboQuant 路线定位
+143:## 8. 计划中的量化实验设计
+147:### 8.1 FP32 Feasibility Test
+159:### 8.2 FP8 KV Cache Test
+171:### 8.3 INT8 / AWQ / GPTQ Serving Test
+183:## 9. 量化对比表结构
+195:## 10. 阶段交付边界说明
+215:## 11. Evidence 路径
+227:## 12. 结论
+
+----- docs/week2_quantization_strategy.md -----
+1:# 量化优化方案：Seed-OSS-36B 推理显存与吞吐对比
+3:## 1. 文档目的
+23:## 2. 当前资源边界
+46:## 3. Baseline 定义
+48:### 3.1 实际运行 baseline：BF16
+66:### 3.2 理论对照 baseline：FP32
+89:## 4. 量化候选方案
+103:## 5. 实验矩阵
+114:## 6. 对比指标
+136:## 7. 量化对比表模板
+147:## 8. 失败情况记录原则
+170:## 9. 交付边界与指标口径
+183:## 10. 小结
+
+===== 不适合正式报告的字眼检查 =====
+未发现不适合正式报告的字眼。
+
+===== 量化边界表述检查 =====
+docs/week2_quantization_feasibility_report.md:7:当前项目已完成 Seed-OSS-36B-Instruct 在 RunPod 2×NVIDIA A100-SXM4-80GB 环境下的 BF16 serving baseline、并发 benchmark、64K 长上下文验证和 Prefix Cache 行为分析。本文在该 baseline 基础上，对 FP32、INT8、AWQ/GPTQ、FP8 KV Cache 和低比特 KV cache 压缩等量化路线进行资源可行性分析，并给出后续实验计划。
+docs/week2_quantization_feasibility_report.md:25:当前 BF16 baseline 已完成以下验证：
+docs/week2_quantization_feasibility_report.md:34:该 BF16 baseline 是后续量化实验的主要对照组。
+docs/week2_quantization_feasibility_report.md:36:## 3. FP32 Baseline 可行性分析
+docs/week2_quantization_feasibility_report.md:42:| FP32 | 4 bytes | ~144GB |
+docs/week2_quantization_feasibility_report.md:44:| INT8 | 1 byte | ~36GB |
+docs/week2_quantization_feasibility_report.md:47:当前 RunPod 实验环境为 2×A100 80GB，总显存约 160GB。FP32 权重本身约 144GB，尚未计入以下额外开销：
+docs/week2_quantization_feasibility_report.md:57:因此，在当前 2×A100 80GB 环境下，FP32 serving baseline 缺少足够显存余量，尤其难以同时支持长上下文 KV cache。当前阶段未将 FP32 作为已完成实测结果，而将其记录为资源受限项。
+docs/week2_quantization_feasibility_report.md:59:后续若需要进行严格 FP32 baseline，应使用更多 GPU 或更高显存 GPU，并保存以下 evidence：
+docs/week2_quantization_feasibility_report.md:67:| conclusion | 判断 FP32 baseline 是否具备可复现实测条件 |
+docs/week2_quantization_feasibility_report.md:69:## 4. INT8 量化可行性分析
+docs/week2_quantization_feasibility_report.md:71:INT8 量化不是简单将 vLLM 启动参数中的 `--dtype` 修改为 `int8`。可部署的 INT8 或低比特推理通常需要：
+docs/week2_quantization_feasibility_report.md:80:对于 Seed-OSS-36B-Instruct，当前阶段尚未准备可直接用于 vLLM serving 的 INT8/AWQ/GPTQ 量化权重，也未完成离线量化流程。因此，本文不记录未经实测的 INT8 性能数据，而是将 INT8 作为后续实验路线。
+docs/week2_quantization_feasibility_report.md:82:## 5. 当前量化任务完成度与资源边界
+docs/week2_quantization_feasibility_report.md:86:| BF16 baseline | 已完成真实部署与 benchmark | 已完成 |
+docs/week2_quantization_feasibility_report.md:87:| FP32 对比 | 当前 2×A100 80GB 环境显存余量不足 | 需后续资源验证 |
+docs/week2_quantization_feasibility_report.md:88:| INT8 量化 | 尚未准备兼容量化权重或离线量化流程 | 需后续实验 |
+docs/week2_quantization_feasibility_report.md:89:| 显存降低 ≥30% | 尚未完成真实量化实验 | 当前不声明达成 |
+docs/week2_quantization_feasibility_report.md:90:| 速度提升 ≥20% | 尚未完成真实量化实验 | 当前不声明达成 |
+docs/week2_quantization_feasibility_report.md:102:| INT8 weight quantization | 降低权重显存 | 未实测 | 准备 Seed-OSS 兼容 INT8 权重或量化流程 |
+docs/week2_quantization_feasibility_report.md:132:当前阶段已完成 vLLM KV cache capacity、Prefix Cache metrics 和重复长文本请求行为分析。后续可调研 TurboQuant 等低比特 KV cache 压缩方法，用于评估其对 128K、256K、512K long-context serving 的潜在帮助。
+docs/week2_quantization_feasibility_report.md:147:### 8.1 FP32 Feasibility Test
+docs/week2_quantization_feasibility_report.md:149:目标：确认 FP32 在当前或更高资源环境下是否具备启动条件。
+docs/week2_quantization_feasibility_report.md:157:| Purpose | 明确 FP32 baseline 是否具备实测条件 |
+docs/week2_quantization_feasibility_report.md:171:### 8.3 INT8 / AWQ / GPTQ Serving Test
+docs/week2_quantization_feasibility_report.md:177:| Quantization method | INT8 / AWQ / GPTQ / FP8 |
+docs/week2_quantization_feasibility_report.md:185:当前阶段不填入未经实测的数据。后续量化实验完成后，将按照以下结构更新：
+docs/week2_quantization_feasibility_report.md:189:| FP32 | No | TBD | TBD | TBD | TBD | TBD | Resource feasibility required |
+docs/week2_quantization_feasibility_report.md:191:| INT8 | No | TBD | TBD | TBD | TBD | TBD | Requires quantized weights |
+docs/week2_quantization_feasibility_report.md:197:本阶段原始目标包括 INT8 量化与 FP32 对比。当前阶段已完成：
+docs/week2_quantization_feasibility_report.md:199:1. BF16 baseline 的真实部署与 benchmark；
+docs/week2_quantization_feasibility_report.md:201:3. FP32 baseline 的资源可行性分析；
+docs/week2_quantization_feasibility_report.md:202:4. INT8/AWQ/GPTQ/FP8 等量化路线拆解；
+docs/week2_quantization_feasibility_report.md:206:当前阶段尚未完成：
+docs/week2_quantization_feasibility_report.md:208:1. FP32 实机启动验证；
+docs/week2_quantization_feasibility_report.md:209:2. INT8 实机量化推理；
+docs/week2_quantization_feasibility_report.md:210:3. 显存降低 ≥30% 的真实实验数据；
+docs/week2_quantization_feasibility_report.md:211:4. 速度提升 ≥20% 的真实实验数据。
+docs/week2_quantization_feasibility_report.md:213:因此，当前项目不声明量化优化指标已经达成。后续实验将基于 BF16 baseline 继续补齐真实对比数据。
+docs/week2_quantization_feasibility_report.md:229:当前阶段已完成 Seed-OSS-36B-Instruct 的 BF16 serving baseline、并发 benchmark、64K 长上下文验证和 KV cache / Prefix Cache 分析。真实 INT8 与 FP32 对比尚未完成，主要限制来自当前 GPU 显存余量、量化权重准备和框架兼容性验证。
+docs/week2_quantization_feasibility_report.md:233:1. FP32 feasibility test，用于明确高精度 baseline 的资源条件；
+docs/week2_quantization_feasibility_report.md:235:3. INT8/AWQ/GPTQ serving test，用于比较低比特权重量化下的显存、延迟、吞吐和输出质量；
+docs/week2_quantization_strategy.md:9:1. 实施 Seed-OSS 的 INT8 量化；
+docs/week2_quantization_strategy.md:10:2. 对比 FP32 精度下的速度与显存占用；
+docs/week2_quantization_strategy.md:12:4. 目标为显存降低 ≥30%，速度提升 ≥20%。
+docs/week2_quantization_strategy.md:16:1. 理论 FP32 baseline；
+docs/week2_quantization_strategy.md:17:2. 实际可运行 BF16 baseline；
+docs/week2_quantization_strategy.md:23:## 2. 当前资源边界
+docs/week2_quantization_strategy.md:39:1. BF16 baseline 已经接近单卡显存上限；
+docs/week2_quantization_strategy.md:40:2. FP32 权重理论显存约为 BF16 的 2 倍；
+docs/week2_quantization_strategy.md:41:3. 在当前 2×A100 80GB 环境下，FP32 serving baseline 很可能不可直接运行；
+docs/week2_quantization_strategy.md:42:4. 当前阶段不能虚假宣称 FP32 已完成，必须用显存估算和运行证据说明资源边界。
+docs/week2_quantization_strategy.md:66:### 3.2 理论对照 baseline：FP32
+docs/week2_quantization_strategy.md:68:FP32 用于原始目标中的精度对照，但当前资源可能不足以直接 serving。
+docs/week2_quantization_strategy.md:83:因此，FP32 实际 serving 需求会高于 144GB，2×A100 80GB 在当前配置下风险极高。
+docs/week2_quantization_strategy.md:85:如果后续资源允许，可以尝试 FP32 小上下文 smoke test；如果无法运行，应记录资源原因和失败日志。
+docs/week2_quantization_strategy.md:95:| INT8 | 原始目标指定方向，优先检查可行性 | P0 |
+docs/week2_quantization_strategy.md:107:| BF16 baseline | bfloat16 | 是 | 建立实际性能基线 |
+docs/week2_quantization_strategy.md:108:| FP32 estimate / attempt | float32 | 尽量尝试，资源不足则估算 | 回应 FP32 对照要求 |
+docs/week2_quantization_strategy.md:109:| INT8 | INT8 或等价支持方案 | 优先尝试 | 验证显存与速度收益 |
+docs/week2_quantization_strategy.md:110:| FP8/AWQ/GPTQ | 可用则尝试 | 可选增强 | 作为 INT8 不兼容时替代方案 |
+docs/week2_quantization_strategy.md:140:| BF16 baseline | 后续量化实验补充 | 后续量化实验补充 | 后续量化实验补充 | 后续量化实验补充 | 后续量化实验补充 | baseline | baseline | 后续量化实验补充 | 实际主基线 |
+docs/week2_quantization_strategy.md:141:| FP32 | 后续量化实验补充 | 后续量化实验补充 | 后续量化实验补充 | 后续量化实验补充 | 后续量化实验补充 | 后续量化实验补充 | 后续量化实验补充 | 后续量化实验补充 | 资源不足则写估算 |
+docs/week2_quantization_strategy.md:142:| INT8 | 后续量化实验补充 | 后续量化实验补充 | 后续量化实验补充 | 后续量化实验补充 | 后续量化实验补充 | 目标 ≥30% | 目标 ≥20% | 后续量化实验补充 | 优先尝试 |
+docs/week2_quantization_strategy.md:149:如果 INT8、FP32 或其他量化方案无法运行，不能删除失败记录。必须保留：
+docs/week2_quantization_strategy.md:174:| INT8 量化 | 优先检查并尝试 INT8 或 vLLM 可落地等价方案 |
+docs/week2_quantization_strategy.md:175:| 对比 FP32 精度下速度与显存 | 给出 FP32 资源估算，资源允许时尝试 FP32 smoke test |
+docs/week2_quantization_strategy.md:176:| 量化前后性能对比表 | 使用 BF16/FP32/INT8/FP8/AWQ/GPTQ 表格统一对比 |
+docs/week2_quantization_strategy.md:177:| 显存降低 ≥30% | 作为量化目标指标记录 |
+docs/week2_quantization_strategy.md:178:| 速度提升 ≥20% | 作为量化目标指标记录 |
+docs/week2_quantization_strategy.md:187:当前最可靠的实际 baseline 是 BF16。FP32 是原始目标指定对照，但在 Seed-OSS-36B 与 2×A100 80GB 条件下大概率存在资源瓶颈。INT8/FP8/AWQ/GPTQ 是 当前阶段需要优先验证的优化方向。
+docs/week2_quantization_strategy.md:189:最终交付不是只写“量化可行”，而是给出可复现命令、运行结果、显存/延迟/吞吐对比、失败日志和资源边界说明。
+
+===== 当前 git 状态 =====
+位于分支 main
+您的分支与上游分支 'origin/main' 一致。
+
+尚未暂存以备提交的变更：
+  （使用 "git add <文件>..." 更新要提交的内容）
+  （使用 "git restore <文件>..." 丢弃工作区的改动）
+	修改：     docs/week2_performance_optimization_report.md
+	修改：     docs/week2_quantization_feasibility_report.md
+	修改：     docs/week2_quantization_strategy.md
+
+未跟踪的文件:
+  （使用 "git add <文件>..." 以包含要提交的内容）
+	logs/week2_quantization_current_state_check_20260527.txt
+	logs/week2_quantization_language_polish_snapshot_20260527.txt
+
+修改尚未加入提交（使用 "git add" 和/或 "git commit -a"）

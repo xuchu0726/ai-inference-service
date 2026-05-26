@@ -1,8 +1,8 @@
-# Week2 Seed-OSS-36B 量化优化可行性分析与实验计划
+# Seed-OSS-36B 量化优化可行性分析与实验计划
 
 ## 1. 背景
 
-Week2 性能优化任务要求对 Seed-OSS-36B-Instruct 推理服务进行量化优化分析，并对比不同精度配置下的显存占用、延迟和吞吐表现。目标是形成可复现的量化前后性能对比表，包括显存占用、P50/P95 latency、tokens/s、错误率和输出质量观察。
+本阶段围绕 Seed-OSS-36B-Instruct 推理服务的量化优化可行性展开分析，重点评估不同精度配置对显存占用、延迟和吞吐表现的影响。目标是形成可复现的量化前后性能对比表，包括显存占用、P50/P95 latency、tokens/s、错误率和输出质量观察。
 
 当前项目已完成 Seed-OSS-36B-Instruct 在 RunPod 2×NVIDIA A100-SXM4-80GB 环境下的 BF16 serving baseline、并发 benchmark、64K 长上下文验证和 Prefix Cache 行为分析。本文在该 baseline 基础上，对 FP32、INT8、AWQ/GPTQ、FP8 KV Cache 和低比特 KV cache 压缩等量化路线进行资源可行性分析，并给出后续实验计划。
 
@@ -79,9 +79,9 @@ INT8 量化不是简单将 vLLM 启动参数中的 `--dtype` 修改为 `int8`。
 
 对于 Seed-OSS-36B-Instruct，当前阶段尚未准备可直接用于 vLLM serving 的 INT8/AWQ/GPTQ 量化权重，也未完成离线量化流程。因此，本文不记录未经实测的 INT8 性能数据，而是将 INT8 作为后续实验路线。
 
-## 5. 当前量化任务完成度与资源边界
+## 5. 当前量化完成度与资源边界
 
-| 任务书要求 | 当前状态 | 判断 |
+| 原始目标要求 | 当前状态 | 判断 |
 |---|---|---|
 | BF16 baseline | 已完成真实部署与 benchmark | 已完成 |
 | FP32 对比 | 当前 2×A100 80GB 环境显存余量不足 | 需后续资源验证 |
@@ -192,9 +192,9 @@ TurboQuant 等低比特压缩方法可作为后续长上下文推理优化的研
 | FP8 KV Cache | No | TBD | TBD | TBD | TBD | TBD | High priority for long context |
 | AWQ / GPTQ | No | TBD | TBD | TBD | TBD | TBD | Candidate route |
 
-## 10. 对 Week2 任务要求的回应
+## 10. 阶段交付边界说明
 
-Week2 任务要求包括 INT8 量化与 FP32 对比。当前阶段已完成：
+本阶段原始目标包括 INT8 量化与 FP32 对比。当前阶段已完成：
 
 1. BF16 baseline 的真实部署与 benchmark；
 2. 2×A100 80GB 下 Seed-OSS-36B 的显存占用记录；
