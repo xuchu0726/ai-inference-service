@@ -1,0 +1,20 @@
+旧 Network Volume 保存决策：
+
+1. 直接保存到 GitHub：
+- logs/ 中旧 volume 独有的运行、安装、GPU 异常、审计日志
+- results/ 中旧 volume 独有的 JSON/TXT 结果
+- volume_audit/ 中本次审计与差异清单
+
+2. 压缩保存到 GitHub：
+- monitoring_data/prometheus/ 原始 TSDB 数据，压缩为 artifacts/week2_prometheus_raw_monitoring_data_20260527.tar.gz
+
+3. 不保存：
+- hf_cache/：模型权重缓存，可重新下载
+- venvs/：虚拟环境，可重建
+- tools/：工具缓存，可重装
+- github_clean_ai_inference_service/：临时 GitHub clean clone
+- .git/、__pycache__、*.pyc、.ipynb_checkpoints：无保存价值
+
+4. 关键结论：
+旧 volume 中没有 GitHub 缺失的代码或正式文档。
+旧 volume 独有内容全部属于实验 evidence 或监控原始数据。

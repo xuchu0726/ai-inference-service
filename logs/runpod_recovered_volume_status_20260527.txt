@@ -1,0 +1,167 @@
+===== 日期 =====
+Wed May 27 21:41:17 UTC 2026
+
+===== 本步骤目的 =====
+确认欧洲区 2×A100 Pod 已成功挂载旧 Network Volume，并检查 GPU、仓库、模型缓存和历史 evidence 是否存在。
+本步骤不启动模型，只做恢复状态检查。
+
+===== 当前路径 =====
+/workspace
+
+===== 磁盘挂载 =====
+Filesystem                           Size  Used Avail Use% Mounted on
+overlay                               20G   16M   20G   1% /
+tmpfs                                 64M     0   64M   0% /dev
+mfs#eur-is-1.runpod.net:9421         1.4P  745T  687T  53% /workspace
+shm                                  117G     0  117G   0% /dev/shm
+/dev/mapper/ubuntu--vg-runpod--data   14T   12T  2.1T  86% /etc/hosts
+/dev/nvme1n1p2                        49G   22G   26G  46% /usr/bin/nvidia-smi
+tmpfs                                504G     0  504G   0% /sys/fs/cgroup
+tmpfs                                504G   12K  504G   1% /proc/driver/nvidia
+tmpfs                                504G  4.0K  504G   1% /etc/nvidia/nvidia-application-profiles-rc.d
+tmpfs                                101G   68M  101G   1% /run/nvidia-persistenced/socket
+tmpfs                                504G     0  504G   0% /proc/acpi
+tmpfs                                504G     0  504G   0% /proc/scsi
+tmpfs                                504G     0  504G   0% /sys/firmware
+tmpfs                                504G     0  504G   0% /sys/devices/virtual/powercap
+
+Filesystem                    Size  Used Avail Use% Mounted on
+mfs#eur-is-1.runpod.net:9421  1.4P  745T  687T  53% /workspace
+
+===== /workspace 顶层 =====
+total 19M
+drwxrwxrwx  8 root root 2.9M May 27 21:41 .
+drwxr-xr-x  1 root root  109 May 27 21:30 ..
+drwxrwxrwx 15 root root 2.0M May 25 15:29 ai-inference-service
+drwxrwxrwx  3 root root 978K May 25 14:10 ai_inference_env_bootstrap_20260525
+-rw-rw-rw-  1 root root 3.5M May 25 16:17 ai_inference_service_full_20260525.tar.gz
+drwxrwxrwx  6 root root 2.9M May 25 15:06 hf_cache
+drwxrwxrwx  3 root root 2.0M May 25 16:18 old_backup_check
+-rw-rw-rw-  1 root root 8.7K May 25 16:19 old_backup_missing_from_current_20260525.txt
+-rw-rw-rw-  1 root root 1.6K May 27 21:41 runpod_recovered_volume_status_20260527.txt
+drwxrwxrwx  3 root root 2.0M May 25 15:28 tools
+drwxrwxrwx  3 root root 2.9M May 25 14:12 venvs
+
+===== GPU 状态 =====
+Wed May 27 21:41:17 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 565.57.01              Driver Version: 565.57.01      CUDA Version: 12.7     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:10:00.0 Off |                    0 |
+| N/A   30C    P0             88W /  400W |   67294MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:48:00.0 Off |                    0 |
+| N/A   29C    P0             67W /  400W |       1MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
++-----------------------------------------------------------------------------------------+
+
+===== ai-inference-service 是否存在 =====
+total 22M
+drwxrwxrwx 15 root root  2.0M May 25 15:29 .
+drwxrwxrwx  8 root root  2.9M May 27 21:41 ..
+drwxrwxrwx  8 root root  2.0M May 25 19:38 .git
+-rw-rw-rw-  1 root root   354 May 25 14:12 .gitignore
+-rw-rw-rw-  1 root root   11K May 25 14:12 README.md
+drwxrwxrwx  6 root root  980K May 25 15:17 app
+drwxrwxrwx  2 root root  1.1M May 25 14:12 artifacts
+drwxrwxrwx  3 root root  977K May 25 14:12 data
+drwxrwxrwx  5 root root  980K May 25 14:12 deployment
+drwxrwxrwx  2 root root 1005K May 25 19:38 docs
+drwxrwxrwx  4 root root  2.0M May 25 14:12 evidence
+drwxrwxrwx  2 root root  1.1M May 25 19:38 figures
+drwxrwxrwx  2 root root  2.0M May 25 19:38 logs
+drwxrwxrwx  3 root root  2.0M May 25 15:29 monitoring_data
+-rw-rw-rw-  1 root root    13 May 25 14:12 requirements-vllm.txt
+-rw-rw-rw-  1 root root    98 May 25 14:12 requirements.txt
+drwxrwxrwx  2 root root  2.0M May 25 19:30 results
+drwxrwxrwx  2 root root  986K May 25 14:12 scripts
+drwxrwxrwx  2 root root     1 May 25 14:12 tests
+
+===== hf_cache 是否存在 =====
+68G	/workspace/hf_cache
+/workspace/hf_cache
+/workspace/hf_cache/hub
+/workspace/hf_cache/hub/.locks
+/workspace/hf_cache/hub/.locks/models--ByteDance-Seed--Seed-OSS-36B-Instruct
+/workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct
+/workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots
+/workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs
+/workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/refs
+/workspace/hf_cache/modules
+/workspace/hf_cache/xet
+/workspace/hf_cache/xet/https___cas_serv-tGqkUaZf_CBPHQ6h
+/workspace/hf_cache/xet/https___cas_serv-tGqkUaZf_CBPHQ6h/staging
+/workspace/hf_cache/xet/logs
+/workspace/hf_cache/transformers
+/workspace/hf_cache/transformers/.locks
+/workspace/hf_cache/transformers/.locks/models--ByteDance-Seed--Seed-OSS-36B-Instruct
+/workspace/hf_cache/transformers/models--ByteDance-Seed--Seed-OSS-36B-Instruct
+/workspace/hf_cache/transformers/models--ByteDance-Seed--Seed-OSS-36B-Instruct/.no_exist
+/workspace/hf_cache/transformers/models--ByteDance-Seed--Seed-OSS-36B-Instruct/refs
+/workspace/hf_cache/transformers/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots
+/workspace/hf_cache/transformers/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs
+
+===== 关键 evidence 目录大小 =====
+4.8M	/workspace/ai-inference-service/logs
+4.2M	/workspace/ai-inference-service/results
+12M	/workspace/ai-inference-service/evidence
+1.5M	/workspace/ai-inference-service/artifacts
+1.8M	/workspace/ai-inference-service/figures
+
+===== 旧仓库 git 状态 =====
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	logs/install_fastapi_root_venv.log
+	logs/new_pod_after_vllm_pip_freeze_20260525.txt
+	logs/new_pod_apt_update_for_grafana_20260525.log
+	logs/new_pod_apt_update_grafana_repo_20260525.log
+	logs/new_pod_base_cuda_mismatch_20260525.txt
+	logs/new_pod_base_import_check_20260525.log
+	logs/new_pod_base_pip_freeze_20260525.txt
+	logs/new_pod_grafana_prereq_20260525.log
+	logs/new_pod_install_base_requirements_20260525.log
+	logs/new_pod_install_grafana_20260525.log
+	logs/new_pod_install_vllm_20260525.log
+	logs/new_pod_pre_model_load_snapshot_20260525.txt
+	logs/new_pod_recovery_before_grafana_20260525.txt
+	logs/new_pod_seed_oss_fastapi_20260525.log
+	logs/new_pod_seed_oss_fastapi_smoke_snapshot_20260525.txt
+	logs/new_pod_seed_oss_vllm_64k_launch_20260525.log
+	logs/new_pod_seed_oss_vllm_64k_startup_snapshot_20260525.txt
+	logs/new_pod_upgrade_pip_20260525.log
+	logs/new_pod_vllm_import_cuda_check_20260525.log
+	logs/reinstall_base_requirements_clean_env.log
+	logs/reinstall_vllm_root_venv.log
+	monitoring_data/
+	results/new_pod_prometheus_runtime_config_20260525.json
+	results/new_pod_prometheus_targets_20260525.json
+	results/new_pod_seed_oss_fastapi_health_20260525.json
+	results/new_pod_seed_oss_fastapi_health_debug_20260525.txt
+	results/new_pod_seed_oss_fastapi_smoke_20260525.txt
+	results/new_pod_seed_oss_vllm_metrics_head_20260525.txt
+	results/new_pod_seed_oss_vllm_models_20260525.json
+
+nothing added to commit but untracked files present (use "git add" to track)
+af6b3af 补充 Week2 batch token workload 调优证据
+8ac0576 补充旧 Pod Week2 实验证据备份
+3114679 补充 Week2 Grafana 实机监控证据
+07e7f66 规范 Week2 剩余实验计划表述
+b945f47 修正 Week2 主报告图表路径
+8995029 清理 Week2 文档残留占位描述
+49340d8 清理 Week2 主性能报告重复与过期描述
+423e3e2 补充 Week2 最终可观测性证据

@@ -1,0 +1,7 @@
+python: 3.11.10 (main, Sep  7 2024, 18:35:41) [GCC 11.4.0]
+torch: 2.9.0+cu128
+cuda available: True
+cuda device count: 2
+0 NVIDIA A100-SXM4-80GB
+1 NVIDIA A100-SXM4-80GB
+vllm: 0.11.2

@@ -1,0 +1,80 @@
+===== date =====
+Mon May 25 15:00:14 UTC 2026
+
+===== git =====
+?? figures/.ipynb_checkpoints/
+?? logs/new_pod_after_vllm_pip_freeze_20260525.txt
+?? logs/new_pod_base_cuda_mismatch_20260525.txt
+?? logs/new_pod_base_import_check_20260525.log
+?? logs/new_pod_base_pip_freeze_20260525.txt
+?? logs/new_pod_install_base_requirements_20260525.log
+?? logs/new_pod_install_vllm_20260525.log
+?? logs/new_pod_pre_model_load_snapshot_20260525.txt
+?? logs/new_pod_upgrade_pip_20260525.log
+?? logs/new_pod_vllm_import_cuda_check_20260525.log
+07e7f66 xuchu0726 <chuxu7678@gmail.com> | 规范 Week2 剩余实验计划表述
+b945f47 xuchu0726 <chuxu7678@gmail.com> | 修正 Week2 主报告图表路径
+8995029 xuchu0726 <chuxu7678@gmail.com> | 清理 Week2 文档残留占位描述
+49340d8 xuchu0726 <chuxu7678@gmail.com> | 清理 Week2 主性能报告重复与过期描述
+423e3e2 xuchu0726 <chuxu7678@gmail.com> | 补充 Week2 最终可观测性证据
+7369854 xuchu0726 <chuxu7678@gmail.com> | 更新 Week2 主性能报告最终实测结果
+0f7bc54 xuchu0726 <chuxu7678@gmail.com> | 更新 Week2 动态并发 batching 实测结果
+4b58bf4 xuchu0726 <chuxu7678@gmail.com> | 更新 Week2 GSM8K 与代码生成评测报告
+
+===== nvidia-smi before model loading =====
+Mon May 25 15:00:14 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.195.03             Driver Version: 570.195.03     CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:4E:00.0 Off |                    0 |
+| N/A   26C    P0             64W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:A1:00.0 Off |                    0 |
+| N/A   30C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== disk =====
+Filesystem                           Size  Used Avail Use% Mounted on
+overlay                               80G  7.4G   73G  10% /
+tmpfs                                 64M     0   64M   0% /dev
+mfs#eur-is-1.runpod.net:9421         1.4P  762T  670T  54% /workspace
+shm                                  117G     0  117G   0% /dev/shm
+/dev/nvme0n1p2                        98G   23G   71G  24% /usr/bin/nvidia-smi
+/dev/mapper/ubuntu--vg-runpod--data   14T  1.8T   13T  13% /etc/hosts
+tmpfs                                504G     0  504G   0% /sys/fs/cgroup
+tmpfs                                101G   74M  101G   1% /run/nvidia-persistenced/socket
+tmpfs                                4.0K  4.0K     0 100% /run/nvidia-ctk-hookcfa5d50c-a4a1-4cbe-806c-2d99701e8fbc
+tmpfs                                504G     0  504G   0% /proc/acpi
+tmpfs                                504G     0  504G   0% /proc/scsi
+tmpfs                                504G     0  504G   0% /sys/firmware
+tmpfs                                504G     0  504G   0% /sys/devices/virtual/powercap
+Filesystem                    Size  Used Avail Use% Mounted on
+mfs#eur-is-1.runpod.net:9421  1.4P  762T  670T  54% /workspace
+
+===== workspace size =====
+39M	/workspace/ai-inference-service
+2.9M	/workspace/ai_inference_env_bootstrap_20260525
+512	/workspace/hf_cache
+18G	/workspace/venvs
+
+===== environment =====
+/workspace/venvs/ai-inference-vllm/bin/python
+Python 3.11.10
+pip 26.1.1 from /workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/pip (python 3.11)
+torch 2.9.0+cu128
+vllm 0.11.2
+cuda True 2

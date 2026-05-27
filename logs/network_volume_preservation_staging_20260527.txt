@@ -1,0 +1,133 @@
+===== 日期 =====
+Wed May 27 22:25:03 UTC 2026
+
+===== 本步骤目的 =====
+保存旧 Network Volume 独有 evidence。
+小型 logs/results/audit 文件直接进入 GitHub；Prometheus 原始 TSDB 数据压缩成 archive 保存；不直接提交 monitoring_data 原始目录。
+
+===== 1. 压缩 Prometheus 原始监控数据 =====
+-rw-r--r-- 1 root root 601K May 27 22:25 artifacts/week2_prometheus_raw_monitoring_data_20260527.tar.gz
+
+===== 2. 生成 Prometheus archive 说明 =====
+
+===== 3. 生成最终保存决策清单 =====
+
+===== 4. git add：小型 evidence + 审计清单 + Prometheus archive =====
+
+===== 5. 确认没有加入 monitoring_data 原始目录 =====
+OK: monitoring_data raw files not staged
+
+===== 6. staged 文件检查 =====
+artifacts/week2_prometheus_raw_monitoring_data_20260527.tar.gz
+artifacts/week2_prometheus_raw_monitoring_data_20260527_README.txt
+logs/gpu_memory_after_pod_restart_20260527.txt
+logs/gpu_memory_residue_check_20260527.txt
+logs/gpu_memory_residue_cleanup_attempt_20260527.txt
+logs/gpu_memory_residue_wait_check_20260527.txt
+logs/install_fastapi_root_venv.log
+logs/network_volume_clean_clone_snapshot_20260527.txt
+logs/network_volume_diff_against_github_20260527.txt
+logs/network_volume_file_inventory_20260527.txt
+logs/network_volume_preservation_classification_20260527.txt
+logs/new_pod_after_vllm_pip_freeze_20260525.txt
+logs/new_pod_apt_update_for_grafana_20260525.log
+logs/new_pod_apt_update_grafana_repo_20260525.log
+logs/new_pod_base_cuda_mismatch_20260525.txt
+logs/new_pod_base_import_check_20260525.log
+logs/new_pod_base_pip_freeze_20260525.txt
+logs/new_pod_grafana_prereq_20260525.log
+logs/new_pod_install_base_requirements_20260525.log
+logs/new_pod_install_grafana_20260525.log
+logs/new_pod_install_vllm_20260525.log
+logs/new_pod_pre_model_load_snapshot_20260525.txt
+logs/new_pod_recovery_before_grafana_20260525.txt
+logs/new_pod_seed_oss_fastapi_20260525.log
+logs/new_pod_seed_oss_fastapi_smoke_snapshot_20260525.txt
+logs/new_pod_seed_oss_vllm_64k_launch_20260525.log
+logs/new_pod_seed_oss_vllm_64k_startup_snapshot_20260525.txt
+logs/new_pod_upgrade_pip_20260525.log
+logs/new_pod_vllm_import_cuda_check_20260525.log
+logs/reinstall_base_requirements_clean_env.log
+logs/reinstall_vllm_root_venv.log
+logs/runpod_recovered_volume_status_20260527.txt
+logs/week2_gpu_residue_failure_snapshot_20260527.txt
+logs/week2_gpu_residue_new_pod_failed_snapshot_20260527.txt
+logs/week2_gpu_residue_restart_failed_snapshot_20260527.txt
+logs/week2_gpu_residue_stop_start_failed_snapshot_20260527.txt
+results/new_pod_prometheus_runtime_config_20260525.json
+results/new_pod_prometheus_targets_20260525.json
+results/new_pod_seed_oss_fastapi_health_20260525.json
+results/new_pod_seed_oss_fastapi_health_debug_20260525.txt
+results/new_pod_seed_oss_fastapi_smoke_20260525.txt
+results/new_pod_seed_oss_vllm_metrics_head_20260525.txt
+results/new_pod_seed_oss_vllm_models_20260525.json
+volume_audit/github_clean_files.txt
+volume_audit/github_only_files.txt
+volume_audit/keep_to_github_files.txt
+volume_audit/network_volume_preservation_decision_20260527.txt
+volume_audit/prometheus_raw_archive_files.txt
+volume_audit/volume_code_doc_files.txt
+volume_audit/volume_evidence_files.txt
+volume_audit/volume_only_code_doc_files.txt
+volume_audit/volume_only_evidence_files.txt
+volume_audit/volume_only_file_sizes.txt
+volume_audit/volume_only_files.txt
+volume_audit/volume_repo_files.txt
+
+===== 7. staged 大小粗查 =====
+ ..._prometheus_raw_monitoring_data_20260527.tar.gz |  Bin 0 -> 614593 bytes
+ ...metheus_raw_monitoring_data_20260527_README.txt |   15 +
+ logs/gpu_memory_after_pod_restart_20260527.txt     |   92 ++
+ logs/gpu_memory_residue_check_20260527.txt         |   52 +
+ ...gpu_memory_residue_cleanup_attempt_20260527.txt |   68 ++
+ logs/gpu_memory_residue_wait_check_20260527.txt    |   65 ++
+ logs/install_fastapi_root_venv.log                 |   19 +
+ ...etwork_volume_clean_clone_snapshot_20260527.txt |   80 ++
+ ...network_volume_diff_against_github_20260527.txt |  176 ++++
+ logs/network_volume_file_inventory_20260527.txt    |  347 +++++++
+ ...volume_preservation_classification_20260527.txt |  173 ++++
+ logs/new_pod_after_vllm_pip_freeze_20260525.txt    |  171 ++++
+ logs/new_pod_apt_update_for_grafana_20260525.log   |   24 +
+ logs/new_pod_apt_update_grafana_repo_20260525.log  |   10 +
+ logs/new_pod_base_cuda_mismatch_20260525.txt       |   61 ++
+ logs/new_pod_base_import_check_20260525.log        |   10 +
+ logs/new_pod_base_pip_freeze_20260525.txt          |   66 ++
+ logs/new_pod_grafana_prereq_20260525.log           |   70 ++
+ .../new_pod_install_base_requirements_20260525.log |  238 +++++
+ logs/new_pod_install_grafana_20260525.log          |   24 +
+ logs/new_pod_install_vllm_20260525.log             |  447 +++++++++
+ logs/new_pod_pre_model_load_snapshot_20260525.txt  |   80 ++
+ logs/new_pod_recovery_before_grafana_20260525.txt  |   59 ++
+ logs/new_pod_seed_oss_fastapi_20260525.log         |  837 ++++++++++++++++
+ ...od_seed_oss_fastapi_smoke_snapshot_20260525.txt |   70 ++
+ logs/new_pod_seed_oss_vllm_64k_launch_20260525.log | 1011 ++++++++++++++++++++
+ ...seed_oss_vllm_64k_startup_snapshot_20260525.txt |   42 +
+ logs/new_pod_upgrade_pip_20260525.log              |   27 +
+ logs/new_pod_vllm_import_cuda_check_20260525.log   |    7 +
+ logs/reinstall_base_requirements_clean_env.log     |  239 +++++
+ logs/reinstall_vllm_root_venv.log                  |  515 ++++++++++
+ logs/runpod_recovered_volume_status_20260527.txt   |  167 ++++
+ ...week2_gpu_residue_failure_snapshot_20260527.txt |   71 ++
+ ...pu_residue_new_pod_failed_snapshot_20260527.txt |   89 ++
+ ...pu_residue_restart_failed_snapshot_20260527.txt |   85 ++
+ ...residue_stop_start_failed_snapshot_20260527.txt |   87 ++
+ ...new_pod_prometheus_runtime_config_20260525.json |    1 +
+ results/new_pod_prometheus_targets_20260525.json   |    1 +
+ .../new_pod_seed_oss_fastapi_health_20260525.json  |    1 +
+ ..._pod_seed_oss_fastapi_health_debug_20260525.txt |   20 +
+ .../new_pod_seed_oss_fastapi_smoke_20260525.txt    |   15 +
+ ...new_pod_seed_oss_vllm_metrics_head_20260525.txt |   80 ++
+ results/new_pod_seed_oss_vllm_models_20260525.json |    1 +
+ volume_audit/github_clean_files.txt                |  686 +++++++++++++
+ volume_audit/github_only_files.txt                 |   50 +
+ volume_audit/keep_to_github_files.txt              |   38 +
+ ...twork_volume_preservation_decision_20260527.txt |   20 +
+ volume_audit/prometheus_raw_archive_files.txt      |   16 +
+ volume_audit/volume_code_doc_files.txt             |   85 ++
+ volume_audit/volume_evidence_files.txt             |  604 ++++++++++++
+ volume_audit/volume_only_code_doc_files.txt        |    0
+ volume_audit/volume_only_evidence_files.txt        |   54 ++
+ volume_audit/volume_only_file_sizes.txt            |   54 ++
+ volume_audit/volume_only_files.txt                 |   54 ++
+ volume_audit/volume_repo_files.txt                 |  690 +++++++++++++
+ 55 files changed, 8064 insertions(+)

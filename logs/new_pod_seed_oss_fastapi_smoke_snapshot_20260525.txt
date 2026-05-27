@@ -1,0 +1,70 @@
+===== date =====
+Mon May 25 15:24:19 UTC 2026
+
+===== health =====
+{"status":"ok"}
+===== smoke result =====
+status: 200
+client_latency_seconds: 7.046266
+{
+  "response": "<seed:think>\n用户现在需要我用三句话解释大模型推理，然后说明为什么vLLM适合做推理服务。首先得明确“大模型推理”的定义，应该包括输入处理、模型计算、输出生成这几个核心步骤吧？得简洁，三句话，所以每句要点不同。比如第一句讲核心过程，第二句讲目标，第三句讲关键挑战？\n<seed:cot_budget_reflect>I have used 128 tokens, and there are 384 tokens remaining for use.</seed:cot_budget_reflect>\n\n\n然后是vLLM适合的原因，得回忆vLLM的特点，比如连续批处理",
+  "latency_seconds": 7.038517,
+  "input_chars": 36,
+  "max_new_tokens": 128,
+  "thinking_budget": 512,
+  "backend": "vllm",
+  "input_tokens": 118,
+  "output_tokens": 128,
+  "tokens_per_second": 18.1856,
+  "model_name": "ByteDance-Seed/Seed-OSS-36B-Instruct",
+  "device": "vllm_server"
+}
+
+===== nvidia-smi after fastapi smoke =====
+Mon May 25 15:24:20 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.195.03             Driver Version: 570.195.03     CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:4E:00.0 Off |                    0 |
+| N/A   29C    P0             85W /  400W |   75925MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:A1:00.0 Off |                    0 |
+| N/A   34C    P0             86W /  400W |   75925MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            3452      C   VLLM::Worker_TP0                      75918MiB |
+|    1   N/A  N/A            3453      C   VLLM::Worker_TP1                      75918MiB |
++-----------------------------------------------------------------------------------------+
+
+===== selected vllm metrics =====
+# HELP vllm:num_requests_running Number of requests in model execution batches.
+# TYPE vllm:num_requests_running gauge
+vllm:num_requests_running{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:num_requests_waiting Number of requests waiting to be processed.
+# TYPE vllm:num_requests_waiting gauge
+vllm:num_requests_waiting{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:kv_cache_usage_perc KV-cache usage. 1 means 100 percent usage.
+# TYPE vllm:kv_cache_usage_perc gauge
+vllm:kv_cache_usage_perc{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+# HELP vllm:prefix_cache_queries_total Prefix cache queries, in terms of number of queried tokens.
+# TYPE vllm:prefix_cache_queries_total counter
+vllm:prefix_cache_queries_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 118.0
+# HELP vllm:prefix_cache_hits_total Prefix cache hits, in terms of number of cached tokens.
+# TYPE vllm:prefix_cache_hits_total counter
+vllm:prefix_cache_hits_total{engine="0",model_name="ByteDance-Seed/Seed-OSS-36B-Instruct"} 0.0
+
+===== ports =====
+LISTEN 0      2048         0.0.0.0:8002       0.0.0.0:*    users:(("vllm",pid=2759,fd=26))            
+LISTEN 0      2048         0.0.0.0:8000       0.0.0.0:*    users:(("python",pid=4605,fd=11))          
+LISTEN 0      4096               *:8003             *:*    users:(("VLLM::Worker_TP",pid=3452,fd=63)) 

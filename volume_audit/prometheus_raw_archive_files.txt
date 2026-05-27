@@ -1,0 +1,16 @@
+monitoring_data/prometheus/01KSG6BZAPHW3DXGP57GQVZ6RA/chunks/000001
+monitoring_data/prometheus/01KSG6BZAPHW3DXGP57GQVZ6RA/index
+monitoring_data/prometheus/01KSG6BZAPHW3DXGP57GQVZ6RA/meta.json
+monitoring_data/prometheus/01KSG6BZAPHW3DXGP57GQVZ6RA/tombstones
+monitoring_data/prometheus/01KSG84A3B7TA86BAMPWJPDM99/chunks/000001
+monitoring_data/prometheus/01KSG84A3B7TA86BAMPWJPDM99/index
+monitoring_data/prometheus/01KSG84A3B7TA86BAMPWJPDM99/meta.json
+monitoring_data/prometheus/01KSG84A3B7TA86BAMPWJPDM99/tombstones
+monitoring_data/prometheus/chunks_head/000001
+monitoring_data/prometheus/chunks_head/000002
+monitoring_data/prometheus/chunks_head/000003
+monitoring_data/prometheus/lock
+monitoring_data/prometheus/queries.active
+monitoring_data/prometheus/wal/00000000
+monitoring_data/prometheus/wal/00000001
+monitoring_data/prometheus/wal/00000002

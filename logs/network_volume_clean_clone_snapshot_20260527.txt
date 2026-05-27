@@ -1,0 +1,80 @@
+===== 日期 =====
+Wed May 27 22:20:47 UTC 2026
+
+===== 本步骤目的 =====
+修复 CPU Pod 中 Git safe.directory 权限检查，并创建 GitHub 最新 main 的干净副本。
+后续用 clean clone 与旧 Network Volume 仓库对比，确认哪些文件只存在于旧 volume。
+
+===== 1. 允许当前 root 用户读取旧 volume 仓库 =====
+
+===== 2. 旧 volume 仓库状态复查 =====
+?? logs/gpu_memory_after_pod_restart_20260527.txt
+?? logs/gpu_memory_residue_check_20260527.txt
+?? logs/gpu_memory_residue_cleanup_attempt_20260527.txt
+?? logs/gpu_memory_residue_wait_check_20260527.txt
+?? logs/install_fastapi_root_venv.log
+?? logs/network_volume_clean_clone_snapshot_20260527.txt
+?? logs/network_volume_file_inventory_20260527.txt
+?? logs/new_pod_after_vllm_pip_freeze_20260525.txt
+?? logs/new_pod_apt_update_for_grafana_20260525.log
+?? logs/new_pod_apt_update_grafana_repo_20260525.log
+?? logs/new_pod_base_cuda_mismatch_20260525.txt
+?? logs/new_pod_base_import_check_20260525.log
+?? logs/new_pod_base_pip_freeze_20260525.txt
+?? logs/new_pod_grafana_prereq_20260525.log
+?? logs/new_pod_install_base_requirements_20260525.log
+?? logs/new_pod_install_grafana_20260525.log
+?? logs/new_pod_install_vllm_20260525.log
+?? logs/new_pod_pre_model_load_snapshot_20260525.txt
+?? logs/new_pod_recovery_before_grafana_20260525.txt
+?? logs/new_pod_seed_oss_fastapi_20260525.log
+?? logs/new_pod_seed_oss_fastapi_smoke_snapshot_20260525.txt
+?? logs/new_pod_seed_oss_vllm_64k_launch_20260525.log
+?? logs/new_pod_seed_oss_vllm_64k_startup_snapshot_20260525.txt
+?? logs/new_pod_upgrade_pip_20260525.log
+?? logs/new_pod_vllm_import_cuda_check_20260525.log
+?? logs/reinstall_base_requirements_clean_env.log
+?? logs/reinstall_vllm_root_venv.log
+?? logs/runpod_recovered_volume_status_20260527.txt
+?? logs/week2_gpu_residue_failure_snapshot_20260527.txt
+?? logs/week2_gpu_residue_new_pod_failed_snapshot_20260527.txt
+?? logs/week2_gpu_residue_restart_failed_snapshot_20260527.txt
+?? logs/week2_gpu_residue_stop_start_failed_snapshot_20260527.txt
+?? monitoring_data/
+?? results/new_pod_prometheus_runtime_config_20260525.json
+?? results/new_pod_prometheus_targets_20260525.json
+?? results/new_pod_seed_oss_fastapi_health_20260525.json
+?? results/new_pod_seed_oss_fastapi_health_debug_20260525.txt
+?? results/new_pod_seed_oss_fastapi_smoke_20260525.txt
+?? results/new_pod_seed_oss_vllm_metrics_head_20260525.txt
+?? results/new_pod_seed_oss_vllm_models_20260525.json
+?? volume_audit/
+af6b3af 补充 Week2 batch token workload 调优证据
+8ac0576 补充旧 Pod Week2 实验证据备份
+3114679 补充 Week2 Grafana 实机监控证据
+07e7f66 规范 Week2 剩余实验计划表述
+b945f47 修正 Week2 主报告图表路径
+8995029 清理 Week2 文档残留占位描述
+49340d8 清理 Week2 主性能报告重复与过期描述
+423e3e2 补充 Week2 最终可观测性证据
+
+===== 3. 创建 GitHub clean clone =====
+Cloning into '/workspace/github_clean_ai_inference_service'...
+Updating files:   8% (55/686)Updating files:   9% (62/686)Updating files:  10% (69/686)Updating files:  11% (76/686)Updating files:  12% (83/686)Updating files:  13% (90/686)Updating files:  14% (97/686)Updating files:  15% (103/686)Updating files:  16% (110/686)Updating files:  17% (117/686)Updating files:  18% (124/686)Updating files:  18% (125/686)Updating files:  19% (131/686)Updating files:  20% (138/686)Updating files:  21% (145/686)Updating files:  22% (151/686)Updating files:  23% (158/686)Updating files:  24% (165/686)Updating files:  25% (172/686)Updating files:  25% (177/686)Updating files:  26% (179/686)Updating files:  27% (186/686)Updating files:  28% (193/686)Updating files:  29% (199/686)Updating files:  30% (206/686)Updating files:  30% (208/686)Updating files:  31% (213/686)Updating files:  32% (220/686)Updating files:  33% (227/686)Updating files:  34% (234/686)Updating files:  35% (241/686)Updating files:  36% (247/686)Updating files:  37% (254/686)Updating files:  38% (261/686)Updating files:  39% (268/686)Updating files:  40% (275/686)Updating files:  41% (282/686)Updating files:  42% (289/686)Updating files:  43% (295/686)Updating files:  44% (302/686)Updating files:  45% (309/686)Updating files:  46% (316/686)Updating files:  47% (323/686)Updating files:  48% (330/686)Updating files:  49% (337/686)Updating files:  50% (343/686)Updating files:  51% (350/686)Updating files:  52% (357/686)Updating files:  53% (364/686)Updating files:  54% (371/686)Updating files:  55% (378/686)Updating files:  56% (385/686)Updating files:  57% (392/686)Updating files:  58% (398/686)Updating files:  59% (405/686)Updating files:  59% (408/686)Updating files:  60% (412/686)Updating files:  61% (419/686)Updating files:  62% (426/686)Updating files:  63% (433/686)Updating files:  64% (440/686)Updating files:  65% (446/686)Updating files:  66% (453/686)Updating files:  67% (460/686)Updating files:  68% (467/686)Updating files:  69% (474/686)Updating files:  70% (481/686)Updating files:  71% (488/686)Updating files:  72% (494/686)Updating files:  73% (501/686)Updating files:  74% (508/686)Updating files:  75% (515/686)Updating files:  76% (522/686)Updating files:  77% (529/686)Updating files:  78% (536/686)Updating files:  79% (542/686)Updating files:  80% (549/686)Updating files:  81% (556/686)Updating files:  82% (563/686)Updating files:  83% (570/686)Updating files:  84% (577/686)Updating files:  85% (584/686)Updating files:  86% (590/686)Updating files:  87% (597/686)Updating files:  88% (604/686)Updating files:  89% (611/686)Updating files:  90% (618/686)Updating files:  91% (625/686)Updating files:  92% (632/686)Updating files:  93% (638/686)Updating files:  94% (645/686)Updating files:  95% (652/686)Updating files:  96% (659/686)Updating files:  97% (666/686)Updating files:  98% (673/686)Updating files:  99% (680/686)Updating files: 100% (686/686)Updating files: 100% (686/686), done.
+
+===== 4. GitHub clean clone 状态 =====
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+fb48ae1 清理旧 volume 半截本地归档记录
+64a17a5 补充 Week2 workload-aware routing policy 抽象
+dc00221 规范 Week2 量化可行性文档边界表述
+f360edc 补充 Week2 batch-token 最终远端同步状态
+c749860 补充 Week2 batch-token 推送同步证据
+04641c7 补充 Week2 batch-token 调优报告与 workload-aware batching 证据
+af6b3af 补充 Week2 batch token workload 调优证据
+8ac0576 补充旧 Pod Week2 实验证据备份
+
+===== 5. 生成 GitHub clean 文件清单 =====
+686 /workspace/ai-inference-service/volume_audit/github_clean_files.txt

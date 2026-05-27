@@ -1,0 +1,71 @@
+===== 日期 =====
+Wed May 27 21:48:05 UTC 2026
+
+===== 本步骤目的 =====
+保存当前 Pod GPU0 残留显存异常证据。
+当前 GPU0 被 [Not Found] PID 1800729 占用约 67GB，容器内无法 kill，GPU reset 不支持，等待 90 秒后仍未释放。
+该 Pod 当前不能用于 Seed-OSS-36B TP=2 推理实验。
+
+===== 原始证据文件 =====
+-rw-rw-rw- 1 root root 3.7K May 27 21:42 /workspace/gpu_memory_residue_check_20260527.txt
+-rw-rw-rw- 1 root root 4.7K May 27 21:43 /workspace/gpu_memory_residue_cleanup_attempt_20260527.txt
+-rw-rw-rw- 1 root root 4.9K May 27 21:46 /workspace/gpu_memory_residue_wait_check_20260527.txt
+
+===== 当前 GPU 状态 =====
+Wed May 27 21:48:05 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 565.57.01              Driver Version: 565.57.01      CUDA Version: 12.7     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:10:00.0 Off |                    0 |
+| N/A   30C    P0             88W /  400W |   67294MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:48:00.0 Off |                    0 |
+| N/A   29C    P0             67W /  400W |       1MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
++-----------------------------------------------------------------------------------------+
+pid, process_name, used_gpu_memory [MiB]
+1800729, [Not Found], 67284 MiB
+
+===== 当前 git 状态 =====
+?? logs/install_fastapi_root_venv.log
+?? logs/new_pod_after_vllm_pip_freeze_20260525.txt
+?? logs/new_pod_apt_update_for_grafana_20260525.log
+?? logs/new_pod_apt_update_grafana_repo_20260525.log
+?? logs/new_pod_base_cuda_mismatch_20260525.txt
+?? logs/new_pod_base_import_check_20260525.log
+?? logs/new_pod_base_pip_freeze_20260525.txt
+?? logs/new_pod_grafana_prereq_20260525.log
+?? logs/new_pod_install_base_requirements_20260525.log
+?? logs/new_pod_install_grafana_20260525.log
+?? logs/new_pod_install_vllm_20260525.log
+?? logs/new_pod_pre_model_load_snapshot_20260525.txt
+?? logs/new_pod_recovery_before_grafana_20260525.txt
+?? logs/new_pod_seed_oss_fastapi_20260525.log
+?? logs/new_pod_seed_oss_fastapi_smoke_snapshot_20260525.txt
+?? logs/new_pod_seed_oss_vllm_64k_launch_20260525.log
+?? logs/new_pod_seed_oss_vllm_64k_startup_snapshot_20260525.txt
+?? logs/new_pod_upgrade_pip_20260525.log
+?? logs/new_pod_vllm_import_cuda_check_20260525.log
+?? logs/reinstall_base_requirements_clean_env.log
+?? logs/reinstall_vllm_root_venv.log
+?? logs/week2_gpu_residue_failure_snapshot_20260527.txt
+?? monitoring_data/
+?? results/new_pod_prometheus_runtime_config_20260525.json
+?? results/new_pod_prometheus_targets_20260525.json
+?? results/new_pod_seed_oss_fastapi_health_20260525.json
+?? results/new_pod_seed_oss_fastapi_health_debug_20260525.txt
+?? results/new_pod_seed_oss_fastapi_smoke_20260525.txt
+?? results/new_pod_seed_oss_vllm_metrics_head_20260525.txt
+?? results/new_pod_seed_oss_vllm_models_20260525.json

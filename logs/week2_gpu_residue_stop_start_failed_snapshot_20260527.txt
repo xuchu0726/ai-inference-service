@@ -1,0 +1,87 @@
+===== 日期 =====
+Wed May 27 21:58:48 UTC 2026
+
+===== 本步骤目的 =====
+保存 Stop/Start 后 GPU0 残留显存仍未释放的最终证据。
+Restart、等待、kill、gpu-reset、Stop/Start 均未释放 GPU0 残留显存。
+当前 Pod 所在宿主机 GPU0 处于不可用状态，不适合继续 Seed-OSS-36B TP=2 实验。
+
+===== 当前 GPU 状态 =====
+Wed May 27 21:58:48 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 565.57.01              Driver Version: 565.57.01      CUDA Version: 12.7     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:10:00.0 Off |                    0 |
+| N/A   30C    P0             88W /  400W |   67294MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:48:00.0 Off |                    0 |
+| N/A   29C    P0             67W /  400W |       1MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
++-----------------------------------------------------------------------------------------+
+pid, process_name, used_gpu_memory [MiB]
+1800729, [Not Found], 67284 MiB
+
+===== 已有 GPU 异常证据 =====
+-rw-rw-rw- 1 root root 5.3K May 27 21:50 /workspace/gpu_memory_after_pod_restart_20260527.txt
+-rw-rw-rw- 1 root root 5.7K May 27 21:54 /workspace/gpu_memory_after_ready_check_20260527.txt
+-rw-rw-rw- 1 root root 5.7K May 27 21:58 /workspace/gpu_memory_after_stop_start_20260527.txt
+-rw-rw-rw- 1 root root 3.7K May 27 21:42 /workspace/gpu_memory_residue_check_20260527.txt
+-rw-rw-rw- 1 root root 4.7K May 27 21:43 /workspace/gpu_memory_residue_cleanup_attempt_20260527.txt
+-rw-rw-rw- 1 root root 4.9K May 27 21:46 /workspace/gpu_memory_residue_wait_check_20260527.txt
+-rw-rw-rw- 1 root root 8.9K May 27 21:41 /workspace/runpod_recovered_volume_status_20260527.txt
+
+===== /workspace 挂载确认 =====
+Filesystem                    Size  Used Avail Use% Mounted on
+mfs#eur-is-1.runpod.net:9421  1.4P  745T  687T  53% /workspace
+68G	/workspace/hf_cache
+
+===== git 状态 =====
+?? logs/gpu_memory_after_pod_restart_20260527.txt
+?? logs/gpu_memory_residue_check_20260527.txt
+?? logs/gpu_memory_residue_cleanup_attempt_20260527.txt
+?? logs/gpu_memory_residue_wait_check_20260527.txt
+?? logs/install_fastapi_root_venv.log
+?? logs/new_pod_after_vllm_pip_freeze_20260525.txt
+?? logs/new_pod_apt_update_for_grafana_20260525.log
+?? logs/new_pod_apt_update_grafana_repo_20260525.log
+?? logs/new_pod_base_cuda_mismatch_20260525.txt
+?? logs/new_pod_base_import_check_20260525.log
+?? logs/new_pod_base_pip_freeze_20260525.txt
+?? logs/new_pod_grafana_prereq_20260525.log
+?? logs/new_pod_install_base_requirements_20260525.log
+?? logs/new_pod_install_grafana_20260525.log
+?? logs/new_pod_install_vllm_20260525.log
+?? logs/new_pod_pre_model_load_snapshot_20260525.txt
+?? logs/new_pod_recovery_before_grafana_20260525.txt
+?? logs/new_pod_seed_oss_fastapi_20260525.log
+?? logs/new_pod_seed_oss_fastapi_smoke_snapshot_20260525.txt
+?? logs/new_pod_seed_oss_vllm_64k_launch_20260525.log
+?? logs/new_pod_seed_oss_vllm_64k_startup_snapshot_20260525.txt
+?? logs/new_pod_upgrade_pip_20260525.log
+?? logs/new_pod_vllm_import_cuda_check_20260525.log
+?? logs/reinstall_base_requirements_clean_env.log
+?? logs/reinstall_vllm_root_venv.log
+?? logs/runpod_recovered_volume_status_20260527.txt
+?? logs/week2_gpu_residue_failure_snapshot_20260527.txt
+?? logs/week2_gpu_residue_restart_failed_snapshot_20260527.txt
+?? logs/week2_gpu_residue_stop_start_failed_snapshot_20260527.txt
+?? monitoring_data/
+?? results/new_pod_prometheus_runtime_config_20260525.json
+?? results/new_pod_prometheus_targets_20260525.json
+?? results/new_pod_seed_oss_fastapi_health_20260525.json
+?? results/new_pod_seed_oss_fastapi_health_debug_20260525.txt
+?? results/new_pod_seed_oss_fastapi_smoke_20260525.txt
+?? results/new_pod_seed_oss_vllm_metrics_head_20260525.txt
+?? results/new_pod_seed_oss_vllm_models_20260525.json

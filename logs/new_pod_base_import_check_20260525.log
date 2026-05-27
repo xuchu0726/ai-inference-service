@@ -1,0 +1,10 @@
+/workspace/venvs/ai-inference-vllm/lib/python3.11/site-packages/torch/cuda/__init__.py:187: UserWarning: CUDA initialization: The NVIDIA driver on your system is too old (found version 12080). Please update your GPU driver by downloading and installing a new version from the URL: http://www.nvidia.com/Download/index.aspx Alternatively, go to: https://pytorch.org to install a PyTorch version that has been compiled with your version of the CUDA driver. (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:119.)
+  return torch._C._cuda_getDeviceCount() > 0
+python: 3.11.10 (main, Sep  7 2024, 18:35:41) [GCC 11.4.0]
+fastapi: 0.136.3
+uvicorn: 0.48.0
+pydantic: 2.13.4
+requests: 2.34.2
+torch: 2.12.0+cu130
+cuda available: False
+cuda device count: 2
