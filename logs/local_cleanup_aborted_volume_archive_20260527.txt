@@ -1,0 +1,19 @@
+===== 日期 =====
+Wed May 27 22:34:47 BST 2026
+
+===== 本步骤目的 =====
+清理刚才从旧 RunPod Network Volume 半截下载到本地的归档内容。
+原因：当前旧欧洲区 Network Volume 已重新挂载到 2×A100 Pod，本地半截归档不再需要，避免污染 GitHub 仓库。
+
+===== 删除前 git 状态 =====
+?? external_archives/
+?? logs/local_cleanup_aborted_volume_archive_20260527.txt
+?? logs/runpod_archive_after_interrupt_check_20260527.txt
+?? logs/runpod_old_volume_archive_download_20260527.txt
+
+===== 删除半截 external_archives =====
+
+===== 删除本轮本地下载/归档相关日志 =====
+
+===== 删除后 git 状态 =====
+?? logs/local_cleanup_aborted_volume_archive_20260527.txt
