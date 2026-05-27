@@ -117,6 +117,7 @@ Evidence：
 |---|---|
 | Week2 主性能报告 | docs/week2_performance_optimization_report.md |
 | Batch-Token 调优专项报告 | docs/week2_batch_token_tuning_report.md |
+| Workload-Aware Routing Policy 抽象说明 | docs/week2_routing_policy_abstraction.md |
 | 长上下文汇总表 | docs/week2_context_gradient_summary.md |
 | Prefix Cache 分析 | docs/week2_prefix_cache_investigation_summary.md |
 | 64K RunPod 原始证据 | evidence/week2_64k_context/ |

@@ -1,0 +1,29 @@
+===== 日期 =====
+2026年 5月27日 星期三 11时27分56秒 BST
+
+===== 本步骤目的 =====
+验证 workload-aware routing policy abstraction 是否能按预期选择 serving profile。
+该测试只验证策略模块本身，不启动 vLLM，不启动 FastAPI，不代表已经完成生产级 gateway routing。
+
+===== Python 版本 =====
+Python 3.13.5
+
+===== pytest 版本 =====
+pytest 9.0.2
+
+===== 执行 routing 单元测试 =====
+...                                                                      [100%]
+3 passed in 0.02s
+
+===== 当前 git 状态 =====
+位于分支 main
+您的分支与上游分支 'origin/main' 一致。
+
+未跟踪的文件:
+  （使用 "git add <文件>..." 以包含要提交的内容）
+	app/routing.py
+	logs/week2_routing_policy_initial_snapshot_20260527.txt
+	logs/week2_routing_policy_test_snapshot_20260527.txt
+	tests/test_routing.py
+
+提交为空，但是存在尚未跟踪的文件（使用 "git add" 建立跟踪）

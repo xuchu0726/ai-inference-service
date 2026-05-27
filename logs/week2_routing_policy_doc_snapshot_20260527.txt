@@ -1,0 +1,45 @@
+===== 日期 =====
+2026年 5月27日 星期三 11时31分14秒 BST
+
+===== 本步骤目的 =====
+重新创建 workload-aware routing policy abstraction 说明文档。
+本次使用安全 heredoc，避免 Markdown 代码围栏导致终端卡住。
+
+===== 新增文档存在性 =====
+-rw-r--r--  1 xc1225  staff   2.8K  5 27 11:31 docs/week2_routing_policy_abstraction.md
+
+===== 新增文档结构 =====
+1:# Workload-Aware Routing Policy 抽象说明
+3:## 1. 背景
+13:## 2. 当前实现范围
+32:## 3. 工程边界
+50:## 4. 测试结果
+73:## 5. 后续扩展方向
+
+===== 关键边界表述检查 =====
+7:在 short-output c8 burst 场景下，32768 profile 相比 8192 将 QPS 从 1.921 提升到 2.371，并将 P95 latency 从 7.350s 降低到 3.415s。
+9:在 long-output c4 decode-heavy 场景下，8192 profile 更稳健，P95 latency 为 13.258s，而 32768 为 16.406s。
+29:| short_output_burst | short_output_burst_32768 | 32768 |
+30:| long_output_or_mixed | long_output_or_mixed_8192 | 8192 |
+34:当前实现不是完整生产级 gateway routing，也没有启动多个 vLLM 实例。
+42:当前不声明以下能力已经完成：
+58:1. high-concurrency short-output 请求选择 32768 profile；
+59:2. long-output 请求选择 8192 profile；
+60:3. long-context 请求选择 8192 profile。
+64:    3 passed in 0.02s
+79:1. 启动多个 vLLM serving profile，例如 8192 profile 和 32768 profile；
+
+===== 当前 git 状态 =====
+位于分支 main
+您的分支与上游分支 'origin/main' 一致。
+
+未跟踪的文件:
+  （使用 "git add <文件>..." 以包含要提交的内容）
+	app/routing.py
+	docs/week2_routing_policy_abstraction.md
+	logs/week2_routing_policy_doc_snapshot_20260527.txt
+	logs/week2_routing_policy_initial_snapshot_20260527.txt
+	logs/week2_routing_policy_test_snapshot_20260527.txt
+	tests/test_routing.py
+
+提交为空，但是存在尚未跟踪的文件（使用 "git add" 建立跟踪）

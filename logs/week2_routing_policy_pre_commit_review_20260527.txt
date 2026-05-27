@@ -1,0 +1,54 @@
+===== 日期 =====
+2026年 5月27日 星期三 11时32分14秒 BST
+
+===== 本步骤目的 =====
+提交前检查 workload-aware routing policy abstraction 相关改动。
+确认只提交 routing policy 模块、测试、说明文档、文档引用和 evidence。
+
+===== staged 文件列表 =====
+app/routing.py
+docs/week2_batch_token_tuning_report.md
+docs/week2_delivery_summary.md
+docs/week2_routing_policy_abstraction.md
+logs/week2_routing_policy_doc_integration_snapshot_20260527.txt
+logs/week2_routing_policy_doc_snapshot_20260527.txt
+logs/week2_routing_policy_initial_snapshot_20260527.txt
+logs/week2_routing_policy_test_snapshot_20260527.txt
+tests/test_routing.py
+
+===== staged diff 统计 =====
+ app/routing.py                                     |  72 ++++++++++
+ docs/week2_batch_token_tuning_report.md            |  34 ++++-
+ docs/week2_delivery_summary.md                     |   1 +
+ docs/week2_routing_policy_abstraction.md           |  82 +++++++++++
+ ...ng_policy_doc_integration_snapshot_20260527.txt |  58 ++++++++
+ .../week2_routing_policy_doc_snapshot_20260527.txt |  45 ++++++
+ ...k2_routing_policy_initial_snapshot_20260527.txt | 154 +++++++++++++++++++++
+ ...week2_routing_policy_test_snapshot_20260527.txt |  29 ++++
+ tests/test_routing.py                              |  55 ++++++++
+ 9 files changed, 525 insertions(+), 5 deletions(-)
+
+===== routing 测试复核 =====
+...                                                                      [100%]
+3 passed in 0.03s
+
+===== 当前 git 状态 =====
+位于分支 main
+您的分支与上游分支 'origin/main' 一致。
+
+要提交的变更：
+  （使用 "git restore --staged <文件>..." 以取消暂存）
+	新文件：   app/routing.py
+	修改：     docs/week2_batch_token_tuning_report.md
+	修改：     docs/week2_delivery_summary.md
+	新文件：   docs/week2_routing_policy_abstraction.md
+	新文件：   logs/week2_routing_policy_doc_integration_snapshot_20260527.txt
+	新文件：   logs/week2_routing_policy_doc_snapshot_20260527.txt
+	新文件：   logs/week2_routing_policy_initial_snapshot_20260527.txt
+	新文件：   logs/week2_routing_policy_test_snapshot_20260527.txt
+	新文件：   tests/test_routing.py
+
+未跟踪的文件:
+  （使用 "git add <文件>..." 以包含要提交的内容）
+	logs/week2_routing_policy_pre_commit_review_20260527.txt
+

@@ -142,7 +142,31 @@ long-output c4 场景用于验证较大的 batch-token budget 在长输出 decod
 - figures/week2/batch_tokens/week2_batch_tokens_workload_p95_summary.png
 - figures/week2/batch_tokens/week2_batch_tokens_profile_decision.png
 
-## 8. 动态批处理的工程边界说明
+## 8. Workload-Aware Routing Policy 抽象
+
+在 batch-token tuning 实验完成后，本项目进一步将 workload-aware serving profile 结论沉淀为轻量 routing policy abstraction。
+
+新增代码模块：
+
+- `app/routing.py`
+- `tests/test_routing.py`
+
+该模块根据 `prompt_chars`、`max_new_tokens` 和 `concurrency_hint` 对请求进行 workload classification，并返回推荐 serving profile：
+
+| Workload | 推荐 profile | max_num_batched_tokens |
+|---|---|---:|
+| short_output_burst | short_output_burst_32768 | 32768 |
+| long_output_or_mixed | long_output_or_mixed_8192 | 8192 |
+
+单元测试已覆盖 short-output burst、long-output 和 long-context 三类请求，测试结果为 `3 passed in 0.02s`。
+
+该实现不代表已经完成生产级 gateway routing，也没有启动多个 vLLM 实例。当前价值在于把实测 batch-token tuning 结论转化为可测试、可扩展的工程策略模块，为后续多 serving profile、网关路由和服务降级策略提供代码基础。
+
+详细说明见：
+
+- `docs/week2_routing_policy_abstraction.md`
+
+## 9. 动态批处理的工程边界说明
 
 本实验完成的是 profile 级别的 batch-token 调优和 workload-aware serving profile 分析，不等同于完整的运行时动态批处理调度器。
 
@@ -157,7 +181,7 @@ long-output c4 场景用于验证较大的 batch-token budget 在长输出 decod
 
 因此，当前结论应表述为：已完成 workload-aware batching policy foundation，而不是已实现完整生产级运行时动态批处理调度。
 
-## 9. 工程意义与后续扩展方向
+## 10. 工程意义与后续扩展方向
 
 该实验对应大模型推理服务中的多个核心工程能力。
 
@@ -173,7 +197,7 @@ long-output c4 场景用于验证较大的 batch-token budget 在长输出 decod
 
 该实验的价值不在于单纯修改一个参数，而在于基于真实 Seed-OSS-36B serving 数据，识别不同 workload 下的调度差异，并形成可解释、可复现、可继续工程化的 serving profile 策略。
 
-## 10. 局限性
+## 11. 局限性
 
 本实验仍存在以下限制：
 
@@ -185,7 +209,7 @@ long-output c4 场景用于验证较大的 batch-token budget 在长输出 decod
 6. 32768 在 short-output burst 场景表现更好，但不能推广为所有场景下的最优配置；
 7. long-output 场景只比较了 8192 和 32768，后续仍可加入更多输出长度和并发组合进行验证。
 
-## 11. 结论
+## 12. 结论
 
 本专项实验完成了 Seed-OSS-36B-Instruct 推理服务在 vLLM serving 下的 batch-token tuning 与 workload-aware batching 分析。
 
@@ -198,7 +222,7 @@ long-output c4 场景用于验证较大的 batch-token budget 在长输出 decod
 5. 对于生产化推理服务，更合理的动态批处理实现方式是多 serving profile 加网关路由，而不是运行时热修改单个 vLLM engine；
 6. 本实验为后续网关路由、服务降级、高可用架构和压测验证提供了数据基础。
 
-## 12. Evidence 清单
+## 13. Evidence 清单
 
 | 类型 | 路径 |
 |---|---|

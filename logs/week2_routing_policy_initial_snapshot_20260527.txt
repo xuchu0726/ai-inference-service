@@ -1,0 +1,154 @@
+===== 日期 =====
+2026年 5月27日 星期三 11时27分28秒 BST
+
+===== 本步骤目的 =====
+创建轻量 workload-aware routing policy abstraction。
+该步骤不声称已经启动多 vLLM 实例，也不声称完成生产级 gateway routing。
+目标是把 batch-token tuning 的实测结论沉淀为可测试的工程策略模块。
+
+===== 新增文件 =====
+-rw-r--r--  1 xc1225  staff   1.9K  5 27 11:27 app/routing.py
+-rw-r--r--  1 xc1225  staff   1.4K  5 27 11:27 tests/test_routing.py
+
+===== routing.py 预览 =====
+from dataclasses import dataclass
+from enum import Enum
+
+
+class WorkloadType(str, Enum):
+    SHORT_OUTPUT_BURST = "short_output_burst"
+    LONG_OUTPUT_OR_MIXED = "long_output_or_mixed"
+
+
+@dataclass(frozen=True)
+class ServingProfile:
+    name: str
+    max_num_batched_tokens: int
+    reason: str
+
+
+SHORT_OUTPUT_BURST_PROFILE = ServingProfile(
+    name="short_output_burst_32768",
+    max_num_batched_tokens=32768,
+    reason=(
+        "Short-output burst workload favors a larger batch-token budget. "
+        "Week2 measurements showed QPS improving from 1.921 to 2.371 and "
+        "P95 latency decreasing from 7.350s to 3.415s under c8 burst."
+    ),
+)
+
+LONG_OUTPUT_OR_MIXED_PROFILE = ServingProfile(
+    name="long_output_or_mixed_8192",
+    max_num_batched_tokens=8192,
+    reason=(
+        "Long-output or mixed workload favors a more conservative batch-token "
+        "budget. Week2 measurements showed lower P95 latency with 8192 "
+        "than 32768 under long-output c4."
+    ),
+)
+
+
+def classify_workload(
+    prompt_chars: int,
+    max_new_tokens: int,
+    concurrency_hint: int | None = None,
+) -> WorkloadType:
+    if max_new_tokens >= 384:
+        return WorkloadType.LONG_OUTPUT_OR_MIXED
+
+    if prompt_chars >= 8000:
+        return WorkloadType.LONG_OUTPUT_OR_MIXED
+
+    if concurrency_hint is not None and concurrency_hint >= 8 and max_new_tokens <= 160:
+        return WorkloadType.SHORT_OUTPUT_BURST
+
+    if max_new_tokens <= 160:
+        return WorkloadType.SHORT_OUTPUT_BURST
+
+    return WorkloadType.LONG_OUTPUT_OR_MIXED
+
+
+def select_serving_profile(
+    prompt_chars: int,
+    max_new_tokens: int,
+    concurrency_hint: int | None = None,
+) -> ServingProfile:
+    workload = classify_workload(
+        prompt_chars=prompt_chars,
+        max_new_tokens=max_new_tokens,
+        concurrency_hint=concurrency_hint,
+    )
+
+    if workload == WorkloadType.SHORT_OUTPUT_BURST:
+        return SHORT_OUTPUT_BURST_PROFILE
+
+    return LONG_OUTPUT_OR_MIXED_PROFILE
+
+===== test_routing.py 预览 =====
+from app.routing import (
+    WorkloadType,
+    classify_workload,
+    select_serving_profile,
+)
+
+
+def test_short_output_burst_profile_for_high_concurrency_short_output():
+    workload = classify_workload(
+        prompt_chars=500,
+        max_new_tokens=128,
+        concurrency_hint=8,
+    )
+    profile = select_serving_profile(
+        prompt_chars=500,
+        max_new_tokens=128,
+        concurrency_hint=8,
+    )
+
+    assert workload == WorkloadType.SHORT_OUTPUT_BURST
+    assert profile.name == "short_output_burst_32768"
+    assert profile.max_num_batched_tokens == 32768
+
+
+def test_long_output_profile_for_large_generation_budget():
+    workload = classify_workload(
+        prompt_chars=500,
+        max_new_tokens=512,
+        concurrency_hint=4,
+    )
+    profile = select_serving_profile(
+        prompt_chars=500,
+        max_new_tokens=512,
+        concurrency_hint=4,
+    )
+
+    assert workload == WorkloadType.LONG_OUTPUT_OR_MIXED
+    assert profile.name == "long_output_or_mixed_8192"
+    assert profile.max_num_batched_tokens == 8192
+
+
+def test_long_context_profile_for_large_prompt():
+    workload = classify_workload(
+        prompt_chars=12000,
+        max_new_tokens=128,
+        concurrency_hint=4,
+    )
+    profile = select_serving_profile(
+        prompt_chars=12000,
+        max_new_tokens=128,
+        concurrency_hint=4,
+    )
+
+    assert workload == WorkloadType.LONG_OUTPUT_OR_MIXED
+    assert profile.max_num_batched_tokens == 8192
+
+===== 当前 git 状态 =====
+位于分支 main
+您的分支与上游分支 'origin/main' 一致。
+
+未跟踪的文件:
+  （使用 "git add <文件>..." 以包含要提交的内容）
+	app/routing.py
+	logs/week2_routing_policy_initial_snapshot_20260527.txt
+	tests/test_routing.py
+
+提交为空，但是存在尚未跟踪的文件（使用 "git add" 建立跟踪）
