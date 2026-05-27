@@ -1,0 +1,161 @@
+===== 日期 =====
+Wed May 27 22:26:02 UTC 2026
+
+===== 本步骤目的 =====
+提交旧 Network Volume 独有 evidence，并在推送前同步 GitHub 最新 main。
+当前旧 volume 仓库落后于 GitHub，因此采用 commit -> fetch -> rebase -> push，避免覆盖 GitHub 上较新的 batch-token/routing 成果。
+
+===== 1. 补充 staging 本步骤日志 =====
+
+===== 2. 再次确认没有 staged monitoring_data 原始目录 =====
+OK: monitoring_data raw files not staged
+
+===== 3. staged 文件数量与关键文件 =====
+56
+artifacts/week2_prometheus_raw_monitoring_data_20260527.tar.gz
+artifacts/week2_prometheus_raw_monitoring_data_20260527_README.txt
+logs/gpu_memory_after_pod_restart_20260527.txt
+logs/gpu_memory_residue_check_20260527.txt
+logs/gpu_memory_residue_cleanup_attempt_20260527.txt
+logs/gpu_memory_residue_wait_check_20260527.txt
+logs/install_fastapi_root_venv.log
+logs/network_volume_clean_clone_snapshot_20260527.txt
+logs/network_volume_diff_against_github_20260527.txt
+logs/network_volume_file_inventory_20260527.txt
+logs/network_volume_preservation_classification_20260527.txt
+logs/network_volume_preservation_staging_20260527.txt
+logs/new_pod_after_vllm_pip_freeze_20260525.txt
+logs/new_pod_apt_update_for_grafana_20260525.log
+logs/new_pod_apt_update_grafana_repo_20260525.log
+logs/new_pod_base_cuda_mismatch_20260525.txt
+logs/new_pod_base_import_check_20260525.log
+logs/new_pod_base_pip_freeze_20260525.txt
+logs/new_pod_grafana_prereq_20260525.log
+logs/new_pod_install_base_requirements_20260525.log
+logs/new_pod_install_grafana_20260525.log
+logs/new_pod_install_vllm_20260525.log
+logs/new_pod_pre_model_load_snapshot_20260525.txt
+logs/new_pod_recovery_before_grafana_20260525.txt
+logs/new_pod_seed_oss_fastapi_20260525.log
+logs/new_pod_seed_oss_fastapi_smoke_snapshot_20260525.txt
+logs/new_pod_seed_oss_vllm_64k_launch_20260525.log
+logs/new_pod_seed_oss_vllm_64k_startup_snapshot_20260525.txt
+logs/new_pod_upgrade_pip_20260525.log
+logs/new_pod_vllm_import_cuda_check_20260525.log
+logs/reinstall_base_requirements_clean_env.log
+logs/reinstall_vllm_root_venv.log
+logs/runpod_recovered_volume_status_20260527.txt
+logs/week2_gpu_residue_failure_snapshot_20260527.txt
+logs/week2_gpu_residue_new_pod_failed_snapshot_20260527.txt
+logs/week2_gpu_residue_restart_failed_snapshot_20260527.txt
+logs/week2_gpu_residue_stop_start_failed_snapshot_20260527.txt
+results/new_pod_prometheus_runtime_config_20260525.json
+results/new_pod_prometheus_targets_20260525.json
+results/new_pod_seed_oss_fastapi_health_20260525.json
+results/new_pod_seed_oss_fastapi_health_debug_20260525.txt
+results/new_pod_seed_oss_fastapi_smoke_20260525.txt
+results/new_pod_seed_oss_vllm_metrics_head_20260525.txt
+results/new_pod_seed_oss_vllm_models_20260525.json
+volume_audit/github_clean_files.txt
+volume_audit/github_only_files.txt
+volume_audit/keep_to_github_files.txt
+volume_audit/network_volume_preservation_decision_20260527.txt
+volume_audit/prometheus_raw_archive_files.txt
+volume_audit/volume_code_doc_files.txt
+volume_audit/volume_evidence_files.txt
+volume_audit/volume_only_code_doc_files.txt
+volume_audit/volume_only_evidence_files.txt
+volume_audit/volume_only_file_sizes.txt
+volume_audit/volume_only_files.txt
+volume_audit/volume_repo_files.txt
+
+===== 4. 提交 =====
+[main f3f97dc] 保存旧 Network Volume 独有实验记录
+ 56 files changed, 8197 insertions(+)
+ create mode 100644 artifacts/week2_prometheus_raw_monitoring_data_20260527.tar.gz
+ create mode 100644 artifacts/week2_prometheus_raw_monitoring_data_20260527_README.txt
+ create mode 100644 logs/gpu_memory_after_pod_restart_20260527.txt
+ create mode 100644 logs/gpu_memory_residue_check_20260527.txt
+ create mode 100644 logs/gpu_memory_residue_cleanup_attempt_20260527.txt
+ create mode 100644 logs/gpu_memory_residue_wait_check_20260527.txt
+ create mode 100644 logs/install_fastapi_root_venv.log
+ create mode 100644 logs/network_volume_clean_clone_snapshot_20260527.txt
+ create mode 100644 logs/network_volume_diff_against_github_20260527.txt
+ create mode 100644 logs/network_volume_file_inventory_20260527.txt
+ create mode 100644 logs/network_volume_preservation_classification_20260527.txt
+ create mode 100644 logs/network_volume_preservation_staging_20260527.txt
+ create mode 100644 logs/new_pod_after_vllm_pip_freeze_20260525.txt
+ create mode 100644 logs/new_pod_apt_update_for_grafana_20260525.log
+ create mode 100644 logs/new_pod_apt_update_grafana_repo_20260525.log
+ create mode 100644 logs/new_pod_base_cuda_mismatch_20260525.txt
+ create mode 100644 logs/new_pod_base_import_check_20260525.log
+ create mode 100644 logs/new_pod_base_pip_freeze_20260525.txt
+ create mode 100644 logs/new_pod_grafana_prereq_20260525.log
+ create mode 100644 logs/new_pod_install_base_requirements_20260525.log
+ create mode 100644 logs/new_pod_install_grafana_20260525.log
+ create mode 100644 logs/new_pod_install_vllm_20260525.log
+ create mode 100644 logs/new_pod_pre_model_load_snapshot_20260525.txt
+ create mode 100644 logs/new_pod_recovery_before_grafana_20260525.txt
+ create mode 100644 logs/new_pod_seed_oss_fastapi_20260525.log
+ create mode 100644 logs/new_pod_seed_oss_fastapi_smoke_snapshot_20260525.txt
+ create mode 100644 logs/new_pod_seed_oss_vllm_64k_launch_20260525.log
+ create mode 100644 logs/new_pod_seed_oss_vllm_64k_startup_snapshot_20260525.txt
+ create mode 100644 logs/new_pod_upgrade_pip_20260525.log
+ create mode 100644 logs/new_pod_vllm_import_cuda_check_20260525.log
+ create mode 100644 logs/reinstall_base_requirements_clean_env.log
+ create mode 100644 logs/reinstall_vllm_root_venv.log
+ create mode 100644 logs/runpod_recovered_volume_status_20260527.txt
+ create mode 100644 logs/week2_gpu_residue_failure_snapshot_20260527.txt
+ create mode 100644 logs/week2_gpu_residue_new_pod_failed_snapshot_20260527.txt
+ create mode 100644 logs/week2_gpu_residue_restart_failed_snapshot_20260527.txt
+ create mode 100644 logs/week2_gpu_residue_stop_start_failed_snapshot_20260527.txt
+ create mode 100644 results/new_pod_prometheus_runtime_config_20260525.json
+ create mode 100644 results/new_pod_prometheus_targets_20260525.json
+ create mode 100644 results/new_pod_seed_oss_fastapi_health_20260525.json
+ create mode 100644 results/new_pod_seed_oss_fastapi_health_debug_20260525.txt
+ create mode 100644 results/new_pod_seed_oss_fastapi_smoke_20260525.txt
+ create mode 100644 results/new_pod_seed_oss_vllm_metrics_head_20260525.txt
+ create mode 100644 results/new_pod_seed_oss_vllm_models_20260525.json
+ create mode 100644 volume_audit/github_clean_files.txt
+ create mode 100644 volume_audit/github_only_files.txt
+ create mode 100644 volume_audit/keep_to_github_files.txt
+ create mode 100644 volume_audit/network_volume_preservation_decision_20260527.txt
+ create mode 100644 volume_audit/prometheus_raw_archive_files.txt
+ create mode 100644 volume_audit/volume_code_doc_files.txt
+ create mode 100644 volume_audit/volume_evidence_files.txt
+ create mode 100644 volume_audit/volume_only_code_doc_files.txt
+ create mode 100644 volume_audit/volume_only_evidence_files.txt
+ create mode 100644 volume_audit/volume_only_file_sizes.txt
+ create mode 100644 volume_audit/volume_only_files.txt
+ create mode 100644 volume_audit/volume_repo_files.txt
+
+===== 5. fetch 最新 GitHub main =====
+From https://github.com/xuchu0726/ai-inference-service
+   af6b3af..fb48ae1  main       -> origin/main
+
+===== 6. rebase 到 origin/main =====
+First, rewinding head to replay your work on top of it...
+Applying: 保存旧 Network Volume 独有实验记录
+
+===== 7. push =====
+To https://github.com/xuchu0726/ai-inference-service.git
+   fb48ae1..c6ece09  main -> main
+
+===== 8. 最终状态 =====
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	logs/network_volume_preservation_commit_push_20260527.txt
+	monitoring_data/
+
+nothing added to commit but untracked files present (use "git add" to track)
+c6ece09 保存旧 Network Volume 独有实验记录
+fb48ae1 清理旧 volume 半截本地归档记录
+64a17a5 补充 Week2 workload-aware routing policy 抽象
+dc00221 规范 Week2 量化可行性文档边界表述
+f360edc 补充 Week2 batch-token 最终远端同步状态
+c749860 补充 Week2 batch-token 推送同步证据
+04641c7 补充 Week2 batch-token 调优报告与 workload-aware batching 证据
+af6b3af 补充 Week2 batch token workload 调优证据
