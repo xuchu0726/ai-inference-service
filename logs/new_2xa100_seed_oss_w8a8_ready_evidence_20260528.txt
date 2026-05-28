@@ -1,0 +1,210 @@
+===== 日期 =====
+Thu May 28 23:01:42 UTC 2026
+
+===== 本步骤目的 =====
+确认 Seed-OSS-36B W8A8 compressed-tensors vLLM serving 是否完成加载并进入 API ready 状态。
+关键判断：8 个 safetensors 分片是否加载完成、是否使用 CompressedTensorsW8A8Int8 kernel、显存占用、KV cache capacity、/v1/models 是否返回。
+
+===== vLLM 进程 =====
+8602
+    PID    PPID STAT     ELAPSED %CPU %MEM CMD
+   8602    1424 Sl         04:16  4.3  0.0 python -m vllm.entrypoints.openai.api_server --model /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8 --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --distributed-executor-backend mp --dtype bfloat16 --quantization compressed-tensors --max-model-len 512 --max-num-batched-tokens 512 --max-num-seqs 1 --gpu-memory-utilization 0.90 --trust-remote-code --enforce-eager
+   8602    1424 Sl         04:16  4.3  0.0 python -m vllm.entrypoints.openai.api_server --model /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8 --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --distributed-executor-backend mp --dtype bfloat16 --quantization compressed-tensors --max-model-len 512 --max-num-batched-tokens 512 --max-num-seqs 1 --gpu-memory-utilization 0.90 --trust-remote-code --enforce-eager
+   8635    8602 Sl         04:08  6.7  0.0 VLLM::EngineCore
+   8657    8635 Rl         04:00 97.0  0.0 VLLM::Worker_TP0
+   8658    8635 Rl         04:00 98.6  0.0 VLLM::Worker_TP1
+
+===== GPU 状态 =====
+Thu May 28 23:01:42 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   28C    P0             85W /  400W |   74581MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   29C    P0             83W /  400W |   74581MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            8657      C   VLLM::Worker_TP0                      74572MiB |
+|    1   N/A  N/A            8658      C   VLLM::Worker_TP1                      74572MiB |
++-----------------------------------------------------------------------------------------+
+
+===== API ready 探测 =====
+{"object":"list","data":[{"id":"Seed-OSS-36B-Instruct-W8A8","object":"model","created":1780009302,"owned_by":"vllm","root":"/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8","parent":null,"max_model_len":512,"permission":[{"id":"modelperm-88333fbea33f478cac71b12310456e9e","object":"model_permission","created":1780009302,"allow_create_engine":false,"allow_sampling":true,"allow_logprobs":true,"allow_search_indices":false,"allow_view":true,"allow_fine_tuning":false,"organization":"*","group":null,"is_blocking":false}]}]}
+
+
+===== 关键日志摘录 =====
+[1;36m(Worker_TP0 pid=8657)[0;0m INFO 05-28 22:57:52 [compressed_tensors_w8a8_int8.py:62] Using CutlassScaledMMLinearKernel for CompressedTensorsW8A8Int8
+[1;36m(Worker_TP1 pid=8658)[0;0m INFO 05-28 22:57:52 [compressed_tensors_w8a8_int8.py:62] Using CutlassScaledMMLinearKernel for CompressedTensorsW8A8Int8
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards:   0% Completed | 0/8 [00:00<?, ?it/s]
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards:  12% Completed | 1/8 [00:07<00:52,  7.53s/it]
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards:  25% Completed | 2/8 [00:12<00:36,  6.00s/it]
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards:  38% Completed | 3/8 [00:17<00:28,  5.64s/it]
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards:  50% Completed | 4/8 [00:24<00:24,  6.14s/it]
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards:  62% Completed | 5/8 [00:31<00:19,  6.44s/it]
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards:  75% Completed | 6/8 [00:38<00:13,  6.53s/it]
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards:  88% Completed | 7/8 [00:45<00:06,  6.62s/it]
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards: 100% Completed | 8/8 [00:51<00:00,  6.64s/it]
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards: 100% Completed | 8/8 [00:51<00:00,  6.47s/it]
+[1;36m(Worker_TP0 pid=8657)[0;0m INFO 05-28 22:58:45 [default_loader.py:314] Loading weights took 51.88 seconds
+[1;36m(Worker_TP0 pid=8657)[0;0m INFO 05-28 22:58:46 [gpu_model_runner.py:3338] Model loading took 17.7109 GiB memory and 52.656971 seconds
+[1;36m(Worker_TP0 pid=8657)[0;0m INFO 05-28 22:58:51 [gpu_worker.py:359] Available KV cache memory: 53.04 GiB
+[1;36m(EngineCore_DP0 pid=8635)[0;0m INFO 05-28 22:58:52 [kv_cache_utils.py:1229] GPU KV cache size: 434,480 tokens
+[1;36m(EngineCore_DP0 pid=8635)[0;0m INFO 05-28 22:58:52 [kv_cache_utils.py:1234] Maximum concurrency for 512 tokens per request: 848.59x
+[1;36m(EngineCore_DP0 pid=8635)[0;0m INFO 05-28 22:58:52 [kv_cache_utils.py:1234] Maximum concurrency for 512 tokens per request: 848.59x
+[1;36m(APIServer pid=8602)[0;0m INFO:     Application startup complete.
+[1;36m(APIServer pid=8602)[0;0m INFO:     127.0.0.1:59956 - "GET /v1/models HTTP/1.1" 200 OK
+
+===== 日志最后 500 行 =====
+nohup: ignoring input
+INFO 05-28 22:57:33 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=2048.
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:57:33 [api_server.py:1977] vLLM API server version 0.11.2
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:57:33 [utils.py:253] non-default args: {'host': '0.0.0.0', 'port': 8002, 'model': '/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8', 'trust_remote_code': True, 'dtype': 'bfloat16', 'max_model_len': 512, 'quantization': 'compressed-tensors', 'enforce_eager': True, 'served_model_name': ['Seed-OSS-36B-Instruct-W8A8'], 'distributed_executor_backend': 'mp', 'tensor_parallel_size': 2, 'max_num_batched_tokens': 512, 'max_num_seqs': 1}
+[1;36m(APIServer pid=8602)[0;0m The argument `trust_remote_code` is to be used with Auto classes. It has no effect here and is ignored.
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:57:33 [model.py:631] Resolved architecture: SeedOssForCausalLM
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:57:33 [model.py:1745] Using max model len 512
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:57:34 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=512.
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:57:34 [vllm.py:500] Cudagraph is disabled under eager mode
+[1;36m(APIServer pid=8602)[0;0m The tokenizer you are loading from '/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[1;36m(EngineCore_DP0 pid=8635)[0;0m INFO 05-28 22:57:42 [core.py:93] Initializing a V1 LLM engine (v0.11.2) with config: model='/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8', speculative_config=None, tokenizer='/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.bfloat16, max_seq_len=512, download_dir=None, load_format=auto, tensor_parallel_size=2, pipeline_parallel_size=1, data_parallel_size=1, disable_custom_all_reduce=False, quantization=compressed-tensors, enforce_eager=True, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=0, served_model_name=Seed-OSS-36B-Instruct-W8A8, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'level': None, 'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'splitting_ops': None, 'compile_mm_encoder': False, 'use_inductor': None, 'compile_sizes': [], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {}, 'max_cudagraph_capture_size': 0, 'local_cache_dir': None}
+INFO 05-28 22:57:51 [parallel_state.py:1208] world_size=2 rank=1 local_rank=1 distributed_init_method=tcp://127.0.0.1:51407 backend=nccl
+INFO 05-28 22:57:51 [parallel_state.py:1208] world_size=2 rank=0 local_rank=0 distributed_init_method=tcp://127.0.0.1:51407 backend=nccl
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+INFO 05-28 22:57:51 [pynccl.py:111] vLLM is using nccl==2.27.5
+WARNING 05-28 22:57:51 [symm_mem.py:67] SymmMemCommunicator: Device capability 8.0 not supported, communicator is not available.
+WARNING 05-28 22:57:51 [symm_mem.py:67] SymmMemCommunicator: Device capability 8.0 not supported, communicator is not available.
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+INFO 05-28 22:57:52 [parallel_state.py:1394] rank 0 in world size 2 is assigned as DP rank 0, PP rank 0, TP rank 0, EP rank 0
+INFO 05-28 22:57:52 [parallel_state.py:1394] rank 1 in world size 2 is assigned as DP rank 0, PP rank 0, TP rank 1, EP rank 1
+[1;36m(Worker_TP0 pid=8657)[0;0m INFO 05-28 22:57:52 [gpu_model_runner.py:3259] Starting to load model /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8...
+[1;36m(Worker_TP0 pid=8657)[0;0m INFO 05-28 22:57:52 [compressed_tensors_w8a8_int8.py:62] Using CutlassScaledMMLinearKernel for CompressedTensorsW8A8Int8
+[1;36m(Worker_TP1 pid=8658)[0;0m INFO 05-28 22:57:52 [compressed_tensors_w8a8_int8.py:62] Using CutlassScaledMMLinearKernel for CompressedTensorsW8A8Int8
+[1;36m(Worker_TP0 pid=8657)[0;0m INFO 05-28 22:57:53 [cuda.py:418] Valid backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION']
+[1;36m(Worker_TP0 pid=8657)[0;0m INFO 05-28 22:57:53 [cuda.py:427] Using FLASH_ATTN backend.
+[1;36m(Worker_TP1 pid=8658)[0;0m INFO 05-28 22:57:53 [cuda.py:418] Valid backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION']
+[1;36m(Worker_TP1 pid=8658)[0;0m INFO 05-28 22:57:53 [cuda.py:427] Using FLASH_ATTN backend.
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards:   0% Completed | 0/8 [00:00<?, ?it/s]
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards:  12% Completed | 1/8 [00:07<00:52,  7.53s/it]
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards:  25% Completed | 2/8 [00:12<00:36,  6.00s/it]
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards:  38% Completed | 3/8 [00:17<00:28,  5.64s/it]
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards:  50% Completed | 4/8 [00:24<00:24,  6.14s/it]
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards:  62% Completed | 5/8 [00:31<00:19,  6.44s/it]
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards:  75% Completed | 6/8 [00:38<00:13,  6.53s/it]
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards:  88% Completed | 7/8 [00:45<00:06,  6.62s/it]
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards: 100% Completed | 8/8 [00:51<00:00,  6.64s/it]
+[1;36m(Worker_TP0 pid=8657)[0;0m Loading safetensors checkpoint shards: 100% Completed | 8/8 [00:51<00:00,  6.47s/it]
+[1;36m(Worker_TP0 pid=8657)[0;0m 
+[1;36m(Worker_TP0 pid=8657)[0;0m INFO 05-28 22:58:45 [default_loader.py:314] Loading weights took 51.88 seconds
+[1;36m(Worker_TP0 pid=8657)[0;0m INFO 05-28 22:58:46 [gpu_model_runner.py:3338] Model loading took 17.7109 GiB memory and 52.656971 seconds
+[1;36m(Worker_TP0 pid=8657)[0;0m INFO 05-28 22:58:51 [gpu_worker.py:359] Available KV cache memory: 53.04 GiB
+[1;36m(EngineCore_DP0 pid=8635)[0;0m INFO 05-28 22:58:52 [kv_cache_utils.py:1229] GPU KV cache size: 434,480 tokens
+[1;36m(EngineCore_DP0 pid=8635)[0;0m INFO 05-28 22:58:52 [kv_cache_utils.py:1234] Maximum concurrency for 512 tokens per request: 848.59x
+[1;36m(EngineCore_DP0 pid=8635)[0;0m INFO 05-28 22:58:52 [kv_cache_utils.py:1234] Maximum concurrency for 512 tokens per request: 848.59x
+[1;36m(EngineCore_DP0 pid=8635)[0;0m INFO 05-28 22:58:53 [core.py:250] init engine (profile, create kv cache, warmup model) took 7.14 seconds
+[1;36m(EngineCore_DP0 pid=8635)[0;0m The tokenizer you are loading from '/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[1;36m(EngineCore_DP0 pid=8635)[0;0m INFO 05-28 22:58:54 [vllm.py:500] Cudagraph is disabled under eager mode
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [api_server.py:1725] Supported tasks: ['generate']
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [api_server.py:2052] Starting vLLM API server 0 on http://0.0.0.0:8002
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:38] Available routes are:
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /openapi.json, Methods: HEAD, GET
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /docs, Methods: HEAD, GET
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /docs/oauth2-redirect, Methods: HEAD, GET
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /redoc, Methods: HEAD, GET
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /health, Methods: GET
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /load, Methods: GET
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /tokenize, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /detokenize, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /v1/models, Methods: GET
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /version, Methods: GET
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /v1/responses, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /v1/responses/{response_id}, Methods: GET
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /v1/responses/{response_id}/cancel, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /v1/messages, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /v1/chat/completions, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /v1/completions, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /v1/embeddings, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /pooling, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /classify, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /score, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /v1/score, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /v1/audio/transcriptions, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /v1/audio/translations, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /rerank, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /v1/rerank, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /v2/rerank, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /scale_elastic_ep, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /is_scaling_elastic_ep, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /inference/v1/generate, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /ping, Methods: GET
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /ping, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /invocations, Methods: POST
+[1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:58:54 [launcher.py:46] Route: /metrics, Methods: GET
+[1;36m(APIServer pid=8602)[0;0m INFO:     Started server process [8602]
+[1;36m(APIServer pid=8602)[0;0m INFO:     Waiting for application startup.
+[1;36m(APIServer pid=8602)[0;0m INFO:     Application startup complete.
+[1;36m(APIServer pid=8602)[0;0m INFO:     127.0.0.1:59956 - "GET /v1/models HTTP/1.1" 200 OK
+[1;36m(APIServer pid=8602)[0;0m INFO:     127.0.0.1:59970 - "GET /health HTTP/1.1" 200 OK
+
+===== Git 状态 =====
+?? logs/new_2xa100_seed_oss_bnb_int8_openai_benchmark_3req_20260528.log
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_loading_check_20260528_215302.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_check_20260528_215331.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_evidence_20260528.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215126.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215205.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_vllm.pid
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214511.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214606.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_vllm.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225050.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225112.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225143.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225148.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_launch_snapshot_20260528.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224821.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224908.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224940.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224956.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_save_check_20260528_225306.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_status_check_20260528_224730.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223546.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223556.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223611.txt
+?? logs/new_2xa100_seed_oss_w8a8_ready_evidence_20260528.txt
+?? logs/new_2xa100_seed_oss_w8a8_vllm.pid
+?? logs/new_2xa100_seed_oss_w8a8_vllm_launch_20260528.log
+?? logs/new_2xa100_seed_oss_w8a8_vllm_ready_check_20260528.txt
+?? logs/new_2xa100_seed_oss_w8a8_vllm_status_check_20260528_225827.txt
+5659c1c 完成 Seed-OSS-36B 离线 W8A8 量化 checkpoint 生成
+b77bb24 修复 Seed-OSS W8A8 量化 checkpoint 保存配置
+b5f0026 记录 Seed-OSS W8A8 离线量化保存阶段失败原因
+de05629 修复 Seed-OSS W8A8 离线量化脚本入口
+affc3e7 追查 llmcompressor oneshot API 导入失败原因
+2a6a5aa 添加 Seed-OSS-36B 离线 W8A8 量化脚本
+a598017 安装 Seed-OSS 离线 W8A8 量化工具链
+c17c485 归档 Seed-OSS 量化路径补充过程日志
