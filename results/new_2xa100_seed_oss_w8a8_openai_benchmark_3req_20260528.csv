@@ -1,0 +1,4 @@
+request_id,status_code,latency_seconds,prompt_tokens,completion_tokens,total_tokens,tokens_per_second,prompt,output,error_text
+1,200,2.4831,18,64,82,25.7739,用一句话解释什么是 GPU 推理服务。,<seed:think>\n用户现在需要用一句话解释GPU推理服务，首先得明确GPU推理服务的核心要素：GPU（图形处理器，用于加速计算）、推理（机器学习模型的预测过程，比如输入数据得到输出结果）、服务（提供可调用的接口或功能）。\n\n首先，推理是,
+2,200,2.4797,17,64,81,25.8094,用一句话解释什么是 KV cache。,<seed:think>\n用户现在需要用一句话解释KV cache，首先得回忆一下KV cache是什么。KV应该是Key-Value的意思，cache就是缓存。在什么场景下用的呢？应该是大模型推理的时候吧，比如Transformer模型，每次生成token的时候，会有自注意力机制，需要,
+3,200,2.5739,16,64,80,24.865,用一句话解释什么是模型量化。,<seed:think>\n用户现在需要用一句话解释模型量化，首先得抓住核心概念。模型量化应该是跟模型的数值表示有关，比如从高精度到低精度的转换？对，通常是把模型中的参数和计算从比如32位浮点（FP32）转换成更低精度的类型，,
