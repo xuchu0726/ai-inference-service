@@ -1,0 +1,100 @@
+===== 日期 =====
+Thu May 28 22:09:05 UTC 2026
+
+===== 本步骤目的 =====
+检查 Seed-OSS-36B INC INT8 量化路径：是否进入 EngineCore/Worker、是否加载权重、是否 API ready、是否因预量化配置缺失或模型不兼容失败。
+
+===== 主进程状态 =====
+7163
+    PID    PPID STAT     ELAPSED %CPU %MEM CMD
+
+===== vLLM 相关进程 =====
+   7442    1424 S+         00:00  0.0  0.0 tee logs/new_2xa100_seed_oss_inc_int8_status_check_20260528_220905.txt
+
+===== GPU 状态 =====
+Thu May 28 22:09:05 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   25C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   25C    P0             62W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== API ready 探测 =====
+
+
+===== 日志文件状态 =====
+-rw-r--r-- 1 root root 5.0K May 28 22:09 logs/new_2xa100_seed_oss_inc_int8_vllm_launch_20260528.log
+  File: logs/new_2xa100_seed_oss_inc_int8_vllm_launch_20260528.log
+  Size: 5063      	Blocks: 16         IO Block: 4096   regular file
+Device: 4fh/79d	Inode: 32217775179  Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2026-05-28 22:08:59.460666432 +0000
+Modify: 2026-05-28 22:09:02.419664310 +0000
+Change: 2026-05-28 22:09:02.419664310 +0000
+ Birth: 2026-05-28 22:08:53.856670452 +0000
+
+===== 日志最后 500 行 =====
+nohup: ignoring input
+INFO 05-28 22:09:00 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=2048.
+[1;36m(APIServer pid=7163)[0;0m INFO 05-28 22:09:00 [api_server.py:1977] vLLM API server version 0.11.2
+[1;36m(APIServer pid=7163)[0;0m INFO 05-28 22:09:00 [utils.py:253] non-default args: {'host': '0.0.0.0', 'port': 8002, 'model': 'ByteDance-Seed/Seed-OSS-36B-Instruct', 'trust_remote_code': True, 'dtype': 'bfloat16', 'max_model_len': 512, 'quantization': 'inc', 'enforce_eager': True, 'served_model_name': ['ByteDance-Seed/Seed-OSS-36B-Instruct'], 'download_dir': '/workspace/hf_cache', 'distributed_executor_backend': 'mp', 'tensor_parallel_size': 2, 'max_num_batched_tokens': 512, 'max_num_seqs': 1}
+[1;36m(APIServer pid=7163)[0;0m The argument `trust_remote_code` is to be used with Auto classes. It has no effect here and is ignored.
+[1;36m(APIServer pid=7163)[0;0m INFO 05-28 22:09:01 [model.py:631] Resolved architecture: SeedOssForCausalLM
+[1;36m(APIServer pid=7163)[0;0m INFO 05-28 22:09:01 [model.py:1745] Using max model len 512
+[1;36m(APIServer pid=7163)[0;0m INFO 05-28 22:09:01 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=512.
+[1;36m(APIServer pid=7163)[0;0m Traceback (most recent call last):
+[1;36m(APIServer pid=7163)[0;0m   File "<frozen runpy>", line 198, in _run_module_as_main
+[1;36m(APIServer pid=7163)[0;0m   File "<frozen runpy>", line 88, in _run_code
+[1;36m(APIServer pid=7163)[0;0m   File "/usr/local/lib/python3.11/dist-packages/vllm/entrypoints/openai/api_server.py", line 2096, in <module>
+[1;36m(APIServer pid=7163)[0;0m     uvloop.run(run_server(args))
+[1;36m(APIServer pid=7163)[0;0m   File "/usr/local/lib/python3.11/dist-packages/uvloop/__init__.py", line 92, in run
+[1;36m(APIServer pid=7163)[0;0m     return runner.run(wrapper())
+[1;36m(APIServer pid=7163)[0;0m            ^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=7163)[0;0m   File "/usr/lib/python3.11/asyncio/runners.py", line 118, in run
+[1;36m(APIServer pid=7163)[0;0m     return self._loop.run_until_complete(task)
+[1;36m(APIServer pid=7163)[0;0m            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=7163)[0;0m   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+[1;36m(APIServer pid=7163)[0;0m   File "/usr/local/lib/python3.11/dist-packages/uvloop/__init__.py", line 48, in wrapper
+[1;36m(APIServer pid=7163)[0;0m     return await main
+[1;36m(APIServer pid=7163)[0;0m            ^^^^^^^^^^
+[1;36m(APIServer pid=7163)[0;0m   File "/usr/local/lib/python3.11/dist-packages/vllm/entrypoints/openai/api_server.py", line 2024, in run_server
+[1;36m(APIServer pid=7163)[0;0m     await run_server_worker(listen_address, sock, args, **uvicorn_kwargs)
+[1;36m(APIServer pid=7163)[0;0m   File "/usr/local/lib/python3.11/dist-packages/vllm/entrypoints/openai/api_server.py", line 2043, in run_server_worker
+[1;36m(APIServer pid=7163)[0;0m     async with build_async_engine_client(
+[1;36m(APIServer pid=7163)[0;0m   File "/usr/lib/python3.11/contextlib.py", line 210, in __aenter__
+[1;36m(APIServer pid=7163)[0;0m     return await anext(self.gen)
+[1;36m(APIServer pid=7163)[0;0m            ^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=7163)[0;0m   File "/usr/local/lib/python3.11/dist-packages/vllm/entrypoints/openai/api_server.py", line 195, in build_async_engine_client
+[1;36m(APIServer pid=7163)[0;0m     async with build_async_engine_client_from_engine_args(
+[1;36m(APIServer pid=7163)[0;0m   File "/usr/lib/python3.11/contextlib.py", line 210, in __aenter__
+[1;36m(APIServer pid=7163)[0;0m     return await anext(self.gen)
+[1;36m(APIServer pid=7163)[0;0m            ^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=7163)[0;0m   File "/usr/local/lib/python3.11/dist-packages/vllm/entrypoints/openai/api_server.py", line 221, in build_async_engine_client_from_engine_args
+[1;36m(APIServer pid=7163)[0;0m     vllm_config = engine_args.create_engine_config(usage_context=usage_context)
+[1;36m(APIServer pid=7163)[0;0m                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=7163)[0;0m   File "/usr/local/lib/python3.11/dist-packages/vllm/engine/arg_utils.py", line 1772, in create_engine_config
+[1;36m(APIServer pid=7163)[0;0m     config = VllmConfig(
+[1;36m(APIServer pid=7163)[0;0m              ^^^^^^^^^^^
+[1;36m(APIServer pid=7163)[0;0m   File "/usr/local/lib/python3.11/dist-packages/pydantic/_internal/_dataclasses.py", line 121, in __init__
+[1;36m(APIServer pid=7163)[0;0m     s.__pydantic_validator__.validate_python(ArgsKwargs(args, kwargs), self_instance=s)
+[1;36m(APIServer pid=7163)[0;0m pydantic_core._pydantic_core.ValidationError: 1 validation error for VllmConfig
+[1;36m(APIServer pid=7163)[0;0m   Assertion failed,  [type=assertion_error, input_value=ArgsKwargs((), {'model_co...additional_config': {}}), input_type=ArgsKwargs]
+[1;36m(APIServer pid=7163)[0;0m     For further information visit https://errors.pydantic.dev/2.13/v/assertion_error
