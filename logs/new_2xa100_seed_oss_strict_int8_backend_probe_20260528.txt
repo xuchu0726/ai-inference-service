@@ -1,0 +1,156 @@
+===== 日期 =====
+Thu May 28 22:04:23 UTC 2026
+
+===== 本步骤目的 =====
+系统探测当前 vLLM 0.11.2 环境支持的量化后端，为严格 INT8/W8A8 serving 路径选择提供依据。
+重点判断：是否存在 direct INT8 / W8A8 / compressed-tensors / INC / GPTQ / AWQ 等可用于 Seed-OSS-36B 的 serving 路径。
+
+===== Python / vLLM / CUDA =====
+torch: 2.9.0+cu128
+transformers: 4.57.6
+vllm: 0.11.2
+cuda_available: True
+gpu_count: 2
+gpu_0: NVIDIA A100-SXM4-80GB
+gpu_1: NVIDIA A100-SXM4-80GB
+
+===== vLLM CLI quantization 参数 =====
+                     [--trust-remote-code | --no-trust-remote-code]
+                     [--dtype {auto,bfloat16,float,float16,float32,half}]
+                     [--seed SEED] [--hf-config-path HF_CONFIG_PATH]
+                     [--allowed-local-media-path ALLOWED_LOCAL_MEDIA_PATH]
+                     [--allowed-media-domains ALLOWED_MEDIA_DOMAINS [ALLOWED_MEDIA_DOMAINS ...]]
+                     [--revision REVISION] [--code-revision CODE_REVISION]
+                     [--tokenizer-revision TOKENIZER_REVISION]
+                     [--max-model-len MAX_MODEL_LEN]
+                     [--quantization QUANTIZATION]
+                     [--enforce-eager | --no-enforce-eager]
+                     [--max-logprobs MAX_LOGPROBS]
+                     [--logprobs-mode {processed_logits,processed_logprobs,raw_logits,raw_logprobs}]
+                     [--disable-sliding-window | --no-disable-sliding-window]
+                     [--disable-cascade-attn | --no-disable-cascade-attn]
+                     [--skip-tokenizer-init | --no-skip-tokenizer-init]
+                     [--enable-prompt-embeds | --no-enable-prompt-embeds]
+                     [--served-model-name SERVED_MODEL_NAME [SERVED_MODEL_NAME ...]]
+
+===== vLLM quantization package 文件 =====
+quantization_package_root: /usr/local/lib/python3.11/dist-packages/vllm/model_executor/layers/quantization
+auto_round.py
+awq.py
+awq_marlin.py
+awq_triton.py
+base_config.py
+bitblas.py
+bitsandbytes.py
+deepspeedfp.py
+experts_int8.py
+fbgemm_fp8.py
+fp8.py
+fp_quant.py
+gguf.py
+gptq.py
+gptq_bitblas.py
+gptq_marlin.py
+gptq_marlin_24.py
+hqq_marlin.py
+inc.py
+input_quant_fp8.py
+ipex_quant.py
+kv_cache.py
+modelopt.py
+moe_wna16.py
+mxfp4.py
+petit.py
+ptpc_fp8.py
+qutlass_utils.py
+rtn.py
+schema.py
+torchao.py
+tpu_int8.py
+
+===== vLLM quantization registry 探测 =====
+QUANTIZATION_METHODS:
+auto-round
+awq
+awq_marlin
+bitblas
+bitsandbytes
+compressed-tensors
+deepspeedfp
+experts_int8
+fbgemm_fp8
+fp8
+fp_quant
+gguf
+gptq
+gptq_bitblas
+gptq_marlin
+gptq_marlin_24
+hqq
+inc
+ipex
+modelopt
+modelopt_fp4
+moe_wna16
+mxfp4
+petit_nvfp4
+ptpc_fp8
+quark
+rtn
+torchao
+tpu_int8
+
+candidate_backend_probe:
+awq => <class 'vllm.model_executor.layers.quantization.awq.AWQConfig'>
+gptq => <class 'vllm.model_executor.layers.quantization.gptq.GPTQConfig'>
+squeezellm => ERROR: ValueError('Invalid quantization method: squeezellm')
+marlin => ERROR: ValueError('Invalid quantization method: marlin')
+gptq_marlin => <class 'vllm.model_executor.layers.quantization.gptq_marlin.GPTQMarlinConfig'>
+awq_marlin => <class 'vllm.model_executor.layers.quantization.awq_marlin.AWQMarlinConfig'>
+bitsandbytes => <class 'vllm.model_executor.layers.quantization.bitsandbytes.BitsAndBytesConfig'>
+compressed-tensors => <class 'vllm.model_executor.layers.quantization.compressed_tensors.compressed_tensors.CompressedTensorsConfig'>
+inc => <class 'vllm.model_executor.layers.quantization.inc.INCConfig'>
+fp8 => <class 'vllm.model_executor.layers.quantization.fp8.Fp8Config'>
+fbgemm_fp8 => <class 'vllm.model_executor.layers.quantization.fbgemm_fp8.FBGEMMFp8Config'>
+modelopt => <class 'vllm.model_executor.layers.quantization.modelopt.ModelOptFp8Config'>
+gguf => <class 'vllm.model_executor.layers.quantization.gguf.GGUFConfig'>
+
+===== Seed-OSS config 关键结构 =====
+`torch_dtype` is deprecated! Use `dtype` instead!
+model_type: seed_oss
+architectures: ['SeedOssForCausalLM']
+hidden_size: 5120
+num_hidden_layers: 64
+num_attention_heads: 80
+num_key_value_heads: 8
+head_dim: 128
+intermediate_size: 27648
+max_position_embeddings: 524288
+torch_dtype: torch.bfloat16
+gqa_group_size: 10
+
+===== GPU 空闲状态 =====
+Thu May 28 22:04:54 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   25C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   26C    P0             62W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
