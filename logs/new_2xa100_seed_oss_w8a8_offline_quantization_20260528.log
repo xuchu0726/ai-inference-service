@@ -1,0 +1,6 @@
+nohup: ignoring input
+Traceback (most recent call last):
+  File "/root/ai-inference-service/scripts/quantization/quantize_seed_oss_36b_w8a8.py", line 9, in <module>
+    from llmcompressor.transformers import oneshot
+ImportError: cannot import name 'oneshot' from 'llmcompressor.transformers' (/usr/local/lib/python3.11/dist-packages/llmcompressor/transformers/__init__.py)
+[W528 22:32:27.320547649 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())

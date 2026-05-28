@@ -1,0 +1,146 @@
+===== 日期 =====
+Thu May 28 22:33:19 UTC 2026
+
+===== 本步骤目的 =====
+探测当前 llmcompressor 0.10.0.2 中 oneshot API 的真实导入路径，修复离线 W8A8 量化脚本的 import 错误。
+
+===== 当前版本 =====
+llmcompressor: 0.10.0.2
+compressed_tensors: 0.14.0.1
+torch: 2.9.0+cu128
+transformers: 4.57.6
+[W528 22:33:26.811541035 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
+
+===== 探测 llmcompressor 顶层模块 =====
+llmcompressor file: /usr/local/lib/python3.11/dist-packages/llmcompressor/__init__.py
+top-level attrs containing oneshot:
+Oneshot
+oneshot
+[W528 22:33:35.249016918 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
+
+===== 探测常见 oneshot 导入路径 =====
+IMPORT_FAIL: llmcompressor.transformers.oneshot ModuleNotFoundError("No module named 'llmcompressor.transformers.oneshot'")
+IMPORT_FAIL: llmcompressor.transformers.finetune.oneshot ModuleNotFoundError("No module named 'llmcompressor.transformers.finetune'")
+IMPORT_FAIL: llmcompressor.transformers.entrypoints.oneshot ModuleNotFoundError("No module named 'llmcompressor.transformers.entrypoints'")
+IMPORT_OK: llmcompressor.entrypoints.oneshot <module 'llmcompressor.entrypoints.oneshot' from '/usr/local/lib/python3.11/dist-packages/llmcompressor/entrypoints/oneshot.py'>
+attrs: ['Oneshot', 'oneshot']
+IMPORT_FAIL: llmcompressor.oneshot ModuleNotFoundError("No module named 'llmcompressor.oneshot'")
+[W528 22:33:43.233974023 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
+
+===== 全包搜索 oneshot 名称 =====
+root: /usr/local/lib/python3.11/dist-packages/llmcompressor
+/usr/local/lib/python3.11/dist-packages/llmcompressor/__init__.py
+    from llmcompressor.entrypoints import Oneshot, oneshot, model_free_ptq
+/usr/local/lib/python3.11/dist-packages/llmcompressor/args/model_arguments.py
+        Model variables used for oneshot calibration, finetuning and
+        stage runners (sequential run of oneshot and finetune).
+/usr/local/lib/python3.11/dist-packages/llmcompressor/args/recipe_arguments.py
+            metadata={"help": ("The stage of the recipe to use for oneshot / train.",)},
+/usr/local/lib/python3.11/dist-packages/llmcompressor/args/utils.py
+        Keyword arguments passed in from `oneshot` or `train` will
+        oneshot.
+/usr/local/lib/python3.11/dist-packages/llmcompressor/datasets/utils.py
+        do_oneshot: bool = False,
+        :param do_oneshot: True for oneshot pathway
+        :return: A dataset corresponding to either train or calibration (oneshot)
+                "Running oneshot without calibration data. This is expected for "
+            do_oneshot=do_oneshot,
+        Get the dataloader used for oneshot calibration.
+            do_oneshot=True,
+        do_oneshot: bool = True,
+        :param do_oneshot: Whether to store the calibration dataset
+        :return: A dataset corresponding to either train or calibration (oneshot)
+        if do_oneshot:
+                    raise ValueError("--do_oneshot requires a calibration dataset")
+                    "`oneshot` with `batch_size=1`"
+/usr/local/lib/python3.11/dist-packages/llmcompressor/entrypoints/__init__.py
+    Includes oneshot compression, training, and pre and post-processing utilities
+    from .oneshot import Oneshot, oneshot
+/usr/local/lib/python3.11/dist-packages/llmcompressor/entrypoints/oneshot.py
+    Provides the main oneshot compression entry point for applying
+    __all__ = ["Oneshot", "oneshot"]
+            The oneshot calibration lifecycle consists of three steps:
+            oneshot = Oneshot(model=model, recipe=recipe, dataset=dataset)
+            oneshot()
+            model = oneshot.model
+            processor = oneshot.processor
+            recipe = oneshot.recipe
+            :param output_dir: Path to save the output model after carrying out oneshot
+            :param log_dir: Path to save logs during oneshot run.
+                    f"{log_dir}/oneshot_{date_str}.log",
+    def oneshot(
+        Performs oneshot calibration on a model.
+        :param stage: The stage of the recipe to use for oneshot.
+        :param log_dir: Path to save logs during oneshot run.
+/usr/local/lib/python3.11/dist-packages/llmcompressor/entrypoints/utils.py
+                        "processor directly to `oneshot`/`train`."
+                        f"`oneshot`/`train`.\nInitialization Error: {e}"
+                "Ex. `oneshot(..., output_dir=...)`"
+        # optimized models must be decompressed to carry out oneshot/train/etc
+/usr/local/lib/python3.11/dist-packages/llmcompressor/entrypoints/model_free/validate.py
+                "Model Free PTQ cannot calibrate activations. Please use `oneshot` instead."
+/usr/local/lib/python3.11/dist-packages/llmcompressor/modifiers/pruning/sparsegpt/sgpt_base.py
+        Abstract base class which implements functionality related to oneshot sparsity.
+                    "oneshot() dataset_args. Please provide sequential_targets in only "
+/usr/local/lib/python3.11/dist-packages/llmcompressor/pipelines/sequential/ast_helpers.py
+                "`oneshot`. For example, `oneshot(model.thinker, ...)`"
+/usr/local/lib/python3.11/dist-packages/llmcompressor/pipelines/sequential/helpers.py
+                "please use `oneshot(sequential_targets=...)`"
+/usr/local/lib/python3.11/dist-packages/llmcompressor/pytorch/model_load/helpers.py
+        # as this is only a checkpoint, decompress model to enable future training/oneshot
+/usr/local/lib/python3.11/dist-packages/llmcompressor/recipe/recipe.py
+            the default run type is `oneshot`)
+                if `oneshot` or `train` the run_type of the recipe will be
+                if `oneshot` or `train` the run_type of the recipe will be
+[W528 22:33:51.365377260 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
+
+===== 当前失败日志摘录 =====
+nohup: ignoring input
+Traceback (most recent call last):
+  File "/root/ai-inference-service/scripts/quantization/quantize_seed_oss_36b_w8a8.py", line 9, in <module>
+    from llmcompressor.transformers import oneshot
+ImportError: cannot import name 'oneshot' from 'llmcompressor.transformers' (/usr/local/lib/python3.11/dist-packages/llmcompressor/transformers/__init__.py)
+[W528 22:32:27.320547649 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
+
+===== GPU 状态 =====
+Thu May 28 22:33:51 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   25C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   25C    P0             62W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== Git 状态 =====
+?? logs/new_2xa100_llmcompressor_oneshot_api_probe_20260528.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_openai_benchmark_3req_20260528.log
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_loading_check_20260528_215302.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_check_20260528_215331.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_evidence_20260528.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215126.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215205.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_vllm.pid
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214511.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214606.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_vllm.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_20260528.log
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_launch_snapshot_20260528.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_status_check_20260528_223237.txt
