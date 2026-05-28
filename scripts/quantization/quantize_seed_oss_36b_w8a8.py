@@ -73,6 +73,13 @@ def main():
         low_cpu_mem_usage=True,
     )
 
+    print("===== Sanitizing generation config before saving quantized checkpoint =====")
+    if hasattr(model, "generation_config") and model.generation_config is not None:
+        model.generation_config.do_sample = False
+        model.generation_config.temperature = None
+        model.generation_config.top_p = None
+        model.generation_config.top_k = None
+
     print("===== Starting W8A8 quantization =====")
     recipe = QuantizationModifier(
         targets="Linear",
