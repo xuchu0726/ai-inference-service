@@ -1,0 +1,49 @@
+===== 日期 =====
+Thu May 28 21:39:17 UTC 2026
+
+===== 本步骤目的 =====
+确认 FP32 服务已停止、GPU 显存已释放、GitHub evidence 已同步，准备进入 INT8/量化实验阶段。
+
+===== Git 状态 =====
+?? logs/new_2xa100_after_fp32_before_int8_check_20260528.txt
+b75d439 补充 Seed-OSS-36B FP32 vLLM 正常退出日志
+4226dbe 记录 Seed-OSS-36B FP32 服务停止状态
+c4ad18b 归档 Seed-OSS-36B FP32 实验过程日志
+0ea9789 保存 Seed-OSS-36B FP32 baseline 实验证据
+0a15e87 修正 Week2 Seed-OSS FP32 启动尝试记录
+e25e42a 补充 Seed-OSS FP32 启动可行性边界记录
+
+===== GPU 状态 =====
+Thu May 28 21:39:17 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   26C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   27C    P0             62W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== 端口状态 =====
+
+===== cache / disk =====
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          80G   15G   66G  19% /
+Filesystem                   Size  Used Avail Use% Mounted on
+mfs#us-wa-1.runpod.net:9421  479T  283T  196T  60% /workspace
+68G	/workspace/hf_cache
