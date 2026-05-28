@@ -1,0 +1,84 @@
+===== 日期 =====
+Thu May 28 21:37:17 UTC 2026
+
+===== 本步骤目的 =====
+停止 Seed-OSS-36B FP32 vLLM 服务，释放 2×A100 显存，为后续 INT8/量化实验做准备。
+
+===== 当前 Git 状态 =====
+?? logs/new_2xa100_seed_oss_fp32_shutdown_20260528.txt
+c4ad18b 归档 Seed-OSS-36B FP32 实验过程日志
+0ea9789 保存 Seed-OSS-36B FP32 baseline 实验证据
+0a15e87 修正 Week2 Seed-OSS FP32 启动尝试记录
+e25e42a 补充 Seed-OSS FP32 启动可行性边界记录
+f183f3e 保存旧 Network Volume 顶层兜底记录
+97c896d 补充旧 volume evidence 推送日志
+
+===== 停止前进程 =====
+   2200    1424 Sl         14:04  3.6  0.0 python -m vllm.entrypoints.openai.api_server --model ByteDance-Seed/Seed-OSS-36B-Instruct --served-model-name ByteDance-Seed/Seed-OSS-36B-Instruct --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --distributed-executor-backend mp --dtype float32 --max-model-len 512 --max-num-batched-tokens 512 --max-num-seqs 1 --gpu-memory-utilization 0.98 --download-dir /workspace/hf_cache --trust-remote-code --enforce-eager
+   2774    2200 Sl         13:45  5.8  0.0 VLLM::EngineCore
+   2908    2774 Rl         13:37 92.6  0.0 VLLM::Worker_TP0
+   2909    2774 Rl         13:37  148  0.1 VLLM::Worker_TP1
+
+===== 停止前 GPU =====
+Thu May 28 21:37:17 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   29C    P0             85W /  400W |   81147MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   30C    P0             83W /  400W |   81147MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            2908      C   VLLM::Worker_TP0                      81138MiB |
+|    1   N/A  N/A            2909      C   VLLM::Worker_TP1                      81138MiB |
++-----------------------------------------------------------------------------------------+
+
+===== 当前 API ready 探测 =====
+{"object":"list","data":[{"id":"ByteDance-Seed/Seed-OSS-36B-Instruct","object":"model","created":1780004237,"owned_by":"vllm","root":"ByteDance-Seed/Seed-OSS-36B-Instruct","parent":null,"max_model_len":512,"permission":[{"id":"modelperm-bfff6885a5b94a0c86ad35e8d2b44536","object":"model_permission","created":1780004237,"allow_create_engine":false,"allow_sampling":true,"allow_logprobs":true,"allow_search_indices":false,"allow_view":true,"allow_fine_tuning":false,"organization":"*","group":null,"is_blocking":false}]}]}
+
+===== kill vLLM 主进程 =====
+
+===== 清理残留 worker =====
+
+===== 停止后进程 =====
+
+===== 停止后 GPU =====
+Thu May 28 21:37:32 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   27C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   28C    P0             63W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== 停止后端口检查 =====
