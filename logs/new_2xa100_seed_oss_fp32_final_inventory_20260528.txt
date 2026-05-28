@@ -1,0 +1,88 @@
+===== 日期 =====
+Thu May 28 21:31:20 UTC 2026
+
+===== 本步骤目的 =====
+汇总 Seed-OSS-36B FP32 baseline 实验关键证据。
+
+===== FP32 ready evidence 文件 =====
+-rw-r--r-- 1 root root 6.0K May 28 21:28 logs/new_2xa100_seed_oss_fp32_ready_evidence_20260528.txt
+
+===== FP32 smoke test 文件 =====
+-rw-r--r-- 1 root root 5.6K May 28 21:30 results/new_2xa100_seed_oss_fp32_smoke_test_retry_20260528.txt
+
+===== FP32 benchmark 文件 =====
+-rw-r--r-- 1 root root 1.3K May 28 21:30 results/new_2xa100_seed_oss_fp32_openai_benchmark_3req_20260528.csv
+-rw-r--r-- 1 root root 4.1K May 28 21:30 logs/new_2xa100_seed_oss_fp32_openai_benchmark_3req_20260528.log
+
+===== 关键 ready 证据 =====
+[1;36m(EngineCore_DP0 pid=2774)[0;0m INFO 05-28 21:23:40 [core.py:93] Initializing a V1 LLM engine (v0.11.2) with config: model='ByteDance-Seed/Seed-OSS-36B-Instruct', speculative_config=None, tokenizer='ByteDance-Seed/Seed-OSS-36B-Instruct', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float32, max_seq_len=512, download_dir='/workspace/hf_cache', load_format=auto, tensor_parallel_size=2, pipeline_parallel_size=1, data_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=True, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=0, served_model_name=ByteDance-Seed/Seed-OSS-36B-Instruct, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'level': None, 'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'splitting_ops': None, 'compile_mm_encoder': False, 'use_inductor': None, 'compile_sizes': [], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {}, 'max_cudagraph_capture_size': 0, 'local_cache_dir': None}
+[1;36m(Worker_TP0 pid=2908)[0;0m INFO 05-28 21:26:10 [default_loader.py:314] Loading weights took 93.52 seconds
+[1;36m(Worker_TP0 pid=2908)[0;0m INFO 05-28 21:26:11 [gpu_model_runner.py:3338] Model loading took 67.5901 GiB memory and 139.225964 seconds
+[1;36m(Worker_TP0 pid=2908)[0;0m INFO 05-28 21:26:20 [gpu_worker.py:359] Available KV cache memory: 9.43 GiB
+[1;36m(EngineCore_DP0 pid=2774)[0;0m INFO 05-28 21:26:20 [kv_cache_utils.py:1229] GPU KV cache size: 38,624 tokens
+[1;36m(EngineCore_DP0 pid=2774)[0;0m INFO 05-28 21:26:20 [kv_cache_utils.py:1234] Maximum concurrency for 512 tokens per request: 75.44x
+[1;36m(EngineCore_DP0 pid=2774)[0;0m INFO 05-28 21:26:20 [kv_cache_utils.py:1234] Maximum concurrency for 512 tokens per request: 75.44x
+[1;36m(APIServer pid=2200)[0;0m INFO:     Application startup complete.
+[1;36m(APIServer pid=2200)[0;0m INFO:     127.0.0.1:33202 - "GET /v1/models HTTP/1.1" 200 OK
+[1;36m(APIServer pid=2200)[0;0m INFO:     127.0.0.1:47624 - "GET /v1/models HTTP/1.1" 200 OK
+
+===== FP32 benchmark CSV =====
+request_id,status_code,latency_seconds,prompt_tokens,completion_tokens,total_tokens,tokens_per_second,prompt,output,error_text
+1,200,3.1076,18,64,82,20.5944,用一句话解释什么是 GPU 推理服务。,<seed:think>\n用户现在需要用一句话解释GPU推理服务，首先得明确几个关键要素：GPU是什么（图形处理器，擅长并行计算），推理服务的核心（用训练好的模型处理输入数据得到输出，比如预测、识别），还有服务的属性（提供API或接口供外部调用,
+2,200,3.118,17,64,81,20.5262,用一句话解释什么是 KV cache。,<seed:think>\n用户现在需要用一句话解释KV cache，首先得回忆一下KV cache是什么东西。KV应该是Key-Value的意思，cache就是缓存。那它用在什么场景呢？应该是大语言模型（LLM）推理的时候吧，因为之前了解过LLM生成文本是逐个,
+3,200,3.1063,16,64,80,20.6031,用一句话解释什么是模型量化。,<seed:think>\n用户现在需要我用一句话解释模型量化是什么。首先，我得回忆一下模型量化的核心概念。量化应该是针对机器学习模型的，主要是为了降低模型的大小和计算成本吧？通常是把模型中的高精度参数（比如浮点数，像FP32）转换成,
+
+===== 当前 GPU 状态 =====
+Thu May 28 21:31:20 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   27C    P0             85W /  400W |   81147MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   28C    P0             82W /  400W |   81147MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            2908      C   VLLM::Worker_TP0                      81138MiB |
+|    1   N/A  N/A            2909      C   VLLM::Worker_TP1                      81138MiB |
++-----------------------------------------------------------------------------------------+
+
+===== 当前 cache / disk =====
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          80G   15G   66G  19% /
+Filesystem                   Size  Used Avail Use% Mounted on
+mfs#us-wa-1.runpod.net:9421  479T  283T  196T  60% /workspace
+68G	/workspace/hf_cache
+
+===== Git 状态 =====
+?? logs/new_2xa100_env_install_all_20260528.txt
+?? logs/new_2xa100_fp32_int8_precheck_20260528.txt
+?? logs/new_2xa100_fp32_prelaunch_snapshot_20260528.txt
+?? logs/new_2xa100_install_base_requirements_20260528.log
+?? logs/new_2xa100_install_vllm_20260528.log
+?? logs/new_2xa100_seed_oss_fp32_benchmark_3req_20260528.log
+?? logs/new_2xa100_seed_oss_fp32_final_inventory_20260528.txt
+?? logs/new_2xa100_seed_oss_fp32_launch_snapshot_20260528.txt
+?? logs/new_2xa100_seed_oss_fp32_monitor_20260528_212503.txt
+?? logs/new_2xa100_seed_oss_fp32_openai_benchmark_3req_20260528.log
+?? logs/new_2xa100_seed_oss_fp32_ready_evidence_20260528.txt
+?? logs/new_2xa100_seed_oss_fp32_shard_loading_check_20260528_212723.txt
+?? logs/new_2xa100_seed_oss_fp32_vllm.pid
+?? logs/new_2xa100_seed_oss_fp32_vllm_launch_20260528.log
+?? logs/new_2xa100_upgrade_pip_20260528.log
+?? logs/new_2xa100_vllm_cuda_check_20260528.txt
+?? results/new_2xa100_seed_oss_fp32_openai_benchmark_3req_20260528.csv
+?? results/new_2xa100_seed_oss_fp32_smoke_test_20260528.txt
+?? results/new_2xa100_seed_oss_fp32_smoke_test_retry_20260528.txt

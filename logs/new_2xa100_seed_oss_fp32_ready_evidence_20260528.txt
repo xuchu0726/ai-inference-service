@@ -1,0 +1,57 @@
+===== 日期 =====
+Thu May 28 21:28:18 UTC 2026
+
+===== 本步骤目的 =====
+保存 Seed-OSS-36B FP32 baseline 已完成加载并进入 API ready 状态的证据。
+
+===== /v1/models =====
+{"object":"list","data":[{"id":"ByteDance-Seed/Seed-OSS-36B-Instruct","object":"model","created":1780003698,"owned_by":"vllm","root":"ByteDance-Seed/Seed-OSS-36B-Instruct","parent":null,"max_model_len":512,"permission":[{"id":"modelperm-793545809298464e8b6f27e40dbb1a44","object":"model_permission","created":1780003698,"allow_create_engine":false,"allow_sampling":true,"allow_logprobs":true,"allow_search_indices":false,"allow_view":true,"allow_fine_tuning":false,"organization":"*","group":null,"is_blocking":false}]}]}
+
+===== /health =====
+
+
+===== GPU 状态 =====
+Thu May 28 21:28:18 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   27C    P0             85W /  400W |   81147MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   28C    P0             83W /  400W |   81147MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            2908      C   VLLM::Worker_TP0                      81138MiB |
+|    1   N/A  N/A            2909      C   VLLM::Worker_TP1                      81138MiB |
++-----------------------------------------------------------------------------------------+
+
+===== 关键日志摘录 =====
+[1;36m(EngineCore_DP0 pid=2774)[0;0m INFO 05-28 21:23:40 [core.py:93] Initializing a V1 LLM engine (v0.11.2) with config: model='ByteDance-Seed/Seed-OSS-36B-Instruct', speculative_config=None, tokenizer='ByteDance-Seed/Seed-OSS-36B-Instruct', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float32, max_seq_len=512, download_dir='/workspace/hf_cache', load_format=auto, tensor_parallel_size=2, pipeline_parallel_size=1, data_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=True, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=0, served_model_name=ByteDance-Seed/Seed-OSS-36B-Instruct, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'level': None, 'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'splitting_ops': None, 'compile_mm_encoder': False, 'use_inductor': None, 'compile_sizes': [], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {}, 'max_cudagraph_capture_size': 0, 'local_cache_dir': None}
+[1;36m(Worker_TP0 pid=2908)[0;0m INFO 05-28 21:26:10 [default_loader.py:314] Loading weights took 93.52 seconds
+[1;36m(Worker_TP0 pid=2908)[0;0m INFO 05-28 21:26:11 [gpu_model_runner.py:3338] Model loading took 67.5901 GiB memory and 139.225964 seconds
+[1;36m(Worker_TP0 pid=2908)[0;0m INFO 05-28 21:26:20 [gpu_worker.py:359] Available KV cache memory: 9.43 GiB
+[1;36m(EngineCore_DP0 pid=2774)[0;0m INFO 05-28 21:26:20 [kv_cache_utils.py:1229] GPU KV cache size: 38,624 tokens
+[1;36m(EngineCore_DP0 pid=2774)[0;0m INFO 05-28 21:26:20 [kv_cache_utils.py:1234] Maximum concurrency for 512 tokens per request: 75.44x
+[1;36m(EngineCore_DP0 pid=2774)[0;0m INFO 05-28 21:26:20 [kv_cache_utils.py:1234] Maximum concurrency for 512 tokens per request: 75.44x
+[1;36m(APIServer pid=2200)[0;0m INFO:     Application startup complete.
+[1;36m(APIServer pid=2200)[0;0m INFO:     127.0.0.1:33202 - "GET /v1/models HTTP/1.1" 200 OK
+[1;36m(APIServer pid=2200)[0;0m INFO:     127.0.0.1:47624 - "GET /v1/models HTTP/1.1" 200 OK
+
+===== cache / disk 状态 =====
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          80G   15G   66G  19% /
+Filesystem                   Size  Used Avail Use% Mounted on
+mfs#us-wa-1.runpod.net:9421  479T  283T  196T  60% /workspace
+68G	/workspace/hf_cache

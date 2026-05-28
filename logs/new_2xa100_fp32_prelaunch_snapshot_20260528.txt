@@ -1,0 +1,62 @@
+===== 日期 =====
+Thu May 28 21:22:29 UTC 2026
+
+===== 本步骤目的 =====
+保存 Seed-OSS-36B FP32 baseline 启动前的干净环境状态。
+本实验目标：在 2×A100-SXM4-80GB 上尝试 full precision FP32 serving baseline，记录模型下载、权重加载、显存占用、API ready 或资源边界。
+
+===== Git 状态 =====
+?? logs/new_2xa100_env_install_all_20260528.txt
+?? logs/new_2xa100_fp32_int8_precheck_20260528.txt
+?? logs/new_2xa100_fp32_prelaunch_snapshot_20260528.txt
+?? logs/new_2xa100_install_base_requirements_20260528.log
+?? logs/new_2xa100_install_vllm_20260528.log
+?? logs/new_2xa100_upgrade_pip_20260528.log
+?? logs/new_2xa100_vllm_cuda_check_20260528.txt
+0a15e87 修正 Week2 Seed-OSS FP32 启动尝试记录
+e25e42a 补充 Seed-OSS FP32 启动可行性边界记录
+f183f3e 保存旧 Network Volume 顶层兜底记录
+97c896d 补充旧 volume evidence 推送日志
+c6ece09 保存旧 Network Volume 独有实验记录
+
+===== Python / vLLM / CUDA =====
+torch: 2.9.0+cu128
+transformers: 4.57.6
+vllm: 0.11.2
+cuda_available: True
+gpu_count: 2
+gpu_0: NVIDIA A100-SXM4-80GB
+gpu_1: NVIDIA A100-SXM4-80GB
+
+===== GPU 初始状态 =====
+Thu May 28 21:22:36 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   26C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   27C    P0             63W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== 磁盘状态 =====
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          80G   15G   66G  19% /
+Filesystem                   Size  Used Avail Use% Mounted on
+mfs#us-wa-1.runpod.net:9421  479T  283T  196T  60% /workspace
+512	/workspace/hf_cache
