@@ -1,0 +1,160 @@
+===== 日期 =====
+Thu May 28 21:42:59 UTC 2026
+
+===== 本步骤目的 =====
+在不启动模型的情况下，探测 Seed-OSS-36B-Instruct 在当前 vLLM 0.11.2 环境中的量化可行性。
+重点判断 direct INT8 serving 是否具备条件，并为后续 FP32 vs 量化 对比实验保存证据。
+
+===== Git 状态 =====
+?? logs/new_2xa100_seed_oss_quantization_feasibility_probe_20260528.txt
+719c4bc 记录 FP32 结束后 INT8 前置状态
+b75d439 补充 Seed-OSS-36B FP32 vLLM 正常退出日志
+4226dbe 记录 Seed-OSS-36B FP32 服务停止状态
+c4ad18b 归档 Seed-OSS-36B FP32 实验过程日志
+0ea9789 保存 Seed-OSS-36B FP32 baseline 实验证据
+0a15e87 修正 Week2 Seed-OSS FP32 启动尝试记录
+e25e42a 补充 Seed-OSS FP32 启动可行性边界记录
+f183f3e 保存旧 Network Volume 顶层兜底记录
+
+===== Python / CUDA / vLLM 环境 =====
+/usr/bin/python
+/usr/local/bin/pip
+Python 3.11.10
+pip 26.1.1 from /usr/local/lib/python3.11/dist-packages/pip (python 3.11)
+torch: 2.9.0+cu128
+transformers: 4.57.6
+vllm: 0.11.2
+cuda_available: True
+gpu_count: 2
+gpu_0: NVIDIA A100-SXM4-80GB
+gpu_1: NVIDIA A100-SXM4-80GB
+
+===== GPU 空闲状态 =====
+Thu May 28 21:43:06 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   25C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   25C    P0             62W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== vLLM OpenAI API server quantization 参数片段 =====
+                     [--allowed-media-domains ALLOWED_MEDIA_DOMAINS [ALLOWED_MEDIA_DOMAINS ...]]
+                     [--revision REVISION] [--code-revision CODE_REVISION]
+                     [--tokenizer-revision TOKENIZER_REVISION]
+                     [--max-model-len MAX_MODEL_LEN]
+                     [--quantization QUANTIZATION]
+                     [--enforce-eager | --no-enforce-eager]
+                     [--max-logprobs MAX_LOGPROBS]
+                     [--logprobs-mode {processed_logits,processed_logprobs,raw_logits,raw_logprobs}]
+                     [--disable-sliding-window | --no-disable-sliding-window]
+                     [--disable-cascade-attn | --no-disable-cascade-attn]
+                     [--skip-tokenizer-init | --no-skip-tokenizer-init]
+                     [--enable-prompt-embeds | --no-enable-prompt-embeds]
+                     [--served-model-name SERVED_MODEL_NAME [SERVED_MODEL_NAME ...]]
+
+===== vLLM help 中所有 quantization 相关行 =====
+                     [--quantization QUANTIZATION]
+
+===== Seed-OSS 本地缓存与模型文件结构 =====
+HF_HOME=/workspace/hf_cache
+HF_HUB_CACHE=/workspace/hf_cache/hub
+68G	/workspace/hf_cache
+//workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/4757f05d44783fc4a75af17b7c3c4c7fa64c0059
+//workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/a2b5aeb2cc06fb4b5f06fc7bd88144ceae69f1d754944575e2a0fe177cd9ae45
+//workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/7ec20d327302f1a82685a660ee792f6319f861f8099882d3c53b59b5f18e487d
+//workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/74340de3038f2469c7d7bcfa127f32baaa0f708a00698b6583d013f012feab07
+//workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/b4efea0bf1a26fc0da3eb1fc4c963956fec43dc276270dfa8dd556477f758ce6
+//workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/7928067d17eb6e3b208317c1bb9c03ae8d0ddf233e846c284ed29896dcabe4d4
+//workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/e6b61535f8efaf570381bcb2d389cf660c1bce9f6b8976c3a92a251eac8d0285
+//workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/2aab66b2b8ea7246faae1170444920f487ad45c7e1081a5dc97ec0b80ec2897c
+//workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/19752faebe38e21395701abacdaf0f9b06432be692efb60020b28752ef444d15
+//workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/d6328108446b779b73867a033ba16421974f44d64c1d40d01eba98ac0786a06a
+//workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/724dfc23348ea55f35135c582ed4b59b57a021d1448cedb479884a3b3fe89ed5
+//workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/3aa39357bfeb0a0601db504c6ee068f45c580df160f9da98ee9d0ec1815e9576
+//workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/e4ab51a947e938e0e92f2f0062ad652801e0b416a1f3bdb68874c880c3083bc6
+//workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/8aa1816ca29458caf3269e5c3d1dd639736f945b4970368c6b7e7d27e52a143d
+//workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/d68e5465e342cf2c45001685b0623af71f67a13e73fc8417e163ad78da96cdd0
+//workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/834c2453087fdbce45b786e250d736727ec5f52d13721577d2bf3517b828ffcc
+//workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/refs/main
+//workspace/hf_cache/modules/__init__.py
+//workspace/hf_cache/xet/logs/xet_20260528T212412474+0000_2909.log
+//workspace/hf_cache/xet/logs/xet_20260528T212330799+0000_2200.log
+//workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/.no_exist/497f1dca95ebdec98e41d517b9f060ee753c902f/video_preprocessor_config.json
+//workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/.no_exist/497f1dca95ebdec98e41d517b9f060ee753c902f/processor_config.json
+//workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/.no_exist/497f1dca95ebdec98e41d517b9f060ee753c902f/added_tokens.json
+//workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/.no_exist/497f1dca95ebdec98e41d517b9f060ee753c902f/tokenizer.model
+//workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/.no_exist/497f1dca95ebdec98e41d517b9f060ee753c902f/preprocessor_config.json
+//workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/refs/main
+//workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/3a7b67b2ff117b28fee613608490c8eb4cba65c0
+//workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/903ebaaba77ed311bab4892f6a14324283852427
+//workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/7dd43a535f9b404a917fb3d9acae8369939f2402
+//workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/f6bd848f52451824a3033a9f1e67eea5b399a13c90f845a332d3a29537e05827
+//workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/c72b8f0c6e6bef225d3dfcb60a7579bf63a575f1
+//workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs/e0944451ae2b83e0643ed832217a4322ed5e28db
+
+===== Seed-OSS config 探测 =====
+`torch_dtype` is deprecated! Use `dtype` instead!
+model_type: seed_oss
+architectures: ['SeedOssForCausalLM']
+torch_dtype: torch.bfloat16
+hidden_size: 5120
+num_hidden_layers: 64
+num_attention_heads: 80
+num_key_value_heads: 8
+head_dim: 128
+max_position_embeddings: 524288
+vocab_size: 155136
+gqa_group_size: 10
+
+===== config json key fields =====
+model_type: seed_oss
+architectures: ['SeedOssForCausalLM']
+torch_dtype: None
+hidden_size: 5120
+num_hidden_layers: 64
+num_attention_heads: 80
+num_key_value_heads: 8
+head_dim: 128
+intermediate_size: 27648
+max_position_embeddings: 524288
+rope_theta: 10000000.0
+
+===== 已完成 FP32 baseline 关键证据摘录 =====
+[1;36m(EngineCore_DP0 pid=2774)[0;0m INFO 05-28 21:23:40 [core.py:93] Initializing a V1 LLM engine (v0.11.2) with config: model='ByteDance-Seed/Seed-OSS-36B-Instruct', speculative_config=None, tokenizer='ByteDance-Seed/Seed-OSS-36B-Instruct', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float32, max_seq_len=512, download_dir='/workspace/hf_cache', load_format=auto, tensor_parallel_size=2, pipeline_parallel_size=1, data_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=True, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=0, served_model_name=ByteDance-Seed/Seed-OSS-36B-Instruct, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'level': None, 'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'splitting_ops': None, 'compile_mm_encoder': False, 'use_inductor': None, 'compile_sizes': [], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {}, 'max_cudagraph_capture_size': 0, 'local_cache_dir': None}
+[1;36m(Worker_TP0 pid=2908)[0;0m INFO 05-28 21:26:10 [default_loader.py:314] Loading weights took 93.52 seconds
+[1;36m(Worker_TP0 pid=2908)[0;0m INFO 05-28 21:26:11 [gpu_model_runner.py:3338] Model loading took 67.5901 GiB memory and 139.225964 seconds
+[1;36m(Worker_TP0 pid=2908)[0;0m INFO 05-28 21:26:20 [gpu_worker.py:359] Available KV cache memory: 9.43 GiB
+[1;36m(EngineCore_DP0 pid=2774)[0;0m INFO 05-28 21:26:20 [kv_cache_utils.py:1229] GPU KV cache size: 38,624 tokens
+[1;36m(EngineCore_DP0 pid=2774)[0;0m INFO 05-28 21:26:20 [kv_cache_utils.py:1234] Maximum concurrency for 512 tokens per request: 75.44x
+[1;36m(EngineCore_DP0 pid=2774)[0;0m INFO 05-28 21:26:20 [kv_cache_utils.py:1234] Maximum concurrency for 512 tokens per request: 75.44x
+[1;36m(APIServer pid=2200)[0;0m INFO:     Application startup complete.
+
+===== FP32 benchmark CSV =====
+request_id,status_code,latency_seconds,prompt_tokens,completion_tokens,total_tokens,tokens_per_second,prompt,output,error_text
+1,200,3.1076,18,64,82,20.5944,用一句话解释什么是 GPU 推理服务。,<seed:think>\n用户现在需要用一句话解释GPU推理服务，首先得明确几个关键要素：GPU是什么（图形处理器，擅长并行计算），推理服务的核心（用训练好的模型处理输入数据得到输出，比如预测、识别），还有服务的属性（提供API或接口供外部调用,
+2,200,3.118,17,64,81,20.5262,用一句话解释什么是 KV cache。,<seed:think>\n用户现在需要用一句话解释KV cache，首先得回忆一下KV cache是什么东西。KV应该是Key-Value的意思，cache就是缓存。那它用在什么场景呢？应该是大语言模型（LLM）推理的时候吧，因为之前了解过LLM生成文本是逐个,
+3,200,3.1063,16,64,80,20.6031,用一句话解释什么是模型量化。,<seed:think>\n用户现在需要我用一句话解释模型量化是什么。首先，我得回忆一下模型量化的核心概念。量化应该是针对机器学习模型的，主要是为了降低模型的大小和计算成本吧？通常是把模型中的高精度参数（比如浮点数，像FP32）转换成,
+
+===== 当前判断边界 =====
+1. 当前 FP32 baseline 已完成：2×A100-SXM4-80GB, TP=2, dtype=float32, max_model_len=512。
+2. FP32 模型加载后显存接近满载，nvidia-smi 记录约 81147MiB / 81920MiB per GPU。
+3. 下一阶段不能直接假设 INT8 可用，必须先确认 vLLM 支持的量化后端是否需要预量化权重。
+4. 如果 direct INT8 不支持原始 HF BF16 权重在线转换，则应记录为 direct INT8 serving feasibility boundary，并选择 vLLM 支持的工程量化路径继续验证。
