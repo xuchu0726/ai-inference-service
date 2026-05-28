@@ -120,3 +120,11 @@ INFO 05-28 21:51:07 [parallel_state.py:1394] rank 0 in world size 2 is assigned 
 [1;36m(APIServer pid=5351)[0;0m INFO:     127.0.0.1:53900 - "GET /v1/models HTTP/1.1" 200 OK
 [1;36m(APIServer pid=5351)[0;0m INFO:     127.0.0.1:53916 - "GET /health HTTP/1.1" 200 OK
 [1;36m(APIServer pid=5351)[0;0m INFO:     127.0.0.1:53922 - "GET /metrics HTTP/1.1" 200 OK
+[1;36m(APIServer pid=5351)[0;0m INFO:     127.0.0.1:35162 - "GET /v1/models HTTP/1.1" 200 OK
+[1;36m(APIServer pid=5351)[0;0m INFO:     127.0.0.1:35178 - "GET /health HTTP/1.1" 200 OK
+[1;36m(APIServer pid=5351)[0;0m INFO 05-28 22:03:31 [launcher.py:110] Shutting down FastAPI HTTP server.
+[1;36m(Worker_TP0 pid=5767)[0;0m INFO 05-28 22:03:31 [multiproc_executor.py:702] Parent process exited, terminating worker
+[1;36m(Worker_TP1 pid=5768)[0;0m INFO 05-28 22:03:31 [multiproc_executor.py:702] Parent process exited, terminating worker
+[1;36m(APIServer pid=5351)[0;0m INFO:     Shutting down
+[1;36m(APIServer pid=5351)[0;0m INFO:     Waiting for application shutdown.
+[1;36m(APIServer pid=5351)[0;0m INFO:     Application shutdown complete.
