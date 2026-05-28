@@ -1,0 +1,4 @@
+metric,fp32,bnb_int8,change_percent,direction,interpretation
+steady_state_gpu_memory_mib_per_gpu,81147,74829,7.7859,lower_is_better,量化服务进入稳定 serving 后，nvidia-smi 观测到的单卡显存占用下降，但下降幅度未达到 30%。原因是该指标包含模型权重、vLLM runtime、KV cache 预分配等整体显存占用，并不只反映权重量化后的参数体积。
+avg_latency_seconds_3req,3.1106,4.8426,55.6778,lower_is_better,当前 bitsandbytes 量化路径下，端到端请求延迟高于 FP32 baseline，说明该路径在当前配置下未带来推理加速。
+avg_completion_tokens_per_second_3req,20.5746,13.2198,-35.7467,higher_is_better,当前 bitsandbytes 量化路径下，completion tokens/s 低于 FP32 baseline，说明在线低比特量化可能引入反量化或 kernel 执行开销，不适合作为当前配置下的高吞吐优化方案。

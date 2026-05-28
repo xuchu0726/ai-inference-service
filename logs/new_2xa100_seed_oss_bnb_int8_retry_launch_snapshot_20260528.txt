@@ -1,0 +1,53 @@
+===== 日期 =====
+Thu May 28 21:50:45 UTC 2026
+
+===== 本步骤目的 =====
+记录安装 bitsandbytes 后，Seed-OSS-36B bitsandbytes INT8/低比特量化 retry 启动后的初始状态。
+本次实验与第一次失败 attempt 参数保持一致，仅补齐 bitsandbytes 依赖，用于验证量化路径是否可继续。
+
+===== PID =====
+5351
+
+===== vLLM 进程 =====
+    PID    PPID STAT     ELAPSED %CPU %MEM CMD
+   5351    1424 Rl         00:04  266  0.0 python -m vllm.entrypoints.openai.api_server --model ByteDance-Seed/Seed-OSS-36B-Instruct --served-model-name ByteDance-Seed/Seed-OSS-36B-Instruct --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --distributed-executor-backend mp --dtype bfloat16 --quantization bitsandbytes --load-format bitsandbytes --max-model-len 512 --max-num-batched-tokens 512 --max-num-seqs 1 --gpu-memory-utilization 0.90 --download-dir /workspace/hf_cache --trust-remote-code --enforce-eager
+   5351    1424 Rl         00:04  266  0.0 python -m vllm.entrypoints.openai.api_server --model ByteDance-Seed/Seed-OSS-36B-Instruct --served-model-name ByteDance-Seed/Seed-OSS-36B-Instruct --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --distributed-executor-backend mp --dtype bfloat16 --quantization bitsandbytes --load-format bitsandbytes --max-model-len 512 --max-num-batched-tokens 512 --max-num-seqs 1 --gpu-memory-utilization 0.90 --download-dir /workspace/hf_cache --trust-remote-code --enforce-eager
+
+===== GPU 状态 =====
+Thu May 28 21:50:45 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   26C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   27C    P0             63W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== cache / disk =====
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          80G   15G   66G  19% /
+Filesystem                   Size  Used Avail Use% Mounted on
+mfs#us-wa-1.runpod.net:9421  479T  283T  196T  60% /workspace
+68G	/workspace/hf_cache
+
+===== API ready 探测 =====
+
+
+===== 启动日志前 220 行 =====
+nohup: ignoring input

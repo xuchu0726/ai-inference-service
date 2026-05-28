@@ -1,0 +1,69 @@
+===== 日期 =====
+Thu May 28 21:55:21 UTC 2026
+
+===== 本步骤目的 =====
+对 Seed-OSS-36B bitsandbytes 量化服务进行最小单请求 smoke test。
+记录 latency、输出内容、token usage、请求前后 GPU 状态，用于和 FP32 baseline 对比。
+
+===== 请求前 GPU =====
+Thu May 28 21:55:21 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   26C    P0             85W /  400W |   74643MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   27C    P0             82W /  400W |   74643MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            5767      C   VLLM::Worker_TP0                      74634MiB |
+|    1   N/A  N/A            5768      C   VLLM::Worker_TP1                      74634MiB |
++-----------------------------------------------------------------------------------------+
+
+===== bitsandbytes quantized smoke request =====
+status_code: 200
+wall_time_seconds: 6.4323
+response_text:
+{"id":"chatcmpl-ad23ce2cad0844a1ba094e46357e79f8","object":"chat.completion","created":1780005323,"model":"ByteDance-Seed/Seed-OSS-36B-Instruct","choices":[{"index":0,"message":{"role":"assistant","content":"<seed:think>\n用户现在需要我用一句话解释GPU推理服务。首先得明确GPU推理服务的核心要素：GPU（图形处理器，用于加速计算）、推理（机器学习模型的预测过程，比如输入数据得到输出）、服务（提供这种能力的系统或平台）。\n\n首先，推理是","refusal":null,"annotations":null,"audio":null,"function_call":null,"tool_calls":[],"reasoning":null,"reasoning_content":null},"logprobs":null,"finish_reason":"length","stop_reason":null,"token_ids":null}],"service_tier":null,"system_fingerprint":null,"usage":{"prompt_tokens":18,"total_tokens":82,"completion_tokens":64,"prompt_tokens_details":null},"prompt_logprobs":null,"prompt_token_ids":null,"kv_transfer_params":null}
+completion_tokens_per_second: 9.9499
+usage: {"prompt_tokens": 18, "total_tokens": 82, "completion_tokens": 64, "prompt_tokens_details": null}
+
+
+===== 请求后 GPU =====
+Thu May 28 21:55:28 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   32C    P0            182W /  400W |   74829MiB /  81920MiB |     51%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   33C    P0            180W /  400W |   74829MiB /  81920MiB |     53%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            5767      C   VLLM::Worker_TP0                      74820MiB |
+|    1   N/A  N/A            5768      C   VLLM::Worker_TP1                      74820MiB |
++-----------------------------------------------------------------------------------------+
