@@ -1,0 +1,55 @@
+===== 日期 =====
+Thu May 28 21:45:01 UTC 2026
+
+===== 本步骤目的 =====
+记录 Seed-OSS-36B bitsandbytes INT8/低比特量化 serving attempt 启动后的初始状态。
+配置：2×A100-SXM4-80GB, TP=2, quantization=bitsandbytes, load_format=bitsandbytes, dtype=bfloat16, max_model_len=512。
+目标：验证量化加载是否成功，并与 FP32 baseline 的显存、latency、tokens/s 做对比。
+
+===== PID =====
+4584
+
+===== vLLM 进程 =====
+    PID    PPID STAT     ELAPSED %CPU %MEM CMD
+   4584    1424 Rl         00:05  239  0.0 python -m vllm.entrypoints.openai.api_server --model ByteDance-Seed/Seed-OSS-36B-Instruct --served-model-name ByteDance-Seed/Seed-OSS-36B-Instruct --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --distributed-executor-backend mp --dtype bfloat16 --quantization bitsandbytes --load-format bitsandbytes --max-model-len 512 --max-num-batched-tokens 512 --max-num-seqs 1 --gpu-memory-utilization 0.90 --download-dir /workspace/hf_cache --trust-remote-code --enforce-eager
+   4584    1424 Rl         00:05  239  0.0 python -m vllm.entrypoints.openai.api_server --model ByteDance-Seed/Seed-OSS-36B-Instruct --served-model-name ByteDance-Seed/Seed-OSS-36B-Instruct --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --distributed-executor-backend mp --dtype bfloat16 --quantization bitsandbytes --load-format bitsandbytes --max-model-len 512 --max-num-batched-tokens 512 --max-num-seqs 1 --gpu-memory-utilization 0.90 --download-dir /workspace/hf_cache --trust-remote-code --enforce-eager
+
+===== GPU 状态 =====
+Thu May 28 21:45:03 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   26C    P0             93W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   28C    P0            112W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== cache / disk =====
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          80G   15G   66G  19% /
+Filesystem                   Size  Used Avail Use% Mounted on
+mfs#us-wa-1.runpod.net:9421  479T  283T  196T  60% /workspace
+68G	/workspace/hf_cache
+
+===== 启动日志前 160 行 =====
+nohup: ignoring input
+INFO 05-28 21:45:03 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=2048.
+[1;36m(APIServer pid=4584)[0;0m INFO 05-28 21:45:03 [api_server.py:1977] vLLM API server version 0.11.2
+[1;36m(APIServer pid=4584)[0;0m INFO 05-28 21:45:03 [utils.py:253] non-default args: {'host': '0.0.0.0', 'port': 8002, 'model': 'ByteDance-Seed/Seed-OSS-36B-Instruct', 'trust_remote_code': True, 'dtype': 'bfloat16', 'max_model_len': 512, 'quantization': 'bitsandbytes', 'enforce_eager': True, 'served_model_name': ['ByteDance-Seed/Seed-OSS-36B-Instruct'], 'load_format': 'bitsandbytes', 'download_dir': '/workspace/hf_cache', 'distributed_executor_backend': 'mp', 'tensor_parallel_size': 2, 'max_num_batched_tokens': 512, 'max_num_seqs': 1}
+[1;36m(APIServer pid=4584)[0;0m The argument `trust_remote_code` is to be used with Auto classes. It has no effect here and is ignored.
