@@ -1,0 +1,120 @@
+===== 日期 =====
+Thu May 28 22:03:31 UTC 2026
+
+===== 本步骤目的 =====
+归档 Seed-OSS-36B bitsandbytes 量化服务最终状态，然后停止服务，释放 GPU，为严格 INT8/W8A8 路径探测做准备。
+说明：当前 bitsandbytes 路径不能直接等同于老师要求的严格 INT8 量化，只作为低比特/在线量化后端尝试与工程边界证据。
+
+===== Git 状态 =====
+?? logs/new_2xa100_seed_oss_bnb_int8_openai_benchmark_3req_20260528.log
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_loading_check_20260528_215302.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_check_20260528_215331.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_evidence_20260528.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215126.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215205.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_vllm.pid
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214511.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214606.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_vllm.pid
+?? logs/new_2xa100_seed_oss_bnb_quantization_shutdown_and_boundary_20260528.txt
+7610128 补充 Seed-OSS 量化对比中文实验结论
+a390118 安装 bitsandbytes 量化后端依赖
+a504d91 记录 Seed-OSS bitsandbytes 量化首次失败边界
+a04f922 记录 Seed-OSS-36B 量化可行性探测
+719c4bc 记录 FP32 结束后 INT8 前置状态
+b75d439 补充 Seed-OSS-36B FP32 vLLM 正常退出日志
+4226dbe 记录 Seed-OSS-36B FP32 服务停止状态
+c4ad18b 归档 Seed-OSS-36B FP32 实验过程日志
+
+===== 当前 vLLM 进程 =====
+   5351    1424 Sl         12:50  4.4  0.0 python -m vllm.entrypoints.openai.api_server --model ByteDance-Seed/Seed-OSS-36B-Instruct --served-model-name ByteDance-Seed/Seed-OSS-36B-Instruct --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --distributed-executor-backend mp --dtype bfloat16 --quantization bitsandbytes --load-format bitsandbytes --max-model-len 512 --max-num-batched-tokens 512 --max-num-seqs 1 --gpu-memory-utilization 0.90 --download-dir /workspace/hf_cache --trust-remote-code --enforce-eager
+   5633    5351 Sl         12:41  6.1  0.0 VLLM::EngineCore
+   5767    5633 Rl         12:34 88.8  0.0 VLLM::Worker_TP0
+   5768    5633 Rl         12:34 88.8  0.0 VLLM::Worker_TP1
+
+===== 停止前 GPU =====
+Thu May 28 22:03:31 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   27C    P0             85W /  400W |   74829MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   28C    P0             83W /  400W |   74829MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            5767      C   VLLM::Worker_TP0                      74820MiB |
+|    1   N/A  N/A            5768      C   VLLM::Worker_TP1                      74820MiB |
++-----------------------------------------------------------------------------------------+
+
+===== API ready 探测 =====
+{"object":"list","data":[{"id":"ByteDance-Seed/Seed-OSS-36B-Instruct","object":"model","created":1780005811,"owned_by":"vllm","root":"ByteDance-Seed/Seed-OSS-36B-Instruct","parent":null,"max_model_len":512,"permission":[{"id":"modelperm-4d4b29661cc54f8e89bd9d745c623b30","object":"model_permission","created":1780005811,"allow_create_engine":false,"allow_sampling":true,"allow_logprobs":true,"allow_search_indices":false,"allow_view":true,"allow_fine_tuning":false,"organization":"*","group":null,"is_blocking":false}]}]}
+
+
+===== bnb 关键日志摘录 =====
+[1;36m(EngineCore_DP0 pid=5633)[0;0m INFO 05-28 21:50:57 [core.py:93] Initializing a V1 LLM engine (v0.11.2) with config: model='ByteDance-Seed/Seed-OSS-36B-Instruct', speculative_config=None, tokenizer='ByteDance-Seed/Seed-OSS-36B-Instruct', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.bfloat16, max_seq_len=512, download_dir='/workspace/hf_cache', load_format=bitsandbytes, tensor_parallel_size=2, pipeline_parallel_size=1, data_parallel_size=1, disable_custom_all_reduce=False, quantization=bitsandbytes, enforce_eager=True, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=0, served_model_name=ByteDance-Seed/Seed-OSS-36B-Instruct, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'level': None, 'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'splitting_ops': None, 'compile_mm_encoder': False, 'use_inductor': None, 'compile_sizes': [], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {}, 'max_cudagraph_capture_size': 0, 'local_cache_dir': None}
+[1;36m(Worker_TP0 pid=5767)[0;0m INFO 05-28 21:51:09 [bitsandbytes_loader.py:791] Loading weights with BitsAndBytes quantization. May take a while ...
+[1;36m(Worker_TP1 pid=5768)[0;0m INFO 05-28 21:51:09 [bitsandbytes_loader.py:791] Loading weights with BitsAndBytes quantization. May take a while ...
+[1;36m(Worker_TP0 pid=5767)[0;0m INFO 05-28 21:53:31 [gpu_model_runner.py:3338] Model loading took 10.7777 GiB memory and 142.367932 seconds
+[1;36m(Worker_TP0 pid=5767)[0;0m INFO 05-28 21:53:36 [gpu_worker.py:359] Available KV cache memory: 59.83 GiB
+[1;36m(EngineCore_DP0 pid=5633)[0;0m INFO 05-28 21:53:37 [kv_cache_utils.py:1229] GPU KV cache size: 490,128 tokens
+[1;36m(EngineCore_DP0 pid=5633)[0;0m INFO 05-28 21:53:37 [kv_cache_utils.py:1234] Maximum concurrency for 512 tokens per request: 957.28x
+[1;36m(EngineCore_DP0 pid=5633)[0;0m INFO 05-28 21:53:37 [kv_cache_utils.py:1234] Maximum concurrency for 512 tokens per request: 957.28x
+[1;36m(APIServer pid=5351)[0;0m INFO:     Application startup complete.
+[1;36m(APIServer pid=5351)[0;0m INFO:     127.0.0.1:56632 - "GET /v1/models HTTP/1.1" 200 OK
+[1;36m(APIServer pid=5351)[0;0m INFO:     127.0.0.1:59298 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[1;36m(APIServer pid=5351)[0;0m INFO:     127.0.0.1:49106 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[1;36m(APIServer pid=5351)[0;0m INFO:     127.0.0.1:49118 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[1;36m(APIServer pid=5351)[0;0m INFO:     127.0.0.1:47560 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[1;36m(APIServer pid=5351)[0;0m INFO:     127.0.0.1:53900 - "GET /v1/models HTTP/1.1" 200 OK
+[1;36m(APIServer pid=5351)[0;0m INFO:     127.0.0.1:35162 - "GET /v1/models HTTP/1.1" 200 OK
+
+===== benchmark CSV =====
+request_id,status_code,latency_seconds,prompt_tokens,completion_tokens,total_tokens,tokens_per_second,prompt,output,error_text
+1,200,4.7504,18,64,82,13.4725,用一句话解释什么是 GPU 推理服务。,<seed:think>\n用户现在需要我用一句话解释GPU推理服务。首先得明确GPU推理服务的核心要素：GPU（图形处理器，用于加速计算）、推理（机器学习模型的预测过程，比如输入数据得到输出）、服务（提供这种能力的系统或平台）。\n\n首先，推理是,
+2,200,4.8291,17,64,81,13.2531,用一句话解释什么是 KV cache。,<seed:think>\n用户现在需要我用一句话解释KV cache是什么。首先，我得回忆一下KV cache的基本概念，它主要用于大语言模型（LLM）的推理过程中，对吧？核心是存储之前生成的键（Key）和值（Value）的缓存，目的是减少重复,
+3,200,4.9482,16,64,80,12.9339,用一句话解释什么是模型量化。,<seed:think>\n用户现在需要我用一句话解释模型量化是什么。首先，我得回忆一下模型量化的核心概念。量化应该是把模型里的参数和计算从高精度（比如浮点型，像FP32）转换成低精度（比如整数，INT8、INT4这些），对吧？,
+
+===== 停止服务 =====
+
+===== 停止后进程 =====
+
+===== 停止后 GPU =====
+Thu May 28 22:03:46 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   26C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   27C    P0             63W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== 端口状态 =====
