@@ -1,0 +1,105 @@
+===== 实验结论摘要 =====
+
+本实验在 2×NVIDIA A100-SXM4-80GB 环境中，对 ByteDance-Seed/Seed-OSS-36B-Instruct 进行了 FP32 baseline 与离线 W8A8 量化 serving 对比。
+
+FP32 baseline 配置：
+- model: ByteDance-Seed/Seed-OSS-36B-Instruct
+- dtype: float32
+- tensor_parallel_size: 2
+- max_model_len: 512
+- max_num_batched_tokens: 512
+- max_num_seqs: 1
+- vLLM version: 0.11.2
+
+W8A8 量化配置：
+- offline quantization tool: llmcompressor
+- quantization scheme: W8A8
+- serving backend: vLLM compressed-tensors
+- model path: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+- tensor_parallel_size: 2
+- max_model_len: 512
+- max_num_batched_tokens: 512
+- max_num_seqs: 1
+- vLLM kernel: CompressedTensorsW8A8Int8 / CutlassScaledMMLinearKernel
+
+===== 模型加载与显存对比 =====
+
+FP32 baseline:
+- model loading memory: 67.5901 GiB
+- available KV cache memory: 9.43 GiB
+- GPU KV cache size: 38,624 tokens
+- max concurrency estimate for 512 tokens/request: 75.44x
+- nvidia-smi runtime memory: about 81147 MiB / 81920 MiB per GPU
+
+W8A8:
+- model loading memory: 17.7109 GiB
+- available KV cache memory: 53.04 GiB
+- GPU KV cache size: 434,480 tokens
+- max concurrency estimate for 512 tokens/request: 848.59x
+- nvidia-smi runtime memory: about 74581 MiB / 81920 MiB per GPU
+
+Derived comparison:
+- model loading memory reduction: about 73.8%
+- available KV cache memory increase: about 462.5%
+- GPU KV cache capacity increase: about 1025%
+- max concurrency estimate increase: about 1025%
+- nvidia-smi runtime reserved memory reduction: about 8.1%
+
+Interpretation:
+W8A8 significantly reduces model weight loading memory. However, vLLM uses the released memory to allocate a much larger KV cache, so nvidia-smi runtime memory does not drop proportionally. Therefore, the main serving-side benefit is not only lower model weight memory, but larger KV cache capacity and much higher concurrency headroom.
+
+===== 3-request benchmark 对比 =====
+
+FP32 baseline:
+- request count: 3
+- success count: 3
+- error rate: 0
+- avg latency: 3.1106 s
+- P50 latency: 3.1076 s
+- max latency: 3.1180 s
+- avg completion tokens/s: 20.5746
+
+W8A8:
+- request count: 3
+- success count: 3
+- error rate: 0
+- avg latency: 2.5122 s
+- P50 latency: 2.4831 s
+- max latency: 2.5739 s
+- avg completion tokens/s: 25.4828
+
+Derived comparison:
+- avg latency reduction: about 19.24%
+- P50 latency reduction: about 20.10%
+- max latency reduction: about 17.45%
+- avg completion tokens/s improvement: about 23.86%
+
+Interpretation:
+Under the current short-output benchmark setting, W8A8 improves average completion throughput by about 23.86% and reduces P50 latency by about 20.10%. This satisfies the speed-improvement target when measured by tokens/s and P50 latency. The sample size is still small, so a larger concurrency benchmark is required before making production-level conclusions.
+
+===== 工程结论 =====
+
+1. Direct INT8 serving on the original Seed-OSS BF16 checkpoint failed because the original checkpoint did not contain quantization_config or compressed-tensors metadata required by vLLM strict quantization backends.
+2. bitsandbytes online quantization could run, but it did not provide the strongest serving result and should not be treated as the final strict INT8 evidence.
+3. The high-value path is offline W8A8 quantization with llmcompressor, producing a compressed-tensors checkpoint and serving it through vLLM.
+4. The final W8A8 checkpoint can be loaded by vLLM and uses CompressedTensorsW8A8Int8 kernels.
+5. W8A8 serving successfully completed smoke test and repeated 3-request benchmark.
+6. The most important inference-serving gain is increased KV cache capacity and concurrency headroom, not merely lower nvidia-smi visible memory.
+
+===== 后续仍需补强 =====
+
+1. Current benchmark uses only 3 sequential requests and is sufficient for milestone evidence, but not sufficient for a high-confidence performance report.
+2. Next step should run concurrency sweep under FP32 and W8A8 using the same workload:
+   - concurrency = 1, 2, 4, 8
+   - repeat >= 8 per setting
+   - max_tokens = 64 or 128
+   - record QPS, avg latency, P50, P95, tokens/s, error rate
+3. Prometheus/Grafana should be used to explain:
+   - num_requests_running
+   - num_requests_waiting
+   - kv_cache_usage_perc
+   - request_prompt_tokens
+   - request_generation_tokens
+   - time_to_first_token_seconds
+   - prefix_cache hit rate
+4. The report should explicitly state that vLLM preallocates KV cache, so nvidia-smi runtime memory is not the right sole metric for quantization benefit.
