@@ -1,0 +1,85 @@
+===== 实验结论摘要 =====
+
+本实验在 2×NVIDIA A100-SXM4-80GB 环境中，对 Seed-OSS-36B W8A8 compressed-tensors 量化模型启动 batch-oriented serving profile，并执行并发压力 sweep。
+
+服务配置：
+- model path: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+- served model name: Seed-OSS-36B-Instruct-W8A8-BatchProfile
+- quantization backend: compressed-tensors
+- kernel: CompressedTensorsW8A8Int8 / CutlassScaledMMLinearKernel
+- tensor_parallel_size: 2
+- max_model_len: 512
+- max_num_batched_tokens: 8192
+- max_num_seqs: 32
+- dtype: bfloat16
+- vLLM version: 0.11.2
+
+===== 并发 sweep 结果 =====
+
+concurrency=1:
+- total requests: 32
+- successful requests: 32
+- error rate: 0
+- QPS: 0.4096
+- P50 latency: 2.4049 s
+- P95 latency: 2.5703 s
+- aggregate output tokens/s: 26.2146
+
+concurrency=2:
+- total requests: 32
+- successful requests: 32
+- error rate: 0
+- QPS: 0.7968
+- P50 latency: 2.5039 s
+- P95 latency: 2.5774 s
+- aggregate output tokens/s: 50.9981
+
+concurrency=4:
+- total requests: 32
+- successful requests: 32
+- error rate: 0
+- QPS: 1.5286
+- P50 latency: 2.6040 s
+- P95 latency: 2.7323 s
+- aggregate output tokens/s: 97.8298
+
+concurrency=8:
+- total requests: 32
+- successful requests: 32
+- error rate: 0
+- QPS: 3.1125
+- P50 latency: 2.5697 s
+- P95 latency: 2.5973 s
+- aggregate output tokens/s: 199.1979
+
+concurrency=16:
+- total requests: 32
+- successful requests: 32
+- error rate: 0
+- QPS: 6.0876
+- P50 latency: 2.6089 s
+- P95 latency: 2.6735 s
+- aggregate output tokens/s: 389.6063
+
+===== 派生指标 =====
+
+从 concurrency=1 到 concurrency=16：
+- QPS 从 0.4096 提升到 6.0876，约提升 14.86 倍。
+- aggregate output tokens/s 从 26.2146 提升到 389.6063，约提升 14.86 倍。
+- P95 latency 从 2.5703 s 上升到 2.6735 s，仅增加约 4.0%。
+- error rate 始终为 0。
+- sweep 后 GPU 利用率达到 GPU0 86%、GPU1 53%，说明较高并发下已经明显提高 GPU 计算利用率。
+
+===== 工程解释 =====
+
+本实验说明，W8A8 量化模型在 batch-oriented serving profile 下可以有效承载更高并发请求。随着 concurrency 从 1 增加到 16，系统吞吐量和输出 token 吞吐量接近线性提升，同时 P95 latency 只小幅上升，未出现排队失控或错误率上升。
+
+该结果体现了 vLLM continuous batching 的实际价值：多个并发请求可以被组织进模型执行批次中，从而提高 GPU 利用率和整体吞吐。当前 workload 的 prompt 和 output 长度较短，KV cache usage 在 sweep 结束后回落为 0，但 request_success_total、request_prompt_tokens_sum、request_generation_tokens_sum 和 prefix cache 相关指标均证明请求已被 vLLM 成功处理。
+
+===== 与岗位相关的结论 =====
+
+该实验不仅验证了模型可运行，还形成了可量化的 serving optimization evidence：
+1. 离线 W8A8 量化 checkpoint 已生成并可被 vLLM compressed-tensors 后端加载。
+2. batch-oriented serving profile 可显著提升并发吞吐。
+3. QPS、P50、P95、error rate、tokens/s、GPU utilization、vLLM metrics 均有记录。
+4. 实验结果可支撑后续性能优化报告、Batch Size 测试图表和面试中的 serving trade-off 解释。

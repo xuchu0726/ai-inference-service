@@ -1,0 +1,6 @@
+concurrency,total_requests,successful_requests,failed_requests,error_rate,wall_time_seconds,qps,avg_latency_seconds,p50_latency_seconds,p95_latency_seconds,avg_completion_tokens_per_second_per_request,aggregate_output_tokens_per_second
+1,32,32,0,0.0,78.1244,0.4096,2.4411,2.4049,2.5703,26.2765,26.2146
+2,32,32,0,0.0,40.1583,0.7968,2.5083,2.5039,2.5774,25.5215,50.9981
+4,32,32,0,0.0,20.9343,1.5286,2.6143,2.604,2.7323,24.5004,97.8298
+8,32,32,0,0.0,10.2812,3.1125,2.565,2.5697,2.5973,24.9543,199.1979
+16,32,32,0,0.0,5.2566,6.0876,2.6103,2.6089,2.6735,24.5274,389.6063
