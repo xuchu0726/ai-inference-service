@@ -1,0 +1,107 @@
+===== 日期 =====
+Thu May 28 22:06:35 UTC 2026
+
+===== 本步骤目的 =====
+检查 Seed-OSS-36B compressed-tensors 严格量化路径：是否进入 EngineCore/Worker、是否加载权重、是否 API ready、是否因缺少预量化配置或模型不兼容失败。
+
+===== 主进程状态 =====
+6797
+    PID    PPID STAT     ELAPSED %CPU %MEM CMD
+
+===== vLLM 相关进程 =====
+   7125    1424 S+         00:00  0.0  0.0 tee logs/new_2xa100_seed_oss_compressed_tensors_int8_status_check_20260528_220635.txt
+
+===== GPU 状态 =====
+Thu May 28 22:06:36 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   25C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   26C    P0             62W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== API ready 探测 =====
+
+
+===== 日志文件状态 =====
+-rw-r--r-- 1 root root 5.7K May 28 22:06 logs/new_2xa100_seed_oss_compressed_tensors_int8_vllm_launch_20260528.log
+  File: logs/new_2xa100_seed_oss_compressed_tensors_int8_vllm_launch_20260528.log
+  Size: 5830      	Blocks: 16         IO Block: 4096   regular file
+Device: 4fh/79d	Inode: 32217775174  Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2026-05-28 22:06:20.383780523 +0000
+Modify: 2026-05-28 22:06:24.931777261 +0000
+Change: 2026-05-28 22:06:24.931777261 +0000
+ Birth: 2026-05-28 22:06:14.876784473 +0000
+
+===== 日志最后 500 行 =====
+nohup: ignoring input
+INFO 05-28 22:06:22 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=2048.
+[1;36m(APIServer pid=6797)[0;0m INFO 05-28 22:06:22 [api_server.py:1977] vLLM API server version 0.11.2
+[1;36m(APIServer pid=6797)[0;0m INFO 05-28 22:06:22 [utils.py:253] non-default args: {'host': '0.0.0.0', 'port': 8002, 'model': 'ByteDance-Seed/Seed-OSS-36B-Instruct', 'trust_remote_code': True, 'dtype': 'bfloat16', 'max_model_len': 512, 'quantization': 'compressed-tensors', 'enforce_eager': True, 'served_model_name': ['ByteDance-Seed/Seed-OSS-36B-Instruct'], 'download_dir': '/workspace/hf_cache', 'distributed_executor_backend': 'mp', 'tensor_parallel_size': 2, 'max_num_batched_tokens': 512, 'max_num_seqs': 1}
+[1;36m(APIServer pid=6797)[0;0m The argument `trust_remote_code` is to be used with Auto classes. It has no effect here and is ignored.
+[1;36m(APIServer pid=6797)[0;0m INFO 05-28 22:06:22 [model.py:631] Resolved architecture: SeedOssForCausalLM
+[1;36m(APIServer pid=6797)[0;0m INFO 05-28 22:06:22 [model.py:1745] Using max model len 512
+[1;36m(APIServer pid=6797)[0;0m INFO 05-28 22:06:23 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=512.
+[1;36m(APIServer pid=6797)[0;0m Traceback (most recent call last):
+[1;36m(APIServer pid=6797)[0;0m   File "<frozen runpy>", line 198, in _run_module_as_main
+[1;36m(APIServer pid=6797)[0;0m   File "<frozen runpy>", line 88, in _run_code
+[1;36m(APIServer pid=6797)[0;0m   File "/usr/local/lib/python3.11/dist-packages/vllm/entrypoints/openai/api_server.py", line 2096, in <module>
+[1;36m(APIServer pid=6797)[0;0m     uvloop.run(run_server(args))
+[1;36m(APIServer pid=6797)[0;0m   File "/usr/local/lib/python3.11/dist-packages/uvloop/__init__.py", line 92, in run
+[1;36m(APIServer pid=6797)[0;0m     return runner.run(wrapper())
+[1;36m(APIServer pid=6797)[0;0m            ^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=6797)[0;0m   File "/usr/lib/python3.11/asyncio/runners.py", line 118, in run
+[1;36m(APIServer pid=6797)[0;0m     return self._loop.run_until_complete(task)
+[1;36m(APIServer pid=6797)[0;0m            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=6797)[0;0m   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+[1;36m(APIServer pid=6797)[0;0m   File "/usr/local/lib/python3.11/dist-packages/uvloop/__init__.py", line 48, in wrapper
+[1;36m(APIServer pid=6797)[0;0m     return await main
+[1;36m(APIServer pid=6797)[0;0m            ^^^^^^^^^^
+[1;36m(APIServer pid=6797)[0;0m   File "/usr/local/lib/python3.11/dist-packages/vllm/entrypoints/openai/api_server.py", line 2024, in run_server
+[1;36m(APIServer pid=6797)[0;0m     await run_server_worker(listen_address, sock, args, **uvicorn_kwargs)
+[1;36m(APIServer pid=6797)[0;0m   File "/usr/local/lib/python3.11/dist-packages/vllm/entrypoints/openai/api_server.py", line 2043, in run_server_worker
+[1;36m(APIServer pid=6797)[0;0m     async with build_async_engine_client(
+[1;36m(APIServer pid=6797)[0;0m   File "/usr/lib/python3.11/contextlib.py", line 210, in __aenter__
+[1;36m(APIServer pid=6797)[0;0m     return await anext(self.gen)
+[1;36m(APIServer pid=6797)[0;0m            ^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=6797)[0;0m   File "/usr/local/lib/python3.11/dist-packages/vllm/entrypoints/openai/api_server.py", line 195, in build_async_engine_client
+[1;36m(APIServer pid=6797)[0;0m     async with build_async_engine_client_from_engine_args(
+[1;36m(APIServer pid=6797)[0;0m   File "/usr/lib/python3.11/contextlib.py", line 210, in __aenter__
+[1;36m(APIServer pid=6797)[0;0m     return await anext(self.gen)
+[1;36m(APIServer pid=6797)[0;0m            ^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=6797)[0;0m   File "/usr/local/lib/python3.11/dist-packages/vllm/entrypoints/openai/api_server.py", line 221, in build_async_engine_client_from_engine_args
+[1;36m(APIServer pid=6797)[0;0m     vllm_config = engine_args.create_engine_config(usage_context=usage_context)
+[1;36m(APIServer pid=6797)[0;0m                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=6797)[0;0m   File "/usr/local/lib/python3.11/dist-packages/vllm/engine/arg_utils.py", line 1772, in create_engine_config
+[1;36m(APIServer pid=6797)[0;0m     config = VllmConfig(
+[1;36m(APIServer pid=6797)[0;0m              ^^^^^^^^^^^
+[1;36m(APIServer pid=6797)[0;0m   File "/usr/local/lib/python3.11/dist-packages/pydantic/_internal/_dataclasses.py", line 121, in __init__
+[1;36m(APIServer pid=6797)[0;0m     s.__pydantic_validator__.validate_python(ArgsKwargs(args, kwargs), self_instance=s)
+[1;36m(APIServer pid=6797)[0;0m   File "/usr/local/lib/python3.11/dist-packages/vllm/config/vllm.py", line 360, in __post_init__
+[1;36m(APIServer pid=6797)[0;0m     self.quant_config = VllmConfig._get_quantization_config(
+[1;36m(APIServer pid=6797)[0;0m                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=6797)[0;0m   File "/usr/local/lib/python3.11/dist-packages/vllm/config/vllm.py", line 251, in _get_quantization_config
+[1;36m(APIServer pid=6797)[0;0m     quant_config = get_quant_config(model_config, load_config)
+[1;36m(APIServer pid=6797)[0;0m                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=6797)[0;0m   File "/usr/local/lib/python3.11/dist-packages/vllm/model_executor/model_loader/weight_utils.py", line 306, in get_quant_config
+[1;36m(APIServer pid=6797)[0;0m     return quant_cls()
+[1;36m(APIServer pid=6797)[0;0m            ^^^^^^^^^^^
+[1;36m(APIServer pid=6797)[0;0m TypeError: CompressedTensorsConfig.__init__() missing 5 required positional arguments: 'target_scheme_map', 'ignore', 'quant_format', 'sparsity_scheme_map', and 'sparsity_ignore_list'
