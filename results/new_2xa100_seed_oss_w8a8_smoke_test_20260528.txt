@@ -1,0 +1,150 @@
+===== 日期 =====
+Thu May 28 23:04:18 UTC 2026
+
+===== 本步骤目的 =====
+对 Seed-OSS-36B W8A8 compressed-tensors 量化服务进行最小单请求 smoke test。
+记录 latency、输出内容、token usage、请求前后 GPU 状态，用于和 FP32 baseline 对比。
+
+===== 请求前 GPU =====
+Thu May 28 23:04:18 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   29C    P0             86W /  400W |   74581MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   30C    P0             83W /  400W |   74581MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            8657      C   VLLM::Worker_TP0                      74572MiB |
+|    1   N/A  N/A            8658      C   VLLM::Worker_TP1                      74572MiB |
++-----------------------------------------------------------------------------------------+
+
+===== W8A8 smoke request =====
+status_code: 200
+wall_time_seconds: 3.2706
+response_text:
+{"id":"chatcmpl-750aeae170044f8db90721cda85ac579","object":"chat.completion","created":1780009459,"model":"Seed-OSS-36B-Instruct-W8A8","choices":[{"index":0,"message":{"role":"assistant","content":"<seed:think>\n用户现在需要用一句话解释GPU推理服务，首先得明确GPU推理服务的核心要素：GPU（图形处理器，用于加速计算）、推理（机器学习模型的预测过程，比如输入数据得到输出结果）、服务（提供可调用的接口或功能）。\n\n首先，推理是","refusal":null,"annotations":null,"audio":null,"function_call":null,"tool_calls":[],"reasoning":null,"reasoning_content":null},"logprobs":null,"finish_reason":"length","stop_reason":null,"token_ids":null}],"service_tier":null,"system_fingerprint":null,"usage":{"prompt_tokens":18,"total_tokens":82,"completion_tokens":64,"prompt_tokens_details":null},"prompt_logprobs":null,"prompt_token_ids":null,"kv_transfer_params":null}
+completion_tokens_per_second: 19.5685
+usage: {"prompt_tokens": 18, "total_tokens": 82, "completion_tokens": 64, "prompt_tokens_details": null}
+
+===== 请求后 GPU =====
+Thu May 28 23:04:21 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   34C    P0            204W /  400W |   74581MiB /  81920MiB |     85%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   35C    P0            196W /  400W |   74581MiB /  81920MiB |     48%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            8657      C   VLLM::Worker_TP0                      74572MiB |
+|    1   N/A  N/A            8658      C   VLLM::Worker_TP1                      74572MiB |
++-----------------------------------------------------------------------------------------+
+
+===== vLLM metrics 关键片段 =====
+# HELP vllm:num_requests_running Number of requests in model execution batches.
+# TYPE vllm:num_requests_running gauge
+vllm:num_requests_running{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+# HELP vllm:num_requests_waiting Number of requests waiting to be processed.
+# TYPE vllm:num_requests_waiting gauge
+vllm:num_requests_waiting{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+# HELP vllm:kv_cache_usage_perc KV-cache usage. 1 means 100 percent usage.
+# TYPE vllm:kv_cache_usage_perc gauge
+vllm:kv_cache_usage_perc{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+# HELP vllm:prefix_cache_queries_total Prefix cache queries, in terms of number of queried tokens.
+# TYPE vllm:prefix_cache_queries_total counter
+vllm:prefix_cache_queries_total{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 18.0
+# HELP vllm:prefix_cache_queries_created Prefix cache queries, in terms of number of queried tokens.
+# TYPE vllm:prefix_cache_queries_created gauge
+vllm:prefix_cache_queries_created{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.7800091345092275e+09
+# HELP vllm:prefix_cache_hits_total Prefix cache hits, in terms of number of cached tokens.
+# TYPE vllm:prefix_cache_hits_total counter
+vllm:prefix_cache_hits_total{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+# HELP vllm:prefix_cache_hits_created Prefix cache hits, in terms of number of cached tokens.
+# TYPE vllm:prefix_cache_hits_created gauge
+vllm:prefix_cache_hits_created{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.78000913450928e+09
+# HELP vllm:request_success_total Count of successfully processed requests.
+# TYPE vllm:request_success_total counter
+vllm:request_success_total{engine="0",finished_reason="stop",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+vllm:request_success_total{engine="0",finished_reason="length",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.0
+vllm:request_success_total{engine="0",finished_reason="abort",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+# HELP vllm:request_success_created Count of successfully processed requests.
+# TYPE vllm:request_success_created gauge
+vllm:request_success_created{engine="0",finished_reason="stop",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.780009134509571e+09
+vllm:request_success_created{engine="0",finished_reason="length",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.7800091345095954e+09
+vllm:request_success_created{engine="0",finished_reason="abort",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.7800091345096123e+09
+# HELP vllm:request_prompt_tokens Number of prefill tokens processed.
+# TYPE vllm:request_prompt_tokens histogram
+vllm:request_prompt_tokens_bucket{engine="0",le="1.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+vllm:request_prompt_tokens_bucket{engine="0",le="2.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+vllm:request_prompt_tokens_bucket{engine="0",le="5.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+vllm:request_prompt_tokens_bucket{engine="0",le="10.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+vllm:request_prompt_tokens_bucket{engine="0",le="20.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.0
+vllm:request_prompt_tokens_bucket{engine="0",le="50.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.0
+vllm:request_prompt_tokens_bucket{engine="0",le="100.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.0
+vllm:request_prompt_tokens_bucket{engine="0",le="200.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.0
+vllm:request_prompt_tokens_bucket{engine="0",le="500.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.0
+vllm:request_prompt_tokens_bucket{engine="0",le="+Inf",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.0
+vllm:request_prompt_tokens_count{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.0
+vllm:request_prompt_tokens_sum{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 18.0
+# HELP vllm:request_prompt_tokens_created Number of prefill tokens processed.
+# TYPE vllm:request_prompt_tokens_created gauge
+vllm:request_prompt_tokens_created{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.7800091345097053e+09
+# HELP vllm:request_generation_tokens Number of generation tokens processed.
+# TYPE vllm:request_generation_tokens histogram
+vllm:request_generation_tokens_bucket{engine="0",le="1.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+vllm:request_generation_tokens_bucket{engine="0",le="2.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+vllm:request_generation_tokens_bucket{engine="0",le="5.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+vllm:request_generation_tokens_bucket{engine="0",le="10.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+vllm:request_generation_tokens_bucket{engine="0",le="20.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+vllm:request_generation_tokens_bucket{engine="0",le="50.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+vllm:request_generation_tokens_bucket{engine="0",le="100.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.0
+vllm:request_generation_tokens_bucket{engine="0",le="200.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.0
+vllm:request_generation_tokens_bucket{engine="0",le="500.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.0
+vllm:request_generation_tokens_bucket{engine="0",le="+Inf",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.0
+vllm:request_generation_tokens_count{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.0
+vllm:request_generation_tokens_sum{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 64.0
+# HELP vllm:request_generation_tokens_created Number of generation tokens processed.
+# TYPE vllm:request_generation_tokens_created gauge
+vllm:request_generation_tokens_created{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.7800091345098088e+09
+# HELP vllm:request_max_num_generation_tokens Histogram of maximum number of requested generation tokens.
+# TYPE vllm:request_max_num_generation_tokens histogram
+vllm:request_max_num_generation_tokens_bucket{engine="0",le="1.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+vllm:request_max_num_generation_tokens_bucket{engine="0",le="2.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+vllm:request_max_num_generation_tokens_bucket{engine="0",le="5.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+vllm:request_max_num_generation_tokens_bucket{engine="0",le="10.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+vllm:request_max_num_generation_tokens_bucket{engine="0",le="20.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+vllm:request_max_num_generation_tokens_bucket{engine="0",le="50.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+vllm:request_max_num_generation_tokens_bucket{engine="0",le="100.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.0
+vllm:request_max_num_generation_tokens_bucket{engine="0",le="200.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.0
+vllm:request_max_num_generation_tokens_bucket{engine="0",le="500.0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.0
+vllm:request_max_num_generation_tokens_bucket{engine="0",le="+Inf",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.0
+vllm:request_max_num_generation_tokens_count{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.0
+vllm:request_max_num_generation_tokens_sum{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 64.0
+# HELP vllm:request_max_num_generation_tokens_created Histogram of maximum number of requested generation tokens.
