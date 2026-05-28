@@ -6,7 +6,7 @@ import torch
 from datasets import Dataset
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from llmcompressor.modifiers.quantization import QuantizationModifier
-from llmcompressor.transformers import oneshot
+from llmcompressor import oneshot
 
 MODEL_ID = "ByteDance-Seed/Seed-OSS-36B-Instruct"
 OUTPUT_DIR = "/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8"

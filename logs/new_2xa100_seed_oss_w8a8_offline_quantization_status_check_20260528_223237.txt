@@ -1,0 +1,47 @@
+===== 日期 =====
+Thu May 28 22:32:37 UTC 2026
+
+===== 本步骤目的 =====
+监控 Seed-OSS-36B 离线 W8A8 量化任务进展。
+重点判断：是否还在运行、是否 OOM、是否开始保存量化 checkpoint、GPU 显存和利用率是否合理。
+
+===== 量化进程 =====
+    PID    PPID STAT     ELAPSED %CPU %MEM CMD
+    632     627 S       01:28:56  0.0  0.0 /usr/bin/python /usr/local/bin/jupyter-lab --allow-root --no-browser --port=8888 --ip=* --FileContentsManager.delete_to_trash=False --ServerApp.terminado_settings={"shell_command":["/bin/bash"]} --ServerApp.token=l8gu35ql9ilbtj6oxnog --ServerApp.allow_origin=* --ServerApp.preferred_dir=/workspace
+
+===== GPU 状态 =====
+Thu May 28 22:32:37 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   25C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   25C    P0             62W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== 输出目录状态 =====
+512	/workspace/quantized_models
+
+===== 日志最后 300 行 =====
+nohup: ignoring input
+Traceback (most recent call last):
+  File "/root/ai-inference-service/scripts/quantization/quantize_seed_oss_36b_w8a8.py", line 9, in <module>
+    from llmcompressor.transformers import oneshot
+ImportError: cannot import name 'oneshot' from 'llmcompressor.transformers' (/usr/local/lib/python3.11/dist-packages/llmcompressor/transformers/__init__.py)
+[W528 22:32:27.320547649 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
