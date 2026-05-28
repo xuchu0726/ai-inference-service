@@ -1,0 +1,148 @@
+===== 日期 =====
+Thu May 28 22:13:34 UTC 2026
+
+===== 本步骤目的 =====
+继续追查 Seed-OSS-36B 严格 INT8 量化路径。
+本步骤不启动模型，重点确认当前缓存的 Seed-OSS 原始权重是否包含量化配置，以及 vLLM 支持的严格 INT8 后端是否需要预量化 checkpoint。
+
+===== 当前 Git 状态 =====
+ M logs/new_2xa100_seed_oss_bnb_int8_retry_vllm_launch_20260528.log
+?? logs/new_2xa100_seed_oss_bnb_int8_openai_benchmark_3req_20260528.log
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_loading_check_20260528_215302.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_check_20260528_215331.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_evidence_20260528.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215126.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215205.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_vllm.pid
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214511.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214606.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_vllm.pid
+?? logs/new_2xa100_seed_oss_strict_int8_root_cause_probe_20260528.txt
+18d4095 记录 Seed-OSS INC 严格 INT8 量化路径边界
+84da485 记录 Seed-OSS compressed-tensors 严格量化路径边界
+a7550fc 探测 Seed-OSS 严格 INT8 量化后端可行性
+24e7d7a 记录 bitsandbytes 量化服务边界并释放资源
+7610128 补充 Seed-OSS 量化对比中文实验结论
+a390118 安装 bitsandbytes 量化后端依赖
+a504d91 记录 Seed-OSS bitsandbytes 量化首次失败边界
+a04f922 记录 Seed-OSS-36B 量化可行性探测
+
+===== GPU 空闲状态 =====
+Thu May 28 22:13:34 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   27C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   28C    P0             63W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== Seed-OSS 本地 snapshot 目录 =====
+find: warning: you have specified the global option -maxdepth after the argument -path, but global options are not positional, i.e., -maxdepth affects tests specified before it as well as those specified after it.  Please specify global options before other arguments.
+/workspace/hf_cache/.locks/models--ByteDance-Seed--Seed-OSS-36B-Instruct
+/workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct
+/workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots
+/workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots/497f1dca95ebdec98e41d517b9f060ee753c902f
+/workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs
+/workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/refs
+/workspace/hf_cache/hub/.locks/models--ByteDance-Seed--Seed-OSS-36B-Instruct
+/workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct
+/workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/.no_exist
+/workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/.no_exist/497f1dca95ebdec98e41d517b9f060ee753c902f
+/workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/refs
+/workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots
+/workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots/497f1dca95ebdec98e41d517b9f060ee753c902f
+/workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/blobs
+
+===== 查找 quantization_config / compressed-tensors / awq / gptq / int8 配置 =====
+/workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/.no_exist/497f1dca95ebdec98e41d517b9f060ee753c902f/video_preprocessor_config.json
+/workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/.no_exist/497f1dca95ebdec98e41d517b9f060ee753c902f/processor_config.json
+/workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/.no_exist/497f1dca95ebdec98e41d517b9f060ee753c902f/preprocessor_config.json
+
+===== 读取 config.json 中与量化相关字段 =====
+config_files: ['/workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots/497f1dca95ebdec98e41d517b9f060ee753c902f/config.json', '/workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots/497f1dca95ebdec98e41d517b9f060ee753c902f/config.json']
+
+CONFIG: /workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots/497f1dca95ebdec98e41d517b9f060ee753c902f/config.json
+model_type: seed_oss
+architectures: ['SeedOssForCausalLM']
+torch_dtype: bfloat16
+quantization_config: None
+compression_config: None
+pre_quantization_dtype: None
+weight_quantization: None
+activation_quantization: None
+num_attention_heads: 80
+num_key_value_heads: 8
+hidden_size: 5120
+num_hidden_layers: 64
+intermediate_size: 27648
+max_position_embeddings: 524288
+
+CONFIG: /workspace/hf_cache/hub/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots/497f1dca95ebdec98e41d517b9f060ee753c902f/config.json
+model_type: seed_oss
+architectures: ['SeedOssForCausalLM']
+torch_dtype: bfloat16
+quantization_config: None
+compression_config: None
+pre_quantization_dtype: None
+weight_quantization: None
+activation_quantization: None
+num_attention_heads: 80
+num_key_value_heads: 8
+hidden_size: 5120
+num_hidden_layers: 64
+intermediate_size: 27648
+max_position_embeddings: 524288
+
+===== vLLM INT8/量化配置类签名探测 =====
+
+==== compressed_tensors ====
+class: <class 'vllm.model_executor.layers.quantization.compressed_tensors.compressed_tensors.CompressedTensorsConfig'>
+signature: (target_scheme_map: dict[str, typing.Any], ignore: list[str], quant_format: str, sparsity_scheme_map: dict[str, compressed_tensors.config.base.SparsityCompressionConfig], sparsity_ignore_list: list[str], kv_cache_scheme: dict[str, typing.Any] | None = None, config: dict[str, typing.Any] | None = None, transform_config: dict[str, typing.Any] | None = None)
+doc: Base class for quantization configs.
+
+==== inc ====
+class: <class 'vllm.model_executor.layers.quantization.inc.INCConfig'>
+signature: ()
+doc: Config class for FP8 using Intel Neural Compressor.
+
+==== awq ====
+class: <class 'vllm.model_executor.layers.quantization.awq.AWQConfig'>
+signature: (weight_bits: int, group_size: int, zero_point: bool, modules_to_not_convert: list[str] | None = None) -> None
+doc: Config class for AWQ.
+
+Reference: https://arxiv.org/abs/2306.00978
+
+==== gptq ====
+class: <class 'vllm.model_executor.layers.quantization.gptq.GPTQConfig'>
+signature: (weight_bits: int, group_size: int, desc_act: bool, lm_head_quantized: bool, dynamic: dict[str, dict[str, int | bool]], autoround_version: str = '', modules_in_block_to_quantize: list[str] | None = None, checkpoint_format: str = '') -> None
+doc: Config class for GPTQ.
+
+Reference: https://arxiv.org/abs/2210.17323
+
+==== bitsandbytes ====
+class: <class 'vllm.model_executor.layers.quantization.bitsandbytes.BitsAndBytesConfig'>
+signature: (load_in_8bit: bool = False, load_in_4bit: bool = True, bnb_4bit_compute_dtype: str = 'float32', bnb_4bit_quant_storage: str = 'uint8', bnb_4bit_quant_type: str = 'fp4', bnb_4bit_use_double_quant: bool = False, llm_int8_enable_fp32_cpu_offload: bool = False, llm_int8_has_fp16_weight: bool = False, llm_int8_skip_modules: list[str] | None = None, llm_int8_threshold: float = 6.0) -> None
+doc: Config class for BitsAndBytes Quantization.
+
+Reference: https://arxiv.org/abs/2305.14314
+
+===== 当前判断 =====
+如果 config.json 不包含 quantization_config 或 compressed-tensors 配置，则 compressed-tensors/inc/AWQ/GPTQ 等严格 INT8 路径通常不能直接作用于原始 BF16 checkpoint。
+后续应选择：1）寻找预量化 checkpoint；2）离线量化生成 checkpoint；3）保留 bnb 作为在线量化对照，但不能包装为达到 INT8 指标。
