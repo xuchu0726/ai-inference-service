@@ -1,0 +1,50 @@
+===== 恢复说明 =====
+该文件根据终端记录恢复，用于补充 Seed-OSS-36B-Instruct 128K over-limit boundary test 的关键证据。
+原始日志位于旧容器 /root/ai-inference-service/logs/ 下；由于仓库当时位于容器本地层，GPU Pod 被释放/切换后旧容器不可见。
+CSV 结果、错误信息、GPU 状态和 vLLM traceback 关键内容来自终端记录。
+
+===== 实验时间 =====
+Fri May 29 01:51:10 UTC 2026
+
+===== 实验目的 =====
+对 Seed-OSS-36B-Instruct 128K serving profile 执行 over-limit boundary test。
+该实验用于验证请求超过 max_model_len=131072 后，系统是否会返回明确错误。
+预期结果可以是失败；失败本身就是上下文边界证据。
+
+===== 服务配置 =====
+model: ByteDance-Seed/Seed-OSS-36B-Instruct
+served_model_name: Seed-OSS-36B-Instruct-128K
+max_model_len: 131072
+tensor_parallel_size: 2
+dtype: bfloat16
+max_num_batched_tokens: 8192
+max_num_seqs: 1
+gpu_memory_utilization: 0.90
+download_dir: /workspace/hf_cache
+
+===== 请求结果 =====
+case_id: 1
+context_target: 128k_over_limit
+target_chars: 246000
+actual_input_chars: 246064
+status_code: 400
+ok: False
+client_latency_seconds: 0.19103
+input_tokens: 0
+output_tokens: 0
+tokens_per_second: 0.0
+max_new_tokens: 128
+thinking_budget: 512
+
+===== 错误信息 =====
+This model's maximum context length is 131072 tokens. However, your request has 134991 input tokens. Please reduce the length of the input messages. None
+
+===== vLLM traceback 关键行 =====
+ERROR 05-29 01:51:10 [serving_chat.py:257] Error in preprocessing prompt inputs
+ValueError: This model's maximum context length is 131072 tokens. However, your request has 134991 input tokens. Please reduce the length of the input messages.
+POST /v1/chat/completions HTTP/1.1 400 Bad Request
+
+===== 结论 =====
+超过 131072 token 的请求在 vLLM preprocessing/tokenization 阶段被拒绝，返回 400 BadRequestError。
+该请求没有进入 GPU 推理阶段，未触发 OOM，GPU 显存保持稳定。
+该结果证明 128K serving profile 的边界校验行为明确，系统能够对 over-limit 请求进行安全失败处理。
