@@ -1,0 +1,130 @@
+===== 实验结论摘要 =====
+
+本实验在 2×NVIDIA A100-SXM4-80GB 环境中，对 ByteDance-Seed/Seed-OSS-36B-Instruct 的 FP32 serving profile 与离线 W8A8 compressed-tensors 量化 serving profile 进行了公平对比。
+
+两组实验均使用相同 serving 参数：
+- tensor_parallel_size: 2
+- max_model_len: 512
+- max_num_batched_tokens: 8192
+- max_num_seqs: 32
+- gpu_memory_utilization: 0.90
+- vLLM version: 0.11.2
+- request count per concurrency level: 32
+- max output tokens per request: 64
+- concurrency levels: 1, 2, 4, 8, 16
+
+W8A8 量化路径：
+- offline quantization tool: llmcompressor
+- quantization scheme: W8A8
+- serving backend: vLLM compressed-tensors
+- quantized checkpoint path: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+- vLLM kernel: CompressedTensorsW8A8Int8 / CutlassScaledMMLinearKernel
+
+===== 并发吞吐对比 =====
+
+concurrency=1:
+- FP32 QPS: 0.3117
+- W8A8 QPS: 0.4096
+- QPS improvement: +31.4%
+- FP32 P95 latency: 3.1300 s
+- W8A8 P95 latency: 2.5703 s
+- P95 latency reduction: -17.9%
+
+concurrency=2:
+- FP32 QPS: 0.5674
+- W8A8 QPS: 0.7968
+- QPS improvement: +40.4%
+- FP32 P95 latency: 4.0014 s
+- W8A8 P95 latency: 2.5774 s
+- P95 latency reduction: -35.6%
+
+concurrency=4:
+- FP32 QPS: 1.0626
+- W8A8 QPS: 1.5286
+- QPS improvement: +43.9%
+- FP32 P95 latency: 3.7787 s
+- W8A8 P95 latency: 2.7323 s
+- P95 latency reduction: -27.7%
+
+concurrency=8:
+- FP32 QPS: 1.4671
+- W8A8 QPS: 3.1125
+- QPS improvement: +112.2%
+- FP32 P95 latency: 5.4604 s
+- W8A8 P95 latency: 2.5973 s
+- P95 latency reduction: -52.4%
+
+concurrency=16:
+- FP32 QPS: 2.6922
+- W8A8 QPS: 6.0876
+- QPS improvement: +126.1%
+- FP32 P95 latency: 6.4298 s
+- W8A8 P95 latency: 2.6735 s
+- P95 latency reduction: -58.4%
+
+===== tokens/s 对比 =====
+
+concurrency=16:
+- FP32 aggregate output tokens/s: 172.3020
+- W8A8 aggregate output tokens/s: 389.6063
+- aggregate output tokens/s improvement: +126.1%
+
+concurrency=8:
+- FP32 aggregate output tokens/s: 93.8937
+- W8A8 aggregate output tokens/s: 199.1979
+- aggregate output tokens/s improvement: +112.2%
+
+===== 显存与 KV cache 对比 =====
+
+FP32 conservative profile:
+- model loading memory: 67.5901 GiB
+- available KV cache memory: 9.43 GiB
+- GPU KV cache size: 38,624 tokens
+- maximum concurrency estimate for 512 tokens/request: 75.44x
+- nvidia-smi runtime memory: about 81,147 MiB per GPU
+
+W8A8 conservative profile:
+- model loading memory: 17.7109 GiB
+- available KV cache memory: 53.04 GiB
+- GPU KV cache size: 434,480 tokens
+- maximum concurrency estimate for 512 tokens/request: 848.59x
+- nvidia-smi runtime memory: about 74,581 MiB per GPU
+
+Derived comparison:
+- model loading memory reduction: about 73.8%
+- available KV cache memory increase: about 462.5%
+- GPU KV cache capacity increase: about 1025%
+- maximum concurrency estimate increase: about 1025%
+- nvidia-smi runtime reserved memory reduction: about 8.1%
+
+===== 结论 =====
+
+离线 W8A8 compressed-tensors 量化在本实验中达到并超过性能优化目标：
+1. 在 batch serving 场景下，W8A8 相比 FP32 在 concurrency=16 时 QPS 提升约 126.1%，aggregate output tokens/s 提升约 126.1%，P95 latency 降低约 58.4%。
+2. 从模型权重加载显存口径看，W8A8 将 model loading memory 从 67.5901 GiB 降至 17.7109 GiB，降低约 73.8%，超过 30% 显存降低目标。
+3. 从 nvidia-smi runtime reserved memory 口径看，显存下降不明显，原因是 vLLM 会将释放出的显存继续用于 KV cache 预分配。因此，runtime memory 不是评价量化显存收益的唯一合理口径。
+4. W8A8 的核心收益不仅是模型权重显存下降，还包括更大的 KV cache capacity、更高的并发承载上限，以及更好的高并发吞吐表现。
+5. FP32 在 concurrency=8 和 concurrency=16 时 P95 latency 明显上升，而 W8A8 在相同并发下保持较稳定延迟，说明量化后 batch serving 的吞吐-延迟权衡更优。
+
+===== 风险与边界 =====
+
+1. 本实验的 max_model_len 为 512，属于短上下文 serving 对比，不能直接外推到 512K 长上下文。
+2. W8A8 使用 16 条校准样本完成离线量化，主要验证 serving 可行性与系统性能收益，尚未充分验证精度保持。
+3. 输出中包含 Seed-OSS thinking 内容，后续报告中应说明本实验主要关注 serving performance，而非最终输出质量评测。
+4. 若用于完整交付，还需要补充 GSM8K 数学推理、代码生成验证、Prometheus/Grafana 图表、GQA 解释和 Batch Size 图表。
+
+===== 已保存的核心证据 =====
+
+W8A8:
+- logs/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528.log
+- results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528.csv
+- results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528_summary.csv
+
+FP32:
+- logs/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528.log
+- results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528.csv
+- results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528_summary.csv
+
+Quantized checkpoint:
+- /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+- checkpoint size: about 36G
