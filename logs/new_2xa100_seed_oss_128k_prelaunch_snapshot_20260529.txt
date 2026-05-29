@@ -1,0 +1,51 @@
+===== 日期 =====
+Fri May 29 01:34:48 UTC 2026
+
+===== 本步骤目的 =====
+启动 Seed-OSS-36B-Instruct 128K long-context serving profile。
+本实验用于把已完成的 64K live context boundary 扩展到 128K，验证 Seed-OSS 长上下文能力、KV cache 容量、显存压力和服务可用性。
+当前配置使用 max_model_len=131072、tensor_parallel_size=2、max_num_seqs=1，优先保证单请求 128K 边界测试稳定性。
+
+===== 启动前 GPU =====
+Fri May 29 01:34:48 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   26C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   26C    P0             62W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== 启动前端口状态 =====
+
+===== 启动前 Git 状态 =====
+?? logs/new_2xa100_long_context_truth_check_20260529.txt
+?? logs/new_2xa100_seed_oss_128k_prelaunch_snapshot_20260529.txt
+4774d05 补充 Week2 关键指标真实性核查记录
+cd92db7 补充 Week2 任务验收矩阵与真实进度清单
+d9c8191 记录 RunPod 释放前最终文件跟踪检查
+bf3ea4b 补充 Seed-OSS W8A8 checkpoint metadata 与最终同步检查
+3e0975f 归档 RunPod 释放前剩余实验证据
+bca56fb 补充 Seed-OSS FP32 batch profile 完整运行日志
+233e0fb 记录 Seed-OSS FP32 batch profile 停止状态
+0196345 记录 Seed-OSS FP32 与 W8A8 最终验收快照
+6c8237f 生成 Seed-OSS FP32 与 W8A8 batch profile 对比图表
+9d07ed7 总结 Seed-OSS FP32 与 W8A8 batch profile 对比结果
+04a6978 记录 Seed-OSS FP32 batch profile 并发对照结果
+1e0b727 记录 Seed-OSS W8A8 batch profile 停止状态
