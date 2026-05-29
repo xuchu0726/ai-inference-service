@@ -1,0 +1,72 @@
+===== 日期 =====
+Fri May 29 00:27:21 UTC 2026
+
+===== Git 状态 =====
+?? logs/new_2xa100_seed_oss_absolute_final_release_check_20260529.txt
+
+===== 关键文件是否被 Git 跟踪 =====
+logs/new_2xa100_seed_oss_final_volume_preservation_manifest_20260529.txt
+logs/new_2xa100_seed_oss_final_github_sync_check_20260529.txt
+logs/new_2xa100_seed_oss_w8a8_checkpoint_metadata_preservation_20260529.txt
+results/quantized_model_metadata/seed_oss_36b_w8a8/config.json
+results/quantized_model_metadata/seed_oss_36b_w8a8/generation_config.json
+results/quantized_model_metadata/seed_oss_36b_w8a8/model.safetensors.index.json
+results/quantized_model_metadata/seed_oss_36b_w8a8/recipe.yaml
+results/quantized_model_metadata/seed_oss_36b_w8a8/calibration_prompts.json
+results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv
+results/figures/seed_oss_fp32_vs_w8a8_qps.png
+results/figures/seed_oss_fp32_vs_w8a8_p95_latency.png
+results/figures/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png
+
+===== 最近 25 个提交 =====
+bf3ea4b 补充 Seed-OSS W8A8 checkpoint metadata 与最终同步检查
+3e0975f 归档 RunPod 释放前剩余实验证据
+bca56fb 补充 Seed-OSS FP32 batch profile 完整运行日志
+233e0fb 记录 Seed-OSS FP32 batch profile 停止状态
+0196345 记录 Seed-OSS FP32 与 W8A8 最终验收快照
+6c8237f 生成 Seed-OSS FP32 与 W8A8 batch profile 对比图表
+9d07ed7 总结 Seed-OSS FP32 与 W8A8 batch profile 对比结果
+04a6978 记录 Seed-OSS FP32 batch profile 并发对照结果
+1e0b727 记录 Seed-OSS W8A8 batch profile 停止状态
+71c3d46 记录 Seed-OSS W8A8 batch profile 并发吞吐优化结果
+abcfaef 记录 Seed-OSS W8A8 conservative profile 停止状态
+bab96e0 总结 Seed-OSS FP32 与 W8A8 量化对比结果
+7965ca6 记录 Seed-OSS-36B W8A8 serving benchmark 结果
+91ba902 记录 Seed-OSS-36B W8A8 smoke test 结果
+9bd2a6d 记录 Seed-OSS-36B W8A8 serving ready 证据
+5659c1c 完成 Seed-OSS-36B 离线 W8A8 量化 checkpoint 生成
+b77bb24 修复 Seed-OSS W8A8 量化 checkpoint 保存配置
+b5f0026 记录 Seed-OSS W8A8 离线量化保存阶段失败原因
+de05629 修复 Seed-OSS W8A8 离线量化脚本入口
+affc3e7 追查 llmcompressor oneshot API 导入失败原因
+2a6a5aa 添加 Seed-OSS-36B 离线 W8A8 量化脚本
+a598017 安装 Seed-OSS 离线 W8A8 量化工具链
+c17c485 归档 Seed-OSS 量化路径补充过程日志
+7984e5b 追查 Seed-OSS 严格 INT8 路径失败根因
+18d4095 记录 Seed-OSS INC 严格 INT8 量化路径边界
+
+===== GPU 状态 =====
+Fri May 29 00:27:21 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   27C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   28C    P0             63W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
