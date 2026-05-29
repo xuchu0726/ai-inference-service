@@ -1,0 +1,360 @@
+===== 时间 =====
+Fri May 29 11:25:54 UTC 2026
+20daa292f023
+/workspace/ai-inference-service
+
+===== Git 当前状态 =====
+?? logs/final_volume_unsaved_check_20260529.txt
+eb27447 记录 Week2 最终报告数据源清单
+520046c 补充 Seed-OSS 128K 长上下文实验复盘
+ff2f0e5 恢复 Seed-OSS 128K over-limit 边界测试证据
+bda4f7c 记录 Seed-OSS 128K 长上下文边界测试结果
+4774d05 补充 Week2 关键指标真实性核查记录
+cd92db7 补充 Week2 任务验收矩阵与真实进度清单
+d9c8191 记录 RunPod 释放前最终文件跟踪检查
+bf3ea4b 补充 Seed-OSS W8A8 checkpoint metadata 与最终同步检查
+3e0975f 归档 RunPod 释放前剩余实验证据
+bca56fb 补充 Seed-OSS FP32 batch profile 完整运行日志
+233e0fb 记录 Seed-OSS FP32 batch profile 停止状态
+0196345 记录 Seed-OSS FP32 与 W8A8 最终验收快照
+
+===== 本地分支与远端差异 =====
+From https://github.com/xuchu0726/ai-inference-service
+ * branch            main       -> FETCH_HEAD
+## main...origin/main
+?? logs/final_volume_unsaved_check_20260529.txt
+
+===== 未跟踪文件 =====
+logs/final_volume_unsaved_check_20260529.txt
+
+===== 已修改但未提交文件 =====
+
+===== 已暂存但未提交文件 =====
+
+===== /workspace 重要非仓库目录 =====
+512	/workspace/hf_cache/modules
+1.0K	/workspace/hf_cache/.locks
+979K	/workspace/ai-inference-service/tests
+1.2M	/workspace/ai-inference-service/volume_audit
+2.0M	/workspace/ai-inference-service/app
+2.0M	/workspace/ai-inference-service/data
+2.1M	/workspace/ai-inference-service/scripts
+2.3M	/workspace/ai-inference-service/docs
+3.9M	/workspace/ai-inference-service/deployment
+3.9M	/workspace/ai-inference-service/external_volume_records
+5.2M	/workspace/hf_cache/xet
+5.7M	/workspace/ai-inference-service/figures
+6.5M	/workspace/ai-inference-service/artifacts
+7.4M	/workspace/ai-inference-service/logs
+7.6M	/workspace/ai-inference-service/results
+12M	/workspace/ai-inference-service/evidence
+18M	/workspace/hf_cache/hub
+24M	/workspace/ai-inference-service/.git
+82M	/workspace/ai-inference-service
+36G	/workspace/quantized_models
+36G	/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+68G	/workspace/hf_cache
+68G	/workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct
+103G	/workspace
+
+===== 最近 24 小时新增/修改文件 =====
+//workspace/ai-inference-service/.git/COMMIT_EDITMSG
+//workspace/ai-inference-service/.git/FETCH_HEAD
+//workspace/ai-inference-service/.git/HEAD
+//workspace/ai-inference-service/.git/config
+//workspace/ai-inference-service/.git/description
+//workspace/ai-inference-service/.git/hooks/applypatch-msg.sample
+//workspace/ai-inference-service/.git/hooks/commit-msg.sample
+//workspace/ai-inference-service/.git/hooks/fsmonitor-watchman.sample
+//workspace/ai-inference-service/.git/hooks/post-update.sample
+//workspace/ai-inference-service/.git/hooks/pre-applypatch.sample
+//workspace/ai-inference-service/.git/hooks/pre-commit.sample
+//workspace/ai-inference-service/.git/hooks/pre-merge-commit.sample
+//workspace/ai-inference-service/.git/hooks/pre-push.sample
+//workspace/ai-inference-service/.git/hooks/pre-rebase.sample
+//workspace/ai-inference-service/.git/hooks/pre-receive.sample
+//workspace/ai-inference-service/.git/hooks/prepare-commit-msg.sample
+//workspace/ai-inference-service/.git/hooks/push-to-checkout.sample
+//workspace/ai-inference-service/.git/hooks/update.sample
+//workspace/ai-inference-service/.git/index
+//workspace/ai-inference-service/.git/info/exclude
+//workspace/ai-inference-service/.git/logs/HEAD
+//workspace/ai-inference-service/.git/logs/refs/heads/main
+//workspace/ai-inference-service/.git/logs/refs/remotes/origin/HEAD
+//workspace/ai-inference-service/.git/logs/refs/remotes/origin/main
+//workspace/ai-inference-service/.git/objects/0d/b9b2523f91f7b564cb71e6d694e3e1a1e2b1d4
+//workspace/ai-inference-service/.git/objects/0e/5c26c3ac0ddcb1595904c20b89708b7d76fadc
+//workspace/ai-inference-service/.git/objects/52/0046c8078035c078b70f1046ffc77467ca0073
+//workspace/ai-inference-service/.git/objects/5a/3d4f32b0d45c58b9abcdd3b6ed4db14fad8717
+//workspace/ai-inference-service/.git/objects/5d/1a575e98ac990670637137b93eb74970daae6e
+//workspace/ai-inference-service/.git/objects/7e/a5fb39eaec450128bd85eac68dfdec8ebfa795
+//workspace/ai-inference-service/.git/objects/88/5d1a14d8a40574207c886f7cea019d74e2c7ac
+//workspace/ai-inference-service/.git/objects/bc/52c44af3970a6992068d962959e1fe72389b8e
+//workspace/ai-inference-service/.git/objects/c0/417325175d4272b7a21acd007fee6293fd61fc
+//workspace/ai-inference-service/.git/objects/c4/02c7b74b831293ebd8d6b02bf8ae59f841a811
+//workspace/ai-inference-service/.git/objects/ea/ef8e3e591bcab1f55bbf71d07946472a011905
+//workspace/ai-inference-service/.git/objects/eb/274472471714806f3bd2f9b1d0edb3d8983c16
+//workspace/ai-inference-service/.git/objects/f5/26c85682212f03fa8076ea6c501c26b45f6019
+//workspace/ai-inference-service/.git/objects/fc/d9cc3bfb2bf05c0f0cf44ec1d7348c3471fd68
+//workspace/ai-inference-service/.git/objects/ff/2f0e554435816922e22e3d36aab3deacb47fae
+//workspace/ai-inference-service/.git/objects/pack/pack-0e9a8ecd7c28591f7c9d6df978d3d7c5e7b1f448.idx
+//workspace/ai-inference-service/.git/objects/pack/pack-0e9a8ecd7c28591f7c9d6df978d3d7c5e7b1f448.pack
+//workspace/ai-inference-service/.git/packed-refs
+//workspace/ai-inference-service/.git/refs/heads/main
+//workspace/ai-inference-service/.git/refs/remotes/origin/HEAD
+//workspace/ai-inference-service/.git/refs/remotes/origin/main
+//workspace/ai-inference-service/.gitignore
+//workspace/ai-inference-service/README.md
+//workspace/ai-inference-service/app/__init__.py
+//workspace/ai-inference-service/app/backends/__init__.py
+//workspace/ai-inference-service/app/backends/base.py
+//workspace/ai-inference-service/app/backends/mock_backend.py
+//workspace/ai-inference-service/app/backends/transformers_backend.py
+//workspace/ai-inference-service/app/backends/vllm_backend.py
+//workspace/ai-inference-service/app/config.py
+//workspace/ai-inference-service/app/inference.py
+//workspace/ai-inference-service/app/main.py
+//workspace/ai-inference-service/app/metrics/__init__.py
+//workspace/ai-inference-service/app/metrics/prometheus_metrics.py
+//workspace/ai-inference-service/app/routing.py
+//workspace/ai-inference-service/app/schemas.py
+//workspace/ai-inference-service/app/utils/__init__.py
+//workspace/ai-inference-service/app/utils/logging_utils.py
+//workspace/ai-inference-service/artifacts/ai_inference_service_full_20260525_from_old_volume.tar.gz
+//workspace/ai-inference-service/artifacts/week2_64k_context_evidence_20260514_005638.tar.gz
+//workspace/ai-inference-service/artifacts/week2_pre_32k_evidence_20260513_223156.tar.gz
+//workspace/ai-inference-service/artifacts/week2_prometheus_raw_monitoring_data_20260527.tar.gz
+//workspace/ai-inference-service/artifacts/week2_prometheus_raw_monitoring_data_20260527_README.txt
+//workspace/ai-inference-service/artifacts/week2_seed_oss_gsm8k_codegen_dynamic_batch_evidence_20260518_042845.tar.gz
+//workspace/ai-inference-service/data/eval/codegen_mini.jsonl
+//workspace/ai-inference-service/data/eval/gsm8k_mini.jsonl
+//workspace/ai-inference-service/deployment/Dockerfile
+//workspace/ai-inference-service/deployment/cloud/README.md
+//workspace/ai-inference-service/deployment/cloud/run_fastapi_vllm.sh
+//workspace/ai-inference-service/deployment/cloud/run_vllm_qwen_1_5b.sh
+//workspace/ai-inference-service/deployment/cloud/run_vllm_seed_oss_36b_tp.sh
+//workspace/ai-inference-service/deployment/cloud/run_vllm_seed_oss_36b_tp2.sh
+//workspace/ai-inference-service/deployment/cloud/smoke_test_generate.py
+//workspace/ai-inference-service/deployment/cx3_2gpu_probe.pbs
+//workspace/ai-inference-service/deployment/cx3_4gpu_probe.pbs
+//workspace/ai-inference-service/deployment/cx3_gpu_smoke.pbs
+//workspace/ai-inference-service/deployment/monitoring/grafana_week2_seed_oss_dashboard.json
+//workspace/ai-inference-service/deployment/monitoring/prometheus.yml
+//workspace/ai-inference-service/deployment/monitoring/prometheus_week2.yml
+//workspace/ai-inference-service/deployment/run_local.sh
+//workspace/ai-inference-service/deployment/vllm/cuda_visible_devices_probe.pbs
+//workspace/ai-inference-service/deployment/vllm/qwen_1_5b_vllm_fastapi_e2e.pbs
+//workspace/ai-inference-service/deployment/vllm/vllm_env_probe.pbs
+//workspace/ai-inference-service/docs/api_doc.md
+//workspace/ai-inference-service/docs/api_error_codes.md
+//workspace/ai-inference-service/docs/architecture.md
+//workspace/ai-inference-service/docs/benchmark_report.md
+//workspace/ai-inference-service/docs/cloud_gpu_deployment.md
+//workspace/ai-inference-service/docs/continuous_batching_notes.md
+//workspace/ai-inference-service/docs/cx3_gpu_smoke_test.md
+//workspace/ai-inference-service/docs/cx3_gpu_validation_report.md
+//workspace/ai-inference-service/docs/cx3_vllm_env.md
+//workspace/ai-inference-service/docs/cx3_vllm_fastapi_e2e.md
+//workspace/ai-inference-service/docs/failure_modes.md
+//workspace/ai-inference-service/docs/grafana_dashboard_notes.md
+//workspace/ai-inference-service/docs/local_small_model_smoke_test.md
+//workspace/ai-inference-service/docs/seed_oss_feasibility.md
+//workspace/ai-inference-service/docs/thinking_budget_experiment.md
+//workspace/ai-inference-service/docs/troubleshooting_faq.md
+//workspace/ai-inference-service/docs/vllm_benchmark_report.md
+//workspace/ai-inference-service/docs/week1_delivery_report.md
+//workspace/ai-inference-service/docs/week2/seed_oss_128k_context_boundary_review.md
+//workspace/ai-inference-service/docs/week2_512k_feasibility_and_resource_analysis.md
+//workspace/ai-inference-service/docs/week2_batch_token_tuning_report.md
+//workspace/ai-inference-service/docs/week2_batching_strategy.md
+//workspace/ai-inference-service/docs/week2_context_gradient_summary.md
+//workspace/ai-inference-service/docs/week2_delivery_summary.md
+//workspace/ai-inference-service/docs/week2_eval_mini_report.md
+//workspace/ai-inference-service/docs/week2_experiment_runbook.md
+//workspace/ai-inference-service/docs/week2_observability_report.md
+//workspace/ai-inference-service/docs/week2_performance_optimization_report.md
+//workspace/ai-inference-service/docs/week2_prefix_cache_investigation_summary.md
+//workspace/ai-inference-service/docs/week2_quantization_feasibility_report.md
+//workspace/ai-inference-service/docs/week2_quantization_strategy.md
+//workspace/ai-inference-service/docs/week2_remaining_gpu_experiment_plan.md
+//workspace/ai-inference-service/docs/week2_requirement_compliance_matrix.md
+//workspace/ai-inference-service/docs/week2_routing_policy_abstraction.md
+//workspace/ai-inference-service/docs/week2_seed_oss_fp32_attempt_note.md
+//workspace/ai-inference-service/evidence/week2_64k_context/docs/api_error_codes.md
+//workspace/ai-inference-service/evidence/week2_64k_context/docs/grafana_dashboard_notes.md
+//workspace/ai-inference-service/evidence/week2_64k_context/docs/troubleshooting_faq.md
+//workspace/ai-inference-service/evidence/week2_64k_context/docs/week2_batching_strategy.md
+//workspace/ai-inference-service/evidence/week2_64k_context/docs/week2_experiment_runbook.md
+//workspace/ai-inference-service/evidence/week2_64k_context/docs/week2_performance_optimization_report.md
+//workspace/ai-inference-service/evidence/week2_64k_context/docs/week2_quantization_strategy.md
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_16k_result_print.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_32k_result_print.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_64k_conservative_result_print.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_64k_context_file_inventory_final.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_64k_context_final_evidence_freeze.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_64k_near_limit_result_print.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_8k_evidence_before_16k.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_concurrency_all_summary_print.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_concurrency_c1.log
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_concurrency_c16.log
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_concurrency_c1_c2_c4_c8_c16_summary_print.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_concurrency_c1_c2_c4_c8_summary_print.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_concurrency_c1_c2_c4_summary_print.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_concurrency_c2.log
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_concurrency_c4.log
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_concurrency_c8.log
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_context_4k_all_summary_print.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_context_4k_calibrated_summary_print.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_context_8k_16k_32k_64k_final_summary.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_context_8k_16k_32k_summary_before_64k.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_context_repeat_final_interpretation.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_context_repeat_investigation_start.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_context_repeat_investigation_summary.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_fastapi.pid
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_fastapi_64k.pid
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_fastapi_vllm.log
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_fastapi_vllm_64k.log
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_fastapi_vllm_64k_tail_after_16k.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_fastapi_vllm_64k_tail_after_32k.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_fastapi_vllm_64k_tail_after_64k_conservative.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_fastapi_vllm_64k_tail_after_64k_near_limit.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_fastapi_vllm_64k_tail_after_8k.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_fastapi_vllm_64k_tail_after_context_repeat_investigation.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_fastapi_vllm_64k_tail_final.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_fastapi_vllm_tail_before_32k.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_after_64k_context_final.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_after_8k_on_64k_service.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_after_concurrency_c16.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_after_concurrency_c1_c2_c4.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_after_concurrency_c8.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_16k_on_64k_service.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_32k_on_64k_service.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_4k.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_4k_calibrated_3000chars.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_4k_calibrated_6000chars.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_4k_calibrated_final.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_64k_conservative_on_64k_service.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_64k_near_limit_on_64k_service.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_repeat_investigation.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_after_fastapi_64k_smoke.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_after_fastapi_smoke.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_after_vllm_64k_startup.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_after_vllm_ready.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_before_context_64k_on_64k_service.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_before_context_repeat_investigation.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_sampling.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context_tail_after_32k.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context_tail_after_64k_conservative.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context_tail_after_64k_near_limit.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context_tail_final.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_tail_after_c16.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_tail_after_c1_c2_c4.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_tail_after_c8.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_tail_before_32k.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_pre_32k_evidence_freeze.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_pre_32k_nvidia_smi.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_prefix_cache_investigation_metrics_summary.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_result_file_inventory_before_32k.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_seed_oss_vllm.pid
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_seed_oss_vllm_64k.pid
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_seed_oss_vllm_64k_key_startup_lines.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_seed_oss_vllm_64k_tail_after_16k.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_seed_oss_vllm_64k_tail_after_32k.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_seed_oss_vllm_64k_tail_after_64k_conservative.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_seed_oss_vllm_64k_tail_after_64k_near_limit.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_seed_oss_vllm_64k_tail_after_8k.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_seed_oss_vllm_64k_tail_after_context_repeat_investigation.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_seed_oss_vllm_64k_tail_final.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_seed_oss_vllm_launch.log
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_seed_oss_vllm_launch_64k.log
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_seed_oss_vllm_launch_hfcache.log
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_seed_oss_vllm_ready_tail.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/logs/week2_seed_oss_vllm_tail_before_32k.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_concurrency_c1.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_concurrency_c16.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_concurrency_c16_summary.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_concurrency_c1_summary.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_concurrency_c2.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_concurrency_c2_summary.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_concurrency_c4.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_concurrency_c4_summary.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_concurrency_c8.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_concurrency_c8_summary.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_context_length_16k_on_64k_service.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_context_length_32k_on_64k_service.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_context_length_4k.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_context_length_4k_calibrated_3000chars.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_context_length_4k_calibrated_6000chars.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_context_length_64k_conservative_on_64k_service.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_context_length_64k_near_limit_on_64k_service.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_context_length_8k_on_64k_service.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_context_repeat_r1_56k_then_64k.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_context_repeat_r2_64k_then_56k.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_context_repeat_r3_56k_then_64k.csv
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_fastapi_64k_health.json
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_fastapi_64k_metrics_head.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_fastapi_64k_smoke_test.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_fastapi_health.json
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_fastapi_metrics_head.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_fastapi_smoke_test.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_pre_32k_fastapi_health.json
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_pre_32k_vllm_metrics_snapshot.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_pre_32k_vllm_models.json
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_seed_oss_vllm_64k_metrics_head.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_seed_oss_vllm_64k_models.json
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_seed_oss_vllm_models.json
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_vllm_64k_metrics_snapshot_after_smoke.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_vllm_metrics_after_context_repeat_investigation.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_vllm_metrics_before_context_repeat_investigation.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_vllm_metrics_head.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_8k_on_64k_service.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_concurrency_c16.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_concurrency_c1_c2_c4.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_concurrency_c8.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_16k_on_64k_service.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_32k_on_64k_service.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_4k.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_4k_calibrated_3000chars.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_4k_calibrated_6000chars.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_4k_calibrated_final.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_64k_conservative_on_64k_service.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_64k_near_limit_on_64k_service.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_smoke.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_before_context_64k_on_64k_service.txt
+//workspace/ai-inference-service/evidence/week2_64k_context/scripts/benchmark_context_length.py
+//workspace/ai-inference-service/evidence/week2_64k_context/scripts/plot_week2_results.py
+//workspace/ai-inference-service/evidence/week2_64k_context/scripts/sample_gpu_metrics.sh
+//workspace/ai-inference-service/evidence/week2_64k_context/scripts/snapshot_vllm_metrics.py
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_concurrency_all_summary_print.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_concurrency_c1.log
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_concurrency_c16.log
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_concurrency_c1_c2_c4_c8_c16_summary_print.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_concurrency_c1_c2_c4_c8_summary_print.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_concurrency_c1_c2_c4_summary_print.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_concurrency_c2.log
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_concurrency_c4.log
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_concurrency_c8.log
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_context_4k_all_summary_print.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_context_4k_calibrated_summary_print.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_fastapi.pid
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_fastapi_vllm.log
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_fastapi_vllm_tail_before_32k.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_nvidia_smi_after_concurrency_c16.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_nvidia_smi_after_concurrency_c1_c2_c4.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_nvidia_smi_after_concurrency_c8.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_nvidia_smi_after_context_4k.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_nvidia_smi_after_context_4k_calibrated_3000chars.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_nvidia_smi_after_context_4k_calibrated_6000chars.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_nvidia_smi_after_context_4k_calibrated_final.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_nvidia_smi_after_fastapi_smoke.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_nvidia_smi_after_vllm_ready.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_nvidia_smi_sampling.csv
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_nvidia_smi_sampling_tail_after_c16.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_nvidia_smi_sampling_tail_after_c1_c2_c4.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_nvidia_smi_sampling_tail_after_c8.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_nvidia_smi_sampling_tail_before_32k.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_pre_32k_evidence_freeze.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_pre_32k_nvidia_smi.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_result_file_inventory_before_32k.txt
+//workspace/ai-inference-service/evidence/week2_pre_32k/logs/week2_seed_oss_vllm.pid
