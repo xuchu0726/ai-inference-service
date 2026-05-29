@@ -23,7 +23,7 @@
 - 最终稳定量化路径是 W8A8 compressed-tensors，不是 plain INT8 / AWQ / GPTQ；
 - `nvidia-smi` 运行时总显存没有按 30% 以上下降，因为 vLLM 会把释放出的模型权重显存重新用于 KV cache；
 - 已完成的是 Seed-OSS 代码生成 mini eval，不是 Seed-Coder 专项模型部署与评测；
-- 当前已有 64K live context 边界测试和 512K 可行性分析，但没有 128K live boundary test；
+- 当前已有 64K live context evidence、128K serving profile live boundary test 和 512K 可行性分析；
 - 当前没有完成 FP8 KV cache / KV cache quantization 实机启动实验。
 
 ## 2. Week2 要求逐项映射
@@ -44,7 +44,7 @@
 | Batch Size 测试图表 | `figures/week2/batch_tokens/` 下多张 QPS/P95/latency 图 | 已完成 | 已覆盖 4096/8192/16384/32768 等 batch-token 配置。 |
 | GQA 如何降低计算复杂度 | Week2 报告和相关文档 | 基本完成 | 主报告中还需要用 MHA/MQA/GQA 对比方式写清楚。 |
 | QPS、延迟、P95 优化图表 | batch-token 图、concurrency 图、FP32 vs W8A8 图 | 已完成 | 图表证据已经足够。 |
-| 128K long-context boundary test | 64K live context evidence、512K feasibility analysis | 未完成 | 没有 128K live boundary test。 |
+| 128K long-context boundary test | 128K conservative / near-limit / over-limit live boundary CSV、vLLM launch log、ready check、boundary review | 已完成 | 已完成 128K serving profile 的 live boundary test；512K full-context 仍未完成实机验证。 |
 | FP8 KV cache / KV cache quantization | 当前未发现明确 evidence | 未完成 | 不能写已完成。 |
 
 ## 3. 量化实验最终解释
@@ -82,7 +82,7 @@
 
 1. 不能写 plain INT8 / AWQ / GPTQ 稳定 serving 已完成；
 2. 不能写 Seed-Coder 专项评测已完成；
-3. 不能写 128K live context boundary test 已完成；
+3. 不能写 512K full-context 已完成；
 4. 不能写 FP8 KV cache quantization 已完成；
 5. 不能写 runtime `nvidia-smi` 总显存降低超过 30%；
 6. 不能把 failed INT8 attempts 包装成成功量化部署；

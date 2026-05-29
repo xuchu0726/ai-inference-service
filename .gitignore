@@ -33,3 +33,6 @@ runpod-volume/
 # Large temporary outputs
 tmp/
 *.tmp
+
+# Runtime process files
+*.pid

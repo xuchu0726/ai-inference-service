@@ -204,7 +204,7 @@ vLLM metrics 快照命令示例：
 
 当前资源边界：
 
-Week1 实测中，Seed-OSS-36B-Instruct 在 BF16、TP=2、max_model_len=4096 下，2×A100 80GB 稳定运行时每张卡显存约 75.8GB/80GB。FP32 权重显存理论上约为 BF16 的 2 倍，因此 FP32 serving baseline 在当前资源下可能需要更多 GPU 或调整实验方案。
+在后续 2×A100-SXM4-80GB 实验窗口中，项目已完成 Seed-OSS-36B-Instruct 的 FP32 baseline serving、W8A8 compressed-tensors 离线量化、W8A8 vLLM serving、smoke test 和同参数 batch-profile benchmark。FP32 与 W8A8 对比不再停留在资源估算阶段，而是已有可复现的实测 CSV、启动日志、ready evidence 和图表。
 
 本周实际方案：
 
@@ -219,8 +219,9 @@ Week1 实测中，Seed-OSS-36B-Instruct 在 BF16、TP=2、max_model_len=4096 下
 | 方案 | 是否完成 | 当前结论 | 备注 |
 |---|---|---|---|
 | BF16 baseline | 已完成 | 已完成真实部署、长上下文、并发、GSM8K full 和 codegen mini eval | 当前主基线 |
-| FP32 serving | 未完成 | 当前 2×A100 80GB 环境显存风险高 | 作为后续资源可行性测试 |
-| INT8 / AWQ / GPTQ | 未完成 | 缺少已验证兼容量化权重和 vLLM loading path | 后续量化实验方向 |
+| FP32 serving | 已完成 | 已完成 2×A100-SXM4-80GB 下的 FP32 baseline serving、smoke test 和 batch-profile benchmark | 作为 W8A8 对照基线 |
+| W8A8 compressed-tensors | 已完成 | 已完成离线量化、vLLM serving、smoke test 和同参数 batch-profile 对比 | 当前稳定可复现的 8-bit 权重量化路径 |
+| strict INT8 / AWQ / GPTQ | 部分完成 / 有边界 | bitsandbytes INT8、INC INT8、compressed-tensors strict INT8 均已做可行性探测和失败边界记录，但没有形成最终稳定 serving | 不能包装为 plain INT8 全部完成 |
 | FP8 KV Cache | 未完成 | 与长上下文 KV cache 显存优化强相关 | 后续优先级较高 |
 
 ---
@@ -485,7 +486,7 @@ vLLM 启动日志显示：
 
 4. 监控与证据链方面，本周保存了 FastAPI health/metrics、vLLM `/metrics`、vLLM 启动日志、nvidia-smi 采样、benchmark CSV、图表和 evidence 压缩包。所有关键证据已归档到 `evidence/`、`artifacts/`、`results/` 和 `figures/` 目录，并提交到 GitHub。
 
-5. 工程局限方面，当前实验完成的是 BF16 baseline、并发测试、KV cache/prefix cache 分析、64K 级别长上下文验证、GSM8K full benchmark 和代码生成 mini eval。INT8 量化、FP32 对比、512K full-context 和 Seed-Coder 专项测试仍需要更多 GPU 资源、兼容量化权重或独立实验窗口支持。GSM8K full benchmark 和代码生成 mini eval 已在本轮补充完成。当前报告中对这些项目以可行性分析和后续计划形式记录，避免伪造不可复现实验结果。
+5. 工程局限方面，当前实验已完成 BF16 baseline、FP32 baseline、W8A8 compressed-tensors serving、FP32 vs W8A8 batch-profile 对比、并发测试、KV cache/prefix cache 分析、128K serving profile 边界验证、GSM8K full benchmark 和代码生成 mini eval。strict INT8 / AWQ / GPTQ 稳定 serving、FP8 KV cache、512K full-context 和 Seed-Coder 专项模型部署仍未完成。报告中必须区分已完成的 W8A8 量化闭环、失败边界记录，以及仍需后续资源验证的方向，避免把失败探测包装成成功部署。
 
 综上，Week2 已从简单 API 验证推进到真实大模型推理服务性能分析阶段，形成了可复现的部署脚本、测试脚本、原始实验数据、图表和工程解释。该阶段结果可作为后续 Week3 高可用架构、降级策略、多模态接入和 Week4 压测验收的基础。
 

@@ -131,9 +131,9 @@ Evidence：
 
 仍未完成或需要后续补强的部分如下：
 
-1. FP32 serving 未完成实机验证。Seed-OSS-36B 在 2×A100 80GB 环境下 BF16 已接近显存上限，FP32 权重和 KV cache 会带来更高显存压力。
-2. INT8 / AWQ / GPTQ 量化 serving 未完成实机验证。当前缺少已验证兼容 Seed-OSS-36B 的量化权重和 vLLM 加载路径。
-3. 512K full-context 未完成实机验证。Week2 已完成 64K 级别服务配置，并验证最高约 61.9K input tokens 请求。
+1. plain INT8 / AWQ / GPTQ 稳定 serving 尚未完成。本阶段已完成的是 W8A8 compressed-tensors 量化闭环；bitsandbytes INT8、INC INT8 和 compressed-tensors strict INT8 已记录失败边界，不能包装为最终成功路径。
+2. FP8 KV cache 尚未完成。当前已完成 vLLM KV cache、PagedAttention、Prefix Cache 和长上下文边界行为分析，但尚未实测 KV cache 低比特量化。
+3. 512K full-context 未完成实机验证。Week2 已完成 128K serving profile live boundary test，包括 conservative、near-limit 和 over-limit 三类请求。
 4. 代码生成测试使用的是 Seed-OSS-36B-Instruct，不是专门的 Seed-Coder 模型。Seed-Coder 专项验证仍是后续任务。
 5. Prometheus 配置、Grafana dashboard JSON 和一次 Grafana 实机导入/负载探测 evidence 已保存；后续仍可继续补充更完整的 dashboard、告警面板和长期监控截图。
 

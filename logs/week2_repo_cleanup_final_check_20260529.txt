@@ -1,0 +1,73 @@
+===== Week2 仓库清理最终检查 =====
+2026年 5月29日 星期五 16时30分38秒 BST
+ M .gitignore
+ M docs/week2_delivery_summary.md
+ M docs/week2_performance_optimization_report.md
+ M docs/week2_quantization_feasibility_report.md
+ M docs/week2_requirement_compliance_matrix.md
+D  evidence/week2_64k_context/logs/week2_fastapi.pid
+D  evidence/week2_64k_context/logs/week2_fastapi_64k.pid
+D  evidence/week2_64k_context/logs/week2_seed_oss_vllm.pid
+D  evidence/week2_64k_context/logs/week2_seed_oss_vllm_64k.pid
+D  evidence/week2_pre_32k/logs/week2_fastapi.pid
+D  evidence/week2_pre_32k/logs/week2_seed_oss_vllm.pid
+D  logs/new_2xa100_seed_oss_bnb_int8_retry_vllm.pid
+D  logs/new_2xa100_seed_oss_bnb_int8_vllm.pid
+D  logs/new_2xa100_seed_oss_compressed_tensors_int8_vllm.pid
+D  logs/new_2xa100_seed_oss_fp32_batch_profile_vllm.pid
+D  logs/new_2xa100_seed_oss_fp32_vllm.pid
+D  logs/new_2xa100_seed_oss_inc_int8_vllm.pid
+D  logs/new_2xa100_seed_oss_w8a8_batch_profile_vllm.pid
+D  logs/new_2xa100_seed_oss_w8a8_offline_quantization.pid
+D  logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry.pid
+D  logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2.pid
+D  logs/new_2xa100_seed_oss_w8a8_vllm.pid
+?? logs/week2_repo_cleanup_final_check_20260529.txt
+?? logs/week2_repo_cleanup_summary_20260529.txt
+
+===== Git 中是否仍跟踪 pid 文件 =====
+
+===== 是否仍存在过期表述 =====
+
+===== 中文清理汇总文件 =====
+-rw-r--r--  1 xc1225  staff   2.6K  5 29 16:30 logs/week2_repo_cleanup_summary_20260529.txt
+===== Week2 仓库清理汇总 =====
+日期：2026-05-29
+
+一、清理目的
+
+本次清理用于整理 Week2 v2 阶段的仓库状态，重点解决以下问题：
+
+1. 删除被 Git 跟踪的运行时 .pid 文件；
+2. 更新 .gitignore，避免后续继续提交 .pid 文件；
+3. 修正 Week2 文档中过期的实验状态描述；
+4. 将 FP32 baseline、W8A8 compressed-tensors serving、FP32 vs W8A8 batch-profile benchmark、128K live boundary test 等最新进展同步到主文档；
+5. 保留 strict INT8 / AWQ / GPTQ、FP8 KV cache、512K full-context、Seed-Coder 专项模型部署等未完成边界，避免夸大实验结论。
+
+二、本次主要更新的文档
+
+- docs/week2_performance_optimization_report.md
+- docs/week2_quantization_feasibility_report.md
+- docs/week2_delivery_summary.md
+- docs/week2_requirement_compliance_matrix.md
+
+三、关键事实口径更新
+
+1. FP32 serving baseline 已完成，包括 API ready、smoke test 和 batch-profile benchmark。
+2. W8A8 compressed-tensors 是当前稳定完成的 8-bit 权重量化 serving 路径。
+3. bitsandbytes INT8、INC INT8 和 compressed-tensors strict INT8 均已进行可行性探测和失败边界记录，但没有成为最终稳定 serving 路径。
+4. W8A8 相比 FP32 在同参数 batch-profile benchmark 下提升了 QPS 和 output tokens/s。
+5. model loading memory 从约 67.59 GiB 降至约 17.71 GiB，下降约 73.8%；但不能表述为 runtime nvidia-smi 总显存同比下降，因为 vLLM 会将释放出来的显存重新用于 KV cache。
+6. 128K serving profile live boundary test 已完成，覆盖 conservative、near-limit 和 over-limit 三类请求。
+7. 512K full-context 实机验证仍未完成。
+8. FP8 KV cache 仍未完成。
+9. Seed-Coder 专项模型部署和评测仍未完成。
+
+四、仓库卫生处理
+
+1. 已删除 Git 中跟踪的运行时 .pid 文件。
+2. 已更新 .gitignore，防止后续 .pid 文件再次进入 Git。
+3. 零散的本地审计、query、临时检查文件不作为最终 evidence 保留。
+4. 本文件作为本轮仓库清理的唯一汇总记录保留。
+
+五、后续注意事项

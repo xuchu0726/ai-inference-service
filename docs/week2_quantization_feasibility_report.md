@@ -54,7 +54,7 @@ Seed-OSS-36B 约 36B 参数。仅从模型权重存储估算：
 6. tensor parallel communication overhead；
 7. 长上下文请求带来的 KV cache 扩张。
 
-因此，在当前 2×A100 80GB 环境下，FP32 serving baseline 缺少足够显存余量，尤其难以同时支持长上下文 KV cache。当前阶段未将 FP32 作为已完成实测结果，而将其记录为资源受限项。
+在后续 2×A100-SXM4-80GB 实验窗口中，FP32 serving baseline 已完成实机启动、API ready、smoke test 和 batch-profile benchmark。因此，FP32 不再仅作为资源估算项，而是作为 W8A8 compressed-tensors 量化路径的实测对照基线。
 
 后续若需要进行严格 FP32 baseline，应使用更多 GPU 或更高显存 GPU，并保存以下 evidence：
 
@@ -77,7 +77,7 @@ INT8 量化不是简单将 vLLM 启动参数中的 `--dtype` 修改为 `int8`。
 5. 输出质量回归验证；
 6. latency、throughput、memory、accuracy 的综合评估。
 
-对于 Seed-OSS-36B-Instruct，当前阶段尚未准备可直接用于 vLLM serving 的 INT8/AWQ/GPTQ 量化权重，也未完成离线量化流程。因此，本文不记录未经实测的 INT8 性能数据，而是将 INT8 作为后续实验路线。
+对于 Seed-OSS-36B-Instruct，本阶段已完成 W8A8 compressed-tensors 离线量化、vLLM serving、smoke test 和同参数 batch-profile benchmark。bitsandbytes INT8、INC INT8 和 compressed-tensors strict INT8 路径已进行可行性探测和失败边界记录，但未形成最终稳定 serving。因此，本文将稳定闭环表述为 W8A8 compressed-tensors，而不是 plain INT8 / AWQ / GPTQ 全部完成。
 
 ## 5. 当前量化完成度与资源边界
 
@@ -86,8 +86,8 @@ INT8 量化不是简单将 vLLM 启动参数中的 `--dtype` 修改为 `int8`。
 | BF16 baseline | 已完成真实部署与 benchmark | 已完成 |
 | FP32 对比 | 当前 2×A100 80GB 环境显存余量不足 | 需后续资源验证 |
 | INT8 量化 | 尚未准备兼容量化权重或离线量化流程 | 需后续实验 |
-| 显存降低 ≥30% | 尚未完成真实量化实验 | 当前不声明达成 |
-| 速度提升 ≥20% | 尚未完成真实量化实验 | 当前不声明达成 |
+| 显存降低 ≥30% | 部分达成 / 需限定口径 | W8A8 相比 FP32 的 model loading memory 显著下降，但 runtime `nvidia-smi` 总显存不会同比下降，因为 vLLM 会将释放出的显存用于 KV cache |
+| 速度提升 ≥20% | 已完成 | W8A8 在同参数 batch-profile benchmark 中相对 FP32 提升 QPS 与 output tokens/s，提升幅度覆盖 concurrency=1/2/4/8/16 |
 | 量化对比表 | 已设计对比表结构 | 待后续实验填充 |
 | KV cache 优化路线 | 已完成 KV cache / Prefix Cache 分析 | 可继续推进 FP8 KV Cache |
 
@@ -226,7 +226,7 @@ TurboQuant 等低比特压缩方法可作为后续长上下文推理优化的研
 
 ## 12. 结论
 
-当前阶段已完成 Seed-OSS-36B-Instruct 的 BF16 serving baseline、并发 benchmark、64K 长上下文验证和 KV cache / Prefix Cache 分析。真实 INT8 与 FP32 对比尚未完成，主要限制来自当前 GPU 显存余量、量化权重准备和框架兼容性验证。
+当前阶段已完成 Seed-OSS-36B-Instruct 的 BF16 serving baseline、FP32 serving baseline、W8A8 compressed-tensors serving、FP32 vs W8A8 batch-profile benchmark、128K serving profile 边界验证和 KV cache / Prefix Cache 分析。strict INT8 / AWQ / GPTQ 仍未形成最终稳定 serving，主要限制来自量化格式、vLLM loading path 和模型结构兼容性。
 
 后续量化优化应优先推进：
 
