@@ -1,0 +1,80 @@
+===== 日期 =====
+Thu May 28 22:36:11 UTC 2026
+
+===== 本步骤目的 =====
+检查修复 oneshot 导入路径后，Seed-OSS-36B 离线 W8A8 量化任务是否真正进入模型加载或量化阶段。
+
+===== PID =====
+8211
+
+===== 量化进程 =====
+    PID    PPID STAT     ELAPSED %CPU %MEM CMD
+   8211    1424 Rl         00:33 60.2  0.2 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+    632     627 S       01:32:30  0.0  0.0 /usr/bin/python /usr/local/bin/jupyter-lab --allow-root --no-browser --port=8888 --ip=* --FileContentsManager.delete_to_trash=False --ServerApp.terminado_settings={"shell_command":["/bin/bash"]} --ServerApp.token=l8gu35ql9ilbtj6oxnog --ServerApp.allow_origin=* --ServerApp.preferred_dir=/workspace
+   8211    1424 Dl         00:33 60.2  0.2 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+
+===== GPU 状态 =====
+Thu May 28 22:36:11 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   28C    P0             85W /  400W |   33887MiB /  81920MiB |      2%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   29C    P0             83W /  400W |   34427MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            8211      C   python                                33878MiB |
+|    1   N/A  N/A            8211      C   python                                34418MiB |
++-----------------------------------------------------------------------------------------+
+
+===== 输出目录状态 =====
+/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/calibration_prompts.json
+166K	/workspace/quantized_models
+
+===== 日志最后 300 行 =====
+nohup: ignoring input
+`torch_dtype` is deprecated! Use `dtype` instead!
+===== Offline W8A8 quantization config =====
+model_id: ByteDance-Seed/Seed-OSS-36B-Instruct
+output_dir: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+hf_cache_dir: /workspace/hf_cache
+num_calibration_samples: 16
+max_seq_length: 512
+torch: 2.9.0+cu128
+cuda_available: True
+gpu_count: 2
+gpu_0: NVIDIA A100-SXM4-80GB
+gpu_1: NVIDIA A100-SXM4-80GB
+===== Loading tokenizer =====
+===== Loading model in BF16 for offline quantization =====
+Loading checkpoint shards:   0%|          | 0/15 [00:00<?, ?it/s]Loading checkpoint shards:   7%|▋         | 1/15 [00:11<02:45, 11.84s/it]
+===== Git 状态 =====
+?? logs/new_2xa100_seed_oss_bnb_int8_openai_benchmark_3req_20260528.log
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_loading_check_20260528_215302.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_check_20260528_215331.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_evidence_20260528.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215126.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215205.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_vllm.pid
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214511.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214606.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_vllm.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_20260528.log
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223546.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223556.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223611.txt

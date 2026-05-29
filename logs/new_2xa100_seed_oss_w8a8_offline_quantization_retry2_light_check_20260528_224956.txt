@@ -1,0 +1,68 @@
+===== 日期 =====
+Thu May 28 22:49:56 UTC 2026
+
+===== 本步骤目的 =====
+继续轻量监控 Seed-OSS-36B W8A8 离线量化 retry2，确认 checkpoint 加载是否继续推进。
+
+===== 量化进程 =====
+    PID    PPID STAT     ELAPSED %CPU %MEM CMD
+   8361    1424 Rl         04:40 42.4  0.1 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+
+===== GPU 状态 =====
+Thu May 28 22:49:56 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   28C    P0             85W /  400W |   34991MiB /  81920MiB |      7%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   29C    P0             83W /  400W |   36031MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            8361      C   python                                34982MiB |
+|    1   N/A  N/A            8361      C   python                                36022MiB |
++-----------------------------------------------------------------------------------------+
+
+===== 日志最后 200 行 =====
+nohup: ignoring input
+`torch_dtype` is deprecated! Use `dtype` instead!
+===== Offline W8A8 quantization config =====
+model_id: ByteDance-Seed/Seed-OSS-36B-Instruct
+output_dir: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+hf_cache_dir: /workspace/hf_cache
+num_calibration_samples: 16
+max_seq_length: 512
+torch: 2.9.0+cu128
+cuda_available: True
+gpu_count: 2
+gpu_0: NVIDIA A100-SXM4-80GB
+gpu_1: NVIDIA A100-SXM4-80GB
+===== Loading tokenizer =====
+===== Loading model in BF16 for offline quantization =====
+Loading checkpoint shards:   0%|          | 0/15 [00:00<?, ?it/s]Loading checkpoint shards:   7%|▋         | 1/15 [00:20<04:47, 20.51s/it]Loading checkpoint shards:  13%|█▎        | 2/15 [00:40<04:22, 20.18s/it]Loading checkpoint shards:  20%|██        | 3/15 [00:59<03:56, 19.74s/it]Loading checkpoint shards:  27%|██▋       | 4/15 [01:17<03:30, 19.15s/it]Loading checkpoint shards:  33%|███▎      | 5/15 [01:36<03:10, 19.06s/it]Loading checkpoint shards:  40%|████      | 6/15 [01:58<03:00, 20.04s/it]Loading checkpoint shards:  47%|████▋     | 7/15 [02:18<02:39, 19.97s/it]Loading checkpoint shards:  53%|█████▎    | 8/15 [02:39<02:21, 20.22s/it]Loading checkpoint shards:  60%|██████    | 9/15 [02:57<01:57, 19.62s/it]Loading checkpoint shards:  67%|██████▋   | 10/15 [03:18<01:39, 19.88s/it]Loading checkpoint shards:  73%|███████▎  | 11/15 [03:36<01:17, 19.27s/it]Loading checkpoint shards:  80%|████████  | 12/15 [03:52<00:55, 18.46s/it]Loading checkpoint shards:  87%|████████▋ | 13/15 [04:02<00:31, 15.86s/it]Loading checkpoint shards:  93%|█████████▎| 14/15 [04:12<00:14, 14.07s/it]Loading checkpoint shards: 100%|██████████| 15/15 [04:19<00:00, 12.04s/it]Loading checkpoint shards: 100%|██████████| 15/15 [04:19<00:00, 17.32s/it]
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+===== Sanitizing generation config before saving quantized checkpoint =====
+===== Starting W8A8 quantization =====
+2026-05-28T22:49:46.058534+0000 | __init__ | WARNING - Disabling tokenizer parallelism due to threading conflict between FastTokenizer and Datasets. Set TOKENIZERS_PARALLELISM=false to suppress this warning.
+Tokenizing:   0%|          | 0/16 [00:00<?, ? examples/s]Tokenizing: 100%|██████████| 16/16 [00:00<00:00, 1318.24 examples/s]
+2026-05-28T22:49:46.200973+0000 | reset | INFO - Compression lifecycle reset
+2026-05-28T22:49:46.202928+0000 | from_modifiers | INFO - Creating recipe from modifiers
+2026-05-28T22:49:46.287958+0000 | initialize | INFO - Compression lifecycle initialized for 1 modifiers
+2026-05-28T22:49:46.288369+0000 | IndependentPipeline | INFO - Inferred `DataFreePipeline` for `QuantizationModifier`
+Calibrating weights:   0%|          | 0/448 [00:00<?, ?it/s]Calibrating weights:   0%|          | 1/448 [00:00<00:58,  7.66it/s]Calibrating weights:  31%|███       | 137/448 [00:00<00:00, 713.02it/s]Calibrating weights:  55%|█████▍    | 246/448 [00:00<00:00, 871.09it/s]Calibrating weights:  85%|████████▍ | 380/448 [00:00<00:00, 1046.65it/s]Calibrating weights: 100%|██████████| 448/448 [00:00<00:00, 926.69it/s] 
+2026-05-28T22:49:47.136317+0000 | finalize | INFO - Compression lifecycle finalized for 1 modifiers
+2026-05-28T22:49:47.136533+0000 | get_model_compressor | INFO - skip_sparsity_compression_stats set to True. Skipping sparsity compression statistic calculations. No sparsity compressor will be applied.
+Compressing model: 0it [00:00, ?it/s]Compressing model: 1it [00:00,  5.65it/s]Compressing model: 4it [00:00, 10.56it/s]Compressing model: 6it [00:01,  3.79it/s]Compressing model: 7it [00:01,  3.19it/s]Compressing model: 8it [00:02,  3.52it/s]Compressing model: 11it [00:02,  5.86it/s]Compressing model: 12it [00:02,  4.35it/s]Compressing model: 13it [00:03,  3.54it/s]Compressing model: 14it [00:03,  3.07it/s]Compressing model: 15it [00:03,  3.39it/s]Compressing model: 18it [00:04,  5.64it/s]Compressing model: 19it [00:04,  4.21it/s]Compressing model: 20it [00:05,  3.46it/s]Compressing model: 21it [00:05,  3.01it/s]Compressing model: 22it [00:05,  3.34it/s]Compressing model: 25it [00:05,  5.55it/s]Compressing model: 26it [00:06,  4.26it/s]Compressing model: 27it [00:06,  3.52it/s]Compressing model: 28it [00:07,  3.07it/s]Compressing model: 29it [00:07,  3.46it/s]Compressing model: 32it [00:07,  5.84it/s]Compressing model: 33it [00:08,  4.44it/s]Compressing model: 34it [00:08,  3.61it/s]Compressing model: 35it [00:08,  3.15it/s]Compressing model: 36it [00:09,  3.54it/s]Compressing model: 39it [00:09,  5.99it/s]
+===== 错误关键词检查 =====

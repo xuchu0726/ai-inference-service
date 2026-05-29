@@ -1,0 +1,690 @@
+===== 日期 =====
+Fri May 29 00:25:34 UTC 2026
+
+===== 本步骤目的 =====
+在释放 RunPod Volume 前，保存当前仓库、GPU、日志、结果文件和量化模型 metadata 的最终资产清单。
+本步骤不保存 36GB 量化权重本体，只保存可证明量化 checkpoint 真实生成的配置、索引、recipe、tokenizer 与文件大小清单。
+
+===== Git 最近提交 =====
+bca56fb 补充 Seed-OSS FP32 batch profile 完整运行日志
+233e0fb 记录 Seed-OSS FP32 batch profile 停止状态
+0196345 记录 Seed-OSS FP32 与 W8A8 最终验收快照
+6c8237f 生成 Seed-OSS FP32 与 W8A8 batch profile 对比图表
+9d07ed7 总结 Seed-OSS FP32 与 W8A8 batch profile 对比结果
+04a6978 记录 Seed-OSS FP32 batch profile 并发对照结果
+1e0b727 记录 Seed-OSS W8A8 batch profile 停止状态
+71c3d46 记录 Seed-OSS W8A8 batch profile 并发吞吐优化结果
+abcfaef 记录 Seed-OSS W8A8 conservative profile 停止状态
+bab96e0 总结 Seed-OSS FP32 与 W8A8 量化对比结果
+7965ca6 记录 Seed-OSS-36B W8A8 serving benchmark 结果
+91ba902 记录 Seed-OSS-36B W8A8 smoke test 结果
+9bd2a6d 记录 Seed-OSS-36B W8A8 serving ready 证据
+5659c1c 完成 Seed-OSS-36B 离线 W8A8 量化 checkpoint 生成
+b77bb24 修复 Seed-OSS W8A8 量化 checkpoint 保存配置
+b5f0026 记录 Seed-OSS W8A8 离线量化保存阶段失败原因
+de05629 修复 Seed-OSS W8A8 离线量化脚本入口
+affc3e7 追查 llmcompressor oneshot API 导入失败原因
+2a6a5aa 添加 Seed-OSS-36B 离线 W8A8 量化脚本
+a598017 安装 Seed-OSS 离线 W8A8 量化工具链
+
+===== Git 当前状态 =====
+?? logs/new_2xa100_seed_oss_bnb_int8_openai_benchmark_3req_20260528.log
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_loading_check_20260528_215302.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_check_20260528_215331.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_evidence_20260528.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215126.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215205.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_vllm.pid
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214511.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214606.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_vllm.pid
+?? logs/new_2xa100_seed_oss_final_volume_preservation_manifest_20260529.txt
+?? logs/new_2xa100_seed_oss_fp32_batch_profile_vllm.pid
+?? logs/new_2xa100_seed_oss_w8a8_batch_profile_vllm.pid
+?? logs/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528.log
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225050.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225112.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225143.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225148.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_launch_snapshot_20260528.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224821.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224908.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224940.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224956.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_save_check_20260528_225306.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_status_check_20260528_224730.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223546.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223556.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223611.txt
+?? logs/new_2xa100_seed_oss_w8a8_vllm_ready_check_20260528.txt
+?? results/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528.csv
+?? results/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528_summary.csv
+
+===== GPU 最终状态 =====
+Fri May 29 00:25:34 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   26C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   27C    P0             62W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== 端口状态 =====
+LISTEN 0      511          0.0.0.0:8001       0.0.0.0:*    users:(("nginx",pid=600,fd=10))     
+
+===== logs 文件清单 =====
+2026-05-28 21:12:22.4003224450 2651 logs/install_fastapi_root_venv.log
+2026-05-28 21:12:22.4003224450 3700 logs/gpu_memory_residue_check_20260527.txt
+2026-05-28 21:12:22.4003224450 4799 logs/gpu_memory_residue_cleanup_attempt_20260527.txt
+2026-05-28 21:12:22.4003224450 5010 logs/gpu_memory_residue_wait_check_20260527.txt
+2026-05-28 21:12:22.4003224450 5333 logs/gpu_memory_after_pod_restart_20260527.txt
+2026-05-28 21:12:22.4013224450 19769 logs/network_volume_file_inventory_20260527.txt
+2026-05-28 21:12:22.4013224450 52751 logs/install_vllm.log
+2026-05-28 21:12:22.4013224450 63826 logs/network_volume_final_top_level_audit_20260527.txt
+2026-05-28 21:12:22.4013224450 6718 logs/network_volume_clean_clone_snapshot_20260527.txt
+2026-05-28 21:12:22.4013224450 718 logs/local_cleanup_aborted_volume_archive_20260527.txt
+2026-05-28 21:12:22.4013224450 8395 logs/network_volume_preservation_commit_push_20260527.txt
+2026-05-28 21:12:22.4013224450 8629 logs/network_volume_preservation_classification_20260527.txt
+2026-05-28 21:12:22.4013224450 9009 logs/network_volume_diff_against_github_20260527.txt
+2026-05-28 21:12:22.4023224460 1303 logs/new_pod_base_pip_freeze_20260525.txt
+2026-05-28 21:12:22.4023224460 1934 logs/new_pod_apt_update_for_grafana_20260525.log
+2026-05-28 21:12:22.4023224460 3502 logs/new_pod_after_vllm_pip_freeze_20260525.txt
+2026-05-28 21:12:22.4023224460 3508 logs/new_pod_base_cuda_mismatch_20260525.txt
+2026-05-28 21:12:22.4023224460 596 logs/new_pod_apt_update_grafana_repo_20260525.log
+2026-05-28 21:12:22.4023224460 6986 logs/network_volume_preservation_staging_20260527.txt
+2026-05-28 21:12:22.4023224460 756 logs/new_pod_base_import_check_20260525.log
+2026-05-28 21:12:22.4033224460 2485 logs/new_pod_grafana_live_dashboard_evidence_20260525.txt
+2026-05-28 21:12:22.4033224460 292080 logs/new_pod_grafana_20260525.log
+2026-05-28 21:12:22.4033224460 3845 logs/new_pod_grafana_load_probe_20260525.log
+2026-05-28 21:12:22.4033224460 432 logs/new_pod_grafana_import_dashboard_20260525.log
+2026-05-28 21:12:22.4043224460 1747 logs/new_pod_install_grafana_20260525.log
+2026-05-28 21:12:22.4043224460 24259 logs/new_pod_install_base_requirements_20260525.log
+2026-05-28 21:12:22.4043224460 3554 logs/new_pod_prometheus_20260525.log
+2026-05-28 21:12:22.4043224460 4526 logs/new_pod_recovery_before_grafana_20260525.txt
+2026-05-28 21:12:22.4043224460 49115 logs/new_pod_seed_oss_fastapi_20260525.log
+2026-05-28 21:12:22.4043224460 4992 logs/new_pod_pre_model_load_snapshot_20260525.txt
+2026-05-28 21:12:22.4043224460 52403 logs/new_pod_install_vllm_20260525.log
+2026-05-28 21:12:22.4043224460 5605 logs/new_pod_grafana_prereq_20260525.log
+2026-05-28 21:12:22.4053224470 106675 logs/new_pod_seed_oss_vllm_64k_launch_20260525.log
+2026-05-28 21:12:22.4053224470 1709 logs/new_pod_upgrade_pip_20260525.log
+2026-05-28 21:12:22.4053224470 181 logs/new_pod_vllm_import_cuda_check_20260525.log
+2026-05-28 21:12:22.4053224470 23102 logs/reinstall_base_requirements_clean_env.log
+2026-05-28 21:12:22.4053224470 2764 logs/new_pod_seed_oss_vllm_64k_startup_snapshot_20260525.txt
+2026-05-28 21:12:22.4053224470 3620 logs/runpod_env_probe.txt
+2026-05-28 21:12:22.4053224470 4788 logs/new_pod_seed_oss_fastapi_smoke_snapshot_20260525.txt
+2026-05-28 21:12:22.4053224470 55054 logs/reinstall_vllm_root_venv.log
+2026-05-28 21:12:22.4053224470 9045 logs/runpod_recovered_volume_status_20260527.txt
+2026-05-28 21:12:22.4063224470 13153 logs/seed_oss_fastapi_benchmark_summary.txt
+2026-05-28 21:12:22.4063224470 1316 logs/seed_oss_fastapi_concurrency2.log
+2026-05-28 21:12:22.4063224470 16108 logs/seed_oss_budget_compare_summary.txt
+2026-05-28 21:12:22.4063224470 1626 logs/seed_oss_fastapi_benchmark_3req.log
+2026-05-28 21:12:22.4063224470 1942 logs/seed_oss_fastapi_budget_compare.log
+2026-05-28 21:12:22.4063224470 2149 logs/seed_oss_after_chat_smoke_256_nvidia_smi.txt
+2026-05-28 21:12:22.4063224470 2149 logs/seed_oss_after_fastapi_smoke_nvidia_smi.txt
+2026-05-28 21:12:22.4063224470 2149 logs/seed_oss_after_long_legal_summary_nvidia_smi.txt
+2026-05-28 21:12:22.4063224470 2149 logs/seed_oss_after_vllm_ready_nvidia_smi.txt
+2026-05-28 21:12:22.4063224470 2292 logs/seed_oss_artifact_inventory.txt
+2026-05-28 21:12:22.4063224470 2771 logs/seed_oss_artifact_inventory_final.txt
+2026-05-28 21:12:22.4063224470 3239 logs/runpod_vllm_probe.txt
+2026-05-28 21:12:22.4063224470 5137 logs/seed_oss_e2e_success_evidence.txt
+2026-05-28 21:12:22.4073224470 1017 logs/week2_16k_result_print.txt
+2026-05-28 21:12:22.4073224470 1294 logs/seed_oss_fastapi_concurrency4.log
+2026-05-28 21:12:22.4073224470 1318 logs/seed_oss_fastapi_concurrency4_retry.log
+2026-05-28 21:12:22.4073224470 21379 logs/seed_oss_week1_metrics_final_evidence.txt
+2026-05-28 21:12:22.4073224470 21543 logs/seed_oss_week1_final_plus_concurrency_evidence.txt
+2026-05-28 21:12:22.4073224470 2287 logs/seed_oss_fastapi_launch_with_metrics.log
+2026-05-28 21:12:22.4073224470 2604 logs/seed_oss_fastapi_launch.log
+2026-05-28 21:12:22.4073224470 3922 logs/seed_oss_week1_final_inventory.txt
+2026-05-28 21:12:22.4073224470 42078 logs/seed_oss_vllm_launch_port8002.log
+2026-05-28 21:12:22.4073224470 6365 logs/seed_oss_vllm_launch.log
+2026-05-28 21:12:22.4073224470 7800 logs/seed_oss_week1_final_after_metrics_commit.txt
+2026-05-28 21:12:22.4083224480 1031 logs/week2_32k_result_print.txt
+2026-05-28 21:12:22.4083224480 1073 logs/week2_8k_evidence_before_16k.txt
+2026-05-28 21:12:22.4083224480 1100 logs/week2_batch_token_final_remote_status_20260527.txt
+2026-05-28 21:12:22.4083224480 12165 logs/week2_64k_context_file_inventory_final.txt
+2026-05-28 21:12:22.4083224480 2711 logs/week2_after_stop_32768_long_output_20260525.txt
+2026-05-28 21:12:22.4083224480 2805 logs/week2_after_stop_8192_before_32768_long_output_20260525.txt
+2026-05-28 21:12:22.4083224480 5333 logs/week2_batch_token_global_consistency_check_20260526.txt
+2026-05-28 21:12:22.4083224480 8527 logs/week2_batch_token_final_staged_check_20260526.txt
+2026-05-28 21:12:22.4083224480 9347 logs/week2_64k_context_final_evidence_freeze.txt
+2026-05-28 21:12:22.4083224480 945 logs/week2_64k_conservative_result_print.txt
+2026-05-28 21:12:22.4083224480 953 logs/week2_64k_near_limit_result_print.txt
+2026-05-28 21:12:22.4093224480 1646 logs/week2_batch_token_push_snapshot_20260527.txt
+2026-05-28 21:12:22.4093224480 16522 logs/week2_batch_token_pre_commit_review_20260526.txt
+2026-05-28 21:12:22.4093224480 2958 logs/week2_batch_token_report_polish_snapshot_20260526.txt
+2026-05-28 21:12:22.4093224480 3865 logs/week2_batch_tokens_16384_benchmark_20260525.log
+2026-05-28 21:12:22.4093224480 41774 logs/week2_batch_token_review_bundle_20260526.txt
+2026-05-28 21:12:22.4093224480 4477 logs/week2_batch_token_report_final_check_snapshot_20260526.txt
+2026-05-28 21:12:22.4093224480 5917 logs/week2_batch_token_global_consistency_check_after_fix_20260526.txt
+2026-05-28 21:12:22.4093224480 8421 logs/week2_batch_token_staged_review_20260526.txt
+2026-05-28 21:12:22.4093224480 9109 logs/week2_batch_tokens_16384_fastapi_20260525.log
+2026-05-28 21:12:22.4103224490 0 logs/week2_batch_tokens_32768_benchmark_20260525.log
+2026-05-28 21:12:22.4103224490 1290 logs/week2_batch_tokens_16384_vllm_key_lines_20260525.txt
+2026-05-28 21:12:22.4103224490 55586 logs/week2_batch_tokens_16384_vllm_launch_20260525.log
+2026-05-28 21:12:22.4103224490 7231 logs/week2_batch_tokens_16384_snapshot_20260525.txt
+2026-05-28 21:12:22.4113224490 1297 logs/week2_batch_tokens_32768_long_output_vllm_key_lines_20260525.txt
+2026-05-28 21:12:22.4113224490 2381 logs/week2_batch_tokens_32768_long_output_512_benchmark_20260525.log
+2026-05-28 21:12:22.4113224490 24193 logs/week2_batch_tokens_32768_fastapi_20260525.log
+2026-05-28 21:12:22.4113224490 32132 logs/week2_batch_tokens_32768_long_output_vllm_startup_wait_snapshot_20260525.txt
+2026-05-28 21:12:22.4113224490 3868 logs/week2_batch_tokens_32768_c8_benchmark_20260525.log
+2026-05-28 21:12:22.4113224490 45763 logs/week2_batch_tokens_32768_long_output_vllm_launch_20260525.log
+2026-05-28 21:12:22.4113224490 6092 logs/week2_batch_tokens_32768_long_output_vllm_config_snapshot_20260525.txt
+2026-05-28 21:12:22.4113224490 6913 logs/week2_batch_tokens_32768_c8_snapshot_20260525.txt
+2026-05-28 21:12:22.4113224490 7893 logs/week2_batch_tokens_32768_long_output_fastapi_20260525.log
+2026-05-28 21:12:22.4113224490 8232 logs/week2_batch_tokens_32768_long_output_512_snapshot_20260525.txt
+2026-05-28 21:12:22.4123224490 1290 logs/week2_batch_tokens_32768_vllm_key_lines_20260525.txt
+2026-05-28 21:12:22.4123224490 3866 logs/week2_batch_tokens_8192_benchmark_20260525.log
+2026-05-28 21:12:22.4123224490 3868 logs/week2_batch_tokens_4096_benchmark_20260525.log
+2026-05-28 21:12:22.4123224490 3869 logs/week2_batch_tokens_8192_c8_benchmark_20260525.log
+2026-05-28 21:12:22.4123224490 40824 logs/week2_batch_tokens_4096_vllm_launch_20260525.log
+2026-05-28 21:12:22.4123224490 4588 logs/week2_batch_tokens_32768_snapshot_20260525.txt
+2026-05-28 21:12:22.4123224490 5809 logs/week2_batch_tokens_4096_snapshot_20260525.txt
+2026-05-28 21:12:22.4123224490 6338 logs/week2_batch_tokens_4096_fastapi_20260525.log
+2026-05-28 21:12:22.4123224490 775 logs/week2_batch_tokens_4096_vllm_key_lines_20260525.txt
+2026-05-28 21:12:22.4123224490 78761 logs/week2_batch_tokens_32768_vllm_launch_20260525.log
+2026-05-28 21:12:22.4133224500 1287 logs/week2_batch_tokens_8192_c8_vllm_key_lines_20260525.txt
+2026-05-28 21:12:22.4133224500 17529 logs/week2_batch_tokens_8192_c8_fastapi_20260525.log
+2026-05-28 21:12:22.4133224500 2380 logs/week2_batch_tokens_8192_long_output_512_benchmark_20260525.log
+2026-05-28 21:12:22.4133224500 47777 logs/week2_batch_tokens_8192_vllm_launch_20260525.log
+2026-05-28 21:12:22.4133224500 61048 logs/week2_batch_tokens_8192_c8_vllm_launch_20260525.log
+2026-05-28 21:12:22.4133224500 7220 logs/week2_batch_tokens_8192_snapshot_20260525.txt
+2026-05-28 21:12:22.4133224500 7221 logs/week2_batch_tokens_8192_c8_snapshot_20260525.txt
+2026-05-28 21:12:22.4133224500 7373 logs/week2_batch_tokens_8192_long_output_512_snapshot_20260525.txt
+2026-05-28 21:12:22.4133224500 775 logs/week2_batch_tokens_8192_vllm_key_lines_20260525.txt
+2026-05-28 21:12:22.4133224500 9110 logs/week2_batch_tokens_8192_fastapi_20260525.log
+2026-05-28 21:12:22.4143224500 1053 logs/week2_concurrency_c1.log
+2026-05-28 21:12:22.4143224500 1370 logs/week2_batch_tokens_request_level_plot_snapshot_20260526.txt
+2026-05-28 21:12:22.4143224500 1706 logs/week2_batch_tokens_csv_fix_and_plot_snapshot_20260526.txt
+2026-05-28 21:12:22.4143224500 1846 logs/week2_batch_tokens_enhanced_plot_snapshot_20260526.txt
+2026-05-28 21:12:22.4143224500 1887 logs/week2_batch_tokens_profile_decision_fix_snapshot_20260526.txt
+2026-05-28 21:12:22.4143224500 2174 logs/week2_batch_tokens_figure_reorg_snapshot_20260526.txt
+2026-05-28 21:12:22.4143224500 2303 logs/week2_batch_tokens_final_interpretation_20260525.txt
+2026-05-28 21:12:22.4143224500 2563 logs/week2_batch_tokens_workload_summary_print_20260525.txt
+2026-05-28 21:12:22.4143224500 2865 logs/week2_batch_tokens_sweep_start_snapshot_20260525.txt
+2026-05-28 21:12:22.4143224500 2870 logs/week2_before_switch_8192_to_32768_long_output_20260525.txt
+2026-05-28 21:12:22.4143224500 3057 logs/week2_before_stop_after_32768_long_output_20260525.txt
+2026-05-28 21:12:22.4143224500 3494 logs/week2_batching_strategy_batch_token_update_snapshot_20260526.txt
+2026-05-28 21:12:22.4143224500 374 logs/week2_codegen_mini_seed_oss_budget0.log
+2026-05-28 21:12:22.4143224500 5284 logs/week2_concurrency_all_summary_print.txt
+2026-05-28 21:12:22.4153224500 1057 logs/week2_concurrency_c2.log
+2026-05-28 21:12:22.4153224500 1057 logs/week2_concurrency_c4.log
+2026-05-28 21:12:22.4153224500 1356 logs/week2_concurrency_c8.log
+2026-05-28 21:12:22.4153224500 1976 logs/week2_concurrency_c16.log
+2026-05-28 21:12:22.4153224500 2458 logs/week2_context_4k_all_summary_print.txt
+2026-05-28 21:12:22.4153224500 2550 logs/week2_context_4k_calibrated_summary_print.txt
+2026-05-28 21:12:22.4153224500 29 logs/week2_context_repeat_investigation_start.txt
+2026-05-28 21:12:22.4153224500 3140 logs/week2_context_8k_16k_32k_summary_before_64k.txt
+2026-05-28 21:12:22.4153224500 3181 logs/week2_concurrency_c1_c2_c4_summary_print.txt
+2026-05-28 21:12:22.4153224500 4230 logs/week2_concurrency_c1_c2_c4_c8_summary_print.txt
+2026-05-28 21:12:22.4153224500 5036 logs/week2_context_8k_16k_32k_64k_final_summary.txt
+2026-05-28 21:12:22.4153224500 5288 logs/week2_concurrency_c1_c2_c4_c8_c16_summary_print.txt
+2026-05-28 21:12:22.4153224500 5327 logs/week2_context_repeat_final_interpretation.txt
+2026-05-28 21:12:22.4163224510 1214 logs/week2_dynamic_batch_concurrency_4_analysis.log
+2026-05-28 21:12:22.4163224510 1216 logs/week2_dynamic_batch_concurrency_2_analysis.log
+2026-05-28 21:12:22.4163224510 1218 logs/week2_dynamic_batch_concurrency_1_analysis.log
+2026-05-28 21:12:22.4163224510 1218 logs/week2_dynamic_batch_concurrency_8_analysis.log
+2026-05-28 21:12:22.4163224510 1221 logs/week2_dynamic_batch_concurrency_16_analysis.log
+2026-05-28 21:12:22.4163224510 2697 logs/week2_delivery_summary_batch_token_update_snapshot_20260526.txt
+2026-05-28 21:12:22.4163224510 3839 logs/week2_dynamic_batch_concurrency_4.log
+2026-05-28 21:12:22.4163224510 3845 logs/week2_dynamic_batch_concurrency_1.log
+2026-05-28 21:12:22.4163224510 3847 logs/week2_dynamic_batch_concurrency_2.log
+2026-05-28 21:12:22.4163224510 3847 logs/week2_dynamic_batch_concurrency_8.log
+2026-05-28 21:12:22.4163224510 3852 logs/week2_dynamic_batch_concurrency_16.log
+2026-05-28 21:12:22.4163224510 5286 logs/week2_context_repeat_investigation_summary.txt
+2026-05-28 21:12:22.4173224510 104820 logs/week2_fastapi_gsm8k_seed_oss.log
+2026-05-28 21:12:22.4173224510 1296 logs/week2_fastapi_vllm_64k.log
+2026-05-28 21:12:22.4173224510 1296 logs/week2_fastapi_vllm_64k_tail_after_context_repeat_investigation.txt
+2026-05-28 21:12:22.4173224510 1296 logs/week2_fastapi_vllm_64k_tail_final.txt
+2026-05-28 21:12:22.4173224510 4333 logs/week2_gpu_residue_failure_snapshot_20260527.txt
+2026-05-28 21:12:22.4173224510 686 logs/week2_fastapi_vllm_64k_tail_after_8k.txt
+2026-05-28 21:12:22.4173224510 747 logs/week2_fastapi_vllm_64k_tail_after_16k.txt
+2026-05-28 21:12:22.4173224510 808 logs/week2_fastapi_vllm_64k_tail_after_32k.txt
+2026-05-28 21:12:22.4173224510 869 logs/week2_fastapi_vllm_64k_tail_after_64k_conservative.txt
+2026-05-28 21:12:22.4173224510 930 logs/week2_fastapi_vllm_64k_tail_after_64k_near_limit.txt
+2026-05-28 21:12:22.4173224510 9606 logs/week2_fastapi_vllm.log
+2026-05-28 21:12:22.4173224510 9606 logs/week2_fastapi_vllm_tail_before_32k.txt
+2026-05-28 21:12:22.4183224520 0 logs/week2_gsm8k_full_seed_oss_max768.log
+2026-05-28 21:12:22.4183224520 145740 logs/week2_gsm8k_full_seed_oss_budget0.log
+2026-05-28 21:12:22.4183224520 1485 logs/week2_gsm8k_diagnostic_budget0_10.log
+2026-05-28 21:12:22.4183224520 1506 logs/week2_gsm8k_diagnostic_budget512_10.log
+2026-05-28 21:12:22.4183224520 5287 logs/week2_gpu_residue_stop_start_failed_snapshot_20260527.txt
+2026-05-28 21:12:22.4183224520 5349 logs/week2_gpu_residue_restart_failed_snapshot_20260527.txt
+2026-05-28 21:12:22.4183224520 5493 logs/week2_gpu_residue_new_pod_failed_snapshot_20260527.txt
+2026-05-28 21:12:22.4183224520 8227 logs/week2_gsm8k_full_seed_oss.log
+2026-05-28 21:12:22.4193224520 11866 logs/week2_gsm8k_vllm_import_failure_diagnostic.txt
+2026-05-28 21:12:22.4193224520 2149 logs/week2_nvidia_smi_after_64k_context_final.txt
+2026-05-28 21:12:22.4193224520 2149 logs/week2_nvidia_smi_after_codegen_mini_budget0.txt
+2026-05-28 21:12:22.4193224520 2149 logs/week2_nvidia_smi_after_concurrency_c16.txt
+2026-05-28 21:12:22.4193224520 2149 logs/week2_nvidia_smi_after_concurrency_c1_c2_c4.txt
+2026-05-28 21:12:22.4193224520 2149 logs/week2_nvidia_smi_after_concurrency_c8.txt
+2026-05-28 21:12:22.4193224520 2149 logs/week2_nvidia_smi_after_context_16k_on_64k_service.txt
+2026-05-28 21:12:22.4193224520 2149 logs/week2_nvidia_smi_after_context_32k_on_64k_service.txt
+2026-05-28 21:12:22.4193224520 2149 logs/week2_nvidia_smi_after_context_4k.txt
+2026-05-28 21:12:22.4193224520 2149 logs/week2_nvidia_smi_after_context_4k_calibrated_3000chars.txt
+2026-05-28 21:12:22.4193224520 2174 logs/week2_nvidia_smi_after_8k_on_64k_service.txt
+2026-05-28 21:12:22.4193224520 3439 logs/week2_main_report_batch_token_integration_snapshot_20260526.txt
+2026-05-28 21:12:22.4193224520 354 logs/week2_gsm8k_mini_seed_oss.log
+2026-05-28 21:12:22.4203224530 2149 logs/week2_nvidia_smi_after_context_4k_calibrated_6000chars.txt
+2026-05-28 21:12:22.4203224530 2149 logs/week2_nvidia_smi_after_context_4k_calibrated_final.txt
+2026-05-28 21:12:22.4203224530 2149 logs/week2_nvidia_smi_after_context_64k_conservative_on_64k_service.txt
+2026-05-28 21:12:22.4203224530 2149 logs/week2_nvidia_smi_after_context_64k_near_limit_on_64k_service.txt
+2026-05-28 21:12:22.4203224530 2149 logs/week2_nvidia_smi_after_context_repeat_investigation.txt
+2026-05-28 21:12:22.4203224530 2149 logs/week2_nvidia_smi_after_dynamic_batch_sweep.txt
+2026-05-28 21:12:22.4203224530 2149 logs/week2_nvidia_smi_after_fastapi_64k_smoke.txt
+2026-05-28 21:12:22.4203224530 2149 logs/week2_nvidia_smi_after_fastapi_smoke.txt
+2026-05-28 21:12:22.4203224530 2149 logs/week2_nvidia_smi_after_gsm8k_full_budget0.txt
+2026-05-28 21:12:22.4203224530 2149 logs/week2_nvidia_smi_after_gsm8k_mini_seed_oss.txt
+2026-05-28 21:12:22.4203224530 2149 logs/week2_nvidia_smi_after_vllm_64k_startup.txt
+2026-05-28 21:12:22.4203224530 2149 logs/week2_nvidia_smi_after_vllm_gsm8k_startup.txt
+2026-05-28 21:12:22.4203224530 2149 logs/week2_nvidia_smi_after_vllm_ready.txt
+2026-05-28 21:12:22.4203224530 2149 logs/week2_nvidia_smi_before_context_64k_on_64k_service.txt
+2026-05-28 21:12:22.4203224530 2149 logs/week2_nvidia_smi_before_context_repeat_investigation.txt
+2026-05-28 21:12:22.4213224530 11231 logs/week2_nvidia_smi_sampling_64k_context_tail_after_64k_near_limit.txt
+2026-05-28 21:12:22.4213224530 12894 logs/week2_old_pod_data_inventory_before_migration.txt
+2026-05-28 21:12:22.4213224530 1400 logs/week2_nvidia_smi_sampling_tail_after_c1_c2_c4.txt
+2026-05-28 21:12:22.4213224530 16820 logs/week2_nvidia_smi_sampling_64k_context_tail_final.txt
+2026-05-28 21:12:22.4213224530 2100 logs/week2_nvidia_smi_sampling_tail_after_c8.txt
+2026-05-28 21:12:22.4213224530 2800 logs/week2_nvidia_smi_sampling_tail_after_c16.txt
+2026-05-28 21:12:22.4213224530 5609 logs/week2_nvidia_smi_sampling_64k_context_tail_after_32k.txt
+2026-05-28 21:12:22.4213224530 62740 logs/week2_nvidia_smi_sampling_64k_context.csv
+2026-05-28 21:12:22.4213224530 8400 logs/week2_nvidia_smi_sampling_tail_before_32k.txt
+2026-05-28 21:12:22.4213224530 8421 logs/week2_nvidia_smi_sampling_64k_context_tail_after_64k_conservative.txt
+2026-05-28 21:12:22.4213224530 97157 logs/week2_nvidia_smi_sampling.csv
+2026-05-28 21:12:22.4223224530 12251 logs/week2_quantization_language_polish_snapshot_20260527.txt
+2026-05-28 21:12:22.4223224530 1277 logs/week2_old_pod_evidence_import_20260525.txt
+2026-05-28 21:12:22.4223224530 2149 logs/week2_pre_32k_nvidia_smi.txt
+2026-05-28 21:12:22.4223224530 24520 logs/week2_quantization_current_state_check_20260527.txt
+2026-05-28 21:12:22.4223224530 2969 logs/week2_routing_policy_doc_integration_snapshot_20260527.txt
+2026-05-28 21:12:22.4223224530 3103 logs/week2_prefix_cache_investigation_metrics_summary.txt
+2026-05-28 21:12:22.4223224530 4777 logs/week2_pre_32k_evidence_freeze.txt
+2026-05-28 21:12:22.4223224530 5127 logs/week2_quantization_second_polish_snapshot_20260527.txt
+2026-05-28 21:12:22.4223224530 5635 logs/week2_result_file_inventory_before_32k.txt
+2026-05-28 21:12:22.4223224530 8013 logs/week2_quantization_pre_commit_review_20260527.txt
+2026-05-28 21:12:22.4233224540 1923 logs/week2_routing_policy_doc_snapshot_20260527.txt
+2026-05-28 21:12:22.4233224540 20606 logs/week2_seed_oss_vllm_64k_tail_after_8k.txt
+2026-05-28 21:12:22.4233224540 2341 logs/week2_routing_policy_pre_commit_review_20260527.txt
+2026-05-28 21:12:22.4233224540 26785 logs/week2_seed_oss_vllm_64k_tail_after_16k.txt
+2026-05-28 21:12:22.4233224540 29742 logs/week2_seed_oss_vllm_64k_tail_after_32k.txt
+2026-05-28 21:12:22.4233224540 30534 logs/week2_seed_oss_vllm_64k_tail_after_64k_conservative.txt
+2026-05-28 21:12:22.4233224540 31237 logs/week2_seed_oss_vllm_64k_tail_after_64k_near_limit.txt
+2026-05-28 21:12:22.4233224540 4375 logs/week2_routing_policy_initial_snapshot_20260527.txt
+2026-05-28 21:12:22.4233224540 682 logs/week2_seed_oss_vllm_64k_key_startup_lines.txt
+2026-05-28 21:12:22.4233224540 957 logs/week2_routing_policy_test_snapshot_20260527.txt
+2026-05-28 21:12:22.4243224540 2413 logs/week2_seed_oss_vllm_gsm8k_64k.log
+2026-05-28 21:12:22.4243224540 33830 logs/week2_seed_oss_vllm_64k_tail_after_context_repeat_investigation.txt
+2026-05-28 21:12:22.4243224540 33830 logs/week2_seed_oss_vllm_64k_tail_final.txt
+2026-05-28 21:12:22.4253224540 16899 logs/week2_seed_oss_vllm_launch.log
+2026-05-28 21:12:22.4253224540 22601 logs/week2_seed_oss_vllm_ready_tail.txt
+2026-05-28 21:12:22.4253224540 33830 logs/week2_seed_oss_vllm_launch_64k.log
+2026-05-28 21:12:22.4253224540 36873 logs/week2_seed_oss_vllm_tail_before_32k.txt
+2026-05-28 21:12:22.4253224540 43968 logs/week2_seed_oss_vllm_launch_hfcache.log
+2026-05-28 21:12:22.4253224540 449339 logs/week2_seed_oss_vllm_gsm8k_64k_clean_env.log
+2026-05-28 21:22:36.9595563880 3479 logs/new_2xa100_fp32_prelaunch_snapshot_20260528.txt
+2026-05-28 21:23:13.7295703850 5 logs/new_2xa100_seed_oss_fp32_vllm.pid
+2026-05-28 21:23:22.0035735350 4292 logs/new_2xa100_seed_oss_fp32_launch_snapshot_20260528.txt
+2026-05-28 21:28:18.7226864860 6108 logs/new_2xa100_seed_oss_fp32_ready_evidence_20260528.txt
+2026-05-28 21:30:49.1577296660 4117 logs/new_2xa100_seed_oss_fp32_openai_benchmark_3req_20260528.log
+2026-05-28 21:31:20.4277385760 8480 logs/new_2xa100_seed_oss_fp32_final_inventory_20260528.txt
+2026-05-28 21:35:33.5318106940 188942 logs/new_2xa100_seed_oss_fp32_process_appendix_20260528.txt
+2026-05-28 21:37:20.7908412560 17645 logs/new_2xa100_seed_oss_fp32_vllm_launch_20260528.log
+2026-05-28 21:37:33.6288449140 6200 logs/new_2xa100_seed_oss_fp32_shutdown_20260528.txt
+2026-05-28 21:39:18.0828746760 2979 logs/new_2xa100_after_fp32_before_int8_check_20260528.txt
+2026-05-28 21:43:27.0099456040 13691 logs/new_2xa100_seed_oss_quantization_feasibility_probe_20260528.txt
+2026-05-28 21:44:56.4809710990 5 logs/new_2xa100_seed_oss_bnb_int8_vllm.pid
+2026-05-28 21:45:03.9499732270 4820 logs/new_2xa100_seed_oss_bnb_int8_launch_snapshot_20260528.txt
+2026-05-28 21:45:12.0669755400 5614 logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214511.txt
+2026-05-28 21:45:31.7569811500 26319 logs/new_2xa100_seed_oss_bnb_int8_vllm_launch_20260528.log
+2026-05-28 21:46:07.6259814160 29658 logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214606.txt
+2026-05-28 21:46:54.4109793160 33861 logs/new_2xa100_seed_oss_bnb_int8_first_failure_summary_20260528.txt
+2026-05-28 21:47:56.0769765450 7580 logs/new_2xa100_install_bitsandbytes_20260528.log
+2026-05-28 21:50:41.1939691230 5 logs/new_2xa100_seed_oss_bnb_int8_retry_vllm.pid
+2026-05-28 21:50:46.6029688790 3883 logs/new_2xa100_seed_oss_bnb_int8_retry_launch_snapshot_20260528.txt
+2026-05-28 21:51:26.9969670650 11446 logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215126.txt
+2026-05-28 21:52:05.4759653360 14951 logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215205.txt
+2026-05-28 21:53:02.5979627710 16259 logs/new_2xa100_seed_oss_bnb_int8_retry_loading_check_20260528_215302.txt
+2026-05-28 21:53:31.8769614550 17531 logs/new_2xa100_seed_oss_bnb_int8_retry_ready_check_20260528_215331.txt
+2026-05-28 21:54:12.5589596240 23302 logs/new_2xa100_seed_oss_bnb_int8_retry_ready_evidence_20260528.txt
+2026-05-28 21:56:25.5259536450 6439 logs/new_2xa100_seed_oss_bnb_int8_openai_benchmark_3req_20260528.log
+2026-05-28 21:58:45.4229473420 30613 logs/new_2xa100_seed_oss_bnb_int8_final_evidence_20260528.txt
+2026-05-28 22:00:37.2159422690 3328 logs/new_2xa100_seed_oss_fp32_vs_bnb_int8_summary_20260528.txt
+2026-05-28 22:03:34.1508997440 17690 logs/new_2xa100_seed_oss_bnb_int8_retry_vllm_launch_20260528.log
+2026-05-28 22:03:47.1088904510 12160 logs/new_2xa100_seed_oss_bnb_quantization_shutdown_and_boundary_20260528.txt
+2026-05-28 22:04:54.1638423600 6223 logs/new_2xa100_seed_oss_strict_int8_backend_probe_20260528.txt
+2026-05-28 22:06:14.8797844700 5 logs/new_2xa100_seed_oss_compressed_tensors_int8_vllm.pid
+2026-05-28 22:06:20.3847805220 4028 logs/new_2xa100_seed_oss_compressed_tensors_int8_launch_snapshot_20260528.txt
+2026-05-28 22:06:24.9317772610 5830 logs/new_2xa100_seed_oss_compressed_tensors_int8_vllm_launch_20260528.log
+2026-05-28 22:06:36.7847687600 9076 logs/new_2xa100_seed_oss_compressed_tensors_int8_status_check_20260528_220635.txt
+2026-05-28 22:07:52.4027145270 9951 logs/new_2xa100_seed_oss_compressed_tensors_int8_failure_summary_20260528.txt
+2026-05-28 22:08:53.8596704500 5 logs/new_2xa100_seed_oss_inc_int8_vllm.pid
+2026-05-28 22:08:59.4606664320 3839 logs/new_2xa100_seed_oss_inc_int8_launch_snapshot_20260528.txt
+2026-05-28 22:09:02.4196643100 5063 logs/new_2xa100_seed_oss_inc_int8_vllm_launch_20260528.log
+2026-05-28 22:09:06.7336612160 8248 logs/new_2xa100_seed_oss_inc_int8_status_check_20260528_220905.txt
+2026-05-28 22:10:19.4386090720 9068 logs/new_2xa100_seed_oss_inc_int8_failure_summary_20260528.txt
+2026-05-28 22:13:41.7119360040 9525 logs/new_2xa100_seed_oss_strict_int8_root_cause_probe_20260528.txt
+2026-05-28 22:22:50.2926740410 145958 logs/new_2xa100_seed_oss_quantization_process_appendix_20260528.txt
+2026-05-28 22:26:25.8417028840 18260 logs/new_2xa100_seed_oss_w8a8_toolchain_install_20260528.txt
+2026-05-28 22:31:55.1748723880 5178 logs/new_2xa100_seed_oss_w8a8_script_preflight_20260528.txt
+2026-05-28 22:32:19.5677696690 5 logs/new_2xa100_seed_oss_w8a8_offline_quantization.pid
+2026-05-28 22:32:27.4437365030 523 logs/new_2xa100_seed_oss_w8a8_offline_quantization_20260528.log
+2026-05-28 22:32:28.6797312980 3612 logs/new_2xa100_seed_oss_w8a8_offline_quantization_launch_snapshot_20260528.txt
+2026-05-28 22:32:38.1086915930 3372 logs/new_2xa100_seed_oss_w8a8_offline_quantization_status_check_20260528_223237.txt
+2026-05-28 22:33:52.6753775920 9746 logs/new_2xa100_llmcompressor_oneshot_api_probe_20260528.txt
+2026-05-28 22:35:38.4820661980 5 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry.pid
+2026-05-28 22:35:47.3310550450 4169 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223546.txt
+2026-05-28 22:35:56.6900432490 4861 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223556.txt
+2026-05-28 22:36:11.6870243470 5030 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223611.txt
+2026-05-28 22:40:44.8045951140 20760 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_20260528.log
+2026-05-28 22:41:52.2364838390 25115 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_224151.txt
+2026-05-28 22:44:54.2731834440 3895 logs/new_2xa100_seed_oss_w8a8_cleanup_incomplete_output_20260528.txt
+2026-05-28 22:45:16.3501470120 5 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2.pid
+2026-05-28 22:45:21.5811383810 4445 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_launch_snapshot_20260528.txt
+2026-05-28 22:47:30.5819334620 5707 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_status_check_20260528_224730.txt
+2026-05-28 22:48:22.0578524210 3930 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224821.txt
+2026-05-28 22:49:08.5847791710 4089 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224908.txt
+2026-05-28 22:49:40.8197284220 4368 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224940.txt
+2026-05-28 22:49:56.8567031740 7492 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224956.txt
+2026-05-28 22:50:50.4516187970 14790 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225050.txt
+2026-05-28 22:51:12.6315838780 17870 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225112.txt
+2026-05-28 22:51:43.6435350540 21040 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225143.txt
+2026-05-28 22:51:48.3195276930 21116 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225148.txt
+2026-05-28 22:53:07.0244037840 22460 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_save_check_20260528_225306.txt
+2026-05-28 22:53:26.1353736960 20481 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_20260528.log
+2026-05-28 22:54:34.2742665900 24980 logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_save_check_20260528_225433.txt
+2026-05-28 22:56:10.7381157130 25302 logs/new_2xa100_seed_oss_w8a8_offline_quantization_success_inventory_20260528.txt
+2026-05-28 22:57:26.6729969460 5 logs/new_2xa100_seed_oss_w8a8_vllm.pid
+2026-05-28 22:57:49.2599616230 9649 logs/new_2xa100_seed_oss_w8a8_vllm_ready_check_20260528.txt
+2026-05-28 22:58:28.0739009250 13798 logs/new_2xa100_seed_oss_w8a8_vllm_status_check_20260528_225827.txt
+2026-05-28 23:01:42.4315969330 23207 logs/new_2xa100_seed_oss_w8a8_ready_evidence_20260528.txt
+2026-05-28 23:07:09.3670828690 17247 logs/new_2xa100_seed_oss_w8a8_openai_benchmark_3req_20260528.log
+2026-05-28 23:11:13.7136980870 4565 logs/new_2xa100_seed_oss_fp32_vs_w8a8_quantization_summary_20260528.txt
+2026-05-28 23:24:23.2664609740 16664 logs/new_2xa100_seed_oss_w8a8_vllm_launch_20260528.log
+2026-05-28 23:24:40.0724345850 11883 logs/new_2xa100_seed_oss_w8a8_conservative_shutdown_20260528.txt
+2026-05-28 23:26:07.9012966750 5 logs/new_2xa100_seed_oss_w8a8_batch_profile_vllm.pid
+2026-05-28 23:31:47.8278005340 19696 logs/new_2xa100_seed_oss_w8a8_batch_profile_launch_snapshot_20260528.txt
+2026-05-28 23:32:58.7837034800 25030 logs/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528.log
+2026-05-28 23:38:42.4492355920 26635 logs/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528.log
+2026-05-28 23:40:56.8830551360 3202 logs/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_summary_20260528.txt
+2026-05-28 23:42:04.5189643460 89907 logs/new_2xa100_seed_oss_w8a8_batch_profile_vllm_launch_20260528.log
+2026-05-28 23:42:21.9329409690 12456 logs/new_2xa100_seed_oss_w8a8_batch_profile_shutdown_20260528.txt
+2026-05-28 23:44:24.8377759910 5 logs/new_2xa100_seed_oss_fp32_batch_profile_vllm.pid
+2026-05-28 23:44:31.5007670470 7147 logs/new_2xa100_seed_oss_fp32_batch_profile_launch_snapshot_20260528.txt
+2026-05-28 23:52:19.3941329960 24470 logs/new_2xa100_seed_oss_fp32_batch_profile_status_check_20260528_235219.txt
+2026-05-28 23:59:13.8135365320 26587 logs/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528.log
+2026-05-29 00:04:18.3840873820 5135 logs/new_2xa100_seed_oss_batch_profile_fp32_vs_w8a8_summary_20260529.txt
+2026-05-29 00:09:27.8946305930 6341 logs/new_2xa100_matplotlib_install_for_charts_20260529.txt
+2026-05-29 00:09:39.0116141860 7521 logs/new_2xa100_seed_oss_fp32_vs_w8a8_chart_generation_20260529.txt
+2026-05-29 00:16:24.3010160430 51634 logs/new_2xa100_seed_oss_fp32_vs_w8a8_final_acceptance_snapshot_20260529.txt
+2026-05-29 00:19:11.2787696090 38639 logs/new_2xa100_seed_oss_fp32_batch_profile_vllm_launch_20260528.log
+2026-05-29 00:19:27.5727455610 9449 logs/new_2xa100_seed_oss_fp32_batch_profile_shutdown_20260529.txt
+2026-05-29 00:25:35.5741950790 6487 logs/new_2xa100_seed_oss_final_volume_preservation_manifest_20260529.txt
+
+===== results 文件清单 =====
+2026-05-28 21:12:22.4263224550 1734 results/new_pod_prometheus_runtime_config_20260525.json
+2026-05-28 21:12:22.4263224550 29755 results/new_pod_grafana_load_probe_20260525.csv
+2026-05-28 21:12:22.4263224550 30 results/new_pod_prometheus_health_20260525.txt
+2026-05-28 21:12:22.4263224550 338 results/benchmark_summary.csv
+2026-05-28 21:12:22.4263224550 380 results/new_pod_grafana_dashboard_search_20260525.json
+2026-05-28 21:12:22.4263224550 448 results/new_pod_grafana_add_prometheus_datasource_20260525.json
+2026-05-28 21:12:22.4263224550 596 results/mock_benchmark.csv
+2026-05-28 21:12:22.4263224550 81 results/new_pod_grafana_health_20260525.json
+2026-05-28 21:12:22.4263224550 915 results/cloud_smoke_test_response.json
+2026-05-28 21:12:22.4273224550 11695 results/seed_oss_fastapi_budget_compare.csv
+2026-05-28 21:12:22.4273224550 1232 results/scheduler_requests.csv
+2026-05-28 21:12:22.4273224550 1459 results/new_pod_prometheus_targets_after_wait_20260525.json
+2026-05-28 21:12:22.4273224550 15 results/new_pod_seed_oss_fastapi_health_20260525.json
+2026-05-28 21:12:22.4273224550 414 results/scheduler_simulation_summary.csv
+2026-05-28 21:12:22.4273224550 523 results/new_pod_seed_oss_vllm_models_20260525.json
+2026-05-28 21:12:22.4273224550 5935 results/new_pod_seed_oss_vllm_metrics_head_20260525.txt
+2026-05-28 21:12:22.4273224550 5943 results/seed_oss_fastapi_concurrency2.csv
+2026-05-28 21:12:22.4273224550 749 results/new_pod_seed_oss_fastapi_health_debug_20260525.txt
+2026-05-28 21:12:22.4273224550 8728 results/scheduler_simulation.csv
+2026-05-28 21:12:22.4273224550 8984 results/seed_oss_fastapi_benchmark_3req.csv
+2026-05-28 21:12:22.4273224550 93 results/new_pod_prometheus_targets_20260525.json
+2026-05-28 21:12:22.4273224550 936 results/new_pod_seed_oss_fastapi_smoke_20260525.txt
+2026-05-28 21:12:22.4283224550 0 results/seed_oss_fastapi_concurrency4.csv
+2026-05-28 21:12:22.4283224550 1116 results/seed_oss_fastapi_concurrency4_manual_summary.txt
+2026-05-28 21:12:22.4283224550 1234 results/seed_oss_vllm_chat_smoke.json
+2026-05-28 21:12:22.4283224550 15 results/seed_oss_fastapi_health.json
+2026-05-28 21:12:22.4283224550 15 results/seed_oss_fastapi_health_after_metrics.json
+2026-05-28 21:12:22.4283224550 1518 results/seed_oss_long_legal_summary_512.json
+2026-05-28 21:12:22.4283224550 22 results/seed_oss_fastapi_metrics_head.txt
+2026-05-28 21:12:22.4283224550 2659 results/seed_oss_fastapi_openapi.json
+2026-05-28 21:12:22.4283224550 4952 results/seed_oss_fastapi_metrics_head_after_enable.txt
+2026-05-28 21:12:22.4283224550 5251 results/seed_oss_fastapi_metrics_generate_head.txt
+2026-05-28 21:12:22.4283224550 6009 results/seed_oss_fastapi_concurrency4_retry.csv
+2026-05-28 21:12:22.4283224550 607 results/seed_oss_fastapi_concurrency4_request_lines.txt
+2026-05-28 21:12:22.4283224550 956 results/seed_oss_fastapi_smoke_test.txt
+2026-05-28 21:12:22.4283224550 961 results/seed_oss_fastapi_smoke_test_after_metrics.txt
+2026-05-28 21:12:22.4293224560 1859 results/seed_oss_vllm_chat_smoke_256.json
+2026-05-28 21:12:22.4293224560 198831 results/seed_oss_vllm_openapi_head.txt
+2026-05-28 21:12:22.4293224560 29463 results/week2_batch_tokens_16384_benchmark_20260525.csv
+2026-05-28 21:12:22.4293224560 522 results/seed_oss_vllm_models.json
+2026-05-28 21:12:22.4293224560 5940 results/seed_oss_vllm_metrics_head.txt
+2026-05-28 21:12:22.4293224560 7556 results/thinking_budget_benchmark.csv
+2026-05-28 21:12:22.4303224560 1098 results/week2_batch_tokens_16384_vllm_metrics_before_benchmark_20260525.txt
+2026-05-28 21:12:22.4303224560 29558 results/week2_batch_tokens_32768_c8_benchmark_20260525.csv
+2026-05-28 21:12:22.4303224560 29623 results/week2_batch_tokens_32768_benchmark_20260525.csv
+2026-05-28 21:12:22.4303224560 4264 results/week2_batch_tokens_32768_long_output_fastapi_health_debug_retry_20260525.txt
+2026-05-28 21:12:22.4303224560 46171 results/week2_batch_tokens_32768_long_output_512_benchmark_20260525.csv
+2026-05-28 21:12:22.4303224560 523 results/week2_batch_tokens_16384_vllm_models_20260525.json
+2026-05-28 21:12:22.4303224560 585 results/week2_batch_tokens_16384_fastapi_health_debug_20260525.txt
+2026-05-28 21:12:22.4303224560 585 results/week2_batch_tokens_32768_fastapi_health_debug_20260525.txt
+2026-05-28 21:12:22.4303224560 585 results/week2_batch_tokens_32768_long_output_fastapi_health_debug_20260525.txt
+2026-05-28 21:12:22.4303224560 749 results/week2_batch_tokens_16384_fastapi_health_debug_retry_20260525.txt
+2026-05-28 21:12:22.4303224560 749 results/week2_batch_tokens_32768_fastapi_health_debug_retry_20260525.txt
+2026-05-28 21:12:22.4313224570 1098 results/week2_batch_tokens_32768_long_output_vllm_metrics_before_benchmark_20260525.txt
+2026-05-28 21:12:22.4313224570 1098 results/week2_batch_tokens_32768_vllm_metrics_before_benchmark_20260525.txt
+2026-05-28 21:12:22.4313224570 1098 results/week2_batch_tokens_4096_vllm_metrics_before_benchmark_20260525.txt
+2026-05-28 21:12:22.4313224570 1098 results/week2_batch_tokens_8192_c8_vllm_metrics_before_benchmark_20260525.txt
+2026-05-28 21:12:22.4313224570 15 results/week2_batch_tokens_4096_fastapi_health_20260525.json
+2026-05-28 21:12:22.4313224570 29642 results/week2_batch_tokens_8192_c8_benchmark_20260525.csv
+2026-05-28 21:12:22.4313224570 29701 results/week2_batch_tokens_4096_benchmark_20260525.csv
+2026-05-28 21:12:22.4313224570 29987 results/week2_batch_tokens_8192_benchmark_20260525.csv
+2026-05-28 21:12:22.4313224570 523 results/week2_batch_tokens_32768_long_output_vllm_models_20260525.json
+2026-05-28 21:12:22.4313224570 523 results/week2_batch_tokens_32768_vllm_models_20260525.json
+2026-05-28 21:12:22.4313224570 523 results/week2_batch_tokens_4096_vllm_models_20260525.json
+2026-05-28 21:12:22.4313224570 585 results/week2_batch_tokens_8192_c8_fastapi_health_debug_20260525.txt
+2026-05-28 21:12:22.4313224570 749 results/week2_batch_tokens_8192_c8_fastapi_health_debug_retry_20260525.txt
+2026-05-28 21:12:22.4323224570 0 results/week2_batch_tokens_8192_fastapi_health_20260525.json
+2026-05-28 21:12:22.4323224570 1098 results/week2_batch_tokens_8192_vllm_metrics_before_benchmark_20260525.txt
+2026-05-28 21:12:22.4323224570 1322 results/week2_codegen_mini_seed_oss_budget0.csv
+2026-05-28 21:12:22.4323224570 1808 results/week2_batch_tokens_workload_summary_20260525.csv
+2026-05-28 21:12:22.4323224570 427 results/week2_batch_tokens_short_c8_wave_latency_summary_20260526.csv
+2026-05-28 21:12:22.4323224570 46818 results/week2_batch_tokens_8192_long_output_512_benchmark_20260525.csv
+2026-05-28 21:12:22.4323224570 523 results/week2_batch_tokens_8192_c8_vllm_models_20260525.json
+2026-05-28 21:12:22.4323224570 523 results/week2_batch_tokens_8192_vllm_models_20260525.json
+2026-05-28 21:12:22.4323224570 749 results/week2_batch_tokens_8192_fastapi_health_debug_20260525.txt
+2026-05-28 21:12:22.4333224570 1017 results/week2_context_length_16k_on_64k_service.csv
+2026-05-28 21:12:22.4333224570 1031 results/week2_context_length_32k_on_64k_service.csv
+2026-05-28 21:12:22.4333224570 1046 results/week2_concurrency_c8_summary.csv
+2026-05-28 21:12:22.4333224570 1049 results/week2_concurrency_c2_summary.csv
+2026-05-28 21:12:22.4333224570 1050 results/week2_concurrency_c1_summary.csv
+2026-05-28 21:12:22.4333224570 1051 results/week2_concurrency_c4_summary.csv
+2026-05-28 21:12:22.4333224570 1054 results/week2_concurrency_c16_summary.csv
+2026-05-28 21:12:22.4333224570 12160 results/week2_concurrency_c16.csv
+2026-05-28 21:12:22.4333224570 3161 results/week2_concurrency_c2.csv
+2026-05-28 21:12:22.4333224570 3202 results/week2_concurrency_c4.csv
+2026-05-28 21:12:22.4333224570 3280 results/week2_concurrency_c1.csv
+2026-05-28 21:12:22.4333224570 440 results/week2_context_gradient_summary.csv
+2026-05-28 21:12:22.4333224570 6128 results/week2_concurrency_c8.csv
+2026-05-28 21:12:22.4343224580 1043 results/week2_context_length_4k_calibrated_3000chars.csv
+2026-05-28 21:12:22.4343224580 1047 results/week2_context_length_8k_on_64k_service.csv
+2026-05-28 21:12:22.4343224580 1054 results/week2_context_length_4k_calibrated_6000chars.csv
+2026-05-28 21:12:22.4343224580 1068 results/week2_dynamic_batch_concurrency_16_summary.csv
+2026-05-28 21:12:22.4343224580 1746 results/week2_context_repeat_r2_64k_then_56k.csv
+2026-05-28 21:12:22.4343224580 1746 results/week2_context_repeat_r3_56k_then_64k.csv
+2026-05-28 21:12:22.4343224580 1794 results/week2_context_repeat_r1_56k_then_64k.csv
+2026-05-28 21:12:22.4343224580 26134 results/week2_dynamic_batch_concurrency_16.csv
+2026-05-28 21:12:22.4343224580 26141 results/week2_dynamic_batch_concurrency_1.csv
+2026-05-28 21:12:22.4343224580 317 results/week2_context_length_4k.csv
+2026-05-28 21:12:22.4343224580 945 results/week2_context_length_64k_conservative_on_64k_service.csv
+2026-05-28 21:12:22.4343224580 953 results/week2_context_length_64k_near_limit_on_64k_service.csv
+2026-05-28 21:12:22.4353224580 1062 results/week2_dynamic_batch_concurrency_4_summary.csv
+2026-05-28 21:12:22.4353224580 1064 results/week2_dynamic_batch_concurrency_2_summary.csv
+2026-05-28 21:12:22.4353224580 1066 results/week2_dynamic_batch_concurrency_1_summary.csv
+2026-05-28 21:12:22.4353224580 1066 results/week2_dynamic_batch_concurrency_8_summary.csv
+2026-05-28 21:12:22.4353224580 15 results/week2_fastapi_64k_health.json
+2026-05-28 21:12:22.4353224580 15 results/week2_fastapi_health.json
+2026-05-28 21:12:22.4353224580 26118 results/week2_dynamic_batch_concurrency_2.csv
+2026-05-28 21:12:22.4353224580 26192 results/week2_dynamic_batch_concurrency_4.csv
+2026-05-28 21:12:22.4353224580 26303 results/week2_dynamic_batch_concurrency_8.csv
+2026-05-28 21:12:22.4353224580 4965 results/week2_fastapi_64k_metrics_head.txt
+2026-05-28 21:12:22.4353224580 962 results/week2_fastapi_64k_smoke_test.txt
+2026-05-28 21:12:22.4363224580 15 results/week2_gsm8k_fastapi_health.json
+2026-05-28 21:12:22.4363224580 461 results/week2_gsm8k_diagnostic_budget0_10_summary.csv
+2026-05-28 21:12:22.4363224580 469 results/week2_gsm8k_diagnostic_budget512_10_summary.csv
+2026-05-28 21:12:22.4363224580 4951 results/week2_fastapi_metrics_head.txt
+2026-05-28 21:12:22.4363224580 7483 results/week2_fastapi_metrics_after_gsm8k_full_budget0.txt
+2026-05-28 21:12:22.4363224580 8449 results/week2_gsm8k_diagnostic_budget0_10.csv
+2026-05-28 21:12:22.4363224580 8467 results/week2_gsm8k_diagnostic_budget512_10.csv
+2026-05-28 21:12:22.4363224580 8604 results/week2_fastapi_metrics_after_codegen_mini_budget0.txt
+2026-05-28 21:12:22.4363224580 8604 results/week2_fastapi_metrics_after_dynamic_batch_sweep.txt
+2026-05-28 21:12:22.4363224580 936 results/week2_fastapi_smoke_test.txt
+2026-05-28 21:12:22.4373224590 87095 results/week2_gsm8k_full_seed_oss.csv
+2026-05-28 21:12:22.4423224610 1075946 results/week2_gsm8k_full_seed_oss_budget0.csv
+2026-05-28 21:12:22.4423224610 2197 results/week2_gsm8k_vllm_metrics_head.txt
+2026-05-28 21:12:22.4423224610 2390 results/week2_gsm8k_mini_seed_oss.csv
+2026-05-28 21:12:22.4423224610 45437 results/week2_gsm8k_full_seed_oss_max768.csv
+2026-05-28 21:12:22.4423224610 485 results/week2_gsm8k_full_seed_oss_budget0_summary.csv
+2026-05-28 21:12:22.4423224610 523 results/week2_gsm8k_vllm_models.json
+2026-05-28 21:12:22.4433224610 15 results/week2_pre_32k_fastapi_health.json
+2026-05-28 21:12:22.4433224610 1529 results/week2_vllm_metrics_after_context_repeat_investigation.txt
+2026-05-28 21:12:22.4433224610 522 results/week2_pre_32k_vllm_models.json
+2026-05-28 21:12:22.4433224610 522 results/week2_seed_oss_vllm_models.json
+2026-05-28 21:12:22.4433224610 523 results/week2_seed_oss_vllm_64k_models.json
+2026-05-28 21:12:22.4433224610 57929 results/week2_vllm_metrics_after_codegen_mini_budget0.txt
+2026-05-28 21:12:22.4433224610 57932 results/week2_vllm_metrics_after_dynamic_batch_sweep.txt
+2026-05-28 21:12:22.4433224610 7402 results/week2_seed_oss_vllm_64k_metrics_head.txt
+2026-05-28 21:12:22.4433224610 745 results/week2_vllm_64k_metrics_snapshot_after_smoke.txt
+2026-05-28 21:12:22.4433224610 749 results/week2_pre_32k_vllm_metrics_snapshot.txt
+2026-05-28 21:12:22.4443224620 1528 results/week2_vllm_metrics_before_context_repeat_investigation.txt
+2026-05-28 21:12:22.4443224620 57922 results/week2_vllm_metrics_after_gsm8k_full_budget0.txt
+2026-05-28 21:12:22.4443224620 5947 results/week2_vllm_metrics_head.txt
+2026-05-28 21:12:22.4443224620 747 results/week2_vllm_metrics_snapshot_after_8k_on_64k_service.txt
+2026-05-28 21:12:22.4443224620 749 results/week2_vllm_metrics_snapshot_after_concurrency_c16.txt
+2026-05-28 21:12:22.4443224620 749 results/week2_vllm_metrics_snapshot_after_concurrency_c1_c2_c4.txt
+2026-05-28 21:12:22.4443224620 749 results/week2_vllm_metrics_snapshot_after_concurrency_c8.txt
+2026-05-28 21:12:22.4443224620 749 results/week2_vllm_metrics_snapshot_after_context_4k.txt
+2026-05-28 21:12:22.4443224620 749 results/week2_vllm_metrics_snapshot_after_context_4k_calibrated_3000chars.txt
+2026-05-28 21:12:22.4443224620 749 results/week2_vllm_metrics_snapshot_after_context_4k_calibrated_6000chars.txt
+2026-05-28 21:12:22.4443224620 749 results/week2_vllm_metrics_snapshot_after_context_4k_calibrated_final.txt
+2026-05-28 21:12:22.4443224620 750 results/week2_vllm_metrics_snapshot_after_context_16k_on_64k_service.txt
+2026-05-28 21:12:22.4443224620 751 results/week2_vllm_metrics_snapshot_after_context_32k_on_64k_service.txt
+2026-05-28 21:12:22.4443224620 752 results/week2_vllm_metrics_snapshot_after_context_64k_conservative_on_64k_service.txt
+2026-05-28 21:12:22.4443224620 753 results/week2_vllm_metrics_snapshot_after_context_64k_near_limit_on_64k_service.txt
+2026-05-28 21:12:22.4453224620 745 results/week2_vllm_metrics_snapshot_after_smoke.txt
+2026-05-28 21:12:22.4453224620 751 results/week2_vllm_metrics_snapshot_before_context_64k_on_64k_service.txt
+2026-05-28 21:30:08.4777180750 5635 results/new_2xa100_seed_oss_fp32_smoke_test_retry_20260528.txt
+2026-05-28 21:30:49.0807296440 1284 results/new_2xa100_seed_oss_fp32_openai_benchmark_3req_20260528.csv
+2026-05-28 21:55:28.1389562260 5820 results/new_2xa100_seed_oss_bnb_int8_smoke_test_20260528.txt
+2026-05-28 21:56:25.4539536490 1256 results/new_2xa100_seed_oss_bnb_int8_openai_benchmark_3req_20260528.csv
+2026-05-28 22:00:37.2159422690 897 results/new_2xa100_seed_oss_fp32_vs_bnb_int8_comparison_20260528.csv
+2026-05-28 23:04:21.8503466680 13057 results/new_2xa100_seed_oss_w8a8_smoke_test_20260528.txt
+2026-05-28 23:07:09.2610830360 1288 results/new_2xa100_seed_oss_w8a8_openai_benchmark_3req_20260528.csv
+2026-05-28 23:32:58.6607036480 35805 results/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528.csv
+2026-05-28 23:32:58.6607036480 467 results/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528_summary.csv
+2026-05-28 23:38:42.3202357650 572 results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528_summary.csv
+2026-05-28 23:38:42.3202357650 60829 results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528.csv
+2026-05-28 23:59:13.6105368310 569 results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528_summary.csv
+2026-05-28 23:59:13.6105368310 61747 results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528.csv
+2026-05-29 00:09:38.3366151820 1581 results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv
+2026-05-29 00:09:38.4876149590 58872 results/figures/seed_oss_fp32_vs_w8a8_qps.png
+2026-05-29 00:09:38.6516147170 67413 results/figures/seed_oss_fp32_vs_w8a8_p95_latency.png
+2026-05-29 00:09:38.8406144390 73175 results/figures/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png
+
+===== 量化模型目录大小 =====
+36G	/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+
+===== 量化模型文件清单 =====
+2026-05-28 22:45:23.0000000000 843 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/calibration_prompts.json
+2026-05-28 22:51:31.0000000000 189 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/generation_config.json
+2026-05-28 22:51:45.0000000000 4945314032 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/model-00001-of-00008.safetensors
+2026-05-28 22:52:00.0000000000 4861975184 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/model-00002-of-00008.safetensors
+2026-05-28 22:52:15.0000000000 4861975256 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/model-00003-of-00008.safetensors
+2026-05-28 22:52:29.0000000000 4861975256 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/model-00004-of-00008.safetensors
+2026-05-28 22:52:44.0000000000 4861975256 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/model-00005-of-00008.safetensors
+2026-05-28 22:52:58.0000000000 4861975256 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/model-00006-of-00008.safetensors
+2026-05-28 22:53:13.0000000000 4861975256 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/model-00007-of-00008.safetensors
+2026-05-28 22:53:24.0000000000 3634077288 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/model-00008-of-00008.safetensors
+2026-05-28 22:53:25.0000000000 102383 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/model.safetensors.index.json
+2026-05-28 22:53:25.0000000000 169 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/recipe.yaml
+2026-05-28 22:53:25.0000000000 2088 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/config.json
+2026-05-28 22:53:25.0000000000 23849 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/tokenizer_config.json
+2026-05-28 22:53:25.0000000000 432 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/special_tokens_map.json
+2026-05-28 22:53:25.0000000000 7705 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/chat_template.jinja
+2026-05-28 22:53:26.0000000000 11883966 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/tokenizer.json
+
+===== 量化模型 config 量化字段 =====
+model_type: seed_oss
+architectures: ['SeedOssForCausalLM']
+torch_dtype: None
+quantization_config: {
+  "config_groups": {
+    "group_0": {
+      "format": "int-quantized",
+      "input_activations": {
+        "actorder": null,
+        "block_structure": null,
+        "dynamic": true,
+        "group_size": null,
+        "num_bits": 8,
+        "observer": null,
+        "observer_kwargs": {},
+        "scale_dtype": null,
+        "strategy": "token",
+        "symmetric": true,
+        "type": "int",
+        "zp_dtype": null
+      },
+      "output_activations": null,
+      "targets": [
+        "Linear"
+      ],
+      "weights": {
+        "actorder": null,
+        "block_structure": null,
+        "dynamic": false,
+        "group_size": null,
+        "num_bits": 8,
+        "observer": "memoryless_minmax",
+        "observer_kwargs": {},
+        "scale_dtype": null,
+        "strategy": "channel",
+        "symmetric": true,
+        "type": "int",
+        "zp_dtype": null
+      }
+    }
+  },
+  "format": "int-quantized",
+  "global_compression_ratio": null,
+  "ignore": [
+    "lm_head"
+  ],
+  "kv_cache_scheme": null,
+  "quant_method": "compressed-tensors",
+  "quantization_status": "compressed",
+  "sparsity_config": {},
+  "transform_config": {},
+  "version": "0.14.0.1"
+}

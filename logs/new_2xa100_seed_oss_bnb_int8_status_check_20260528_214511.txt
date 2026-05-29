@@ -1,0 +1,65 @@
+===== 日期 =====
+Thu May 28 21:45:11 UTC 2026
+
+===== 本步骤目的 =====
+监控 Seed-OSS-36B bitsandbytes INT8/低比特量化 attempt：是否完成加载、API ready、OOM、参数不支持或架构不兼容。
+
+===== 进程状态 =====
+    PID    PPID STAT     ELAPSED %CPU %MEM CMD
+   4584    1424 Sl         00:15  216  0.0 python -m vllm.entrypoints.openai.api_server --model ByteDance-Seed/Seed-OSS-36B-Instruct --served-model-name ByteDance-Seed/Seed-OSS-36B-Instruct --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --distributed-executor-backend mp --dtype bfloat16 --quantization bitsandbytes --load-format bitsandbytes --max-model-len 512 --max-num-batched-tokens 512 --max-num-seqs 1 --gpu-memory-utilization 0.90 --download-dir /workspace/hf_cache --trust-remote-code --enforce-eager
+   4584    1424 Sl         00:15  216  0.0 python -m vllm.entrypoints.openai.api_server --model ByteDance-Seed/Seed-OSS-36B-Instruct --served-model-name ByteDance-Seed/Seed-OSS-36B-Instruct --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --distributed-executor-backend mp --dtype bfloat16 --quantization bitsandbytes --load-format bitsandbytes --max-model-len 512 --max-num-batched-tokens 512 --max-num-seqs 1 --gpu-memory-utilization 0.90 --download-dir /workspace/hf_cache --trust-remote-code --enforce-eager
+
+===== GPU 状态 =====
+Thu May 28 21:45:11 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   26C    P0             84W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   27C    P0             82W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== cache 大小 =====
+68G	/workspace/hf_cache
+
+===== API ready 探测 =====
+
+
+===== 日志文件状态 =====
+-rw-r--r-- 1 root root 1.5K May 28 21:45 logs/new_2xa100_seed_oss_bnb_int8_vllm_launch_20260528.log
+  File: logs/new_2xa100_seed_oss_bnb_int8_vllm_launch_20260528.log
+  Size: 1531      	Blocks: 8          IO Block: 4096   regular file
+Device: 4fh/79d	Inode: 32232118084  Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2026-05-28 21:45:03.949973227 +0000
+Modify: 2026-05-28 21:45:06.666974001 +0000
+Change: 2026-05-28 21:45:06.666974001 +0000
+ Birth: 2026-05-28 21:44:56.476971097 +0000
+
+===== 启动日志最后 300 行 =====
+nohup: ignoring input
+INFO 05-28 21:45:03 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=2048.
+[1;36m(APIServer pid=4584)[0;0m INFO 05-28 21:45:03 [api_server.py:1977] vLLM API server version 0.11.2
+[1;36m(APIServer pid=4584)[0;0m INFO 05-28 21:45:03 [utils.py:253] non-default args: {'host': '0.0.0.0', 'port': 8002, 'model': 'ByteDance-Seed/Seed-OSS-36B-Instruct', 'trust_remote_code': True, 'dtype': 'bfloat16', 'max_model_len': 512, 'quantization': 'bitsandbytes', 'enforce_eager': True, 'served_model_name': ['ByteDance-Seed/Seed-OSS-36B-Instruct'], 'load_format': 'bitsandbytes', 'download_dir': '/workspace/hf_cache', 'distributed_executor_backend': 'mp', 'tensor_parallel_size': 2, 'max_num_batched_tokens': 512, 'max_num_seqs': 1}
+[1;36m(APIServer pid=4584)[0;0m The argument `trust_remote_code` is to be used with Auto classes. It has no effect here and is ignored.
+[1;36m(APIServer pid=4584)[0;0m INFO 05-28 21:45:04 [model.py:631] Resolved architecture: SeedOssForCausalLM
+[1;36m(APIServer pid=4584)[0;0m INFO 05-28 21:45:04 [model.py:1745] Using max model len 512
+[1;36m(APIServer pid=4584)[0;0m INFO 05-28 21:45:04 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=512.
+[1;36m(APIServer pid=4584)[0;0m INFO 05-28 21:45:05 [vllm.py:500] Cudagraph is disabled under eager mode
+[1;36m(APIServer pid=4584)[0;0m The following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.

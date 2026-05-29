@@ -1,0 +1,115 @@
+===== 日期 =====
+Thu May 28 21:53:02 UTC 2026
+
+===== 本步骤目的 =====
+继续监控 Seed-OSS-36B bitsandbytes 量化加载过程，确认 shard 加载进度、显存占用、API ready 状态，以及是否出现 OOM 或量化兼容性错误。
+
+===== 进程状态 =====
+    PID    PPID STAT     ELAPSED %CPU %MEM CMD
+   5351    1424 Sl         02:21 23.0  0.0 python -m vllm.entrypoints.openai.api_server --model ByteDance-Seed/Seed-OSS-36B-Instruct --served-model-name ByteDance-Seed/Seed-OSS-36B-Instruct --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --distributed-executor-backend mp --dtype bfloat16 --quantization bitsandbytes --load-format bitsandbytes --max-model-len 512 --max-num-batched-tokens 512 --max-num-seqs 1 --gpu-memory-utilization 0.90 --download-dir /workspace/hf_cache --trust-remote-code --enforce-eager
+   5351    1424 Sl         02:21 23.0  0.0 python -m vllm.entrypoints.openai.api_server --model ByteDance-Seed/Seed-OSS-36B-Instruct --served-model-name ByteDance-Seed/Seed-OSS-36B-Instruct --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --distributed-executor-backend mp --dtype bfloat16 --quantization bitsandbytes --load-format bitsandbytes --max-model-len 512 --max-num-batched-tokens 512 --max-num-seqs 1 --gpu-memory-utilization 0.90 --download-dir /workspace/hf_cache --trust-remote-code --enforce-eager
+   5633    5351 Sl         02:12 15.6  0.0 VLLM::EngineCore
+   5767    5633 Dl         02:05 44.7  0.1 VLLM::Worker_TP0
+   5768    5633 Dl         02:05 43.7  0.0 VLLM::Worker_TP1
+
+===== GPU 状态 =====
+Thu May 28 21:53:02 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   27C    P0             85W /  400W |   12223MiB /  81920MiB |      4%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   28C    P0             83W /  400W |   12223MiB /  81920MiB |      7%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            5767      C   VLLM::Worker_TP0                      12214MiB |
+|    1   N/A  N/A            5768      C   VLLM::Worker_TP1                      12214MiB |
++-----------------------------------------------------------------------------------------+
+
+===== API ready 探测 =====
+
+
+===== 关键日志摘录 =====
+[1;36m(APIServer pid=5351)[0;0m INFO 05-28 21:50:48 [utils.py:253] non-default args: {'host': '0.0.0.0', 'port': 8002, 'model': 'ByteDance-Seed/Seed-OSS-36B-Instruct', 'trust_remote_code': True, 'dtype': 'bfloat16', 'max_model_len': 512, 'quantization': 'bitsandbytes', 'enforce_eager': True, 'served_model_name': ['ByteDance-Seed/Seed-OSS-36B-Instruct'], 'load_format': 'bitsandbytes', 'download_dir': '/workspace/hf_cache', 'distributed_executor_backend': 'mp', 'tensor_parallel_size': 2, 'max_num_batched_tokens': 512, 'max_num_seqs': 1}
+[1;36m(EngineCore_DP0 pid=5633)[0;0m INFO 05-28 21:50:57 [core.py:93] Initializing a V1 LLM engine (v0.11.2) with config: model='ByteDance-Seed/Seed-OSS-36B-Instruct', speculative_config=None, tokenizer='ByteDance-Seed/Seed-OSS-36B-Instruct', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.bfloat16, max_seq_len=512, download_dir='/workspace/hf_cache', load_format=bitsandbytes, tensor_parallel_size=2, pipeline_parallel_size=1, data_parallel_size=1, disable_custom_all_reduce=False, quantization=bitsandbytes, enforce_eager=True, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=0, served_model_name=ByteDance-Seed/Seed-OSS-36B-Instruct, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'level': None, 'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'splitting_ops': None, 'compile_mm_encoder': False, 'use_inductor': None, 'compile_sizes': [], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {}, 'max_cudagraph_capture_size': 0, 'local_cache_dir': None}
+[1;36m(Worker_TP0 pid=5767)[0;0m INFO 05-28 21:51:09 [bitsandbytes_loader.py:791] Loading weights with BitsAndBytes quantization. May take a while ...
+[1;36m(Worker_TP1 pid=5768)[0;0m INFO 05-28 21:51:09 [bitsandbytes_loader.py:791] Loading weights with BitsAndBytes quantization. May take a while ...
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:   0% Completed | 0/15 [00:00<?, ?it/s]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:   7% Completed | 1/15 [00:10<02:30, 10.76s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  13% Completed | 2/15 [00:21<02:18, 10.67s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  20% Completed | 3/15 [00:32<02:09, 10.82s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  27% Completed | 4/15 [00:42<01:57, 10.65s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  33% Completed | 5/15 [00:54<01:49, 10.92s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  40% Completed | 6/15 [01:02<01:29,  9.99s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  47% Completed | 7/15 [01:07<01:06,  8.33s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  53% Completed | 8/15 [01:13<00:53,  7.68s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  60% Completed | 9/15 [01:22<00:49,  8.21s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  67% Completed | 10/15 [01:33<00:45,  9.02s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  73% Completed | 11/15 [01:42<00:35,  8.94s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  80% Completed | 12/15 [01:51<00:26,  8.83s/it]
+
+===== 启动日志最后 220 行 =====
+nohup: ignoring input
+INFO 05-28 21:50:48 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=2048.
+[1;36m(APIServer pid=5351)[0;0m INFO 05-28 21:50:48 [api_server.py:1977] vLLM API server version 0.11.2
+[1;36m(APIServer pid=5351)[0;0m INFO 05-28 21:50:48 [utils.py:253] non-default args: {'host': '0.0.0.0', 'port': 8002, 'model': 'ByteDance-Seed/Seed-OSS-36B-Instruct', 'trust_remote_code': True, 'dtype': 'bfloat16', 'max_model_len': 512, 'quantization': 'bitsandbytes', 'enforce_eager': True, 'served_model_name': ['ByteDance-Seed/Seed-OSS-36B-Instruct'], 'load_format': 'bitsandbytes', 'download_dir': '/workspace/hf_cache', 'distributed_executor_backend': 'mp', 'tensor_parallel_size': 2, 'max_num_batched_tokens': 512, 'max_num_seqs': 1}
+[1;36m(APIServer pid=5351)[0;0m The argument `trust_remote_code` is to be used with Auto classes. It has no effect here and is ignored.
+[1;36m(APIServer pid=5351)[0;0m INFO 05-28 21:50:49 [model.py:631] Resolved architecture: SeedOssForCausalLM
+[1;36m(APIServer pid=5351)[0;0m INFO 05-28 21:50:49 [model.py:1745] Using max model len 512
+[1;36m(APIServer pid=5351)[0;0m INFO 05-28 21:50:49 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=512.
+[1;36m(APIServer pid=5351)[0;0m INFO 05-28 21:50:50 [vllm.py:500] Cudagraph is disabled under eager mode
+[1;36m(APIServer pid=5351)[0;0m The following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+[1;36m(EngineCore_DP0 pid=5633)[0;0m INFO 05-28 21:50:57 [core.py:93] Initializing a V1 LLM engine (v0.11.2) with config: model='ByteDance-Seed/Seed-OSS-36B-Instruct', speculative_config=None, tokenizer='ByteDance-Seed/Seed-OSS-36B-Instruct', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.bfloat16, max_seq_len=512, download_dir='/workspace/hf_cache', load_format=bitsandbytes, tensor_parallel_size=2, pipeline_parallel_size=1, data_parallel_size=1, disable_custom_all_reduce=False, quantization=bitsandbytes, enforce_eager=True, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=0, served_model_name=ByteDance-Seed/Seed-OSS-36B-Instruct, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'level': None, 'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'splitting_ops': None, 'compile_mm_encoder': False, 'use_inductor': None, 'compile_sizes': [], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {}, 'max_cudagraph_capture_size': 0, 'local_cache_dir': None}
+[1;36m(EngineCore_DP0 pid=5633)[0;0m WARNING 05-28 21:50:57 [multiproc_executor.py:869] Reducing Torch parallelism from 128 threads to 1 to avoid unnecessary CPU contention. Set OMP_NUM_THREADS in the external environment to tune this value as needed.
+INFO 05-28 21:51:06 [parallel_state.py:1208] world_size=2 rank=1 local_rank=1 distributed_init_method=tcp://127.0.0.1:59467 backend=nccl
+INFO 05-28 21:51:06 [parallel_state.py:1208] world_size=2 rank=0 local_rank=0 distributed_init_method=tcp://127.0.0.1:59467 backend=nccl
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+INFO 05-28 21:51:06 [pynccl.py:111] vLLM is using nccl==2.27.5
+WARNING 05-28 21:51:07 [symm_mem.py:67] SymmMemCommunicator: Device capability 8.0 not supported, communicator is not available.
+WARNING 05-28 21:51:07 [symm_mem.py:67] SymmMemCommunicator: Device capability 8.0 not supported, communicator is not available.
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+INFO 05-28 21:51:07 [parallel_state.py:1394] rank 1 in world size 2 is assigned as DP rank 0, PP rank 0, TP rank 1, EP rank 1
+INFO 05-28 21:51:07 [parallel_state.py:1394] rank 0 in world size 2 is assigned as DP rank 0, PP rank 0, TP rank 0, EP rank 0
+[1;36m(Worker_TP0 pid=5767)[0;0m INFO 05-28 21:51:08 [gpu_model_runner.py:3259] Starting to load model ByteDance-Seed/Seed-OSS-36B-Instruct...
+[1;36m(Worker_TP0 pid=5767)[0;0m INFO 05-28 21:51:09 [cuda.py:418] Valid backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION']
+[1;36m(Worker_TP0 pid=5767)[0;0m INFO 05-28 21:51:09 [cuda.py:427] Using FLASH_ATTN backend.
+[1;36m(Worker_TP1 pid=5768)[0;0m INFO 05-28 21:51:09 [cuda.py:418] Valid backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION']
+[1;36m(Worker_TP1 pid=5768)[0;0m INFO 05-28 21:51:09 [cuda.py:427] Using FLASH_ATTN backend.
+[1;36m(Worker_TP0 pid=5767)[0;0m INFO 05-28 21:51:09 [bitsandbytes_loader.py:791] Loading weights with BitsAndBytes quantization. May take a while ...
+[1;36m(Worker_TP1 pid=5768)[0;0m INFO 05-28 21:51:09 [bitsandbytes_loader.py:791] Loading weights with BitsAndBytes quantization. May take a while ...
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:   0% Completed | 0/15 [00:00<?, ?it/s]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:   7% Completed | 1/15 [00:10<02:30, 10.76s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  13% Completed | 2/15 [00:21<02:18, 10.67s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  20% Completed | 3/15 [00:32<02:09, 10.82s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  27% Completed | 4/15 [00:42<01:57, 10.65s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  33% Completed | 5/15 [00:54<01:49, 10.92s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  40% Completed | 6/15 [01:02<01:29,  9.99s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  47% Completed | 7/15 [01:07<01:06,  8.33s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  53% Completed | 8/15 [01:13<00:53,  7.68s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  60% Completed | 9/15 [01:22<00:49,  8.21s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  67% Completed | 10/15 [01:33<00:45,  9.02s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  73% Completed | 11/15 [01:42<00:35,  8.94s/it]
+[1;36m(Worker_TP0 pid=5767)[0;0m Loading safetensors checkpoint shards:  80% Completed | 12/15 [01:51<00:26,  8.83s/it]

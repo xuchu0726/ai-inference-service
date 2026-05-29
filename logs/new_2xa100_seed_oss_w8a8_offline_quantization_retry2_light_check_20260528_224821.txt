@@ -1,0 +1,58 @@
+===== 日期 =====
+Thu May 28 22:48:21 UTC 2026
+
+===== 本步骤目的 =====
+轻量监控 Seed-OSS-36B W8A8 离线量化 retry2，不执行 du，避免 Network Volume 阻塞。
+
+===== 量化进程 =====
+    PID    PPID STAT     ELAPSED %CPU %MEM CMD
+   8361    1424 Rl         03:05 29.9  0.2 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+
+===== GPU 状态 =====
+Thu May 28 22:48:22 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   27C    P0             85W /  400W |   33887MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   28C    P0             83W /  400W |   34427MiB /  81920MiB |      1%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            8361      C   python                                33878MiB |
+|    1   N/A  N/A            8361      C   python                                34418MiB |
++-----------------------------------------------------------------------------------------+
+
+===== 输出文件预览 =====
+/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/calibration_prompts.json
+
+===== 日志最后 300 行 =====
+nohup: ignoring input
+`torch_dtype` is deprecated! Use `dtype` instead!
+===== Offline W8A8 quantization config =====
+model_id: ByteDance-Seed/Seed-OSS-36B-Instruct
+output_dir: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+hf_cache_dir: /workspace/hf_cache
+num_calibration_samples: 16
+max_seq_length: 512
+torch: 2.9.0+cu128
+cuda_available: True
+gpu_count: 2
+gpu_0: NVIDIA A100-SXM4-80GB
+gpu_1: NVIDIA A100-SXM4-80GB
+===== Loading tokenizer =====
+===== Loading model in BF16 for offline quantization =====
+Loading checkpoint shards:   0%|          | 0/15 [00:00<?, ?it/s]Loading checkpoint shards:   7%|▋         | 1/15 [00:20<04:47, 20.51s/it]Loading checkpoint shards:  13%|█▎        | 2/15 [00:40<04:22, 20.18s/it]Loading checkpoint shards:  20%|██        | 3/15 [00:59<03:56, 19.74s/it]Loading checkpoint shards:  27%|██▋       | 4/15 [01:17<03:30, 19.15s/it]Loading checkpoint shards:  33%|███▎      | 5/15 [01:36<03:10, 19.06s/it]Loading checkpoint shards:  40%|████      | 6/15 [01:58<03:00, 20.04s/it]Loading checkpoint shards:  47%|████▋     | 7/15 [02:18<02:39, 19.97s/it]Loading checkpoint shards:  53%|█████▎    | 8/15 [02:39<02:21, 20.22s/it]
+===== 错误关键词检查 =====
