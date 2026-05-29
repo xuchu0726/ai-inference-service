@@ -1,0 +1,343 @@
+===== 日期 =====
+Thu May 28 23:55:30 UTC 2026
+
+===== 本步骤目的 =====
+对 Seed-OSS-36B FP32 batch-oriented serving profile 执行 concurrency sweep。
+本实验与 W8A8 batch profile 使用相同 serving 参数：max_num_seqs=32、max_num_batched_tokens=8192、max_model_len=512。
+目标是公平对比 FP32 与 W8A8 在 batch serving 场景下的 QPS、P50/P95 latency、tokens/s、error rate、GPU 利用率和 KV cache usage。
+
+===== 服务 ready 检查 =====
+{"object":"list","data":[{"id":"Seed-OSS-36B-Instruct-FP32-BatchProfile","object":"model","created":1780012530,"owned_by":"vllm","root":"ByteDance-Seed/Seed-OSS-36B-Instruct","parent":null,"max_model_len":512,"permission":[{"id":"modelperm-18cb84ee71d7449685bd894142d9e50a","object":"model_permission","created":1780012530,"allow_create_engine":false,"allow_sampling":true,"allow_logprobs":true,"allow_search_indices":false,"allow_view":true,"allow_fine_tuning":false,"organization":"*","group":null,"is_blocking":false}]}]}
+
+
+===== sweep 前 GPU =====
+Thu May 28 23:55:30 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   27C    P0             84W /  400W |   72947MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   28C    P0             82W /  400W |   72947MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            9725      C   VLLM::Worker_TP0                      72938MiB |
+|    1   N/A  N/A            9726      C   VLLM::Worker_TP1                      72938MiB |
++-----------------------------------------------------------------------------------------+
+
+===== sweep 前 vLLM metrics 关键项 =====
+# HELP vllm:num_requests_running Number of requests in model execution batches.
+# TYPE vllm:num_requests_running gauge
+vllm:num_requests_running{engine="0",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 0.0
+# HELP vllm:num_requests_waiting Number of requests waiting to be processed.
+# TYPE vllm:num_requests_waiting gauge
+vllm:num_requests_waiting{engine="0",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 0.0
+# HELP vllm:kv_cache_usage_perc KV-cache usage. 1 means 100 percent usage.
+# TYPE vllm:kv_cache_usage_perc gauge
+vllm:kv_cache_usage_perc{engine="0",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 0.0
+# HELP vllm:prefix_cache_queries_total Prefix cache queries, in terms of number of queried tokens.
+# TYPE vllm:prefix_cache_queries_total counter
+vllm:prefix_cache_queries_total{engine="0",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 0.0
+# HELP vllm:prefix_cache_hits_total Prefix cache hits, in terms of number of cached tokens.
+# TYPE vllm:prefix_cache_hits_total counter
+vllm:prefix_cache_hits_total{engine="0",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 0.0
+# HELP vllm:request_success_total Count of successfully processed requests.
+# TYPE vllm:request_success_total counter
+vllm:request_success_total{engine="0",finished_reason="stop",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 0.0
+vllm:request_success_total{engine="0",finished_reason="length",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 0.0
+vllm:request_success_total{engine="0",finished_reason="abort",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 0.0
+vllm:request_prompt_tokens_sum{engine="0",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 0.0
+vllm:request_generation_tokens_sum{engine="0",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 0.0
+
+===== 启动 FP32 concurrency sweep =====
+
+===== concurrency=1 =====
+c1_r1 status=200 latency=6.6793s completion_tokens=64 tokens/s=9.5818
+c1_r2 status=200 latency=3.1206s completion_tokens=64 tokens/s=20.5087
+c1_r3 status=200 latency=3.1019s completion_tokens=64 tokens/s=20.6328
+c1_r4 status=200 latency=3.1079s completion_tokens=64 tokens/s=20.5927
+c1_r5 status=200 latency=3.1101s completion_tokens=64 tokens/s=20.578
+c1_r6 status=200 latency=3.1081s completion_tokens=64 tokens/s=20.5917
+c1_r7 status=200 latency=3.1129s completion_tokens=64 tokens/s=20.5594
+c1_r8 status=200 latency=3.1117s completion_tokens=64 tokens/s=20.5676
+c1_r9 status=200 latency=3.083s completion_tokens=64 tokens/s=20.7592
+c1_r10 status=200 latency=3.0918s completion_tokens=64 tokens/s=20.6999
+c1_r11 status=200 latency=3.0949s completion_tokens=64 tokens/s=20.6794
+c1_r12 status=200 latency=3.0828s completion_tokens=64 tokens/s=20.7601
+c1_r13 status=200 latency=3.0962s completion_tokens=64 tokens/s=20.6707
+c1_r14 status=200 latency=3.0948s completion_tokens=64 tokens/s=20.6795
+c1_r15 status=200 latency=3.1082s completion_tokens=64 tokens/s=20.591
+c1_r16 status=200 latency=3.1078s completion_tokens=64 tokens/s=20.593
+c1_r17 status=200 latency=3.1009s completion_tokens=64 tokens/s=20.6394
+c1_r18 status=200 latency=3.0656s completion_tokens=64 tokens/s=20.8769
+c1_r19 status=200 latency=3.0955s completion_tokens=64 tokens/s=20.6752
+c1_r20 status=200 latency=3.0882s completion_tokens=64 tokens/s=20.7239
+c1_r21 status=200 latency=3.0957s completion_tokens=64 tokens/s=20.6741
+c1_r22 status=200 latency=3.1s completion_tokens=64 tokens/s=20.6449
+c1_r23 status=200 latency=3.0923s completion_tokens=64 tokens/s=20.6965
+c1_r24 status=200 latency=3.0909s completion_tokens=64 tokens/s=20.7057
+c1_r25 status=200 latency=3.0638s completion_tokens=64 tokens/s=20.8893
+c1_r26 status=200 latency=3.0617s completion_tokens=64 tokens/s=20.9033
+c1_r27 status=200 latency=3.0934s completion_tokens=64 tokens/s=20.689
+c1_r28 status=200 latency=3.0719s completion_tokens=64 tokens/s=20.834
+c1_r29 status=200 latency=3.0969s completion_tokens=64 tokens/s=20.6656
+c1_r30 status=200 latency=3.0965s completion_tokens=64 tokens/s=20.6684
+c1_r31 status=200 latency=3.1416s completion_tokens=64 tokens/s=20.3716
+c1_r32 status=200 latency=3.0822s completion_tokens=64 tokens/s=20.7643
+SUMMARY: {"concurrency": 1, "total_requests": 32, "successful_requests": 32, "failed_requests": 0, "error_rate": 0.0, "wall_time_seconds": 102.657, "qps": 0.3117, "avg_latency_seconds": 3.2078, "p50_latency_seconds": 3.096, "p95_latency_seconds": 3.13, "avg_completion_tokens_per_second_per_request": 20.3271, "aggregate_output_tokens_per_second": 19.9499}
+
+===== concurrency=2 =====
+c2_r1 status=200 latency=4.1187s completion_tokens=64 tokens/s=15.5389
+c2_r2 status=200 latency=4.1644s completion_tokens=64 tokens/s=15.3684
+c2_r3 status=200 latency=3.9052s completion_tokens=64 tokens/s=16.3883
+c2_r4 status=200 latency=3.9054s completion_tokens=64 tokens/s=16.3875
+c2_r5 status=200 latency=3.4481s completion_tokens=64 tokens/s=18.561
+c2_r6 status=200 latency=3.4482s completion_tokens=64 tokens/s=18.5605
+c2_r7 status=200 latency=3.4651s completion_tokens=64 tokens/s=18.4697
+c2_r8 status=200 latency=3.4652s completion_tokens=64 tokens/s=18.4693
+c2_r9 status=200 latency=3.4154s completion_tokens=64 tokens/s=18.7388
+c2_r10 status=200 latency=3.4154s completion_tokens=64 tokens/s=18.7387
+c2_r11 status=200 latency=3.4665s completion_tokens=64 tokens/s=18.4624
+c2_r12 status=200 latency=3.4668s completion_tokens=64 tokens/s=18.4608
+c2_r13 status=200 latency=3.4484s completion_tokens=64 tokens/s=18.5591
+c2_r14 status=200 latency=3.4492s completion_tokens=64 tokens/s=18.5552
+c2_r15 status=200 latency=3.4801s completion_tokens=64 tokens/s=18.3904
+c2_r16 status=200 latency=3.4793s completion_tokens=64 tokens/s=18.3946
+c2_r17 status=200 latency=3.4167s completion_tokens=64 tokens/s=18.7316
+c2_r18 status=200 latency=3.4167s completion_tokens=64 tokens/s=18.7315
+c2_r19 status=200 latency=3.4611s completion_tokens=64 tokens/s=18.4913
+c2_r20 status=200 latency=3.4614s completion_tokens=64 tokens/s=18.4899
+c2_r21 status=200 latency=3.4494s completion_tokens=64 tokens/s=18.5541
+c2_r22 status=200 latency=3.4495s completion_tokens=64 tokens/s=18.5532
+c2_r23 status=200 latency=3.482s completion_tokens=64 tokens/s=18.3801
+c2_r24 status=200 latency=3.482s completion_tokens=64 tokens/s=18.3802
+c2_r25 status=200 latency=3.413s completion_tokens=64 tokens/s=18.7517
+c2_r26 status=200 latency=3.4131s completion_tokens=64 tokens/s=18.7512
+c2_r27 status=200 latency=3.459s completion_tokens=64 tokens/s=18.5025
+c2_r28 status=200 latency=3.4591s completion_tokens=64 tokens/s=18.5021
+c2_r29 status=200 latency=3.4479s completion_tokens=64 tokens/s=18.562
+c2_r30 status=200 latency=3.4478s completion_tokens=64 tokens/s=18.5625
+c2_r31 status=200 latency=3.4703s completion_tokens=64 tokens/s=18.4422
+c2_r32 status=200 latency=3.4704s completion_tokens=64 tokens/s=18.4417
+SUMMARY: {"concurrency": 2, "total_requests": 32, "successful_requests": 32, "failed_requests": 0, "error_rate": 0.0, "wall_time_seconds": 56.3982, "qps": 0.5674, "avg_latency_seconds": 3.5231, "p50_latency_seconds": 3.4601, "p95_latency_seconds": 4.0014, "avg_completion_tokens_per_second_per_request": 18.2147, "aggregate_output_tokens_per_second": 36.3132}
+
+===== concurrency=4 =====
+c4_r1 status=200 latency=3.6793s completion_tokens=64 tokens/s=17.3944
+c4_r4 status=200 latency=3.7518s completion_tokens=64 tokens/s=17.0583
+c4_r2 status=200 latency=3.7565s completion_tokens=64 tokens/s=17.037
+c4_r3 status=200 latency=3.7558s completion_tokens=64 tokens/s=17.0404
+c4_r5 status=200 latency=3.7662s completion_tokens=64 tokens/s=16.9932
+c4_r7 status=200 latency=3.7653s completion_tokens=64 tokens/s=16.9975
+c4_r8 status=200 latency=3.7658s completion_tokens=64 tokens/s=16.995
+c4_r6 status=200 latency=3.7672s completion_tokens=64 tokens/s=16.9887
+c4_r9 status=200 latency=3.7567s completion_tokens=64 tokens/s=17.0364
+c4_r12 status=200 latency=3.7543s completion_tokens=64 tokens/s=17.0471
+c4_r11 status=200 latency=3.7567s completion_tokens=64 tokens/s=17.0364
+c4_r10 status=200 latency=3.7579s completion_tokens=64 tokens/s=17.031
+c4_r13 status=200 latency=3.7788s completion_tokens=64 tokens/s=16.9367
+c4_r16 status=200 latency=3.7771s completion_tokens=64 tokens/s=16.944
+c4_r14 status=200 latency=3.7799s completion_tokens=64 tokens/s=16.9318
+c4_r15 status=200 latency=3.7787s completion_tokens=64 tokens/s=16.9373
+c4_r17 status=200 latency=3.7559s completion_tokens=64 tokens/s=17.04
+c4_r19 status=200 latency=3.7539s completion_tokens=64 tokens/s=17.0487
+c4_r18 status=200 latency=3.7553s completion_tokens=64 tokens/s=17.0425
+c4_r20 status=200 latency=3.7541s completion_tokens=64 tokens/s=17.0479
+c4_r21 status=200 latency=3.7744s completion_tokens=64 tokens/s=16.9563
+c4_r24 status=200 latency=3.773s completion_tokens=64 tokens/s=16.9626
+c4_r23 status=200 latency=3.7742s completion_tokens=64 tokens/s=16.9571
+c4_r22 status=200 latency=3.7769s completion_tokens=64 tokens/s=16.945
+c4_r25 status=200 latency=3.7548s completion_tokens=64 tokens/s=17.0447
+c4_r26 status=200 latency=3.7544s completion_tokens=64 tokens/s=17.0468
+c4_r28 status=200 latency=3.7531s completion_tokens=64 tokens/s=17.0528
+c4_r27 status=200 latency=3.7546s completion_tokens=64 tokens/s=17.0457
+c4_r29 status=200 latency=3.7678s completion_tokens=64 tokens/s=16.986
+c4_r32 status=200 latency=3.7654s completion_tokens=64 tokens/s=16.9969
+c4_r31 status=200 latency=3.7665s completion_tokens=64 tokens/s=16.9919
+c4_r30 status=200 latency=3.7684s completion_tokens=64 tokens/s=16.9836
+SUMMARY: {"concurrency": 4, "total_requests": 32, "successful_requests": 32, "failed_requests": 0, "error_rate": 0.0, "wall_time_seconds": 30.1141, "qps": 1.0626, "avg_latency_seconds": 3.761, "p50_latency_seconds": 3.7616, "p95_latency_seconds": 3.7787, "avg_completion_tokens_per_second_per_request": 17.0173, "aggregate_output_tokens_per_second": 68.0079}
+
+===== concurrency=8 =====
+c8_r1 status=200 latency=5.3782s completion_tokens=64 tokens/s=11.8999
+c8_r7 status=200 latency=5.4528s completion_tokens=64 tokens/s=11.7371
+c8_r5 status=200 latency=5.4558s completion_tokens=64 tokens/s=11.7306
+c8_r8 status=200 latency=5.4522s completion_tokens=64 tokens/s=11.7384
+c8_r3 status=200 latency=5.4625s completion_tokens=64 tokens/s=11.7162
+c8_r4 status=200 latency=5.4576s completion_tokens=64 tokens/s=11.7267
+c8_r2 status=200 latency=5.464s completion_tokens=64 tokens/s=11.7131
+c8_r6 status=200 latency=5.4587s completion_tokens=64 tokens/s=11.7244
+c8_r9 status=200 latency=5.4489s completion_tokens=64 tokens/s=11.7456
+c8_r12 status=200 latency=5.4458s completion_tokens=64 tokens/s=11.7522
+c8_r14 status=200 latency=5.4456s completion_tokens=64 tokens/s=11.7525
+c8_r11 status=200 latency=5.4492s completion_tokens=64 tokens/s=11.7448
+c8_r13 status=200 latency=5.4493s completion_tokens=64 tokens/s=11.7446
+c8_r10 status=200 latency=5.4517s completion_tokens=64 tokens/s=11.7394
+c8_r16 status=200 latency=5.4478s completion_tokens=64 tokens/s=11.7478
+c8_r15 status=200 latency=5.4469s completion_tokens=64 tokens/s=11.7498
+c8_r17 status=200 latency=5.4475s completion_tokens=64 tokens/s=11.7485
+c8_r21 status=200 latency=5.4431s completion_tokens=64 tokens/s=11.758
+c8_r20 status=200 latency=5.4473s completion_tokens=64 tokens/s=11.7489
+c8_r18 status=200 latency=5.4484s completion_tokens=64 tokens/s=11.7466
+c8_r22 status=200 latency=5.4463s completion_tokens=64 tokens/s=11.751
+c8_r19 status=200 latency=5.4503s completion_tokens=64 tokens/s=11.7426
+c8_r23 status=200 latency=5.4428s completion_tokens=64 tokens/s=11.7586
+c8_r24 status=200 latency=5.4423s completion_tokens=64 tokens/s=11.7597
+c8_r25 status=200 latency=5.4487s completion_tokens=64 tokens/s=11.7459
+c8_r26 status=200 latency=5.4497s completion_tokens=64 tokens/s=11.7437
+c8_r31 status=200 latency=5.445s completion_tokens=64 tokens/s=11.754
+c8_r28 status=200 latency=5.4472s completion_tokens=64 tokens/s=11.7491
+c8_r27 status=200 latency=5.4468s completion_tokens=64 tokens/s=11.7501
+c8_r29 status=200 latency=5.4448s completion_tokens=64 tokens/s=11.7543
+c8_r30 status=200 latency=5.4463s completion_tokens=64 tokens/s=11.7511
+c8_r32 status=200 latency=5.4452s completion_tokens=64 tokens/s=11.7536
+SUMMARY: {"concurrency": 8, "total_requests": 32, "successful_requests": 32, "failed_requests": 0, "error_rate": 0.0, "wall_time_seconds": 21.8119, "qps": 1.4671, "avg_latency_seconds": 5.4471, "p50_latency_seconds": 5.4476, "p95_latency_seconds": 5.4604, "avg_completion_tokens_per_second_per_request": 11.7493, "aggregate_output_tokens_per_second": 93.8937}
+
+===== concurrency=16 =====
+c16_r2 status=200 latency=6.345s completion_tokens=64 tokens/s=10.0867
+c16_r4 status=200 latency=6.4266s completion_tokens=64 tokens/s=9.9585
+c16_r12 status=200 latency=6.414s completion_tokens=64 tokens/s=9.9782
+c16_r3 status=200 latency=6.4292s completion_tokens=64 tokens/s=9.9546
+c16_r7 status=200 latency=6.4244s completion_tokens=64 tokens/s=9.962
+c16_r6 status=200 latency=6.4266s completion_tokens=64 tokens/s=9.9586
+c16_r8 status=200 latency=6.4247s completion_tokens=64 tokens/s=9.9616
+c16_r14 status=200 latency=6.4134s completion_tokens=64 tokens/s=9.9791
+c16_r5 status=200 latency=6.4306s completion_tokens=64 tokens/s=9.9524
+c16_r16 status=200 latency=6.4143s completion_tokens=64 tokens/s=9.9777
+c16_r10 status=200 latency=6.42s completion_tokens=64 tokens/s=9.9689
+c16_r1 status=200 latency=6.4361s completion_tokens=64 tokens/s=9.9439
+c16_r9 status=200 latency=6.4255s completion_tokens=64 tokens/s=9.9603
+c16_r15 status=200 latency=6.4151s completion_tokens=64 tokens/s=9.9764
+c16_r13 status=200 latency=6.4243s completion_tokens=64 tokens/s=9.9622
+c16_r11 status=200 latency=6.4284s completion_tokens=64 tokens/s=9.9558
+c16_r17 status=200 latency=5.4412s completion_tokens=64 tokens/s=11.7621
+c16_r20 status=200 latency=5.4443s completion_tokens=64 tokens/s=11.7555
+c16_r25 status=200 latency=5.4363s completion_tokens=64 tokens/s=11.7727
+c16_r24 status=200 latency=5.4374s completion_tokens=64 tokens/s=11.7704
+c16_r18 status=200 latency=5.4455s completion_tokens=64 tokens/s=11.7527
+c16_r28 status=200 latency=5.4389s completion_tokens=64 tokens/s=11.767
+c16_r27 status=200 latency=5.4404s completion_tokens=64 tokens/s=11.7639
+c16_r23 status=200 latency=5.4402s completion_tokens=64 tokens/s=11.7642
+c16_r19 status=200 latency=5.4483s completion_tokens=64 tokens/s=11.7469
+c16_r32 status=200 latency=5.4319s completion_tokens=64 tokens/s=11.7823
+c16_r21 status=200 latency=5.4423s completion_tokens=64 tokens/s=11.7598
+c16_r30 status=200 latency=5.4391s completion_tokens=64 tokens/s=11.7667
+c16_r26 status=200 latency=5.4437s completion_tokens=64 tokens/s=11.7567
+c16_r22 status=200 latency=5.4478s completion_tokens=64 tokens/s=11.7478
+c16_r29 status=200 latency=5.4428s completion_tokens=64 tokens/s=11.7586
+c16_r31 status=200 latency=5.4394s completion_tokens=64 tokens/s=11.766
+SUMMARY: {"concurrency": 16, "total_requests": 32, "successful_requests": 32, "failed_requests": 0, "error_rate": 0.0, "wall_time_seconds": 11.8861, "qps": 2.6922, "avg_latency_seconds": 5.9299, "p50_latency_seconds": 5.8966, "p95_latency_seconds": 6.4298, "avg_completion_tokens_per_second_per_request": 10.8666, "aggregate_output_tokens_per_second": 172.302}
+saved_detail_csv: results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528.csv
+saved_summary_csv: results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528_summary.csv
+
+===== sweep 后 GPU =====
+Thu May 28 23:59:13 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   46C    P0            137W /  400W |   72949MiB /  81920MiB |     98%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   48C    P0            161W /  400W |   72949MiB /  81920MiB |     98%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            9725      C   VLLM::Worker_TP0                      72940MiB |
+|    1   N/A  N/A            9726      C   VLLM::Worker_TP1                      72940MiB |
++-----------------------------------------------------------------------------------------+
+
+===== sweep 后 vLLM metrics 关键项 =====
+# HELP vllm:num_requests_running Number of requests in model execution batches.
+# TYPE vllm:num_requests_running gauge
+vllm:num_requests_running{engine="0",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 0.0
+# HELP vllm:num_requests_waiting Number of requests waiting to be processed.
+# TYPE vllm:num_requests_waiting gauge
+vllm:num_requests_waiting{engine="0",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 0.0
+# HELP vllm:kv_cache_usage_perc KV-cache usage. 1 means 100 percent usage.
+# TYPE vllm:kv_cache_usage_perc gauge
+vllm:kv_cache_usage_perc{engine="0",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 0.0
+# HELP vllm:prefix_cache_queries_total Prefix cache queries, in terms of number of queried tokens.
+# TYPE vllm:prefix_cache_queries_total counter
+vllm:prefix_cache_queries_total{engine="0",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 3080.0
+# HELP vllm:prefix_cache_hits_total Prefix cache hits, in terms of number of cached tokens.
+# TYPE vllm:prefix_cache_hits_total counter
+vllm:prefix_cache_hits_total{engine="0",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 2128.0
+# HELP vllm:request_success_total Count of successfully processed requests.
+# TYPE vllm:request_success_total counter
+vllm:request_success_total{engine="0",finished_reason="stop",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 0.0
+vllm:request_success_total{engine="0",finished_reason="length",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 160.0
+vllm:request_success_total{engine="0",finished_reason="abort",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 0.0
+vllm:request_prompt_tokens_sum{engine="0",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 3080.0
+vllm:request_generation_tokens_sum{engine="0",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 10240.0
+vllm:time_to_first_token_seconds_sum{engine="0",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 33.189072370529175
+vllm:time_per_output_token_seconds_sum{engine="0",model_name="Seed-OSS-36B-Instruct-FP32-BatchProfile"} 663.3262399428058
+
+===== FP32 summary CSV 预览 =====
+concurrency,total_requests,successful_requests,failed_requests,error_rate,wall_time_seconds,qps,avg_latency_seconds,p50_latency_seconds,p95_latency_seconds,avg_completion_tokens_per_second_per_request,aggregate_output_tokens_per_second
+1,32,32,0,0.0,102.657,0.3117,3.2078,3.096,3.13,20.3271,19.9499
+2,32,32,0,0.0,56.3982,0.5674,3.5231,3.4601,4.0014,18.2147,36.3132
+4,32,32,0,0.0,30.1141,1.0626,3.761,3.7616,3.7787,17.0173,68.0079
+8,32,32,0,0.0,21.8119,1.4671,5.4471,5.4476,5.4604,11.7493,93.8937
+16,32,32,0,0.0,11.8861,2.6922,5.9299,5.8966,6.4298,10.8666,172.302
+
+===== Git 状态 =====
+?? logs/new_2xa100_seed_oss_bnb_int8_openai_benchmark_3req_20260528.log
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_loading_check_20260528_215302.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_check_20260528_215331.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_evidence_20260528.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215126.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215205.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_vllm.pid
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214511.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214606.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_vllm.pid
+?? logs/new_2xa100_seed_oss_fp32_batch_profile_launch_snapshot_20260528.txt
+?? logs/new_2xa100_seed_oss_fp32_batch_profile_status_check_20260528_235219.txt
+?? logs/new_2xa100_seed_oss_fp32_batch_profile_vllm.pid
+?? logs/new_2xa100_seed_oss_fp32_batch_profile_vllm_launch_20260528.log
+?? logs/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528.log
+?? logs/new_2xa100_seed_oss_w8a8_batch_profile_vllm.pid
+?? logs/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528.log
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225050.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225112.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225143.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225148.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_launch_snapshot_20260528.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224821.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224908.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224940.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224956.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_save_check_20260528_225306.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_status_check_20260528_224730.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223546.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223556.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223611.txt
+?? logs/new_2xa100_seed_oss_w8a8_vllm_ready_check_20260528.txt
+?? results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528.csv
+?? results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528_summary.csv
+?? results/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528.csv
+?? results/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528_summary.csv
