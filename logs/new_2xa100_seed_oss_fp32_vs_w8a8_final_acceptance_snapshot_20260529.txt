@@ -1,0 +1,332 @@
+===== 日期 =====
+Fri May 29 00:16:23 UTC 2026
+
+===== 本步骤目的 =====
+在停止 FP32 batch profile 服务前，汇总 Seed-OSS-36B FP32 与 W8A8 量化优化验收证据。
+重点验证：INT8/W8A8 是否成功 serving、速度提升是否超过 20%、model loading memory 是否降低超过 30%、QPS/P95 图表和对比表是否已生成。
+同时说明：vLLM 会使用释放出的显存扩大 KV cache，因此 nvidia-smi runtime reserved memory 不能直接等价于模型权重显存。
+
+===== 当前 Git 主线 =====
+6c8237f 生成 Seed-OSS FP32 与 W8A8 batch profile 对比图表
+9d07ed7 总结 Seed-OSS FP32 与 W8A8 batch profile 对比结果
+04a6978 记录 Seed-OSS FP32 batch profile 并发对照结果
+1e0b727 记录 Seed-OSS W8A8 batch profile 停止状态
+71c3d46 记录 Seed-OSS W8A8 batch profile 并发吞吐优化结果
+abcfaef 记录 Seed-OSS W8A8 conservative profile 停止状态
+bab96e0 总结 Seed-OSS FP32 与 W8A8 量化对比结果
+7965ca6 记录 Seed-OSS-36B W8A8 serving benchmark 结果
+91ba902 记录 Seed-OSS-36B W8A8 smoke test 结果
+9bd2a6d 记录 Seed-OSS-36B W8A8 serving ready 证据
+5659c1c 完成 Seed-OSS-36B 离线 W8A8 量化 checkpoint 生成
+b77bb24 修复 Seed-OSS W8A8 量化 checkpoint 保存配置
+
+===== 当前 Git 状态 =====
+?? logs/new_2xa100_seed_oss_bnb_int8_openai_benchmark_3req_20260528.log
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_loading_check_20260528_215302.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_check_20260528_215331.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_evidence_20260528.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215126.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215205.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_vllm.pid
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214511.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214606.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_vllm.pid
+?? logs/new_2xa100_seed_oss_fp32_batch_profile_vllm.pid
+?? logs/new_2xa100_seed_oss_fp32_vs_w8a8_final_acceptance_snapshot_20260529.txt
+?? logs/new_2xa100_seed_oss_w8a8_batch_profile_vllm.pid
+?? logs/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528.log
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225050.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225112.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225143.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225148.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_launch_snapshot_20260528.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224821.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224908.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224940.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224956.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_save_check_20260528_225306.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_status_check_20260528_224730.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223546.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223556.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223611.txt
+?? logs/new_2xa100_seed_oss_w8a8_vllm_ready_check_20260528.txt
+?? results/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528.csv
+?? results/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528_summary.csv
+
+===== 当前 FP32 batch profile 进程与 GPU 状态 =====
+9661
+    PID    PPID STAT     ELAPSED %CPU %MEM CMD
+   9661    1424 Sl         31:59  0.6  0.0 python -m vllm.entrypoints.openai.api_server --model ByteDance-Seed/Seed-OSS-36B-Instruct --served-model-name Seed-OSS-36B-Instruct-FP32-BatchProfile --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --distributed-executor-backend mp --dtype float32 --max-model-len 512 --max-num-batched-tokens 8192 --max-num-seqs 32 --gpu-memory-utilization 0.90 --download-dir /workspace/hf_cache --trust-remote-code --enforce-eager
+   9661    1424 Sl         31:59  0.6  0.0 python -m vllm.entrypoints.openai.api_server --model ByteDance-Seed/Seed-OSS-36B-Instruct --served-model-name Seed-OSS-36B-Instruct-FP32-BatchProfile --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --distributed-executor-backend mp --dtype float32 --max-model-len 512 --max-num-batched-tokens 8192 --max-num-seqs 32 --gpu-memory-utilization 0.90 --download-dir /workspace/hf_cache --trust-remote-code --enforce-eager
+   9703    9661 Sl         31:51 13.1  0.0 VLLM::EngineCore
+   9725    9703 Rl         31:45  108  0.0 VLLM::Worker_TP0
+   9726    9703 Rl         31:45  107  0.0 VLLM::Worker_TP1
+Fri May 29 00:16:23 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   28C    P0             85W /  400W |   72949MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   29C    P0             83W /  400W |   72949MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            9725      C   VLLM::Worker_TP0                      72940MiB |
+|    1   N/A  N/A            9726      C   VLLM::Worker_TP1                      72940MiB |
++-----------------------------------------------------------------------------------------+
+
+===== FP32 API ready 检查 =====
+{"object":"list","data":[{"id":"Seed-OSS-36B-Instruct-FP32-BatchProfile","object":"model","created":1780013783,"owned_by":"vllm","root":"ByteDance-Seed/Seed-OSS-36B-Instruct","parent":null,"max_model_len":512,"permission":[{"id":"modelperm-8a42cbfca5dc4f96a5fd732f6bb4b096","object":"model_permission","created":1780013783,"allow_create_engine":false,"allow_sampling":true,"allow_logprobs":true,"allow_search_indices":false,"allow_view":true,"allow_fine_tuning":false,"organization":"*","group":null,"is_blocking":false}]}]}
+
+
+===== 关键结果文件检查 =====
+-rw-r--r-- 1 root root 569 May 28 23:59 results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528_summary.csv
+-rw-r--r-- 1 root root 572 May 28 23:38 results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528_summary.csv
+-rw-r--r-- 1 root root 1.6K May 29 00:09 results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv
+-rw-r--r-- 1 root root 58K May 29 00:09 results/figures/seed_oss_fp32_vs_w8a8_qps.png
+-rw-r--r-- 1 root root 66K May 29 00:09 results/figures/seed_oss_fp32_vs_w8a8_p95_latency.png
+-rw-r--r-- 1 root root 72K May 29 00:09 results/figures/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png
+
+===== FP32 batch profile summary =====
+concurrency,total_requests,successful_requests,failed_requests,error_rate,wall_time_seconds,qps,avg_latency_seconds,p50_latency_seconds,p95_latency_seconds,avg_completion_tokens_per_second_per_request,aggregate_output_tokens_per_second
+1,32,32,0,0.0,102.657,0.3117,3.2078,3.096,3.13,20.3271,19.9499
+2,32,32,0,0.0,56.3982,0.5674,3.5231,3.4601,4.0014,18.2147,36.3132
+4,32,32,0,0.0,30.1141,1.0626,3.761,3.7616,3.7787,17.0173,68.0079
+8,32,32,0,0.0,21.8119,1.4671,5.4471,5.4476,5.4604,11.7493,93.8937
+16,32,32,0,0.0,11.8861,2.6922,5.9299,5.8966,6.4298,10.8666,172.302
+
+===== W8A8 batch profile summary =====
+concurrency,total_requests,successful_requests,failed_requests,error_rate,wall_time_seconds,qps,avg_latency_seconds,p50_latency_seconds,p95_latency_seconds,avg_completion_tokens_per_second_per_request,aggregate_output_tokens_per_second
+1,32,32,0,0.0,78.1244,0.4096,2.4411,2.4049,2.5703,26.2765,26.2146
+2,32,32,0,0.0,40.1583,0.7968,2.5083,2.5039,2.5774,25.5215,50.9981
+4,32,32,0,0.0,20.9343,1.5286,2.6143,2.604,2.7323,24.5004,97.8298
+8,32,32,0,0.0,10.2812,3.1125,2.565,2.5697,2.5973,24.9543,199.1979
+16,32,32,0,0.0,5.2566,6.0876,2.6103,2.6089,2.6735,24.5274,389.6063
+
+===== FP32 vs W8A8 improvement summary =====
+concurrency,total_requests_fp32,successful_requests_fp32,failed_requests_fp32,error_rate_fp32,wall_time_seconds_fp32,qps_fp32,avg_latency_seconds_fp32,p50_latency_seconds_fp32,p95_latency_seconds_fp32,avg_completion_tokens_per_second_per_request_fp32,aggregate_output_tokens_per_second_fp32,total_requests_w8a8,successful_requests_w8a8,failed_requests_w8a8,error_rate_w8a8,wall_time_seconds_w8a8,qps_w8a8,avg_latency_seconds_w8a8,p50_latency_seconds_w8a8,p95_latency_seconds_w8a8,avg_completion_tokens_per_second_per_request_w8a8,aggregate_output_tokens_per_second_w8a8,qps_improvement_pct,p95_latency_reduction_pct,output_tokens_per_second_improvement_pct
+1,32,32,0,0.0,102.657,0.3117,3.2078,3.096,3.13,20.3271,19.9499,32,32,0,0.0,78.1244,0.4096,2.4411,2.4049,2.5703,26.2765,26.2146,31.40840551812642,17.88178913738019,31.402162416854228
+2,32,32,0,0.0,56.3982,0.5674,3.5231,3.4601,4.0014,18.2147,36.3132,32,32,0,0.0,40.1583,0.7968,2.5083,2.5039,2.5774,25.5215,50.9981,40.43003172365173,35.587544359474194,40.43956467620589
+4,32,32,0,0.0,30.1141,1.0626,3.761,3.7616,3.7787,17.0173,68.0079,32,32,0,0.0,20.9343,1.5286,2.6143,2.604,2.7323,24.5004,97.8298,43.85469602860907,27.692063408050394,43.850640881427005
+8,32,32,0,0.0,21.8119,1.4671,5.4471,5.4476,5.4604,11.7493,93.8937,32,32,0,0.0,10.2812,3.1125,2.565,2.5697,2.5973,24.9543,199.1979,112.15322745552447,52.43388762728005,112.15257253681558
+16,32,32,0,0.0,11.8861,2.6922,5.9299,5.8966,6.4298,10.8666,172.302,32,32,0,0.0,5.2566,6.0876,2.6103,2.6089,2.6735,24.5274,389.6063,126.1199019389347,58.420168590002795,126.11826908567514
+
+===== FP32 关键 serving 日志摘录 =====
+[1;36m(EngineCore_DP0 pid=9703)[0;0m INFO 05-28 23:44:38 [core.py:93] Initializing a V1 LLM engine (v0.11.2) with config: model='ByteDance-Seed/Seed-OSS-36B-Instruct', speculative_config=None, tokenizer='ByteDance-Seed/Seed-OSS-36B-Instruct', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float32, max_seq_len=512, download_dir='/workspace/hf_cache', load_format=auto, tensor_parallel_size=2, pipeline_parallel_size=1, data_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=True, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=0, served_model_name=Seed-OSS-36B-Instruct-FP32-BatchProfile, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'level': None, 'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'splitting_ops': None, 'compile_mm_encoder': False, 'use_inductor': None, 'compile_sizes': [], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {}, 'max_cudagraph_capture_size': 0, 'local_cache_dir': None}
+[1;36m(Worker_TP0 pid=9725)[0;0m INFO 05-28 23:46:22 [default_loader.py:314] Loading weights took 92.01 seconds
+[1;36m(Worker_TP0 pid=9725)[0;0m INFO 05-28 23:46:23 [gpu_model_runner.py:3338] Model loading took 67.5881 GiB memory and 94.095695 seconds
+[1;36m(Worker_TP0 pid=9725)[0;0m INFO 05-28 23:46:44 [gpu_worker.py:359] Available KV cache memory: 1.18 GiB
+[1;36m(EngineCore_DP0 pid=9703)[0;0m INFO 05-28 23:46:44 [kv_cache_utils.py:1229] GPU KV cache size: 4,816 tokens
+[1;36m(EngineCore_DP0 pid=9703)[0;0m INFO 05-28 23:46:44 [kv_cache_utils.py:1234] Maximum concurrency for 512 tokens per request: 9.41x
+[1;36m(EngineCore_DP0 pid=9703)[0;0m INFO 05-28 23:46:44 [kv_cache_utils.py:1234] Maximum concurrency for 512 tokens per request: 9.41x
+[1;36m(APIServer pid=9661)[0;0m INFO:     Application startup complete.
+
+===== W8A8 关键 serving 日志摘录 =====
+[1;36m(Worker_TP0 pid=9197)[0;0m INFO 05-28 23:26:32 [compressed_tensors_w8a8_int8.py:62] Using CutlassScaledMMLinearKernel for CompressedTensorsW8A8Int8
+[1;36m(Worker_TP1 pid=9198)[0;0m INFO 05-28 23:26:32 [compressed_tensors_w8a8_int8.py:62] Using CutlassScaledMMLinearKernel for CompressedTensorsW8A8Int8
+[1;36m(Worker_TP0 pid=9197)[0;0m INFO 05-28 23:27:32 [default_loader.py:314] Loading weights took 59.51 seconds
+[1;36m(Worker_TP0 pid=9197)[0;0m INFO 05-28 23:27:32 [gpu_model_runner.py:3338] Model loading took 17.7109 GiB memory and 60.249807 seconds
+[1;36m(Worker_TP0 pid=9197)[0;0m INFO 05-28 23:27:39 [gpu_worker.py:359] Available KV cache memory: 52.05 GiB
+[1;36m(EngineCore_DP0 pid=9175)[0;0m INFO 05-28 23:27:39 [kv_cache_utils.py:1229] GPU KV cache size: 426,416 tokens
+[1;36m(EngineCore_DP0 pid=9175)[0;0m INFO 05-28 23:27:39 [kv_cache_utils.py:1234] Maximum concurrency for 512 tokens per request: 832.84x
+[1;36m(EngineCore_DP0 pid=9175)[0;0m INFO 05-28 23:27:39 [kv_cache_utils.py:1234] Maximum concurrency for 512 tokens per request: 832.84x
+[1;36m(APIServer pid=9127)[0;0m INFO:     Application startup complete.
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+[1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+
+===== 自动计算核心验收指标 =====
+速度提升验收：
+- 最大 QPS 提升: 126.12% at concurrency=16
+- 最大 output tokens/s 提升: 126.12% at concurrency=16
+- 最大 P95 latency 降低: 58.42% at concurrency=16
+
+显存与 KV cache 验收：
+- FP32 model loading memory: 67.5901 GiB
+- W8A8 model loading memory: 17.7109 GiB
+- model loading memory reduction: 73.80%
+- FP32 GPU KV cache size: 38,624 tokens
+- W8A8 GPU KV cache size: 434,480 tokens
+- KV cache capacity increase: 1024.90%
+
+验收判断：
+- speed_improvement_ge_20pct: True
+- model_loading_memory_reduction_ge_30pct: True
+- nvidia_smi_runtime_memory_reduction_ge_30pct: False
+- explanation: vLLM preallocates available memory for KV cache, so runtime reserved memory is not equivalent to model weight memory.
+
+===== 最终说明 =====
+本阶段可以在报告中如实写：W8A8 量化显著降低模型加载权重显存，并将释放出的显存转化为更大的 KV cache capacity 和更高 batch serving 吞吐。
+不能写：nvidia-smi 运行时总显存占用降低 30%。该表述不准确。
