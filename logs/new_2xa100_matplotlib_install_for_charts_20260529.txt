@@ -1,0 +1,91 @@
+===== 日期 =====
+Fri May 29 00:09:23 UTC 2026
+
+===== 本步骤目的 =====
+安装 matplotlib，用于生成 FP32 与 W8A8 batch profile 对比图表。
+本步骤不改模型、不改 serving，只补齐结果可视化依赖。
+
+===== 安装前 Python 环境 =====
+/usr/bin/python
+Python 3.11.10
+/usr/bin/python
+pandas: 3.0.3
+matplotlib_import_error: ModuleNotFoundError("No module named 'matplotlib'")
+
+===== 安装 matplotlib =====
+Collecting matplotlib
+  Downloading matplotlib-3.10.9-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (52 kB)
+Collecting contourpy>=1.0.1 (from matplotlib)
+  Downloading contourpy-1.3.3-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (5.5 kB)
+Collecting cycler>=0.10 (from matplotlib)
+  Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting fonttools>=4.22.0 (from matplotlib)
+  Downloading fonttools-4.63.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (118 kB)
+Collecting kiwisolver>=1.3.1 (from matplotlib)
+  Downloading kiwisolver-1.5.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.1 kB)
+Requirement already satisfied: numpy>=1.23 in /usr/local/lib/python3.11/dist-packages (from matplotlib) (2.2.6)
+Requirement already satisfied: packaging>=20.0 in /usr/local/lib/python3.11/dist-packages (from matplotlib) (26.2)
+Requirement already satisfied: pillow>=8 in /usr/local/lib/python3.11/dist-packages (from matplotlib) (12.2.0)
+Collecting pyparsing>=3 (from matplotlib)
+  Downloading pyparsing-3.3.2-py3-none-any.whl.metadata (5.8 kB)
+Requirement already satisfied: python-dateutil>=2.7 in /usr/local/lib/python3.11/dist-packages (from matplotlib) (2.9.0.post0)
+Requirement already satisfied: six>=1.5 in /usr/lib/python3/dist-packages (from python-dateutil>=2.7->matplotlib) (1.16.0)
+Downloading matplotlib-3.10.9-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (8.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.8/8.8 MB 360.6 MB/s  0:00:00
+Downloading contourpy-1.3.3-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (355 kB)
+Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading fonttools-4.63.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.1/5.1 MB 481.5 MB/s  0:00:00
+Downloading kiwisolver-1.5.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 325.2 MB/s  0:00:00
+Downloading pyparsing-3.3.2-py3-none-any.whl (122 kB)
+Installing collected packages: pyparsing, kiwisolver, fonttools, cycler, contourpy, matplotlib
+  Attempting uninstall: pyparsing
+    Found existing installation: pyparsing 2.4.7
+    Uninstalling pyparsing-2.4.7:
+      Successfully uninstalled pyparsing-2.4.7
+
+Successfully installed contourpy-1.3.3 cycler-0.12.1 fonttools-4.63.0 kiwisolver-1.5.0 matplotlib-3.10.9 pyparsing-3.3.2
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+
+===== 安装后验证 =====
+pandas: 3.0.3
+matplotlib: 3.10.9
+matplotlib_backend: agg
+
+===== Git 状态 =====
+?? logs/new_2xa100_matplotlib_install_for_charts_20260529.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_openai_benchmark_3req_20260528.log
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_loading_check_20260528_215302.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_check_20260528_215331.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_evidence_20260528.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215126.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215205.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_vllm.pid
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214511.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214606.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_vllm.pid
+?? logs/new_2xa100_seed_oss_fp32_batch_profile_vllm.pid
+?? logs/new_2xa100_seed_oss_fp32_vs_w8a8_chart_generation_20260529.txt
+?? logs/new_2xa100_seed_oss_w8a8_batch_profile_vllm.pid
+?? logs/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528.log
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225050.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225112.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225143.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225148.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_launch_snapshot_20260528.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224821.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224908.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224940.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224956.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_save_check_20260528_225306.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_status_check_20260528_224730.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223546.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223556.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223611.txt
+?? logs/new_2xa100_seed_oss_w8a8_vllm_ready_check_20260528.txt
+?? results/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528.csv
+?? results/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528_summary.csv

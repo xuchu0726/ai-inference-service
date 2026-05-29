@@ -1,0 +1,76 @@
+===== 日期 =====
+Fri May 29 00:09:37 UTC 2026
+
+===== 本步骤目的 =====
+基于已完成的 FP32 与 W8A8 batch profile concurrency sweep 结果，生成量化优化对比表和图表。
+输出包括：QPS 对比图、P95 latency 对比图、output tokens/s 对比图、优化收益 CSV。
+
+===== 输入文件检查 =====
+-rw-r--r-- 1 root root 569 May 28 23:59 results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528_summary.csv
+-rw-r--r-- 1 root root 572 May 28 23:38 results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528_summary.csv
+
+===== 生成图表与 improvement CSV =====
+saved: results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv
+
+ concurrency  qps_fp32  qps_w8a8  qps_improvement_pct  p95_latency_seconds_fp32  p95_latency_seconds_w8a8  p95_latency_reduction_pct  aggregate_output_tokens_per_second_fp32  aggregate_output_tokens_per_second_w8a8  output_tokens_per_second_improvement_pct  error_rate_fp32  error_rate_w8a8
+           1    0.3117    0.4096            31.408406                    3.1300                    2.5703                  17.881789                                  19.9499                                  26.2146                                 31.402162              0.0              0.0
+           2    0.5674    0.7968            40.430032                    4.0014                    2.5774                  35.587544                                  36.3132                                  50.9981                                 40.439565              0.0              0.0
+           4    1.0626    1.5286            43.854696                    3.7787                    2.7323                  27.692063                                  68.0079                                  97.8298                                 43.850641              0.0              0.0
+           8    1.4671    3.1125           112.153227                    5.4604                    2.5973                  52.433888                                  93.8937                                 199.1979                                112.152573              0.0              0.0
+          16    2.6922    6.0876           126.119902                    6.4298                    2.6735                  58.420169                                 172.3020                                 389.6063                                126.118269              0.0              0.0
+saved: results/figures/seed_oss_fp32_vs_w8a8_qps.png
+saved: results/figures/seed_oss_fp32_vs_w8a8_p95_latency.png
+saved: results/figures/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png
+
+===== 输出文件检查 =====
+-rw-r--r-- 1 root root 72K May 29 00:09 results/figures/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png
+-rw-r--r-- 1 root root 66K May 29 00:09 results/figures/seed_oss_fp32_vs_w8a8_p95_latency.png
+-rw-r--r-- 1 root root 58K May 29 00:09 results/figures/seed_oss_fp32_vs_w8a8_qps.png
+-rw-r--r-- 1 root root 1.6K May 29 00:09 results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv
+
+===== improvement CSV 预览 =====
+concurrency,total_requests_fp32,successful_requests_fp32,failed_requests_fp32,error_rate_fp32,wall_time_seconds_fp32,qps_fp32,avg_latency_seconds_fp32,p50_latency_seconds_fp32,p95_latency_seconds_fp32,avg_completion_tokens_per_second_per_request_fp32,aggregate_output_tokens_per_second_fp32,total_requests_w8a8,successful_requests_w8a8,failed_requests_w8a8,error_rate_w8a8,wall_time_seconds_w8a8,qps_w8a8,avg_latency_seconds_w8a8,p50_latency_seconds_w8a8,p95_latency_seconds_w8a8,avg_completion_tokens_per_second_per_request_w8a8,aggregate_output_tokens_per_second_w8a8,qps_improvement_pct,p95_latency_reduction_pct,output_tokens_per_second_improvement_pct
+1,32,32,0,0.0,102.657,0.3117,3.2078,3.096,3.13,20.3271,19.9499,32,32,0,0.0,78.1244,0.4096,2.4411,2.4049,2.5703,26.2765,26.2146,31.40840551812642,17.88178913738019,31.402162416854228
+2,32,32,0,0.0,56.3982,0.5674,3.5231,3.4601,4.0014,18.2147,36.3132,32,32,0,0.0,40.1583,0.7968,2.5083,2.5039,2.5774,25.5215,50.9981,40.43003172365173,35.587544359474194,40.43956467620589
+4,32,32,0,0.0,30.1141,1.0626,3.761,3.7616,3.7787,17.0173,68.0079,32,32,0,0.0,20.9343,1.5286,2.6143,2.604,2.7323,24.5004,97.8298,43.85469602860907,27.692063408050394,43.850640881427005
+8,32,32,0,0.0,21.8119,1.4671,5.4471,5.4476,5.4604,11.7493,93.8937,32,32,0,0.0,10.2812,3.1125,2.565,2.5697,2.5973,24.9543,199.1979,112.15322745552447,52.43388762728005,112.15257253681558
+16,32,32,0,0.0,11.8861,2.6922,5.9299,5.8966,6.4298,10.8666,172.302,32,32,0,0.0,5.2566,6.0876,2.6103,2.6089,2.6735,24.5274,389.6063,126.1199019389347,58.420168590002795,126.11826908567514
+
+===== Git 状态 =====
+?? logs/new_2xa100_matplotlib_install_for_charts_20260529.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_openai_benchmark_3req_20260528.log
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_loading_check_20260528_215302.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_check_20260528_215331.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_evidence_20260528.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215126.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215205.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_vllm.pid
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214511.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214606.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_vllm.pid
+?? logs/new_2xa100_seed_oss_fp32_batch_profile_vllm.pid
+?? logs/new_2xa100_seed_oss_fp32_vs_w8a8_chart_generation_20260529.txt
+?? logs/new_2xa100_seed_oss_w8a8_batch_profile_vllm.pid
+?? logs/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528.log
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225050.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225112.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225143.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225148.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_launch_snapshot_20260528.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224821.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224908.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224940.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224956.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_save_check_20260528_225306.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_status_check_20260528_224730.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223546.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223556.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223611.txt
+?? logs/new_2xa100_seed_oss_w8a8_vllm_ready_check_20260528.txt
+?? results/figures/
+?? results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv
+?? results/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528.csv
+?? results/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528_summary.csv
