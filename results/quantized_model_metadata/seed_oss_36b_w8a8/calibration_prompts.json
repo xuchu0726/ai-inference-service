@@ -1,0 +1,18 @@
+[
+  "Explain GPU inference service in one sentence.",
+  "Explain KV cache in LLM inference.",
+  "Explain model quantization and its memory-latency trade-off.",
+  "Explain grouped-query attention.",
+  "Explain prefill and decode stages in transformer inference.",
+  "Explain continuous batching in vLLM.",
+  "Explain paged attention and KV cache memory management.",
+  "Explain tensor parallel inference.",
+  "解释什么是 GPU 推理服务。",
+  "解释 KV cache 为什么能提升大模型推理效率。",
+  "解释模型量化如何降低显存占用。",
+  "解释 GQA 如何减少 KV cache memory。",
+  "解释 batch size、吞吐量、延迟之间的关系。",
+  "解释 P50、P95 latency 和 QPS 的含义。",
+  "解释 W8A8 量化为什么不一定带来延迟下降。",
+  "解释大模型 serving 中显存瓶颈的来源。"
+]
