@@ -1,0 +1,128 @@
+===== 日期 =====
+Fri May 29 00:19:06 UTC 2026
+
+===== 本步骤目的 =====
+停止 Seed-OSS-36B FP32 batch profile 服务，释放 2×A100 GPU 显存。
+当前 FP32 batch profile 已完成并发对照实验，量化对比图表与最终验收快照已提交。
+
+===== 停止前进程 =====
+9661
+    PID    PPID STAT     ELAPSED %CPU %MEM CMD
+   9661    1424 Sl         34:42  0.6  0.0 python -m vllm.entrypoints.openai.api_server --model ByteDance-Seed/Seed-OSS-36B-Instruct --served-model-name Seed-OSS-36B-Instruct-FP32-BatchProfile --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --distributed-executor-backend mp --dtype float32 --max-model-len 512 --max-num-batched-tokens 8192 --max-num-seqs 32 --gpu-memory-utilization 0.90 --download-dir /workspace/hf_cache --trust-remote-code --enforce-eager
+   9661    1424 Sl         34:42  0.6  0.0 python -m vllm.entrypoints.openai.api_server --model ByteDance-Seed/Seed-OSS-36B-Instruct --served-model-name Seed-OSS-36B-Instruct-FP32-BatchProfile --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --distributed-executor-backend mp --dtype float32 --max-model-len 512 --max-num-batched-tokens 8192 --max-num-seqs 32 --gpu-memory-utilization 0.90 --download-dir /workspace/hf_cache --trust-remote-code --enforce-eager
+   9703    9661 Sl         34:34 12.0  0.0 VLLM::EngineCore
+   9725    9703 Rl         34:28  107  0.0 VLLM::Worker_TP0
+   9726    9703 Rl         34:28  107  0.0 VLLM::Worker_TP1
+
+===== 停止前 GPU =====
+Fri May 29 00:19:06 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   27C    P0             85W /  400W |   72949MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   28C    P0             82W /  400W |   72949MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            9725      C   VLLM::Worker_TP0                      72940MiB |
+|    1   N/A  N/A            9726      C   VLLM::Worker_TP1                      72940MiB |
++-----------------------------------------------------------------------------------------+
+
+===== 停止前端口 =====
+LISTEN 0      2048         0.0.0.0:8002       0.0.0.0:*    users:(("python",pid=9661,fd=26))          
+
+===== 停止 FP32 batch profile 主进程 =====
+
+===== 清理残留 FP32/vLLM 进程 =====
+
+===== 停止后进程 =====
+
+===== 停止后 GPU =====
+Fri May 29 00:19:26 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.20             Driver Version: 580.126.20     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:8A:00.0 Off |                    0 |
+| N/A   25C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   26C    P0             62W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== 停止后端口状态 =====
+
+===== Git 状态 =====
+ M logs/new_2xa100_seed_oss_fp32_batch_profile_vllm_launch_20260528.log
+?? logs/new_2xa100_seed_oss_bnb_int8_openai_benchmark_3req_20260528.log
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_loading_check_20260528_215302.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_check_20260528_215331.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_ready_evidence_20260528.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215126.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_status_check_20260528_215205.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_retry_vllm.pid
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214511.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_status_check_20260528_214606.txt
+?? logs/new_2xa100_seed_oss_bnb_int8_vllm.pid
+?? logs/new_2xa100_seed_oss_fp32_batch_profile_shutdown_20260529.txt
+?? logs/new_2xa100_seed_oss_fp32_batch_profile_vllm.pid
+?? logs/new_2xa100_seed_oss_w8a8_batch_profile_vllm.pid
+?? logs/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528.log
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2.pid
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225050.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225112.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225143.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225148.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_launch_snapshot_20260528.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224821.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224908.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224940.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224956.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_save_check_20260528_225306.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_status_check_20260528_224730.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223546.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223556.txt
+?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223611.txt
+?? logs/new_2xa100_seed_oss_w8a8_vllm_ready_check_20260528.txt
+?? results/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528.csv
+?? results/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528_summary.csv
+0196345 记录 Seed-OSS FP32 与 W8A8 最终验收快照
+6c8237f 生成 Seed-OSS FP32 与 W8A8 batch profile 对比图表
+9d07ed7 总结 Seed-OSS FP32 与 W8A8 batch profile 对比结果
+04a6978 记录 Seed-OSS FP32 batch profile 并发对照结果
+1e0b727 记录 Seed-OSS W8A8 batch profile 停止状态
+71c3d46 记录 Seed-OSS W8A8 batch profile 并发吞吐优化结果
+abcfaef 记录 Seed-OSS W8A8 conservative profile 停止状态
+bab96e0 总结 Seed-OSS FP32 与 W8A8 量化对比结果
+7965ca6 记录 Seed-OSS-36B W8A8 serving benchmark 结果
+91ba902 记录 Seed-OSS-36B W8A8 smoke test 结果
+9bd2a6d 记录 Seed-OSS-36B W8A8 serving ready 证据
+5659c1c 完成 Seed-OSS-36B 离线 W8A8 量化 checkpoint 生成
