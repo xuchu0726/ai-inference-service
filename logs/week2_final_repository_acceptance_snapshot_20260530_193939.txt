@@ -1,0 +1,57 @@
+===== Week2 Final Repository Acceptance Snapshot =====
+Generated at: 2026年 5月30日 星期六 19时39分39秒 BST
+Repo path: /Users/xc1225/Desktop/ai-inference-service
+
+===== Git status =====
+## main...origin/main
+?? logs/week2_final_repository_acceptance_snapshot_20260530_193939.txt
+
+===== Latest commits =====
+97972db 归档过时 Week2 计划文档并更新目录说明
+dcb49ae 补充仓库目录结构说明并清理缓存忽略规则
+9fbefe8 忽略 Python 缓存和本地临时文件
+1b81086 记录 Week2 最终交付快照
+f6e688d 规范 Week2 文档链接与正式表述
+6369b6f 清理 Week2 验收矩阵结论标题
+d3bf180 整理 Week2 图表目录结构
+55e7ba1 清理 Week2 正式文档内部提示口吻
+781dc09 完善 Week2 正式文档图表引用与边界表述
+a6873c4 整理 Week2 核心交付文档与量化实验报告
+
+===== Pytest =====
+...                                                                      [100%]
+3 passed in 0.03s
+
+===== Key docs =====
+OK      README.md
+OK      docs/repo_structure_guide.md
+OK      docs/week2_delivery_summary.md
+OK      docs/week2_requirement_compliance_matrix.md
+OK      docs/week2_performance_optimization_report.md
+OK      docs/week2_quantization_feasibility_report.md
+OK      docs/week2_observability_report.md
+OK      docs/week2_eval_mini_report.md
+OK      docs/week2_batch_token_tuning_report.md
+OK      docs/week2/seed_oss_128k_context_boundary_review.md
+
+===== Key figures =====
+OK      figures/week2/concurrency/week2_qps_vs_concurrency_report.png
+OK      figures/week2/concurrency/week2_latency_p50_p95_vs_concurrency.png
+OK      figures/week2/concurrency/week2_tokens_per_second_vs_concurrency_report.png
+OK      figures/week2/concurrency/week2_error_rate_vs_concurrency_report.png
+OK      figures/week2/context/week2_context_latency_first_pass_only.png
+OK      figures/week2/context/week2_context_tokens_per_second_first_pass_only.png
+OK      figures/week2/prefix_cache/week2_prefix_cache_repeat_latency.png
+OK      figures/week2/observability/week2_grafana_seed_oss_live_load_probe.png
+OK      figures/week2/quantization/seed_oss_fp32_vs_w8a8_qps.png
+OK      figures/week2/quantization/seed_oss_fp32_vs_w8a8_p95_latency.png
+OK      figures/week2/quantization/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png
+OK      figures/week2/batch_tokens/week2_batch_tokens_workload_qps_summary.png
+OK      figures/week2/batch_tokens/week2_batch_tokens_workload_p95_summary.png
+OK      figures/week2/batch_tokens/week2_batch_tokens_profile_decision.png
+
+===== Git diff check =====
+
+===== Final git status =====
+## main...origin/main
+?? logs/week2_final_repository_acceptance_snapshot_20260530_193939.txt
