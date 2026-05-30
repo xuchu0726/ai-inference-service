@@ -40,3 +40,6 @@ tmp/
 *$py.class
 # Local temporary audit files
 # macOS
+*.pyc
+*.pyo
+# Local temporary files
