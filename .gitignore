@@ -36,3 +36,7 @@ tmp/
 
 # Runtime process files
 *.pid
+# Python cache
+*$py.class
+# Local temporary audit files
+# macOS
