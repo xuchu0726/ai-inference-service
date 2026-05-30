@@ -102,7 +102,7 @@ GSM8K full benchmark 全部 1319 个样本均通过 API 成功返回，API error
 
 | 项目 | 配置 |
 |---|---|
-| Dataset | `data/eval/codegen_mini.jsonl` |
+| Dataset | [`data/eval/codegen_mini.jsonl`](../data/eval/codegen_mini.jsonl) |
 | Cases | 5 |
 | Endpoint | FastAPI `/generate` |
 | max_new_tokens | 256 |
@@ -156,15 +156,15 @@ python scripts/run_week2_eval_mini.py \
 
 | Evidence | Path |
 |---|---|
-| GSM8K full summary | `results/week2_gsm8k_full_seed_oss_budget0_summary.csv` |
-| Codegen mini result | `results/week2_codegen_mini_seed_oss_budget0.csv` |
-| GPU snapshot after GSM8K | `logs/week2_nvidia_smi_after_gsm8k_full_budget0.txt` |
-| GPU snapshot after codegen | `logs/week2_nvidia_smi_after_codegen_mini_budget0.txt` |
-| vLLM metrics after GSM8K | `results/week2_vllm_metrics_after_gsm8k_full_budget0.txt` |
-| FastAPI metrics after GSM8K | `results/week2_fastapi_metrics_after_gsm8k_full_budget0.txt` |
-| vLLM metrics after codegen | `results/week2_vllm_metrics_after_codegen_mini_budget0.txt` |
-| FastAPI metrics after codegen | `results/week2_fastapi_metrics_after_codegen_mini_budget0.txt` |
-| Evidence package | `artifacts/week2_seed_oss_gsm8k_codegen_dynamic_batch_evidence_20260518_042845.tar.gz` |
+| GSM8K full summary | [`results/week2_gsm8k_full_seed_oss_budget0_summary.csv`](../results/week2_gsm8k_full_seed_oss_budget0_summary.csv) |
+| Codegen mini result | [`results/week2_codegen_mini_seed_oss_budget0.csv`](../results/week2_codegen_mini_seed_oss_budget0.csv) |
+| GPU snapshot after GSM8K | [`logs/week2_nvidia_smi_after_gsm8k_full_budget0.txt`](../logs/week2_nvidia_smi_after_gsm8k_full_budget0.txt) |
+| GPU snapshot after codegen | [`logs/week2_nvidia_smi_after_codegen_mini_budget0.txt`](../logs/week2_nvidia_smi_after_codegen_mini_budget0.txt) |
+| vLLM metrics after GSM8K | [`results/week2_vllm_metrics_after_gsm8k_full_budget0.txt`](../results/week2_vllm_metrics_after_gsm8k_full_budget0.txt) |
+| FastAPI metrics after GSM8K | [`results/week2_fastapi_metrics_after_gsm8k_full_budget0.txt`](../results/week2_fastapi_metrics_after_gsm8k_full_budget0.txt) |
+| vLLM metrics after codegen | [`results/week2_vllm_metrics_after_codegen_mini_budget0.txt`](../results/week2_vllm_metrics_after_codegen_mini_budget0.txt) |
+| FastAPI metrics after codegen | [`results/week2_fastapi_metrics_after_codegen_mini_budget0.txt`](../results/week2_fastapi_metrics_after_codegen_mini_budget0.txt) |
+| Evidence package | [`artifacts/week2_seed_oss_gsm8k_codegen_dynamic_batch_evidence_20260518_042845.tar.gz`](../artifacts/week2_seed_oss_gsm8k_codegen_dynamic_batch_evidence_20260518_042845.tar.gz) |
 
 ---
 

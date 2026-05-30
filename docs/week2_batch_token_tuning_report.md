@@ -148,8 +148,8 @@ long-output c4 场景用于验证较大的 batch-token budget 在长输出 decod
 
 新增代码模块：
 
-- `app/routing.py`
-- `tests/test_routing.py`
+- [`app/routing.py`](../app/routing.py)
+- [`tests/test_routing.py`](../tests/test_routing.py)
 
 该模块根据 `prompt_chars`、`max_new_tokens` 和 `concurrency_hint` 对请求进行 workload classification，并返回推荐 serving profile：
 
@@ -164,7 +164,7 @@ long-output c4 场景用于验证较大的 batch-token budget 在长输出 decod
 
 详细说明见：
 
-- `docs/week2_routing_policy_abstraction.md`
+- [`docs/week2_routing_policy_abstraction.md`](../docs/week2_routing_policy_abstraction.md)
 
 ## 9. 动态批处理的工程边界说明
 

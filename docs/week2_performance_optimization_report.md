@@ -75,8 +75,8 @@ Week1 结论：
 
 | 脚本 | 作用 | 产出 |
 |---|---|---|
-| `scripts/sample_gpu_metrics.sh` | 使用 `nvidia-smi` 定时采样 GPU 显存、GPU utilization、memory utilization | `logs/week2_nvidia_smi_sampling.csv` |
-| `scripts/snapshot_vllm_metrics.py` | 抓取 vLLM `/metrics` 中的 running requests、waiting requests、KV Cache usage、prefix cache 指标 | `results/week2_vllm_metrics_snapshot.txt` |
+| [`scripts/sample_gpu_metrics.sh`](../scripts/sample_gpu_metrics.sh) | 使用 `nvidia-smi` 定时采样 GPU 显存、GPU utilization、memory utilization | [`logs/week2_nvidia_smi_sampling.csv`](../logs/week2_nvidia_smi_sampling.csv) |
+| [`scripts/snapshot_vllm_metrics.py`](../scripts/snapshot_vllm_metrics.py) | 抓取 vLLM `/metrics` 中的 running requests、waiting requests、KV Cache usage、prefix cache 指标 | `results/week2_vllm_metrics_snapshot.txt` |
 
 GPU 采样命令示例：
 
@@ -149,15 +149,15 @@ vLLM metrics 快照命令示例：
 
 专项报告路径：
 
-- `docs/week2_batch_token_tuning_report.md`
+- [`docs/week2_batch_token_tuning_report.md`](../docs/week2_batch_token_tuning_report.md)
 
 相关 evidence：
 
-- `results/week2_batch_tokens_workload_summary_20260525.csv`
-- `results/week2_batch_tokens_short_c8_wave_latency_summary_20260526.csv`
-- `figures/week2/batch_tokens/week2_batch_tokens_profile_decision.png`
-- `figures/week2/batch_tokens/week2_batch_tokens_workload_qps_summary.png`
-- `figures/week2/batch_tokens/week2_batch_tokens_workload_p95_summary.png`
+- [`results/week2_batch_tokens_workload_summary_20260525.csv`](../results/week2_batch_tokens_workload_summary_20260525.csv)
+- [`results/week2_batch_tokens_short_c8_wave_latency_summary_20260526.csv`](../results/week2_batch_tokens_short_c8_wave_latency_summary_20260526.csv)
+- [`figures/week2/batch_tokens/week2_batch_tokens_profile_decision.png`](../figures/week2/batch_tokens/week2_batch_tokens_profile_decision.png)
+- [`figures/week2/batch_tokens/week2_batch_tokens_workload_qps_summary.png`](../figures/week2/batch_tokens/week2_batch_tokens_workload_qps_summary.png)
+- [`figures/week2/batch_tokens/week2_batch_tokens_workload_p95_summary.png`](../figures/week2/batch_tokens/week2_batch_tokens_workload_p95_summary.png)
 
 
 ### 3.3 上下文长度梯度测试
@@ -256,8 +256,8 @@ vLLM metrics 快照命令示例：
 
 为回应 Week1 反馈，本周新增：
 
-1. `docs/troubleshooting_faq.md`
-2. `docs/api_error_codes.md`
+1. [`docs/troubleshooting_faq.md`](../docs/troubleshooting_faq.md)
+2. [`docs/api_error_codes.md`](../docs/api_error_codes.md)
 
 这两份文档用于提升服务的可维护性和可排查性。
 
@@ -395,26 +395,26 @@ vLLM 启动日志显示：
 
 | Evidence | Path |
 |---|---|
-| 64K vLLM 启动日志 | `evidence/week2_64k_context/logs/week2_seed_oss_vllm_launch_64k.log` |
-| 64K vLLM 启动关键行 | `evidence/week2_64k_context/logs/week2_seed_oss_vllm_64k_key_startup_lines.txt` |
-| FastAPI 64K 日志 | `evidence/week2_64k_context/logs/week2_fastapi_vllm_64k.log` |
-| 8K context result | `evidence/week2_64k_context/results/week2_context_length_8k_on_64k_service.csv` |
-| 16K context result | `evidence/week2_64k_context/results/week2_context_length_16k_on_64k_service.csv` |
-| 32K context result | `evidence/week2_64k_context/results/week2_context_length_32k_on_64k_service.csv` |
-| 56K context result | `evidence/week2_64k_context/results/week2_context_length_64k_conservative_on_64k_service.csv` |
-| 61.9K near-limit result | `evidence/week2_64k_context/results/week2_context_length_64k_near_limit_on_64k_service.csv` |
-| Prefix cache repeat round 1 | `evidence/week2_64k_context/results/week2_context_repeat_r1_56k_then_64k.csv` |
-| Prefix cache repeat round 2 | `evidence/week2_64k_context/results/week2_context_repeat_r2_64k_then_56k.csv` |
-| Prefix cache repeat round 3 | `evidence/week2_64k_context/results/week2_context_repeat_r3_56k_then_64k.csv` |
-| Prefix cache before metrics | `evidence/week2_64k_context/results/week2_vllm_metrics_before_context_repeat_investigation.txt` |
-| Prefix cache after metrics | `evidence/week2_64k_context/results/week2_vllm_metrics_after_context_repeat_investigation.txt` |
-| GPU sampling log | `evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context.csv` |
-| 原始压缩证据包 | `artifacts/week2_64k_context_evidence_20260514_005638.tar.gz` |
+| 64K vLLM 启动日志 | [`evidence/week2_64k_context/logs/week2_seed_oss_vllm_launch_64k.log`](../evidence/week2_64k_context/logs/week2_seed_oss_vllm_launch_64k.log) |
+| 64K vLLM 启动关键行 | [`evidence/week2_64k_context/logs/week2_seed_oss_vllm_64k_key_startup_lines.txt`](../evidence/week2_64k_context/logs/week2_seed_oss_vllm_64k_key_startup_lines.txt) |
+| FastAPI 64K 日志 | [`evidence/week2_64k_context/logs/week2_fastapi_vllm_64k.log`](../evidence/week2_64k_context/logs/week2_fastapi_vllm_64k.log) |
+| 8K context result | [`evidence/week2_64k_context/results/week2_context_length_8k_on_64k_service.csv`](../evidence/week2_64k_context/results/week2_context_length_8k_on_64k_service.csv) |
+| 16K context result | [`evidence/week2_64k_context/results/week2_context_length_16k_on_64k_service.csv`](../evidence/week2_64k_context/results/week2_context_length_16k_on_64k_service.csv) |
+| 32K context result | [`evidence/week2_64k_context/results/week2_context_length_32k_on_64k_service.csv`](../evidence/week2_64k_context/results/week2_context_length_32k_on_64k_service.csv) |
+| 56K context result | [`evidence/week2_64k_context/results/week2_context_length_64k_conservative_on_64k_service.csv`](../evidence/week2_64k_context/results/week2_context_length_64k_conservative_on_64k_service.csv) |
+| 61.9K near-limit result | [`evidence/week2_64k_context/results/week2_context_length_64k_near_limit_on_64k_service.csv`](../evidence/week2_64k_context/results/week2_context_length_64k_near_limit_on_64k_service.csv) |
+| Prefix cache repeat round 1 | [`evidence/week2_64k_context/results/week2_context_repeat_r1_56k_then_64k.csv`](../evidence/week2_64k_context/results/week2_context_repeat_r1_56k_then_64k.csv) |
+| Prefix cache repeat round 2 | [`evidence/week2_64k_context/results/week2_context_repeat_r2_64k_then_56k.csv`](../evidence/week2_64k_context/results/week2_context_repeat_r2_64k_then_56k.csv) |
+| Prefix cache repeat round 3 | [`evidence/week2_64k_context/results/week2_context_repeat_r3_56k_then_64k.csv`](../evidence/week2_64k_context/results/week2_context_repeat_r3_56k_then_64k.csv) |
+| Prefix cache before metrics | [`evidence/week2_64k_context/results/week2_vllm_metrics_before_context_repeat_investigation.txt`](../evidence/week2_64k_context/results/week2_vllm_metrics_before_context_repeat_investigation.txt) |
+| Prefix cache after metrics | [`evidence/week2_64k_context/results/week2_vllm_metrics_after_context_repeat_investigation.txt`](../evidence/week2_64k_context/results/week2_vllm_metrics_after_context_repeat_investigation.txt) |
+| GPU sampling log | [`evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context.csv`](../evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context.csv) |
+| 原始压缩证据包 | [`artifacts/week2_64k_context_evidence_20260514_005638.tar.gz`](../artifacts/week2_64k_context_evidence_20260514_005638.tar.gz) |
 
 
 ### 6.6 报告图表索引
 
-本节实验图表已保存到 `figures/` 目录。图表使用原则如下：
+本节实验图表已保存到 [`figures/`](../figures) 目录。图表使用原则如下：
 
 - 并发性能图使用 1/2/4/8/16 concurrency 的真实 FastAPI + vLLM benchmark summary。
 - 长上下文趋势图只使用 first-pass/cold-ish 数据点：8K、16K、32K、56K。
@@ -422,16 +422,16 @@ vLLM 启动日志显示：
 
 | Figure | Path | Purpose |
 |---|---|---|
-| QPS vs concurrency | `figures/week2/concurrency/week2_qps_vs_concurrency_report.png` | 展示 concurrency 提升带来的吞吐提升 |
-| P50/P95 latency vs concurrency | `figures/week2/concurrency/week2_latency_p50_p95_vs_concurrency.png` | 展示并发增加下的尾延迟变化 |
-| Tokens/s vs concurrency | `figures/week2/concurrency/week2_tokens_per_second_vs_concurrency_report.png` | 展示单请求生成速率随并发变化的 trade-off |
-| Error rate vs concurrency | `figures/week2/concurrency/week2_error_rate_vs_concurrency_report.png` | 展示并发测试下 error rate 保持 0 |
-| Long-context latency first-pass | `figures/week2/context/week2_context_latency_first_pass_only.png` | 展示 8K/16K/32K/56K 首次长上下文 latency 趋势 |
-| Long-context tokens/s first-pass | `figures/week2/context/week2_context_tokens_per_second_first_pass_only.png` | 展示首次长上下文 tokens/s 下降趋势 |
-| Prefix cache repeat latency | `figures/week2/prefix_cache/week2_prefix_cache_repeat_latency.png` | 展示重复长文本请求在 prefix cache/warm state 下的 latency 变化 |
-| FP32 vs W8A8 QPS | `figures/week2/quantization/seed_oss_fp32_vs_w8a8_qps.png` | 展示 W8A8 量化 serving 相比 FP32 baseline 的吞吐提升 |
-| FP32 vs W8A8 P95 latency | `figures/week2/quantization/seed_oss_fp32_vs_w8a8_p95_latency.png` | 展示 W8A8 量化 serving 对尾延迟的改善 |
-| FP32 vs W8A8 output tokens/s | `figures/week2/quantization/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png` | 展示量化前后生成吞吐变化 |
+| QPS vs concurrency | [`figures/week2/concurrency/week2_qps_vs_concurrency_report.png`](../figures/week2/concurrency/week2_qps_vs_concurrency_report.png) | 展示 concurrency 提升带来的吞吐提升 |
+| P50/P95 latency vs concurrency | [`figures/week2/concurrency/week2_latency_p50_p95_vs_concurrency.png`](../figures/week2/concurrency/week2_latency_p50_p95_vs_concurrency.png) | 展示并发增加下的尾延迟变化 |
+| Tokens/s vs concurrency | [`figures/week2/concurrency/week2_tokens_per_second_vs_concurrency_report.png`](../figures/week2/concurrency/week2_tokens_per_second_vs_concurrency_report.png) | 展示单请求生成速率随并发变化的 trade-off |
+| Error rate vs concurrency | [`figures/week2/concurrency/week2_error_rate_vs_concurrency_report.png`](../figures/week2/concurrency/week2_error_rate_vs_concurrency_report.png) | 展示并发测试下 error rate 保持 0 |
+| Long-context latency first-pass | [`figures/week2/context/week2_context_latency_first_pass_only.png`](../figures/week2/context/week2_context_latency_first_pass_only.png) | 展示 8K/16K/32K/56K 首次长上下文 latency 趋势 |
+| Long-context tokens/s first-pass | [`figures/week2/context/week2_context_tokens_per_second_first_pass_only.png`](../figures/week2/context/week2_context_tokens_per_second_first_pass_only.png) | 展示首次长上下文 tokens/s 下降趋势 |
+| Prefix cache repeat latency | [`figures/week2/prefix_cache/week2_prefix_cache_repeat_latency.png`](../figures/week2/prefix_cache/week2_prefix_cache_repeat_latency.png) | 展示重复长文本请求在 prefix cache/warm state 下的 latency 变化 |
+| FP32 vs W8A8 QPS | [`figures/week2/quantization/seed_oss_fp32_vs_w8a8_qps.png`](../figures/week2/quantization/seed_oss_fp32_vs_w8a8_qps.png) | 展示 W8A8 量化 serving 相比 FP32 baseline 的吞吐提升 |
+| FP32 vs W8A8 P95 latency | [`figures/week2/quantization/seed_oss_fp32_vs_w8a8_p95_latency.png`](../figures/week2/quantization/seed_oss_fp32_vs_w8a8_p95_latency.png) | 展示 W8A8 量化 serving 对尾延迟的改善 |
+| FP32 vs W8A8 output tokens/s | [`figures/week2/quantization/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png`](../figures/week2/quantization/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png) | 展示量化前后生成吞吐变化 |
 
 
 ### 6.7 关键图表
@@ -505,7 +505,7 @@ W8A8 在所有并发设置下均提升 QPS 和 output tokens/s，提升范围约
 
 4. 量化优化方面，本阶段完成 FP32 baseline 与 W8A8 compressed-tensors serving 的同参数 batch-profile 对比。W8A8 将 QPS 与 output tokens/s 提升约 31.4% 到 126.1%，P95 latency 降低约 17.9% 到 58.4%，model loading memory 从 67.5901 GiB 降至 17.7109 GiB，下降约 73.8%。
 
-5. 监控与证据链方面，本周保存了 FastAPI health/metrics、vLLM `/metrics`、vLLM 启动日志、nvidia-smi 采样、benchmark CSV、图表和 evidence 压缩包。所有关键证据已归档到 `evidence/`、`artifacts/`、`results/` 和 `figures/` 目录，并提交到 GitHub。
+5. 监控与证据链方面，本周保存了 FastAPI health/metrics、vLLM `/metrics`、vLLM 启动日志、nvidia-smi 采样、benchmark CSV、图表和 evidence 压缩包。所有关键证据已归档到 [`evidence/`](../evidence)、[`artifacts/`](../artifacts)、[`results/`](../results) 和 [`figures/`](../figures) 目录，并提交到 GitHub。
 
 6. 工程局限方面，当前实验已完成 BF16 baseline、FP32 baseline、W8A8 compressed-tensors serving、FP32 vs W8A8 batch-profile 对比、并发测试、KV cache/prefix cache 分析、128K serving profile 边界验证、GSM8K full benchmark 和代码生成 mini eval。strict INT8 / AWQ / GPTQ 稳定 serving、FP8 KV cache、512K full-context 和 Seed-Coder 专项模型部署仍未完成。
 

@@ -103,9 +103,9 @@ Week2 已完成以下改进：
 | Prefix Cache 分析 | `docs/week2_prefix_cache_investigation_summary.md` |
 | 原始证据包 | `artifacts/week2_64k_context_evidence_20260514_005638.tar.gz` |
 
-## 8. 后续 GPU 实验计划
+## 8. 后续 GPU 验证路线
 
-如果后续继续申请或租用 GPU，应按照以下顺序推进，而不是直接盲目冲 512K：
+如果后续继续申请或租用 GPU，应按照以下顺序推进，避免直接跳到 512K 导致资源浪费或证据不可解释：
 
 1. 在当前代码基础上尝试 `max_model_len=131072`，记录启动是否成功、KV cache size、显存占用和失败日志；
 2. 如果 128K 成功，再尝试 256K；

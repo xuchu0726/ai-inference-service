@@ -44,10 +44,10 @@ FP32 vLLM 启动日志显示：
 
 对应 evidence：
 
-- `logs/new_2xa100_seed_oss_fp32_vllm_launch_20260528.log`
-- `logs/new_2xa100_seed_oss_fp32_final_inventory_20260528.txt`
-- `results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528.csv`
-- `results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528_summary.csv`
+- [`logs/new_2xa100_seed_oss_fp32_vllm_launch_20260528.log`](../logs/new_2xa100_seed_oss_fp32_vllm_launch_20260528.log)
+- [`logs/new_2xa100_seed_oss_fp32_final_inventory_20260528.txt`](../logs/new_2xa100_seed_oss_fp32_final_inventory_20260528.txt)
+- [`results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528.csv`](../results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528.csv)
+- [`results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528_summary.csv`](../results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528_summary.csv)
 
 ## 4. W8A8 compressed-tensors 离线量化与 Serving
 
@@ -64,12 +64,12 @@ W8A8 vLLM 启动日志显示：
 
 对应 evidence：
 
-- `logs/new_2xa100_seed_oss_w8a8_offline_quantization_success_inventory_20260528.txt`
-- `logs/new_2xa100_seed_oss_w8a8_vllm_launch_20260528.log`
-- `logs/new_2xa100_seed_oss_w8a8_ready_evidence_20260528.txt`
-- `results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528.csv`
-- `results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528_summary.csv`
-- `results/quantized_model_metadata/seed_oss_36b_w8a8/`
+- [`logs/new_2xa100_seed_oss_w8a8_offline_quantization_success_inventory_20260528.txt`](../logs/new_2xa100_seed_oss_w8a8_offline_quantization_success_inventory_20260528.txt)
+- [`logs/new_2xa100_seed_oss_w8a8_vllm_launch_20260528.log`](../logs/new_2xa100_seed_oss_w8a8_vllm_launch_20260528.log)
+- [`logs/new_2xa100_seed_oss_w8a8_ready_evidence_20260528.txt`](../logs/new_2xa100_seed_oss_w8a8_ready_evidence_20260528.txt)
+- [`results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528.csv`](../results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528.csv)
+- [`results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528_summary.csv`](../results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528_summary.csv)
+- [`results/quantized_model_metadata/seed_oss_36b_w8a8/`](../results/quantized_model_metadata/seed_oss_36b_w8a8)
 
 ## 5. FP32 vs W8A8 性能对比
 
@@ -99,10 +99,10 @@ W8A8 在 concurrency=1/2/4/8/16 下均带来 QPS 和 output tokens/s 提升，�
 
 对应 evidence：
 
-- `results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv`
-- `figures/week2/quantization/seed_oss_fp32_vs_w8a8_qps.png`
-- `figures/week2/quantization/seed_oss_fp32_vs_w8a8_p95_latency.png`
-- `figures/week2/quantization/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png`
+- [`results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv`](../results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv)
+- [`figures/week2/quantization/seed_oss_fp32_vs_w8a8_qps.png`](../figures/week2/quantization/seed_oss_fp32_vs_w8a8_qps.png)
+- [`figures/week2/quantization/seed_oss_fp32_vs_w8a8_p95_latency.png`](../figures/week2/quantization/seed_oss_fp32_vs_w8a8_p95_latency.png)
+- [`figures/week2/quantization/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png`](../figures/week2/quantization/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png)
 
 ## 6. 显存收益分析
 
@@ -146,11 +146,11 @@ W8A8 的主要显存收益体现在模型权重加载显存下降和 KV cache he
 
 对应 evidence：
 
-- `logs/new_2xa100_seed_oss_strict_int8_root_cause_probe_20260528.txt`
-- `logs/new_2xa100_seed_oss_bnb_int8_final_evidence_20260528.txt`
-- `logs/new_2xa100_seed_oss_compressed_tensors_int8_failure_summary_20260528.txt`
-- `logs/new_2xa100_seed_oss_inc_int8_failure_summary_20260528.txt`
-- `logs/new_2xa100_seed_oss_quantization_process_appendix_20260528.txt`
+- [`logs/new_2xa100_seed_oss_strict_int8_root_cause_probe_20260528.txt`](../logs/new_2xa100_seed_oss_strict_int8_root_cause_probe_20260528.txt)
+- [`logs/new_2xa100_seed_oss_bnb_int8_final_evidence_20260528.txt`](../logs/new_2xa100_seed_oss_bnb_int8_final_evidence_20260528.txt)
+- [`logs/new_2xa100_seed_oss_compressed_tensors_int8_failure_summary_20260528.txt`](../logs/new_2xa100_seed_oss_compressed_tensors_int8_failure_summary_20260528.txt)
+- [`logs/new_2xa100_seed_oss_inc_int8_failure_summary_20260528.txt`](../logs/new_2xa100_seed_oss_inc_int8_failure_summary_20260528.txt)
+- [`logs/new_2xa100_seed_oss_quantization_process_appendix_20260528.txt`](../logs/new_2xa100_seed_oss_quantization_process_appendix_20260528.txt)
 
 ## 8. 与优化指标的对应关系
 
@@ -168,17 +168,17 @@ W8A8 的主要显存收益体现在模型权重加载显存下降和 KV cache he
 
 | Evidence | Path |
 |---|---|
-| FP32 vLLM launch log | `logs/new_2xa100_seed_oss_fp32_vllm_launch_20260528.log` |
-| W8A8 vLLM launch log | `logs/new_2xa100_seed_oss_w8a8_vllm_launch_20260528.log` |
-| W8A8 offline quantization inventory | `logs/new_2xa100_seed_oss_w8a8_offline_quantization_success_inventory_20260528.txt` |
-| FP32 summary CSV | `results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528_summary.csv` |
-| W8A8 summary CSV | `results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528_summary.csv` |
-| FP32 vs W8A8 improvement CSV | `results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv` |
-| QPS figure | `figures/week2/quantization/seed_oss_fp32_vs_w8a8_qps.png` |
-| P95 latency figure | `figures/week2/quantization/seed_oss_fp32_vs_w8a8_p95_latency.png` |
-| output tokens/s figure | `figures/week2/quantization/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png` |
-| strict INT8 root-cause probe | `logs/new_2xa100_seed_oss_strict_int8_root_cause_probe_20260528.txt` |
-| quantization process appendix | `logs/new_2xa100_seed_oss_quantization_process_appendix_20260528.txt` |
+| FP32 vLLM launch log | [`logs/new_2xa100_seed_oss_fp32_vllm_launch_20260528.log`](../logs/new_2xa100_seed_oss_fp32_vllm_launch_20260528.log) |
+| W8A8 vLLM launch log | [`logs/new_2xa100_seed_oss_w8a8_vllm_launch_20260528.log`](../logs/new_2xa100_seed_oss_w8a8_vllm_launch_20260528.log) |
+| W8A8 offline quantization inventory | [`logs/new_2xa100_seed_oss_w8a8_offline_quantization_success_inventory_20260528.txt`](../logs/new_2xa100_seed_oss_w8a8_offline_quantization_success_inventory_20260528.txt) |
+| FP32 summary CSV | [`results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528_summary.csv`](../results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528_summary.csv) |
+| W8A8 summary CSV | [`results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528_summary.csv`](../results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528_summary.csv) |
+| FP32 vs W8A8 improvement CSV | [`results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv`](../results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv) |
+| QPS figure | [`figures/week2/quantization/seed_oss_fp32_vs_w8a8_qps.png`](../figures/week2/quantization/seed_oss_fp32_vs_w8a8_qps.png) |
+| P95 latency figure | [`figures/week2/quantization/seed_oss_fp32_vs_w8a8_p95_latency.png`](../figures/week2/quantization/seed_oss_fp32_vs_w8a8_p95_latency.png) |
+| output tokens/s figure | [`figures/week2/quantization/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png`](../figures/week2/quantization/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png) |
+| strict INT8 root-cause probe | [`logs/new_2xa100_seed_oss_strict_int8_root_cause_probe_20260528.txt`](../logs/new_2xa100_seed_oss_strict_int8_root_cause_probe_20260528.txt) |
+| quantization process appendix | [`logs/new_2xa100_seed_oss_quantization_process_appendix_20260528.txt`](../logs/new_2xa100_seed_oss_quantization_process_appendix_20260528.txt) |
 
 ## 10. 阶段结论
 

@@ -53,9 +53,9 @@ FastAPI 已接入 Prometheus metrics，主要指标包括：
 
 | Evidence | Path |
 |---|---|
-| FastAPI 64K metrics head | `evidence/week2_64k_context/results/week2_fastapi_64k_metrics_head.txt` |
-| FastAPI 64K health | `evidence/week2_64k_context/results/week2_fastapi_64k_health.json` |
-| FastAPI 64K log | `evidence/week2_64k_context/logs/week2_fastapi_vllm_64k.log` |
+| FastAPI 64K metrics head | [`evidence/week2_64k_context/results/week2_fastapi_64k_metrics_head.txt`](../evidence/week2_64k_context/results/week2_fastapi_64k_metrics_head.txt) |
+| FastAPI 64K health | [`evidence/week2_64k_context/results/week2_fastapi_64k_health.json`](../evidence/week2_64k_context/results/week2_fastapi_64k_health.json) |
+| FastAPI 64K log | [`evidence/week2_64k_context/logs/week2_fastapi_vllm_64k.log`](../evidence/week2_64k_context/logs/week2_fastapi_vllm_64k.log) |
 
 ### 3.2 vLLM Metrics
 
@@ -76,14 +76,14 @@ vLLM 已暴露 Prometheus metrics，主要指标包括：
 
 | Evidence | Path |
 |---|---|
-| vLLM 64K metrics head | `evidence/week2_64k_context/results/week2_seed_oss_vllm_64k_metrics_head.txt` |
-| vLLM 64K metrics after smoke | `evidence/week2_64k_context/results/week2_vllm_64k_metrics_snapshot_after_smoke.txt` |
-| vLLM metrics after 16K | `evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_16k_on_64k_service.txt` |
-| vLLM metrics after 32K | `evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_32k_on_64k_service.txt` |
-| vLLM metrics after 64K conservative | `evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_64k_conservative_on_64k_service.txt` |
-| vLLM metrics after 64K near-limit | `evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_64k_near_limit_on_64k_service.txt` |
-| Prefix cache before repeat | `evidence/week2_64k_context/results/week2_vllm_metrics_before_context_repeat_investigation.txt` |
-| Prefix cache after repeat | `evidence/week2_64k_context/results/week2_vllm_metrics_after_context_repeat_investigation.txt` |
+| vLLM 64K metrics head | [`evidence/week2_64k_context/results/week2_seed_oss_vllm_64k_metrics_head.txt`](../evidence/week2_64k_context/results/week2_seed_oss_vllm_64k_metrics_head.txt) |
+| vLLM 64K metrics after smoke | [`evidence/week2_64k_context/results/week2_vllm_64k_metrics_snapshot_after_smoke.txt`](../evidence/week2_64k_context/results/week2_vllm_64k_metrics_snapshot_after_smoke.txt) |
+| vLLM metrics after 16K | [`evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_16k_on_64k_service.txt`](../evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_16k_on_64k_service.txt) |
+| vLLM metrics after 32K | [`evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_32k_on_64k_service.txt`](../evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_32k_on_64k_service.txt) |
+| vLLM metrics after 64K conservative | [`evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_64k_conservative_on_64k_service.txt`](../evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_64k_conservative_on_64k_service.txt) |
+| vLLM metrics after 64K near-limit | [`evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_64k_near_limit_on_64k_service.txt`](../evidence/week2_64k_context/results/week2_vllm_metrics_snapshot_after_context_64k_near_limit_on_64k_service.txt) |
+| Prefix cache before repeat | [`evidence/week2_64k_context/results/week2_vllm_metrics_before_context_repeat_investigation.txt`](../evidence/week2_64k_context/results/week2_vllm_metrics_before_context_repeat_investigation.txt) |
+| Prefix cache after repeat | [`evidence/week2_64k_context/results/week2_vllm_metrics_after_context_repeat_investigation.txt`](../evidence/week2_64k_context/results/week2_vllm_metrics_after_context_repeat_investigation.txt) |
 
 ## 4. GPU 资源监控
 
@@ -104,12 +104,12 @@ vLLM 已暴露 Prometheus metrics，主要指标包括：
 
 | Evidence | Path |
 |---|---|
-| GPU after 64K startup | `evidence/week2_64k_context/logs/week2_nvidia_smi_after_vllm_64k_startup.txt` |
-| GPU after 64K smoke | `evidence/week2_64k_context/logs/week2_nvidia_smi_after_fastapi_64k_smoke.txt` |
-| GPU after 16K context | `evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_16k_on_64k_service.txt` |
-| GPU after 32K context | `evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_32k_on_64k_service.txt` |
-| GPU after 64K conservative | `evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_64k_conservative_on_64k_service.txt` |
-| GPU after 64K near-limit | `evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_64k_near_limit_on_64k_service.txt` |
+| GPU after 64K startup | [`evidence/week2_64k_context/logs/week2_nvidia_smi_after_vllm_64k_startup.txt`](../evidence/week2_64k_context/logs/week2_nvidia_smi_after_vllm_64k_startup.txt) |
+| GPU after 64K smoke | [`evidence/week2_64k_context/logs/week2_nvidia_smi_after_fastapi_64k_smoke.txt`](../evidence/week2_64k_context/logs/week2_nvidia_smi_after_fastapi_64k_smoke.txt) |
+| GPU after 16K context | [`evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_16k_on_64k_service.txt`](../evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_16k_on_64k_service.txt) |
+| GPU after 32K context | [`evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_32k_on_64k_service.txt`](../evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_32k_on_64k_service.txt) |
+| GPU after 64K conservative | [`evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_64k_conservative_on_64k_service.txt`](../evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_64k_conservative_on_64k_service.txt) |
+| GPU after 64K near-limit | [`evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_64k_near_limit_on_64k_service.txt`](../evidence/week2_64k_context/logs/week2_nvidia_smi_after_context_64k_near_limit_on_64k_service.txt) |
 
 ### 4.2 nvidia-smi Sampling
 
@@ -117,10 +117,10 @@ vLLM 已暴露 Prometheus metrics，主要指标包括：
 
 | Evidence | Path |
 |---|---|
-| Week2 GPU sampling | `evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context.csv` |
-| Tail after 32K | `evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context_tail_after_32k.txt` |
-| Tail after 64K conservative | `evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context_tail_after_64k_conservative.txt` |
-| Tail after 64K near-limit | `evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context_tail_after_64k_near_limit.txt` |
+| Week2 GPU sampling | [`evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context.csv`](../evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context.csv) |
+| Tail after 32K | [`evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context_tail_after_32k.txt`](../evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context_tail_after_32k.txt) |
+| Tail after 64K conservative | [`evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context_tail_after_64k_conservative.txt`](../evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context_tail_after_64k_conservative.txt) |
+| Tail after 64K near-limit | [`evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context_tail_after_64k_near_limit.txt`](../evidence/week2_64k_context/logs/week2_nvidia_smi_sampling_64k_context_tail_after_64k_near_limit.txt) |
 
 该采样用于观察长上下文请求期间 GPU utilization 和 memory usage 的变化。
 
@@ -185,7 +185,7 @@ Dashboard 覆盖以下面板：
 | vLLM Prefix Cache Queries / Hits | `rate(vllm:prefix_cache_queries_total[1m])`, `rate(vllm:prefix_cache_hits_total[1m])` |
 | vLLM Prompt / Generation Tokens | `rate(vllm:prompt_tokens_total[1m])`, `rate(vllm:generation_tokens_total[1m])` |
 
-当前 dashboard JSON 已通过 `python -m json.tool` 格式校验，并已保存一次 Grafana live load probe 截图作为实机导入与负载观测证据：`figures/week2/observability/week2_grafana_seed_oss_live_load_probe.png`。
+当前 dashboard JSON 已通过 `python -m json.tool` 格式校验，并已保存一次 Grafana live load probe 截图作为实机导入与负载观测证据：[`figures/week2/observability/week2_grafana_seed_oss_live_load_probe.png`](../figures/week2/observability/week2_grafana_seed_oss_live_load_probe.png)。
 
 ## 7. 资源瓶颈分析
 
@@ -208,7 +208,7 @@ GPU KV cache size: 290,448 tokens
 Maximum concurrency for 65,536 tokens per request: 4.43x
 ```
 
-该结果说明当前资源可以支撑 64K 级别长上下文服务，但对于 512K 单请求仍缺少 KV cache token capacity。该问题已在 `docs/week2_512k_feasibility_and_resource_analysis.md` 中单独分析。
+该结果说明当前资源可以支撑 64K 级别长上下文服务，但对于 512K 单请求仍缺少 KV cache token capacity。该问题已在 [`docs/week2_512k_feasibility_and_resource_analysis.md`](../docs/week2_512k_feasibility_and_resource_analysis.md) 中单独分析。
 
 ### 7.2 计算利用率
 
@@ -286,9 +286,9 @@ Week2 要求使用 Prometheus + Grafana 分析 GPU 利用率和内存瓶颈。�
 
 | 场景 | GPU snapshot | vLLM metrics | FastAPI metrics |
 |---|---|---|---|
-| GSM8K full benchmark | `logs/week2_nvidia_smi_after_gsm8k_full_budget0.txt` | `results/week2_vllm_metrics_after_gsm8k_full_budget0.txt` | `results/week2_fastapi_metrics_after_gsm8k_full_budget0.txt` |
-| Codegen mini eval | `logs/week2_nvidia_smi_after_codegen_mini_budget0.txt` | `results/week2_vllm_metrics_after_codegen_mini_budget0.txt` | `results/week2_fastapi_metrics_after_codegen_mini_budget0.txt` |
-| Dynamic batch sweep | `logs/week2_nvidia_smi_after_dynamic_batch_sweep.txt` | `results/week2_vllm_metrics_after_dynamic_batch_sweep.txt` | `results/week2_fastapi_metrics_after_dynamic_batch_sweep.txt` |
+| GSM8K full benchmark | [`logs/week2_nvidia_smi_after_gsm8k_full_budget0.txt`](../logs/week2_nvidia_smi_after_gsm8k_full_budget0.txt) | [`results/week2_vllm_metrics_after_gsm8k_full_budget0.txt`](../results/week2_vllm_metrics_after_gsm8k_full_budget0.txt) | [`results/week2_fastapi_metrics_after_gsm8k_full_budget0.txt`](../results/week2_fastapi_metrics_after_gsm8k_full_budget0.txt) |
+| Codegen mini eval | [`logs/week2_nvidia_smi_after_codegen_mini_budget0.txt`](../logs/week2_nvidia_smi_after_codegen_mini_budget0.txt) | [`results/week2_vllm_metrics_after_codegen_mini_budget0.txt`](../results/week2_vllm_metrics_after_codegen_mini_budget0.txt) | [`results/week2_fastapi_metrics_after_codegen_mini_budget0.txt`](../results/week2_fastapi_metrics_after_codegen_mini_budget0.txt) |
+| Dynamic batch sweep | [`logs/week2_nvidia_smi_after_dynamic_batch_sweep.txt`](../logs/week2_nvidia_smi_after_dynamic_batch_sweep.txt) | [`results/week2_vllm_metrics_after_dynamic_batch_sweep.txt`](../results/week2_vllm_metrics_after_dynamic_batch_sweep.txt) | [`results/week2_fastapi_metrics_after_dynamic_batch_sweep.txt`](../results/week2_fastapi_metrics_after_dynamic_batch_sweep.txt) |
 
 这些文件用于证明每轮关键实验之后都保存了 GPU、vLLM 和 FastAPI 层面的状态快照，避免只保留 benchmark CSV 而缺少系统侧证据。
 

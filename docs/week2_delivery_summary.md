@@ -61,10 +61,10 @@
 
 Evidence：
 
-- `docs/week2/seed_oss_128k_context_boundary_review.md`
-- `results/new_2xa100_seed_oss_128k_conservative_context_test_20260529.csv`
-- `results/new_2xa100_seed_oss_128k_near_limit_context_test_20260529.csv`
-- `results/new_2xa100_seed_oss_128k_over_limit_context_test_20260529.csv`
+- [`docs/week2/seed_oss_128k_context_boundary_review.md`](../docs/week2/seed_oss_128k_context_boundary_review.md)
+- [`results/new_2xa100_seed_oss_128k_conservative_context_test_20260529.csv`](../results/new_2xa100_seed_oss_128k_conservative_context_test_20260529.csv)
+- [`results/new_2xa100_seed_oss_128k_near_limit_context_test_20260529.csv`](../results/new_2xa100_seed_oss_128k_near_limit_context_test_20260529.csv)
+- [`results/new_2xa100_seed_oss_128k_over_limit_context_test_20260529.csv`](../results/new_2xa100_seed_oss_128k_over_limit_context_test_20260529.csv)
 
 ### 3.4 Prefix Cache 复测
 
@@ -112,9 +112,9 @@ Evidence：
 
 Evidence：
 
-- `docs/week2_quantization_feasibility_report.md`
-- `docs/week2_requirement_compliance_matrix.md`
-- `results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv`
+- [`docs/week2_quantization_feasibility_report.md`](../docs/week2_quantization_feasibility_report.md)
+- [`docs/week2_requirement_compliance_matrix.md`](../docs/week2_requirement_compliance_matrix.md)
+- [`results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv`](../results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv)
 
 ### 3.7 可观测性与监控证据
 
@@ -131,10 +131,10 @@ Evidence：
 
 Evidence：
 
-- `docs/week2_observability_report.md`
-- `deployment/monitoring/prometheus_week2.yml`
-- `deployment/monitoring/grafana_week2_seed_oss_dashboard.json`
-- `figures/week2/observability/week2_grafana_seed_oss_live_load_probe.png`
+- [`docs/week2_observability_report.md`](../docs/week2_observability_report.md)
+- [`deployment/monitoring/prometheus_week2.yml`](../deployment/monitoring/prometheus_week2.yml)
+- [`deployment/monitoring/grafana_week2_seed_oss_dashboard.json`](../deployment/monitoring/grafana_week2_seed_oss_dashboard.json)
+- [`figures/week2/observability/week2_grafana_seed_oss_live_load_probe.png`](../figures/week2/observability/week2_grafana_seed_oss_live_load_probe.png)
 
 ### 3.8 GSM8K 全量评测
 
@@ -158,8 +158,8 @@ Evidence：
 
 Evidence：
 
-- `results/week2_gsm8k_full_seed_oss_budget0_summary.csv`
-- `artifacts/week2_seed_oss_gsm8k_codegen_dynamic_batch_evidence_20260518_042845.tar.gz`
+- [`results/week2_gsm8k_full_seed_oss_budget0_summary.csv`](../results/week2_gsm8k_full_seed_oss_budget0_summary.csv)
+- [`artifacts/week2_seed_oss_gsm8k_codegen_dynamic_batch_evidence_20260518_042845.tar.gz`](../artifacts/week2_seed_oss_gsm8k_codegen_dynamic_batch_evidence_20260518_042845.tar.gz)
 
 ### 3.9 代码生成 Mini Eval
 
@@ -177,7 +177,7 @@ Evidence：
 
 Evidence：
 
-- `results/week2_codegen_mini_seed_oss_budget0.csv`
+- [`results/week2_codegen_mini_seed_oss_budget0.csv`](../results/week2_codegen_mini_seed_oss_budget0.csv)
 
 ## 4. 关键产物路径
 
