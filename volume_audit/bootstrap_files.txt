@@ -1,2 +1,0 @@
-ai_inference_env_bootstrap_20260525/logs/.ipynb_checkpoints/new_runpod_env_probe_20260525-checkpoint.txt
-ai_inference_env_bootstrap_20260525/logs/new_runpod_env_probe_20260525.txt
