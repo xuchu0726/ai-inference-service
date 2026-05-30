@@ -154,7 +154,7 @@ Evidence：
 | Average tokens/s | 38.30 |
 | Average output tokens | 206.77 |
 
-该结果说明当前服务已经不只是 smoke test，而是具备真实任务级评测结果。GSM8K full benchmark 为 Seed-OSS-36B-Instruct 的数学推理能力、服务稳定性和端到端延迟提供了可量化基线。
+该实验基于 GSM8K test set 完成 1319 条样本的端到端评测，覆盖 API 稳定性、答案正确率、端到端延迟和生成吞吐等指标。结果可作为 Seed-OSS-36B-Instruct 在数学推理场景下的任务级性能基线。
 
 Evidence：
 

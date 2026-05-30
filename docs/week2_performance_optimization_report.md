@@ -483,7 +483,7 @@ W8A8 在所有并发设置下均提升 QPS 和 output tokens/s，提升范围约
 
 | 风险 | 影响 | 处理策略 |
 |---|---|---|
-| strict INT8 / AWQ / GPTQ 路径未稳定服务化 | 不能将其表述为最终稳定 serving 闭环 | 保留兼容性探测和失败边界，最终采用已跑通的 FP32 vs W8A8 compressed-tensors 量化闭环 |
+| strict INT8 / AWQ / GPTQ 路径未稳定服务化 | 本阶段不作为最终稳定 serving 闭环 | 保留兼容性探测和失败边界，最终采用已跑通的 FP32 vs W8A8 compressed-tensors 量化闭环 |
 | 32K/64K OOM | 长上下文实验失败 | 保留 OOM 边界，降低 context length |
 | 高并发 timeout | benchmark 失败率上升 | 保留失败样本，降低 concurrency 或增加 timeout |
 | Grafana 长期监控留存不足 | 不能证明长时间生产级监控稳定性 | 当前已保存 Prometheus 配置、Grafana dashboard JSON 和 live load probe evidence；长期 TSDB 留存不作为本阶段完成项 |
