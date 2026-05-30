@@ -43,7 +43,7 @@
 | `evidence/` | 阶段性冻结证据快照 | 不轻易拆分或删除 |
 | `artifacts/` | 压缩证据包和归档包 | 保存重要阶段的整体 evidence bundle |
 
-这些目录存在一定重复，是因为部分文件既在顶层 `logs/results` 中用于当前报告引用，也在 `evidence/` 中作为阶段冻结快照保存。后续不应直接删除重复项，应先确认正式文档引用和 evidence freeze 关系。
+这些目录存在一定重复，是因为部分文件既在顶层 `logs/` 与 `results/` 中用于当前报告引用，也在 `evidence/` 中作为阶段冻结快照保存。后续不应直接删除重复项，应先确认正式文档引用和 evidence freeze 关系。
 
 ## 4. Week2 图表结构
 
@@ -58,7 +58,7 @@ Week2 图表统一保存在 `figures/week2/`。
 | `figures/week2/quantization/` | FP32 vs W8A8 量化对比图 |
 | `figures/week2/observability/` | Grafana / monitoring 相关截图 |
 
-后续新增 Week2 图表应继续放入对应子目录，不再放入 `figures/` 根目录或 `results/figures/`。
+后续新增 Week2 图表应继续放入对应子目录，不再放入 `figures/` 根目录或 `figures/week2/`。
 
 ## 5. 外部资源与恢复记录
 
@@ -87,10 +87,10 @@ Week2 图表统一保存在 `figures/week2/`。
 ## 7. 后续文件管理规则
 
 1. 新增正式文档放入 `docs/`。
-2. 新增 Week2 图表放入 `figures/week2/<topic>/`。
+2. 新增 Week2 图表放入 `figures/week2/batch_tokens/`、`figures/week2/concurrency/`、`figures/week2/context/`、`figures/week2/quantization/` 等图表子目录。
 3. 新增结构化实验结果放入 `results/`，文件名必须包含实验阶段、模型、配置或日期。
 4. 新增原始运行日志放入 `logs/`，文件名必须能看出实验主题和日期。
-5. 阶段性证据冻结可以放入 `evidence/<stage>/`，但不要随意复制整个仓库。
+5. 阶段性证据冻结可以放入 `evidence/week2_64k_context/` 等阶段性证据目录，但不要随意复制整个仓库。
 6. 大文件、模型权重和完整 checkpoint 不进入 Git，只保存 metadata、配置、日志和必要索引。
 7. 正式文档中引用的路径不要随意移动；如需移动，必须同步更新所有文档链接并做 stale path check。
 
