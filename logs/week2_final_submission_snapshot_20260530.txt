@@ -1,0 +1,71 @@
+===== Week2 final submission snapshot =====
+2026年 5月30日 星期六 18时52分25秒 BST
+
+===== Git status =====
+?? logs/week2_final_submission_snapshot_20260530.txt
+## main...origin/main
+?? logs/week2_final_submission_snapshot_20260530.txt
+
+===== Latest commits =====
+f6e688d 规范 Week2 文档链接与正式表述
+6369b6f 清理 Week2 验收矩阵结论标题
+d3bf180 整理 Week2 图表目录结构
+55e7ba1 清理 Week2 正式文档内部提示口吻
+781dc09 完善 Week2 正式文档图表引用与边界表述
+a6873c4 整理 Week2 核心交付文档与量化实验报告
+72f4d12 清理 Week2 运行时文件并同步最新实验结论
+b079979 记录释放 CPU Pod 前最终文件核查
+eb27447 记录 Week2 最终报告数据源清单
+520046c 补充 Seed-OSS 128K 长上下文实验复盘
+
+===== Core Week2 documents =====
+OK      README.md
+OK      docs/week2_delivery_summary.md
+OK      docs/week2_requirement_compliance_matrix.md
+OK      docs/week2_performance_optimization_report.md
+OK      docs/week2_quantization_feasibility_report.md
+OK      docs/week2_batch_token_tuning_report.md
+OK      docs/week2_observability_report.md
+OK      docs/week2_eval_mini_report.md
+OK      docs/week2/seed_oss_128k_context_boundary_review.md
+OK      docs/week2_512k_feasibility_and_resource_analysis.md
+OK      docs/troubleshooting_faq.md
+OK      docs/api_error_codes.md
+
+===== Core Week2 figures =====
+figures/week2/batch_tokens/week2_batch_tokens_long_c4_latency_boxplot.png
+figures/week2/batch_tokens/week2_batch_tokens_long_c4_p95.png
+figures/week2/batch_tokens/week2_batch_tokens_long_c4_qps.png
+figures/week2/batch_tokens/week2_batch_tokens_profile_decision.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c4_p95.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c4_qps.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_first_wave_latency.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_latency_boxplot.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_latency_scatter.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_p95.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_qps.png
+figures/week2/batch_tokens/week2_batch_tokens_short_c8_wave_latency.png
+figures/week2/batch_tokens/week2_batch_tokens_tokens_per_second_boxplot.png
+figures/week2/batch_tokens/week2_batch_tokens_workload_p95_summary.png
+figures/week2/batch_tokens/week2_batch_tokens_workload_qps_summary.png
+figures/week2/concurrency/week2_error_rate_vs_concurrency_report.png
+figures/week2/concurrency/week2_latency_p50_p95_vs_concurrency.png
+figures/week2/concurrency/week2_qps_vs_concurrency_report.png
+figures/week2/concurrency/week2_tokens_per_second_vs_concurrency_report.png
+figures/week2/context/week2_context_latency_first_pass_only.png
+figures/week2/context/week2_context_tokens_per_second_first_pass_only.png
+figures/week2/observability/week2_grafana_seed_oss_live_load_probe.png
+figures/week2/prefix_cache/week2_prefix_cache_repeat_latency.png
+figures/week2/quantization/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png
+figures/week2/quantization/seed_oss_fp32_vs_w8a8_p95_latency.png
+figures/week2/quantization/seed_oss_fp32_vs_w8a8_qps.png
+
+===== Core Week2 result files =====
+OK      results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv
+OK      results/week2_gsm8k_full_seed_oss_budget0_summary.csv
+OK      results/week2_codegen_mini_seed_oss_budget0.csv
+OK      results/week2_context_gradient_summary.csv
+OK      results/new_2xa100_seed_oss_128k_conservative_context_test_20260529.csv
+OK      results/new_2xa100_seed_oss_128k_near_limit_context_test_20260529.csv
+OK      results/new_2xa100_seed_oss_128k_over_limit_context_test_20260529.csv
+OK      results/week2_batch_tokens_workload_summary_20260525.csv
