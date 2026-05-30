@@ -98,6 +98,6 @@
 5. 显存收益主要体现为 model loading memory 下降、available KV cache memory 增加和 concurrency headroom 扩大，而不是运行时 GPU 总显存占用同比下降；
 6. W8A8 compressed-tensors 是本阶段稳定可复现的 8-bit 权重量化 serving 路线，AWQ、GPTQ 和 FP8 KV cache 仍作为后续优化方向。
 
-## 6. 推荐最终表述
+## 6. 阶段结论
 
 本阶段完成了 Seed-OSS-36B-Instruct 在 2×A100-SXM4-80GB 环境下的 FP32 baseline 与 W8A8 compressed-tensors 量化 serving 对比。实验显示，在相同 batch serving 参数下，W8A8 在 concurrency=1/2/4/8/16 时带来约 31.4% 到 126.1% 的 QPS 与 output tokens/s 提升；模型加载显存由 67.5901 GiB 降至 17.7109 GiB，下降约 73.8%。由于 vLLM 会将释放出的显存用于更大的 KV cache，运行时 GPU 总显存占用没有按同等比例下降，因此本实验将显存收益解释为模型权重加载显存降低和 KV cache/concurrency headroom 提升，而不是简单的总显存下降。strict INT8 相关路径，包括 bitsandbytes、INC 和 compressed-tensors INT8，均已进行可行性探测和失败边界记录，最终选择 W8A8 compressed-tensors 作为稳定、可复现的 8-bit serving 路径。
