@@ -181,7 +181,7 @@ vLLM metrics 快照命令示例：
 | 128K near-limit | 130,608 | 200 / success | 10.089885 | 成功逼近 131,072 token 上限，但受 prefix cache / warm state 影响 |
 | 128K over-limit | 134,991 | 400 / rejected | 0.191030 | 超过上下文上限后被 vLLM 明确拒绝，系统没有 OOM 或崩溃 |
 
-需要说明的是，512K full-context 仍未完成实机验证。当前项目已经从 Week1 的 4K 基线推进到 64K 梯度测试和 128K 边界验证，但 512K 单请求仍需要更多 GPU、KV cache compression、FP8 KV cache 或更强资源配置支撑，不能写成已完成。
+需要说明的是，512K full-context 仍未完成实机验证。当前项目已经从 Week1 的 4K 基线推进到 64K 梯度测试和 128K 边界验证，但 512K 单请求仍需要更多 GPU、KV cache compression、FP8 KV cache 或更强资源配置支撑，因此本阶段只作为后续资源验证方向。
 
 ---
 
@@ -211,7 +211,7 @@ vLLM metrics 快照命令示例：
 | BF16 baseline | 已完成 | 已完成真实部署、长上下文、并发、GSM8K full 和 codegen mini eval | 当前主基线 |
 | FP32 serving | 已完成 | 已完成 2×A100-SXM4-80GB 下的 FP32 baseline serving、smoke test 和 batch-profile benchmark | 作为 W8A8 对照基线 |
 | W8A8 compressed-tensors | 已完成 | 已完成离线量化、vLLM serving、smoke test 和同参数 batch-profile 对比 | 当前稳定可复现的 8-bit 权重量化路径 |
-| strict INT8 / AWQ / GPTQ | 部分完成 / 有边界 | bitsandbytes INT8、INC INT8、compressed-tensors strict INT8 均已做可行性探测和失败边界记录，但没有形成最终稳定 serving | 不能包装为 plain INT8 全部完成 |
+| strict INT8 / AWQ / GPTQ | 部分完成 / 有边界 | bitsandbytes INT8、INC INT8、compressed-tensors strict INT8 均已做可行性探测和失败边界记录，但没有形成最终稳定 serving | 本阶段不作为最终量化闭环 |
 | FP8 KV Cache | 未完成 | 与长上下文 KV cache 显存优化强相关 | 后续优先级较高 |
 
 ---
@@ -327,6 +327,9 @@ vLLM metrics 快照命令示例：
     figures/week2_context_latency_first_pass_only.png
     figures/week2_context_tokens_per_second_first_pass_only.png
     figures/week2_prefix_cache_repeat_latency.png
+    results/figures/seed_oss_fp32_vs_w8a8_qps.png
+    results/figures/seed_oss_fp32_vs_w8a8_p95_latency.png
+    results/figures/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png
 
 ---
 
@@ -426,6 +429,9 @@ vLLM 启动日志显示：
 | Long-context latency first-pass | `figures/week2_context_latency_first_pass_only.png` | 展示 8K/16K/32K/56K 首次长上下文 latency 趋势 |
 | Long-context tokens/s first-pass | `figures/week2_context_tokens_per_second_first_pass_only.png` | 展示首次长上下文 tokens/s 下降趋势 |
 | Prefix cache repeat latency | `figures/week2_prefix_cache_repeat_latency.png` | 展示重复长文本请求在 prefix cache/warm state 下的 latency 变化 |
+| FP32 vs W8A8 QPS | `results/figures/seed_oss_fp32_vs_w8a8_qps.png` | 展示 W8A8 量化 serving 相比 FP32 baseline 的吞吐提升 |
+| FP32 vs W8A8 P95 latency | `results/figures/seed_oss_fp32_vs_w8a8_p95_latency.png` | 展示 W8A8 量化 serving 对尾延迟的改善 |
+| FP32 vs W8A8 output tokens/s | `results/figures/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png` | 展示量化前后生成吞吐变化 |
 
 
 ### 6.7 关键图表
@@ -451,12 +457,33 @@ vLLM 启动日志显示：
 ![Prefix cache repeat latency](../figures/week2_prefix_cache_repeat_latency.png)
 
 
-## 7. 当前风险与处理策略
+## 7. FP32 vs W8A8 量化性能对比
+
+本阶段完成了 Seed-OSS-36B-Instruct 的 FP32 baseline serving 与 W8A8 compressed-tensors 量化 serving 对比。两组实验使用相同 batch-profile serving 参数，并在 concurrency=1/2/4/8/16 下进行 benchmark。
+
+| Concurrency | FP32 QPS | W8A8 QPS | QPS 提升 | FP32 P95 latency | W8A8 P95 latency | P95 降低 |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 0.3117 | 0.4096 | 31.41% | 3.1300s | 2.5703s | 17.88% |
+| 2 | 0.5674 | 0.7968 | 40.43% | 4.0014s | 2.5774s | 35.59% |
+| 4 | 1.0626 | 1.5286 | 43.85% | 3.7787s | 2.7323s | 27.69% |
+| 8 | 1.4671 | 3.1125 | 112.15% | 5.4604s | 2.5973s | 52.43% |
+| 16 | 2.6922 | 6.0876 | 126.12% | 6.4298s | 2.6735s | 58.42% |
+
+W8A8 在所有并发设置下均提升 QPS 和 output tokens/s，提升范围约为 31.4% 到 126.1%。P95 latency 也在所有并发设置下低于 FP32 baseline，说明该量化路径不仅降低模型权重加载显存，也改善了 batch serving 吞吐与尾延迟。
+
+![FP32 vs W8A8 QPS](../results/figures/seed_oss_fp32_vs_w8a8_qps.png)
+
+![FP32 vs W8A8 P95 latency](../results/figures/seed_oss_fp32_vs_w8a8_p95_latency.png)
+
+![FP32 vs W8A8 output tokens/s](../results/figures/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png)
+
+显存方面，FP32 baseline 的 model loading memory 为 67.5901 GiB，W8A8 为 17.7109 GiB，下降约 73.8%。同时，available KV cache memory 从 9.43 GiB 提升到 53.04 GiB，GPU KV cache size 从 38,624 tokens 提升到 434,480 tokens。该收益应解释为模型权重加载显存降低与 KV cache/concurrency headroom 增加，而不是运行时 `nvidia-smi` 总显存同比下降。
+
+## 8. 当前风险与处理策略
 
 | 风险 | 影响 | 处理策略 |
 |---|---|---|
-| strict INT8 / AWQ / GPTQ 路径未稳定服务化 | 不能按 plain INT8 直接包装成功 | 使用已跑通的 FP32 vs W8A8 compressed-tensors 对比作为稳定量化闭环，并保留失败边界 |
-| strict INT8 / AWQ / GPTQ 路径未稳定服务化 | 不能包装为 plain INT8 全部完成 | 保留兼容性探测和失败边界，最终采用已跑通的 FP32 vs W8A8 compressed-tensors 量化闭环 |
+| strict INT8 / AWQ / GPTQ 路径未稳定服务化 | 不能将其表述为最终稳定 serving 闭环 | 保留兼容性探测和失败边界，最终采用已跑通的 FP32 vs W8A8 compressed-tensors 量化闭环 |
 | 32K/64K OOM | 长上下文实验失败 | 保留 OOM 边界，降低 context length |
 | 高并发 timeout | benchmark 失败率上升 | 保留失败样本，降低 concurrency 或增加 timeout |
 | Grafana 长期监控留存不足 | 不能证明长时间生产级监控稳定性 | 当前已保存 Prometheus 配置、Grafana dashboard JSON 和 live load probe evidence；长期 TSDB 留存不作为本阶段完成项 |
@@ -464,7 +491,7 @@ vLLM 启动日志显示：
 
 ---
 
-## 8. 阶段结论
+## 9. 阶段结论
 
 本周完成了 Seed-OSS-36B-Instruct 推理服务在真实云端 GPU 环境下的性能优化与模型特性验证。系统采用 FastAPI + VLLMBackend + vLLM Server 三层架构，模型侧使用 vLLM 0.11.2、BF16、Tensor Parallel Size = 2，在 2 × NVIDIA A100-SXM4-80GB 上完成部署和验证。
 
@@ -476,9 +503,11 @@ vLLM 启动日志显示：
 
 3. Prefix Cache 分析方面，61.9K near-limit 请求出现低于 56K 的 latency。通过交替复测和 vLLM metrics 分析，该现象主要来自 prefix cache、warm state 和重复 prompt 结构影响，不能解释为纯冷启动长上下文性能。该问题已在报告中单独建模并保留原始证据。
 
-4. 监控与证据链方面，本周保存了 FastAPI health/metrics、vLLM `/metrics`、vLLM 启动日志、nvidia-smi 采样、benchmark CSV、图表和 evidence 压缩包。所有关键证据已归档到 `evidence/`、`artifacts/`、`results/` 和 `figures/` 目录，并提交到 GitHub。
+4. 量化优化方面，本阶段完成 FP32 baseline 与 W8A8 compressed-tensors serving 的同参数 batch-profile 对比。W8A8 将 QPS 与 output tokens/s 提升约 31.4% 到 126.1%，P95 latency 降低约 17.9% 到 58.4%，model loading memory 从 67.5901 GiB 降至 17.7109 GiB，下降约 73.8%。
 
-5. 工程局限方面，当前实验已完成 BF16 baseline、FP32 baseline、W8A8 compressed-tensors serving、FP32 vs W8A8 batch-profile 对比、并发测试、KV cache/prefix cache 分析、128K serving profile 边界验证、GSM8K full benchmark 和代码生成 mini eval。strict INT8 / AWQ / GPTQ 稳定 serving、FP8 KV cache、512K full-context 和 Seed-Coder 专项模型部署仍未完成。报告中必须区分已完成的 W8A8 量化闭环、失败边界记录，以及仍需后续资源验证的方向，避免把失败探测包装成成功部署。
+5. 监控与证据链方面，本周保存了 FastAPI health/metrics、vLLM `/metrics`、vLLM 启动日志、nvidia-smi 采样、benchmark CSV、图表和 evidence 压缩包。所有关键证据已归档到 `evidence/`、`artifacts/`、`results/` 和 `figures/` 目录，并提交到 GitHub。
+
+6. 工程局限方面，当前实验已完成 BF16 baseline、FP32 baseline、W8A8 compressed-tensors serving、FP32 vs W8A8 batch-profile 对比、并发测试、KV cache/prefix cache 分析、128K serving profile 边界验证、GSM8K full benchmark 和代码生成 mini eval。strict INT8 / AWQ / GPTQ 稳定 serving、FP8 KV cache、512K full-context 和 Seed-Coder 专项模型部署仍未完成。
 
 综上，Week2 已从简单 API 验证推进到真实大模型推理服务性能分析阶段，形成了可复现的部署脚本、测试脚本、原始实验数据、图表和工程解释。该阶段结果可作为后续 Week3 高可用架构、降级策略、多模态接入和 Week4 压测验收的基础。
 

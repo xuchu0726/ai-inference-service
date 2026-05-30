@@ -111,9 +111,9 @@ W8A8 的主要显存收益体现在模型权重加载显存下降和 KV cache he
 | 指标 | FP32 | W8A8 | 变化 |
 |---|---:|---:|---:|
 | Model loading memory | 67.5901 GiB | 17.7109 GiB | 下降约 73.8% |
-| Available KV cache memory | 9.43 GiB | 53.04 GiB | 显著增加 |
-| GPU KV cache size | 38,624 tokens | 434,480 tokens | 显著增加 |
-| Maximum concurrency for 512 tokens/request | 75.44x | 848.59x | 显著增加 |
+| Available KV cache memory | 9.43 GiB | 53.04 GiB | 增加约 5.63× |
+| GPU KV cache size | 38,624 tokens | 434,480 tokens | 增加约 11.25× |
+| Maximum concurrency for 512 tokens/request | 75.44x | 848.59x | 增加约 11.25× |
 
 需要注意，vLLM serving 场景下不能简单使用 `nvidia-smi` 运行时总显存占用判断量化节省比例。原因是 vLLM 会将量化释放出的权重显存重新分配给 KV cache，从而提高可服务 token capacity 和并发 headroom。
 
@@ -184,6 +184,6 @@ W8A8 的主要显存收益体现在模型权重加载显存下降和 KV cache he
 
 本阶段完成了 Seed-OSS-36B-Instruct 在 2×A100-SXM4-80GB 环境下的 FP32 baseline 与 W8A8 compressed-tensors 量化 serving 对比。W8A8 在相同 batch-profile serving 参数下，将 QPS 与 output tokens/s 提升约 31.4% 到 126.1%，并将 P95 latency 降低约 17.9% 到 58.4%。
 
-显存方面，W8A8 将 model loading memory 从 67.5901 GiB 降至 17.7109 GiB，下降约 73.8%，同时显著扩大 available KV cache memory、GPU KV cache size 和 concurrency headroom。由于 vLLM 会将释放出的显存用于 KV cache，运行时 `nvidia-smi` 总显存不一定同比下降，因此本报告将显存收益定义为模型权重加载显存下降和 KV cache/concurrency headroom 增加。
+显存方面，W8A8 将 model loading memory 从 67.5901 GiB 降至 17.7109 GiB，下降约 73.8%；available KV cache memory 从 9.43 GiB 增至 53.04 GiB，约 5.63×；GPU KV cache size 从 38,624 tokens 增至 434,480 tokens，约 11.25×。由于 vLLM 会将释放出的显存用于 KV cache，运行时 `nvidia-smi` 总显存不一定同比下降，因此本报告将显存收益定义为模型权重加载显存下降和 KV cache/concurrency headroom 增加。
 
 本阶段未将 bitsandbytes INT8、INC INT8、compressed-tensors strict INT8、AWQ、GPTQ 或 FP8 KV cache 包装为已完成稳定 serving。相关探测保留为兼容性边界和后续优化方向。最终可复现、可对比、可写入性能报告的量化闭环为 FP32 baseline vs W8A8 compressed-tensors serving。

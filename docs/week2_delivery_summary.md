@@ -204,7 +204,7 @@ Evidence：
 
 仍未完成或需要后续补强的部分如下：
 
-1. plain INT8 / AWQ / GPTQ 稳定 serving 尚未完成。本阶段已完成的是 W8A8 compressed-tensors 量化闭环；bitsandbytes INT8、INC INT8 和 compressed-tensors strict INT8 已记录失败边界，不能包装为最终成功路径。
+1. plain INT8 / AWQ / GPTQ 稳定 serving 尚未完成。本阶段已完成的是 W8A8 compressed-tensors 量化闭环；bitsandbytes INT8、INC INT8 和 compressed-tensors strict INT8 保留为兼容性边界记录。
 2. FP8 KV cache 尚未完成。当前已完成 vLLM KV cache、PagedAttention、Prefix Cache 和长上下文边界行为分析，但尚未实测 KV cache 低比特量化。
 3. 512K full-context 未完成实机验证。Week2 已完成 128K serving profile live boundary test，包括 conservative、near-limit 和 over-limit 三类请求。
 4. 代码生成测试使用的是 Seed-OSS-36B-Instruct，不是专门的 Seed-Coder 模型。Seed-Coder 专项验证仍是后续任务。

@@ -105,7 +105,7 @@
 | 显存收益解释 | 权重加载显存下降，KV cache/concurrency headroom 增加 |
 | 边界 | runtime nvidia-smi 总显存不会同比下降，因为 vLLM 会利用释放出的显存扩展 KV cache |
 
-plain INT8 / AWQ / GPTQ 稳定 serving 尚未完成，相关尝试记录为失败边界和兼容性分析，不能包装为最终成功路径。
+plain INT8 / AWQ / GPTQ 稳定 serving 尚未完成，相关尝试记录为兼容性边界；本阶段稳定闭环为 FP32 baseline 与 W8A8 compressed-tensors serving 对比。
 
 ### 2.6 GSM8K 与代码生成验证
 
@@ -310,7 +310,7 @@ vLLM backend benchmark：
 3. FP8 KV cache 尚未完成。
 4. 代码生成测试使用 Seed-OSS-36B-Instruct，不是 Seed-Coder 专项模型。
 5. 128K near-limit latency 受 prefix cache / warm state 影响，不能代表 cold prompt 128K 性能。
-6. W8A8 的显存收益应表述为模型权重加载显存下降和 KV cache headroom 增加，不能写成 runtime nvidia-smi 总显存同比下降。
+6. W8A8 的显存收益以模型权重加载显存下降和 KV cache headroom 增加为主要口径；runtime nvidia-smi 总显存不作为同比下降结论。
 
 ## 10. 阶段结论
 

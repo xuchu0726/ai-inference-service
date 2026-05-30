@@ -4,7 +4,7 @@
 
 Week2 性能优化任务要求使用 Prometheus 和 Grafana 等系统监控工具分析 AI 推理服务的 GPU 利用率、显存瓶颈、请求延迟、错误率和服务状态。
 
-当前项目已完成 Seed-OSS-36B-Instruct 在 RunPod 2×NVIDIA A100-SXM4-80GB 环境下的 BF16 serving baseline、并发 benchmark、64K 长上下文验证和 Prefix Cache 分析。本文总结本阶段已完成的可观测性接入、已保存的 metrics evidence、GPU 资源分析结论，以及后续 Grafana 面板实机验证计划。
+当前项目已完成 Seed-OSS-36B-Instruct 在 RunPod 2×NVIDIA A100-SXM4-80GB 环境下的 BF16 serving baseline、并发 benchmark、64K 长上下文验证、Prefix Cache 分析和 Grafana live load probe evidence。本文总结本阶段已完成的可观测性接入、已保存的 metrics evidence、GPU 资源分析结论和监控边界。
 
 ## 2. 服务架构
 
@@ -185,7 +185,7 @@ Dashboard 覆盖以下面板：
 | vLLM Prefix Cache Queries / Hits | `rate(vllm:prefix_cache_queries_total[1m])`, `rate(vllm:prefix_cache_hits_total[1m])` |
 | vLLM Prompt / Generation Tokens | `rate(vllm:prompt_tokens_total[1m])`, `rate(vllm:generation_tokens_total[1m])` |
 
-当前 dashboard JSON 已通过 `python -m json.tool` 格式校验。由于本轮 RunPod GPU 服务已停止，Grafana dashboard 实机导入截图将在 Week3/Week4 运维可视化阶段补充。
+当前 dashboard JSON 已通过 `python -m json.tool` 格式校验，并已保存一次 Grafana live load probe 截图作为实机导入与负载观测证据：`figures/week2_grafana_seed_oss_live_load_probe.png`。
 
 ## 7. 资源瓶颈分析
 
@@ -253,11 +253,11 @@ Week2 要求使用 Prometheus + Grafana 分析 GPU 利用率和内存瓶颈。�
 
 当前阶段尚未完成：
 
-1. Grafana dashboard 实机导入截图；
-2. 长时间运行的 Prometheus TSDB 数据保留；
-3. 多节点/多实例下的统一 dashboard。
+1. 长时间运行的 Prometheus TSDB 数据保留；
+2. 多节点/多实例下的统一 dashboard；
+3. 告警规则与高负载场景联动验证。
 
-上述内容将在 Week3/Week4 运维可视化阶段继续补充。
+上述内容作为后续高可用与运维可视化增强方向。
 
 ## 9. 后续工作
 
@@ -357,4 +357,4 @@ Dynamic batch sweep 完成 concurrency=1/2/4/8/16 的测试，每个并发级别
 5. 不同实验场景后的 metrics snapshot；
 6. 原始 evidence package 归档。
 
-当前仍未完成的是完整 Grafana 实机截图和长时间 Prometheus TSDB 留存。该部分应作为 Week3/Week4 运维可视化增强任务继续补齐。
+当前仍未完成的是长时间 Prometheus TSDB 留存、多节点统一 dashboard 和告警规则验证。该部分作为后续高可用与运维可视化增强方向。

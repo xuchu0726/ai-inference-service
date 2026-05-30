@@ -46,19 +46,19 @@
 | 使用 Prometheus + Grafana 分析 GPU 利用率、内存瓶颈 | `deployment/monitoring/prometheus_week2.yml`、`deployment/monitoring/grafana_week2_seed_oss_dashboard.json`、`figures/week2_grafana_seed_oss_live_load_probe.png`、Prometheus targets JSON、vLLM metrics、nvidia-smi 日志 | 已完成 | GPU 显存、请求队列、KV cache、吞吐和延迟都有证据。GPU 利用率主要通过 Grafana 证据和 nvidia-smi snapshot 支撑。 |
 | 实施 Seed-OSS INT8 量化 | bitsandbytes INT8、INC INT8、compressed-tensors strict INT8 尝试；W8A8 compressed-tensors 成功 serving | 部分完成 / 有边界 | strict INT8/AWQ/GPTQ 没有形成最终稳定 serving。最终闭环的是 W8A8 compressed-tensors，属于 8-bit 权重量化路径。 |
 | 对比 FP32 精度下速度与显存占用 | FP32 baseline、FP32 batch profile、W8A8 batch profile、对比 CSV 和图表 | 已完成 | 已完成同 serving 参数下 FP32 vs W8A8 对比。 |
-| 显存降低 ≥30% | FP32 vs W8A8 model loading memory 对比 | 部分完成 | model loading memory 从约 67.59 GiB 降至约 17.71 GiB，降低约 73.8%。但 runtime `nvidia-smi` 总显存没有同比下降，因为 vLLM 扩大了 KV cache。报告中必须明确这一点。 |
+| 显存降低 ≥30% | FP32 vs W8A8 model loading memory 对比 | 部分完成 | model loading memory 从约 67.59 GiB 降至约 17.71 GiB，降低约 73.8%。但 runtime `nvidia-smi` 总显存没有同比下降，因为 vLLM 扩大了 KV cache。报告中已按该口径说明。 |
 | 速度提升 ≥20% | FP32 vs W8A8 batch profile improvement CSV 和图表 | 已完成 | W8A8 在 concurrency=1/2/4/8/16 下 QPS 与 output tokens/s 提升约 31.4% 到 126.1%。 |
 | 动态 Batch 调度 | `max_num_batched_tokens` sweep、batch-token tuning 图表、workload-aware profile、`app/routing.py` | 已完成 | 实现方式是多 serving profile + routing abstraction，不是运行时热修改单个 vLLM engine 参数。 |
 | KV 缓存优化 | vLLM KV cache、prefix cache metrics、PagedAttention、context length experiments | 已完成 | 项目没有重写底层 KV cache，而是基于 vLLM 的 PagedAttention/KV cache 机制启用并分析缓存行为。 |
 | GSM8K 数学推理 | full GSM8K benchmark、summary、日志、metrics | 已完成 | 已完成完整 GSM8K 评测闭环。 |
-| 代码生成，结合 Seed-Coder | Seed-OSS codegen mini eval | 部分完成 | 已验证代码生成场景，但没有完成 Seed-Coder 专项模型部署与评测。不能写“已完成 Seed-Coder eval”。 |
+| 代码生成，结合 Seed-Coder | Seed-OSS codegen mini eval | 部分完成 | 已验证代码生成场景，但没有完成 Seed-Coder 专项模型部署与评测。该项作为代码生成场景验证，不作为 Seed-Coder 专项评测。 |
 | 性能优化报告 | `docs/week2_performance_optimization_report.md` 等 Week2 文档 | 已完成 | 主报告已整合并发测试、长上下文、128K 边界验证、FP32 vs W8A8 量化对比、GSM8K、代码生成和未完成边界。 |
 | 量化前后性能对比表 | `results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv` | 已完成 | 对比表已形成，但表述必须写成 FP32 vs W8A8，而不是 FP32 vs plain INT8。 |
 | Batch Size 测试图表 | `figures/week2/batch_tokens/` 下多张 QPS/P95/latency 图 | 已完成 | 已覆盖 4096/8192/16384/32768 等 batch-token 配置。 |
 | GQA 如何降低计算复杂度 | Week2 报告和相关文档 | 已完成 | 已结合 GQA、KV cache、长上下文和并发 serving 场景解释其对显存压力和推理复杂度的影响。 |
 | QPS、延迟、P95 优化图表 | batch-token 图、concurrency 图、FP32 vs W8A8 图 | 已完成 | 图表证据已经足够。 |
 | 128K long-context boundary test | 128K conservative / near-limit / over-limit live boundary CSV、vLLM launch log、ready check、boundary review | 已完成 | 已完成 128K serving profile 的 live boundary test；512K full-context 仍未完成实机验证。 |
-| FP8 KV cache / KV cache quantization | 当前未发现明确 evidence | 未完成 | 不能写已完成。 |
+| FP8 KV cache / KV cache quantization | 当前未发现明确 evidence | 未完成 | 该项作为后续优化方向保留。 |
 
 ## 4. 量化实验最终解释
 
@@ -81,25 +81,23 @@
 - W8A8 显著扩大了可用 KV cache 空间和并发 headroom；
 - runtime `nvidia-smi` 显存占用没有同比下降，原因是 vLLM 会把释放出的模型权重显存重新分配给 KV cache。
 
-因此，报告中应写成：
+因此，报告中的量化显存收益采用以下口径：
 
 > W8A8 显著降低模型权重加载显存，并提升 batch serving 吞吐；但在 vLLM serving 场景下，运行时 GPU 总显存不一定下降，因为 vLLM 会利用释放出的显存扩展 KV cache，从而提升并发容量。
 
-不能写成：
+本阶段不使用“运行时 GPU 总显存降低 30% 以上”作为结论口径。
 
-> INT8 让运行时总显存降低 30% 以上。
+## 5. 当前边界说明
 
-## 5. 当前边界与不可扩展表述
+当前阶段的边界如下：
 
-以下内容不能在最终报告里写成“已完成”：
-
-1. 不能写 plain INT8 / AWQ / GPTQ 稳定 serving 已完成；
-2. 不能写 Seed-Coder 专项评测已完成；
-3. 不能写 512K full-context 已完成；
-4. 不能写 FP8 KV cache quantization 已完成；
-5. 不能写 runtime `nvidia-smi` 总显存降低超过 30%；
-6. 不能把 failed INT8 attempts 包装成成功量化部署；
-7. 不能把 W8A8 compressed-tensors 量化与 strict INT8 / AWQ / GPTQ 稳定 serving 完全等同。
+1. plain INT8 / AWQ / GPTQ 尚未形成最终稳定 serving 闭环；
+2. 代码生成验证使用 Seed-OSS-36B-Instruct 完成，Seed-Coder 专项模型部署与评测尚未完成；
+3. 512K full-context 尚未完成实机验证，当前已完成 64K 梯度测试和 128K serving profile 边界验证；
+4. FP8 KV cache / KV cache quantization 尚未完成实机验证；
+5. 显存收益以 model loading memory 下降和 KV cache/concurrency headroom 增加为主要口径，不使用 runtime `nvidia-smi` 总显存下降作为结论；
+6. bitsandbytes INT8、INC INT8 和 compressed-tensors strict INT8 的探测结果作为兼容性边界记录，不作为最终量化 serving 闭环；
+7. W8A8 compressed-tensors 是本阶段稳定可复现的 8-bit 权重量化路径，不等同于 AWQ / GPTQ 或 FP8 KV cache。
 
 ## 6. 推荐最终表述
 

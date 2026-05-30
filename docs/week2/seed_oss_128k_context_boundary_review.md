@@ -66,7 +66,7 @@ near-limit case 输入 130608 tokens，client latency 只有 10.09s。
 - near-limit 前后 metrics 显示 prefix cache hits 增加到 126208 tokens；
 - 因此前后请求并非完全独立冷启动测试，near-limit 受到了 prefix cache 加速。
 
-因此，报告中不能把 near-limit 的 10.09s 当成普通冷启动 128K 性能结论，只能作为“热 prefix cache 场景下的边界通过证据”。
+因此，near-limit 的 10.09s 不作为普通冷启动 128K 性能结论，而是作为热 prefix cache 场景下的边界通过证据。
 
 ### 4.3 over-limit 失败是有效边界证据
 
