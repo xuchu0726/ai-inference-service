@@ -60,7 +60,7 @@ Week1 结论：
 1. 配置 Prometheus scrape；
 2. 搭建或记录 Grafana dashboard；
 3. 展示 FastAPI、vLLM 和 GPU 相关指标；
-4. 为后续性能瓶颈分析提供数据来源。
+4. 为本阶段性能瓶颈分析提供数据来源。
 
 关注指标：
 
@@ -88,7 +88,7 @@ vLLM metrics 快照命令示例：
       --url http://127.0.0.1:8002/metrics \
       --output results/week2_vllm_metrics_snapshot.txt
 
-如果 Grafana dashboard 暂未完整启动，本周先使用 Prometheus metrics 快照、vLLM metrics 快照和 `nvidia-smi` 离线采样文件作为监控证据，并在后续报告中结合 CSV 和图表分析 GPU 利用率、显存瓶颈、KV Cache 压力和请求排队情况。
+本周已保存 Prometheus 配置、Grafana dashboard JSON、Grafana live load probe 截图、vLLM metrics 快照和 `nvidia-smi` 采样文件，用于分析 GPU 利用率、显存瓶颈、KV Cache 压力、Prefix Cache 命中和请求排队行为。
 
 ---
 
@@ -98,7 +98,7 @@ vLLM metrics 快照命令示例：
 
 测试不同并发度下服务吞吐、尾延迟和稳定性变化。
 
-计划测试矩阵：
+实验配置：
 
 | concurrency | max_new_tokens | thinking_budget | 说明 |
 |---:|---:|---:|---|
@@ -123,7 +123,7 @@ vLLM metrics 快照命令示例：
 11. vLLM running/waiting requests；
 12. KV cache usage。
 
-预期图表：
+已完成图表：
 
 1. QPS vs concurrency；
 2. P95 latency vs concurrency；
@@ -164,35 +164,24 @@ vLLM metrics 快照命令示例：
 
 目标：
 
-回应 Week1 中 max_model_len=4096 与 Seed-OSS 原生 512K 能力差距较大的问题，用分阶段实验分析长上下文下的显存、延迟和稳定性边界。
+回应 Week1 中 max_model_len=4096 与 Seed-OSS 原生 512K 能力差距较大的问题，用分阶段实验分析长上下文下的显存、延迟、KV Cache 压力和稳定性边界。
 
-计划测试矩阵：
+本周已完成两组长上下文实验：
 
-| context length | 目标 |
-|---:|---|
-| 4K | Week1 基线复测 |
-| 8K | 低风险扩展 |
-| 16K | 中等长度扩展 |
-| 32K | 高阶尝试 |
-| 64K | 资源允许时尝试 |
+1. 64K serving profile 下的上下文长度梯度测试；
+2. 128K serving profile 下的长上下文边界验证。
 
-记录指标：
+64K 实验使用 `max_model_len=65536`，完成 8K、16K、32K、56K 和 61.9K input tokens 级别请求。首次梯度测试显示，随着输入 tokens 从 7,434 增长到 56,303，client latency 从 4.81s 增长到 16.13s，tokens/s 从 26.69 下降到 7.94，符合长上下文 prefill 成本上升预期。
 
-1. input_tokens；
-2. output_tokens；
-3. max_model_len；
-4. latency；
-5. P50 / P95；
-6. tokens/s；
-7. GPU memory；
-8. KV cache usage；
-9. error_rate；
-10. 是否 OOM；
-11. 是否 timeout。
+128K 实验使用 `max_model_len=131072`、`max_num_seqs=1` 的边界 profile，完成 conservative、near-limit 和 over-limit 三类请求：
 
-说明：
+| Case | Input tokens | Status | Client latency (s) | 结论 |
+|---|---:|---|---:|---|
+| 128K conservative | 126,222 | 200 / success | 84.350549 | 成功处理接近 128K 的长上下文请求 |
+| 128K near-limit | 130,608 | 200 / success | 10.089885 | 成功逼近 131,072 token 上限，但受 prefix cache / warm state 影响 |
+| 128K over-limit | 134,991 | 400 / rejected | 0.191030 | 超过上下文上限后被 vLLM 明确拒绝，系统没有 OOM 或崩溃 |
 
-512K full-context 是 Seed-OSS 的目标能力，但直接进行 512K 测试会带来显著显存、prefill latency 和 OOM 风险。本周优先采用 4K/8K/16K/32K 梯度测试，用数据推导资源边界和后续 512K 专项测试所需条件。
+需要说明的是，512K full-context 仍未完成实机验证。当前项目已经从 Week1 的 4K 基线推进到 64K 梯度测试和 128K 边界验证，但 512K 单请求仍需要更多 GPU、KV cache compression、FP8 KV cache 或更强资源配置支撑，不能写成已完成。
 
 ---
 
@@ -206,13 +195,14 @@ vLLM metrics 快照命令示例：
 
 在后续 2×A100-SXM4-80GB 实验窗口中，项目已完成 Seed-OSS-36B-Instruct 的 FP32 baseline serving、W8A8 compressed-tensors 离线量化、W8A8 vLLM serving、smoke test 和同参数 batch-profile benchmark。FP32 与 W8A8 对比不再停留在资源估算阶段，而是已有可复现的实测 CSV、启动日志、ready evidence 和图表。
 
-本周实际方案：
+本周实际完成情况：
 
-1. 以 BF16 作为实际 serving baseline；
-2. 调研 vLLM 对 Seed-OSS-36B 的 INT8 / FP8 / AWQ / GPTQ 支持情况；
-3. 若可落地，则运行量化版本并对比显存、P95、tokens/s；
-4. 若不可落地，则保留兼容性分析、失败日志和替代方案；
-5. 输出量化可行性对比表。
+1. 已完成 BF16 serving baseline，并作为主服务基线；
+2. 已完成 FP32 baseline serving、smoke test 和 batch-profile benchmark；
+3. 已完成 W8A8 compressed-tensors 离线量化、vLLM serving 和同参数 batch-profile benchmark；
+4. 已保存 FP32 与 W8A8 的 QPS、P95 latency、output tokens/s、model loading memory 和运行边界证据；
+5. 已记录 bitsandbytes INT8、INC INT8 和 compressed-tensors strict INT8 路线的兼容性探测与失败边界；
+6. 最终稳定量化闭环采用 FP32 baseline vs W8A8 compressed-tensors serving，而不是包装为 plain INT8 / AWQ / GPTQ 全部完成。
 
 量化对比表结构：
 
@@ -246,16 +236,9 @@ vLLM metrics 快照命令示例：
 
 目标：
 
-验证 Seed-OSS-36B 在数学推理任务上的基本能力，并记录推理服务指标。
+验证 Seed-OSS-36B 在数学推理任务上的服务稳定性、结果正确性和端到端延迟表现。
 
-计划：
-
-1. 选取 GSM8K 小样本；
-2. 记录 prompt、response、latency、output_tokens；
-3. 人工判断是否正确；
-4. 汇总 accuracy、平均 latency 和错误类型。
-
-本轮已完成 GSM8K full benchmark。最终结果为 1319 个样本全部 API 成功，正确 999 个，accuracy 为 75.74%，P50 latency 为 5.51s，P95 latency 为 6.69s。
+本轮已完成 GSM8K test set full benchmark。最终结果为 1319 个样本全部 API 成功，API error rate 为 0，正确 999 个，accuracy 为 75.74%，P50 latency 为 5.51s，P95 latency 为 6.69s。该结果可作为后续量化、降级策略和质量回归实验的任务级 baseline。
 
 ---
 
@@ -263,16 +246,9 @@ vLLM metrics 快照命令示例：
 
 目标：
 
-验证 Seed 模型在代码生成场景中的基础表现，为后续 Seed-Coder 或代码助手场景做准备。
+验证当前 FastAPI + VLLMBackend + Seed-OSS-36B-Instruct 服务链路是否能够支持基础代码生成场景。
 
-计划：
-
-1. 准备 5-10 个代码生成 prompt；
-2. 覆盖 Python 函数、数据处理、API 调用、错误修复等场景；
-3. 记录 latency、output_tokens、是否可运行；
-4. 总结常见错误类型。
-
-本轮已完成 5 个 Python 代码生成 mini eval，全部 API 成功，并全部通过简单正确性检查。该测试用于轻量验证当前服务链路支持代码生成场景。
+本轮已完成 5 个 Python 代码生成 mini eval，全部 API 成功，并全部通过简单正确性检查。该测试覆盖加法、奇偶判断、字符串反转、阶乘和单词计数等基础函数生成任务。该结果不能替代 HumanEval、MBPP 或 Seed-Coder 专项评测，但可以证明当前服务链路具备代码生成场景的基础可用性。
 
 ---
 
@@ -293,34 +269,50 @@ vLLM metrics 快照命令示例：
 
 ### 5.1 并发 benchmark
 
-计划文件：
+已完成文件：
 
-    results/week2_concurrency_benchmark.csv
-    results/week2_concurrency_summary.csv
+    evidence/week2_64k_context/results/week2_concurrency_c1_summary.csv
+    evidence/week2_64k_context/results/week2_concurrency_c2_summary.csv
+    evidence/week2_64k_context/results/week2_concurrency_c4_summary.csv
+    evidence/week2_64k_context/results/week2_concurrency_c8_summary.csv
+    evidence/week2_64k_context/results/week2_concurrency_c16_summary.csv
 
 ### 5.2 上下文长度 benchmark
 
-计划文件：
+已完成文件：
 
-    results/week2_context_length_benchmark.csv
-    results/week2_context_length_summary.csv
+    results/week2_context_gradient_summary.csv
+    docs/week2_context_gradient_summary.md
+    results/week2_context_length_8k_on_64k_service.csv
+    results/week2_context_length_16k_on_64k_service.csv
+    results/week2_context_length_32k_on_64k_service.csv
+    results/week2_context_length_64k_conservative_on_64k_service.csv
+    results/week2_context_length_64k_near_limit_on_64k_service.csv
+    results/week2_context_repeat_r1_56k_then_64k.csv
+    results/week2_context_repeat_r2_64k_then_56k.csv
+    results/week2_context_repeat_r3_56k_then_64k.csv
+    results/new_2xa100_seed_oss_128k_conservative_context_test_20260529.csv
+    results/new_2xa100_seed_oss_128k_near_limit_context_test_20260529.csv
+    results/new_2xa100_seed_oss_128k_over_limit_context_test_20260529.csv
+    docs/week2/seed_oss_128k_context_boundary_review.md
 
 ### 5.3 量化可行性
 
-计划文件：
+已完成文件：
 
-    results/week2_quantization_comparison.csv
-    docs/week2_quantization_notes.md
+    results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv
+    docs/week2_quantization_feasibility_report.md
+    docs/week2_requirement_compliance_matrix.md
 
 ### 5.4 GSM8K
 
-计划文件：
+已完成文件：
 
     results/week2_gsm8k_full_seed_oss_budget0_summary.csv
 
 ### 5.5 代码生成
 
-计划文件：
+已完成文件：
 
     results/week2_codegen_mini_seed_oss_budget0.csv
 
@@ -463,11 +455,11 @@ vLLM 启动日志显示：
 
 | 风险 | 影响 | 处理策略 |
 |---|---|---|
-| FP32 baseline 显存过高 | 无法按字面完成 FP32 vs INT8 | 使用 BF16 serving baseline，并说明 FP32 资源需求 |
-| INT8 路径不兼容 | 量化实验无法直接跑通 | 记录兼容性和失败日志，改用可支持方案 |
+| strict INT8 / AWQ / GPTQ 路径未稳定服务化 | 不能按 plain INT8 直接包装成功 | 使用已跑通的 FP32 vs W8A8 compressed-tensors 对比作为稳定量化闭环，并保留失败边界 |
+| strict INT8 / AWQ / GPTQ 路径未稳定服务化 | 不能包装为 plain INT8 全部完成 | 保留兼容性探测和失败边界，最终采用已跑通的 FP32 vs W8A8 compressed-tensors 量化闭环 |
 | 32K/64K OOM | 长上下文实验失败 | 保留 OOM 边界，降低 context length |
 | 高并发 timeout | benchmark 失败率上升 | 保留失败样本，降低 concurrency 或增加 timeout |
-| Grafana 配置耗时 | 影响主实验 | 先完成 Prometheus + dashboard notes，再补 JSON |
+| Grafana 长期监控留存不足 | 不能证明长时间生产级监控稳定性 | 当前已保存 Prometheus 配置、Grafana dashboard JSON 和 live load probe evidence；长期 TSDB 留存不作为本阶段完成项 |
 | GPU 成本过高 | 试错成本增加 | 先本地准备脚本和报告框架，再集中跑 GPU |
 
 ---

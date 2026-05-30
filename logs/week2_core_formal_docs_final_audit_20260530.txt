@@ -1,0 +1,217 @@
+===== Week2 core formal docs final audit =====
+2026年 5月30日 星期六 16时34分58秒 BST
+ M README.md
+ M docs/week2_delivery_summary.md
+ M docs/week2_performance_optimization_report.md
+ M docs/week2_quantization_feasibility_report.md
+ M docs/week2_requirement_compliance_matrix.md
+?? logs/docs_content_outline_audit_20260529.txt
+?? logs/docs_stale_statement_audit_20260529.txt
+?? logs/docs_structure_audit_20260529.txt
+?? logs/week2_context_real_files_check_20260529.txt
+?? logs/week2_core_docs_final_consistency_audit_20260530.txt
+?? logs/week2_core_formal_docs_final_audit_20260530.txt
+?? logs/week2_delivery_summary_final_check_20260529.txt
+?? logs/week2_formal_docs_forbidden_wording_check_20260530.txt
+?? logs/week2_performance_report_final_audit_20260529.txt
+?? logs/week2_performance_report_path_and_stale_check_20260529.txt
+?? logs/week2_quantization_report_audit_20260529.txt
+?? logs/week2_quantization_report_rewrite_audit_20260529.txt
+?? logs/week2_quantization_report_rewrite_check_20260530.txt
+
+===== title structure =====
+
+----- README.md -----
+1:# AI Inference Service
+14:## 1. 核心进展
+35:## 2. 当前主要实验结果
+37:### 2.1 Seed-OSS-36B 基础部署
+49:### 2.2 并发测试
+62:### 2.3 长上下文测试
+84:### 2.4 Batch-Token 调优
+95:### 2.5 量化实验
+110:### 2.6 GSM8K 与代码生成验证
+133:## 3. 项目结构
+170:## 4. 关键文档入口
+186:## 5. 运行方式
+221:## 6. API 示例
+250:## 7. Benchmark 与评测
+279:## 8. 监控与证据保存
+304:## 9. 当前边界
+315:## 10. 阶段结论
+
+----- docs/week2_delivery_summary.md -----
+1:# Week2 交付摘要：Seed-OSS-36B 推理服务性能优化与长上下文验证
+3:## 1. 本周交付目标
+7:## 2. 核心环境
+20:## 3. 已完成实验
+22:### 3.1 并发测试
+33:### 3.2 长上下文测试
+44:### 3.3 128K 长上下文边界验证
+69:### 3.4 Prefix Cache 复测
+79:### 3.5 Batch-Token 专项调优
+97:### 3.6 FP32 vs W8A8 量化对比
+119:### 3.7 可观测性与监控证据
+139:### 3.8 GSM8K 全量评测
+164:### 3.9 代码生成 Mini Eval
+182:## 4. 关键产物路径
+201:## 5. 当前局限
+213:## 6. 阶段结论
+
+----- docs/week2_requirement_compliance_matrix.md -----
+1:# Week2 交付完成度与证据索引
+3:## 1. 总体结论
+29:## 2. 推荐阅读顺序
+42:## 3. Week2 交付项逐项映射
+63:## 4. 量化实验最终解释
+92:## 5. 当前边界与不可扩展表述
+104:## 6. 推荐最终表述
+
+----- docs/week2_performance_optimization_report.md -----
+1:# 第 2 周性能优化报告：Seed-OSS-36B 推理服务性能分析与模型特性验证
+3:## 1. 本周目标
+21:## 2. Week1 基线回顾
+52:## 3. Week2 交付范围
+56:### 3.1 监控与可观测性
+95:### 3.2 并发 / Batch 性能测试
+137:### 3.2.1 max_num_batched_tokens 专项调优
+163:### 3.3 上下文长度梯度测试
+188:### 3.4 量化优化可行性与对比
+219:### 3.5 KV Cache 与 GQA 分析
+235:### 3.6 GSM8K 数学推理验证
+245:### 3.7 代码生成验证
+255:## 4. Week2 新增文档
+266:## 5. 实验结果索引
+270:### 5.1 并发 benchmark
+280:### 5.2 上下文长度 benchmark
+299:### 5.3 量化可行性
+307:### 5.4 GSM8K
+313:### 5.5 代码生成
+319:### 5.6 图表
+333:## 6. Seed-OSS-36B 长上下文性能验证（RunPod 2×A100 80GB）
+335:### 6.1 实验环境
+357:### 6.2 长上下文梯度测试结果
+367:### 6.3 结果分析
+378:### 6.4 Prefix Cache 复测结论
+389:### 6.5 Evidence 文件索引
+412:### 6.6 报告图表索引
+431:### 6.7 关键图表
+454:## 7. 当前风险与处理策略
+467:## 8. 阶段结论
+
+----- docs/week2_quantization_feasibility_report.md -----
+1:# Seed-OSS-36B W8A8 量化实验报告
+3:## 1. 实验目标
+16:## 2. 实验环境
+32:## 3. FP32 Baseline
+52:## 4. W8A8 compressed-tensors 离线量化与 Serving
+74:## 5. FP32 vs W8A8 性能对比
+107:## 6. 显存收益分析
+132:## 7. strict INT8 / AWQ / GPTQ 路线边界
+155:## 8. 与优化指标的对应关系
+167:## 9. Evidence 路径
+183:## 10. 阶段结论
+
+----- docs/week2_observability_report.md -----
+1:# Week2 Seed-OSS-36B 可观测性与资源瓶颈分析报告
+3:## 1. 背景
+9:## 2. 服务架构
+37:## 3. 已接入的 Metrics
+39:### 3.1 FastAPI Metrics
+60:### 3.2 vLLM Metrics
+88:## 4. GPU 资源监控
+90:### 4.1 nvidia-smi Snapshot
+114:### 4.2 nvidia-smi Sampling
+127:## 5. Prometheus 配置
+169:## 6. Grafana Dashboard 配置
+190:## 7. 资源瓶颈分析
+192:### 7.1 显存瓶颈
+213:### 7.2 计算利用率
+224:### 7.3 Prefix Cache 行为
+242:## 8. 对 Week2 任务要求的回应
+262:## 9. 后续工作
+273:## 10. 结论
+281:## 11. Week2 最终 Metrics Evidence 补充
+285:### 11.1 新增监控快照
+295:### 11.2 GSM8K Full Benchmark 监控结论
+312:### 11.3 Codegen Mini Eval 监控结论
+327:### 11.4 Dynamic Batch Sweep 监控结论
+349:### 11.5 对可观测性任务要求的回应
+
+----- docs/week2_eval_mini_report.md -----
+1:# Week2 模型能力评测报告：GSM8K Full Benchmark 与代码生成 Mini Eval
+3:## 1. 文档目的
+18:## 2. 服务配置
+35:## 3. GSM8K Full Benchmark
+37:### 3.1 实验配置
+67:### 3.2 实验结果
+87:### 3.3 结果解释
+99:## 4. Code Generation Mini Eval
+101:### 4.1 实验配置
+127:### 4.2 实验结果
+147:### 4.3 结果解释
+155:## 5. Evidence 路径
+171:## 6. 当前局限
+181:## 7. 阶段结论
+
+----- docs/week2_batch_token_tuning_report.md -----
+1:# Batch-Token 调优专项报告：Seed-OSS-36B 推理服务的 Workload-Aware Batching 分析
+3:## 1. 实验背景
+11:## 2. 实验环境
+31:## 3. 实验设计
+47:## 4. Short-output c4 基础扫描结果
+67:## 5. Short-output c8 Burst 场景分析
+98:## 6. Long-output c4 Decode-heavy 场景分析
+126:## 7. Workload-Aware Serving Profile 决策
+145:## 8. Workload-Aware Routing Policy 抽象
+169:## 9. 动态批处理的工程边界说明
+184:## 10. 工程意义与后续扩展方向
+200:## 11. 局限性
+212:## 12. 结论
+225:## 13. Evidence 清单
+
+----- docs/week2/seed_oss_128k_context_boundary_review.md -----
+1:# Seed-OSS-36B-Instruct 128K 长上下文边界实验复盘
+3:## 1. 实验目标
+14:## 2. 服务配置
+42:## 3. 实验结果汇总
+50:## 4. 关键观察
+52:### 4.1 128K profile 启动成功
+57:### 4.2 conservative 请求延迟明显高于 near-limit 请求
+71:### 4.3 over-limit 失败是有效边界证据
+81:### 4.4 KV cache 与显存压力
+91:## 5. 文件保存状态
+93:### 已原始提交
+105:### 从终端记录恢复
+112:## 6. 路径事故复盘
+132:## 7. 后续使用方式
+
+===== forbidden wording in Week2 core docs only =====
+docs/week2_delivery_summary.md:208:2. FP8 KV cache 尚未完成。当前已完成 vLLM KV cache、PagedAttention、Prefix Cache 和长上下文边界行为分析，但尚未实测 KV cache 低比特量化。
+docs/week2_requirement_compliance_matrix.md:54:| 代码生成，结合 Seed-Coder | Seed-OSS codegen mini eval | 部分完成 | 已验证代码生成场景，但没有完成 Seed-Coder 专项模型部署与评测。不能写“已完成 Seed-Coder eval”。 |
+docs/week2_requirement_compliance_matrix.md:61:| FP8 KV cache / KV cache quantization | 当前未发现明确 evidence | 未完成 | 不能写已完成。 |
+docs/week2_requirement_compliance_matrix.md:97:2. 不能写 Seed-Coder 专项评测已完成；
+docs/week2_requirement_compliance_matrix.md:98:3. 不能写 512K full-context 已完成；
+docs/week2_requirement_compliance_matrix.md:99:4. 不能写 FP8 KV cache quantization 已完成；
+docs/week2_requirement_compliance_matrix.md:100:5. 不能写 runtime `nvidia-smi` 总显存降低超过 30%；
+docs/week2_performance_optimization_report.md:184:需要说明的是，512K full-context 仍未完成实机验证。当前项目已经从 Week1 的 4K 基线推进到 64K 梯度测试和 128K 边界验证，但 512K 单请求仍需要更多 GPU、KV cache compression、FP8 KV cache 或更强资源配置支撑，不能写成已完成。
+docs/week2_performance_optimization_report.md:481:5. 工程局限方面，当前实验已完成 BF16 baseline、FP32 baseline、W8A8 compressed-tensors serving、FP32 vs W8A8 batch-profile 对比、并发测试、KV cache/prefix cache 分析、128K serving profile 边界验证、GSM8K full benchmark 和代码生成 mini eval。strict INT8 / AWQ / GPTQ 稳定 serving、FP8 KV cache、512K full-context 和 Seed-Coder 专项模型部署仍未完成。报告中必须区分已完成的 W8A8 量化闭环、失败边界记录，以及仍需后续资源验证的方向，避免把失败探测包装成成功部署。
+docs/week2_quantization_feasibility_report.md:189:本阶段未将 bitsandbytes INT8、INC INT8、compressed-tensors strict INT8、AWQ、GPTQ 或 FP8 KV cache 包装为已完成稳定 serving。相关探测保留为兼容性边界和后续优化方向。最终可复现、可对比、可写入性能报告的量化闭环为 FP32 baseline vs W8A8 compressed-tensors serving。
+
+===== required evidence path check =====
+OK      docs/week2_delivery_summary.md
+OK      docs/week2_requirement_compliance_matrix.md
+OK      docs/week2_performance_optimization_report.md
+OK      docs/week2_quantization_feasibility_report.md
+OK      docs/week2_observability_report.md
+OK      docs/week2_eval_mini_report.md
+OK      docs/week2_batch_token_tuning_report.md
+OK      docs/week2/seed_oss_128k_context_boundary_review.md
+OK      results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv
+OK      results/week2_gsm8k_full_seed_oss_budget0_summary.csv
+OK      results/week2_codegen_mini_seed_oss_budget0.csv
+OK      results/week2_context_gradient_summary.csv
+OK      figures/week2_grafana_seed_oss_live_load_probe.png
+OK      results/figures/seed_oss_fp32_vs_w8a8_qps.png
+OK      results/figures/seed_oss_fp32_vs_w8a8_p95_latency.png
+OK      results/figures/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png

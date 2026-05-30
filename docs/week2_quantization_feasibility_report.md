@@ -1,238 +1,189 @@
-# Seed-OSS-36B 量化优化可行性分析与实验计划
+# Seed-OSS-36B W8A8 量化实验报告
 
-## 1. 背景
+## 1. 实验目标
 
-本阶段围绕 Seed-OSS-36B-Instruct 推理服务的量化优化可行性展开分析，重点评估不同精度配置对显存占用、延迟和吞吐表现的影响。目标是形成可复现的量化前后性能对比表，包括显存占用、P50/P95 latency、tokens/s、错误率和输出质量观察。
+本实验用于验证 Seed-OSS-36B-Instruct 在真实 2×A100-SXM4-80GB 环境下的低比特权重量化 serving 能力，并对比 FP32 baseline 与 W8A8 compressed-tensors serving 在显存、吞吐、延迟和并发能力上的差异。
 
-当前项目已完成 Seed-OSS-36B-Instruct 在 RunPod 2×NVIDIA A100-SXM4-80GB 环境下的 BF16 serving baseline、并发 benchmark、64K 长上下文验证和 Prefix Cache 行为分析。本文在该 baseline 基础上，对 FP32、INT8、AWQ/GPTQ、FP8 KV Cache 和低比特 KV cache 压缩等量化路线进行资源可行性分析，并给出后续实验计划。
+本实验重点回答以下问题：
 
-## 2. 当前 BF16 Baseline
+1. Seed-OSS-36B-Instruct 是否可以在 FP32 精度下完成 serving baseline；
+2. 是否可以通过离线量化生成 W8A8 compressed-tensors checkpoint；
+3. W8A8 量化后是否可以被 vLLM 正常加载并提供 OpenAI-compatible API；
+4. 在相同 batch-profile serving 参数下，W8A8 相比 FP32 是否带来可量化的吞吐和延迟收益；
+5. 显存收益应该如何客观解释，避免将 vLLM 的 KV cache 复用机制误读为运行时总显存下降；
+6. strict INT8、AWQ、GPTQ、INC、bitsandbytes 等路径的边界是什么。
 
-| 项目 | 当前结果 |
+## 2. 实验环境
+
+| 项目 | 配置 |
 |---|---|
-| Model | ByteDance-Seed/Seed-OSS-36B-Instruct |
-| Serving engine | vLLM 0.11.2 |
-| API service | FastAPI + VLLMBackend |
+| 云平台 | RunPod |
 | GPU | 2 × NVIDIA A100-SXM4-80GB |
-| Precision | BF16 |
+| 模型 | ByteDance-Seed/Seed-OSS-36B-Instruct |
+| 推理框架 | vLLM 0.11.2 |
 | Tensor Parallel Size | 2 |
-| Week1 max_model_len | 4096 |
-| Week2 max_model_len | 65536 |
-| Verified context length | up to 61.9K input tokens |
-| Benchmark concurrency | 1 / 2 / 4 / 8 / 16 |
-| Observed GPU memory usage | ~75.8GB / 80GB per GPU |
+| API | vLLM OpenAI-compatible API |
+| 对照 baseline | FP32 serving |
+| 量化方案 | W8A8 compressed-tensors |
+| 对比方式 | 同参数 batch-profile benchmark |
 
-当前 BF16 baseline 已完成以下验证：
+本实验使用 FP32 serving 作为对照基线，使用 W8A8 compressed-tensors serving 作为量化优化方案。两组服务均完成了启动、ready check、smoke test 和 concurrency sweep。
 
-1. vLLM 服务成功启动；
-2. FastAPI + VLLMBackend + vLLM Server 链路打通；
-3. `/health`、`/generate`、FastAPI `/metrics`、vLLM `/metrics` 验证成功；
-4. 完成 concurrency = 1 / 2 / 4 / 8 / 16 的 benchmark；
-5. 完成 8K、16K、32K、56K、61.9K input tokens 的长上下文请求验证；
-6. 保存 vLLM 启动日志、nvidia-smi 输出、metrics snapshot、benchmark CSV 和性能图表。
+## 3. FP32 Baseline
 
-该 BF16 baseline 是后续量化实验的主要对照组。
+FP32 baseline 已完成实机启动、API ready、smoke test 和 batch-profile benchmark。
 
-## 3. FP32 Baseline 可行性分析
+FP32 vLLM 启动日志显示：
 
-Seed-OSS-36B 约 36B 参数。仅从模型权重存储估算：
+| 指标 | 数值 |
+|---|---:|
+| Model loading memory | 67.5901 GiB |
+| Available KV cache memory | 9.43 GiB |
+| GPU KV cache size | 38,624 tokens |
+| Maximum concurrency for 512 tokens/request | 75.44x |
 
-| Precision | Bytes / parameter | Estimated weight memory |
-|---|---:|---:|
-| FP32 | 4 bytes | ~144GB |
-| BF16 / FP16 | 2 bytes | ~72GB |
-| INT8 | 1 byte | ~36GB |
-| INT4 | 0.5 byte | ~18GB |
+对应 evidence：
 
-当前 RunPod 实验环境为 2×A100 80GB，总显存约 160GB。FP32 权重本身约 144GB，尚未计入以下额外开销：
+- `logs/new_2xa100_seed_oss_fp32_vllm_launch_20260528.log`
+- `logs/new_2xa100_seed_oss_fp32_final_inventory_20260528.txt`
+- `results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528.csv`
+- `results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528_summary.csv`
 
-1. KV cache；
-2. CUDA graph；
-3. vLLM runtime overhead；
-4. temporary buffers；
-5. tokenizer / API server / framework overhead；
-6. tensor parallel communication overhead；
-7. 长上下文请求带来的 KV cache 扩张。
+## 4. W8A8 compressed-tensors 离线量化与 Serving
 
-在后续 2×A100-SXM4-80GB 实验窗口中，FP32 serving baseline 已完成实机启动、API ready、smoke test 和 batch-profile benchmark。因此，FP32 不再仅作为资源估算项，而是作为 W8A8 compressed-tensors 量化路径的实测对照基线。
+本阶段完成了 Seed-OSS-36B-Instruct 的 W8A8 compressed-tensors 离线量化，并成功通过 vLLM 加载量化 checkpoint 进行 serving。
 
-后续若需要进行严格 FP32 baseline，应使用更多 GPU 或更高显存 GPU，并保存以下 evidence：
+W8A8 vLLM 启动日志显示：
 
-| Evidence | 内容 |
+| 指标 | 数值 |
+|---|---:|
+| Model loading memory | 17.7109 GiB |
+| Available KV cache memory | 53.04 GiB |
+| GPU KV cache size | 434,480 tokens |
+| Maximum concurrency for 512 tokens/request | 848.59x |
+
+对应 evidence：
+
+- `logs/new_2xa100_seed_oss_w8a8_offline_quantization_success_inventory_20260528.txt`
+- `logs/new_2xa100_seed_oss_w8a8_vllm_launch_20260528.log`
+- `logs/new_2xa100_seed_oss_w8a8_ready_evidence_20260528.txt`
+- `results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528.csv`
+- `results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528_summary.csv`
+- `results/quantized_model_metadata/seed_oss_36b_w8a8/`
+
+## 5. FP32 vs W8A8 性能对比
+
+两组实验使用相同 batch-profile serving 参数：
+
+| 参数 | 数值 |
 |---|---|
-| vLLM startup log | 启动命令、模型加载过程、失败或成功信息 |
-| nvidia-smi | 显存占用、GPU 利用率 |
-| error trace | OOM / unsupported / timeout 等错误信息 |
-| benchmark CSV | 若启动成功，保存 latency、tokens/s、error rate |
-| conclusion | 判断 FP32 baseline 是否具备可复现实测条件 |
+| tensor_parallel_size | 2 |
+| max_model_len | 512 |
+| max_num_batched_tokens | 8192 |
+| max_num_seqs | 32 |
+| gpu_memory_utilization | 0.90 |
+| concurrency sweep | 1 / 2 / 4 / 8 / 16 |
+| requests per concurrency | 32 |
 
-## 4. INT8 量化可行性分析
+核心对比结果如下：
 
-INT8 量化不是简单将 vLLM 启动参数中的 `--dtype` 修改为 `int8`。可部署的 INT8 或低比特推理通常需要：
+| Concurrency | FP32 QPS | W8A8 QPS | QPS 提升 | FP32 P95 latency | W8A8 P95 latency | P95 降低 |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 0.3117 | 0.4096 | 31.41% | 3.1300s | 2.5703s | 17.88% |
+| 2 | 0.5674 | 0.7968 | 40.43% | 4.0014s | 2.5774s | 35.59% |
+| 4 | 1.0626 | 1.5286 | 43.85% | 3.7787s | 2.7323s | 27.69% |
+| 8 | 1.4671 | 3.1125 | 112.15% | 5.4604s | 2.5973s | 52.43% |
+| 16 | 2.6922 | 6.0876 | 126.12% | 6.4298s | 2.6735s | 58.42% |
 
-1. 已量化模型权重；
-2. 量化配置文件；
-3. vLLM 支持的 quantization backend；
-4. 与模型结构兼容的 kernel；
-5. 输出质量回归验证；
-6. latency、throughput、memory、accuracy 的综合评估。
+W8A8 在 concurrency=1/2/4/8/16 下均带来 QPS 和 output tokens/s 提升，提升范围约为 31.4% 到 126.1%。P95 latency 在所有并发设置下均低于 FP32 baseline。
 
-对于 Seed-OSS-36B-Instruct，本阶段已完成 W8A8 compressed-tensors 离线量化、vLLM serving、smoke test 和同参数 batch-profile benchmark。bitsandbytes INT8、INC INT8 和 compressed-tensors strict INT8 路径已进行可行性探测和失败边界记录，但未形成最终稳定 serving。因此，本文将稳定闭环表述为 W8A8 compressed-tensors，而不是 plain INT8 / AWQ / GPTQ 全部完成。
+对应 evidence：
 
-## 5. 当前量化完成度与资源边界
+- `results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv`
+- `results/figures/seed_oss_fp32_vs_w8a8_qps.png`
+- `results/figures/seed_oss_fp32_vs_w8a8_p95_latency.png`
+- `results/figures/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png`
 
-| 原始目标要求 | 当前状态 | 判断 |
+## 6. 显存收益分析
+
+W8A8 的主要显存收益体现在模型权重加载显存下降和 KV cache headroom 增加。
+
+| 指标 | FP32 | W8A8 | 变化 |
+|---|---:|---:|---:|
+| Model loading memory | 67.5901 GiB | 17.7109 GiB | 下降约 73.8% |
+| Available KV cache memory | 9.43 GiB | 53.04 GiB | 显著增加 |
+| GPU KV cache size | 38,624 tokens | 434,480 tokens | 显著增加 |
+| Maximum concurrency for 512 tokens/request | 75.44x | 848.59x | 显著增加 |
+
+需要注意，vLLM serving 场景下不能简单使用 `nvidia-smi` 运行时总显存占用判断量化节省比例。原因是 vLLM 会将量化释放出的权重显存重新分配给 KV cache，从而提高可服务 token capacity 和并发 headroom。
+
+因此，本实验的显存收益应表述为：
+
+- 模型权重加载显存从 67.5901 GiB 降至 17.7109 GiB；
+- 可用 KV cache memory 从 9.43 GiB 增至 53.04 GiB；
+- GPU KV cache size 从 38,624 tokens 增至 434,480 tokens；
+- 运行时 `nvidia-smi` 总显存不一定同比下降，因为释放出的显存被 serving engine 用于扩展 KV cache。
+
+不能表述为：
+
+- W8A8 让运行时 GPU 总显存占用按同等比例下降；
+- 运行时 `nvidia-smi` 显存下降超过 30%。
+
+## 7. strict INT8 / AWQ / GPTQ 路线边界
+
+本阶段除 W8A8 compressed-tensors 量化闭环外，也对 bitsandbytes INT8、INC INT8、compressed-tensors strict INT8、AWQ 和 GPTQ 等路径进行了可行性探测。
+
+结论如下：
+
+| 路线 | 当前状态 | 结论 |
 |---|---|---|
-| BF16 baseline | 已完成真实部署与 benchmark | 已完成 |
-| FP32 对比 | 当前 2×A100 80GB 环境显存余量不足 | 需后续资源验证 |
-| INT8 量化 | 尚未准备兼容量化权重或离线量化流程 | 需后续实验 |
-| 显存降低 ≥30% | 部分达成 / 需限定口径 | W8A8 相比 FP32 的 model loading memory 显著下降，但 runtime `nvidia-smi` 总显存不会同比下降，因为 vLLM 会将释放出的显存用于 KV cache |
-| 速度提升 ≥20% | 已完成 | W8A8 在同参数 batch-profile benchmark 中相对 FP32 提升 QPS 与 output tokens/s，提升幅度覆盖 concurrency=1/2/4/8/16 |
-| 量化对比表 | 已设计对比表结构 | 待后续实验填充 |
-| KV cache 优化路线 | 已完成 KV cache / Prefix Cache 分析 | 可继续推进 FP8 KV Cache |
+| W8A8 compressed-tensors | 已完成 | 已完成离线量化、vLLM serving、smoke test 和 batch-profile benchmark |
+| bitsandbytes INT8 | 已探测 | 可作为 online low-bit loading 探测，但不能作为最终 strict INT8 指标闭环 |
+| INC INT8 | 已探测 | 对原始 BF16 checkpoint 不能直接形成稳定 serving |
+| compressed-tensors strict INT8 | 已探测 | 需要预量化 checkpoint 或明确 quantization_config，不能直接作用于原始 BF16 checkpoint |
+| AWQ / GPTQ | 未完成稳定 serving | 当前没有形成可复现 serving 闭环 |
+| FP8 KV cache | 未完成 | 与长上下文 KV cache capacity 强相关，但本阶段未完成实机验证 |
 
-## 6. 量化路线对比
+对应 evidence：
 
-### 6.1 Weight Quantization
+- `logs/new_2xa100_seed_oss_strict_int8_root_cause_probe_20260528.txt`
+- `logs/new_2xa100_seed_oss_bnb_int8_final_evidence_20260528.txt`
+- `logs/new_2xa100_seed_oss_compressed_tensors_int8_failure_summary_20260528.txt`
+- `logs/new_2xa100_seed_oss_inc_int8_failure_summary_20260528.txt`
+- `logs/new_2xa100_seed_oss_quantization_process_appendix_20260528.txt`
 
-权重量化的主要目标是减少模型权重显存占用，从而提高模型部署可行性，并为 KV cache 释放更多显存空间。
+## 8. 与优化指标的对应关系
 
-| Route | Target | Current status | Follow-up action |
-|---|---|---|---|
-| INT8 weight quantization | 降低权重显存 | 未实测 | 准备 Seed-OSS 兼容 INT8 权重或量化流程 |
-| AWQ | 低比特权重量化，常用于 LLM serving | 未实测 | 评估 vLLM 与 Seed-OSS 兼容性 |
-| GPTQ | 低比特权重量化 | 未实测 | 评估量化流程、加载方式和质量回归 |
-| FP8 weight quantization | 降低权重与计算成本 | 未实测 | 评估 GPU 与 vLLM 支持情况 |
+| 指标 | 当前完成情况 | 说明 |
+|---|---|---|
+| 量化 serving | 已完成 | 完成 W8A8 compressed-tensors 离线量化与 vLLM serving |
+| FP32 对比 | 已完成 | 完成 FP32 baseline 与 W8A8 的同参数 batch-profile 对比 |
+| 速度提升 ≥20% | 已完成 | QPS 与 output tokens/s 提升约 31.4% 到 126.1% |
+| 显存降低 ≥30% | 按 model loading memory 口径完成 | model loading memory 下降约 73.8%；runtime 总显存不作为该指标口径 |
+| Batch-profile 对比表 | 已完成 | 已保存 CSV 和图表 |
+| strict INT8 / AWQ / GPTQ | 未形成最终稳定 serving | 已保留兼容性探测和失败边界 |
+| FP8 KV cache | 未完成 | 不作为本阶段完成项 |
 
-### 6.2 KV Cache Quantization
-
-KV cache 是长上下文 serving 的核心显存瓶颈。当前 64K 服务中，vLLM 启动日志显示：
-
-```text
-GPU KV cache size: 290,448 tokens
-Maximum concurrency for 65,536 tokens per request: 4.43x
-```
-
-512K 单请求约需 524,288 tokens。该长度已经超过当前服务报告的 KV cache token capacity。因此，如果后续继续推进 128K、256K、512K，KV cache quantization 或 FP8 KV Cache 比单纯权重量化更直接关联长上下文能力。
-
-| Route | Target | Current status | Follow-up action |
-|---|---|---|---|
-| FP8 KV Cache | 降低 KV cache memory footprint | 未实测 | 下次 GPU 窗口优先尝试 |
-| KV cache quantization with calibration scales | 改善低精度 KV cache 的质量稳定性 | 未实测 | 准备 calibration 数据 |
-| Prefix Cache | 加速重复前缀请求 | 已完成行为分析 | 继续区分 cold prompt 与 cached prompt |
-| TurboQuant / low-bit KV compression | 前沿低比特 KV cache 压缩路线 | 调研路线 | 不作为当前已实现功能 |
-
-## 7. TurboQuant 路线定位
-
-TurboQuant 等低比特压缩方法可作为后续长上下文推理优化的研究方向。当前项目尚未实现 TurboQuant，也不将其作为已完成实验结果。
-
-在本项目中，TurboQuant 的合理定位是：
-
-```text
-当前阶段已完成 vLLM KV cache capacity、Prefix Cache metrics 和重复长文本请求行为分析。后续可调研 TurboQuant 等低比特 KV cache 压缩方法，用于评估其对 128K、256K、512K long-context serving 的潜在帮助。
-```
-
-该路线与以下工程问题相关：
-
-1. 长上下文推理的 KV cache 显存瓶颈；
-2. 低比特压缩对吞吐和延迟的影响；
-3. 长上下文 serving 的显存成本；
-4. cached prompt 与 cold prompt 的性能差异；
-5. 大规模推理服务中的资源利用率优化。
-
-## 8. 计划中的量化实验设计
-
-后续若重新开启 GPU 实验，应按照以下顺序推进。
-
-### 8.1 FP32 Feasibility Test
-
-目标：确认 FP32 在当前或更高资源环境下是否具备启动条件。
-
-| Item | Record |
-|---|---|
-| dtype | float32 |
-| GPU | 2×A100 80GB or higher |
-| Expected result | 可能出现 OOM 或显存余量不足 |
-| Evidence | vLLM log, nvidia-smi, error trace |
-| Purpose | 明确 FP32 baseline 是否具备实测条件 |
-
-### 8.2 FP8 KV Cache Test
-
-目标：评估 FP8 KV Cache 是否能增加可用 KV cache token capacity，或改善长上下文 serving 的显存效率。
-
-| Item | Record |
-|---|---|
-| Target | 降低 KV cache 显存占用 |
-| Context levels | 64K / 128K / 256K |
-| Metrics | KV cache size, max concurrency, latency, tokens/s |
-| Evidence | vLLM startup log, benchmark CSV, nvidia-smi |
-| Purpose | 验证是否能推进更长上下文 serving |
-
-### 8.3 INT8 / AWQ / GPTQ Serving Test
-
-目标：评估低比特权重量化是否降低模型权重显存占用，并比较其对推理延迟、吞吐和输出质量的影响。
-
-| Item | Record |
-|---|---|
-| Quantization method | INT8 / AWQ / GPTQ / FP8 |
-| Model source | Hugging Face / self-quantized |
-| Metrics | memory, P50, P95, tokens/s, error rate |
-| Quality check | GSM8K mini eval, codegen mini eval |
-| Purpose | 评估低比特权重量化对显存、速度和质量的影响 |
-
-## 9. 量化对比表结构
-
-当前阶段不填入未经实测的数据。后续量化实验完成后，将按照以下结构更新：
-
-| Method | Tested | GPU memory / GPU | P50 latency | P95 latency | tokens/s | Quality observation | Conclusion |
-|---|---|---:|---:|---:|---:|---|---|
-| FP32 | No | TBD | TBD | TBD | TBD | TBD | Resource feasibility required |
-| BF16 | Yes | ~75.8GB | measured | measured | measured | usable | Current baseline |
-| INT8 | No | TBD | TBD | TBD | TBD | TBD | Requires quantized weights |
-| FP8 KV Cache | No | TBD | TBD | TBD | TBD | TBD | High priority for long context |
-| AWQ / GPTQ | No | TBD | TBD | TBD | TBD | TBD | Candidate route |
-
-## 10. 阶段交付边界说明
-
-本阶段原始目标包括 INT8 量化与 FP32 对比。当前阶段已完成：
-
-1. BF16 baseline 的真实部署与 benchmark；
-2. 2×A100 80GB 下 Seed-OSS-36B 的显存占用记录；
-3. FP32 baseline 的资源可行性分析；
-4. INT8/AWQ/GPTQ/FP8 等量化路线拆解；
-5. KV cache quantization 与 512K 长上下文之间的关系分析；
-6. 后续量化实验设计与对比表结构。
-
-当前阶段尚未完成：
-
-1. FP32 实机启动验证；
-2. INT8 实机量化推理；
-3. 显存降低 ≥30% 的真实实验数据；
-4. 速度提升 ≥20% 的真实实验数据。
-
-因此，当前项目不声明量化优化指标已经达成。后续实验将基于 BF16 baseline 继续补齐真实对比数据。
-
-## 11. Evidence 路径
+## 9. Evidence 路径
 
 | Evidence | Path |
 |---|---|
-| BF16 64K vLLM startup log | `evidence/week2_64k_context/logs/week2_seed_oss_vllm_launch_64k.log` |
-| BF16 64K startup key lines | `evidence/week2_64k_context/logs/week2_seed_oss_vllm_64k_key_startup_lines.txt` |
-| Long-context summary | `docs/week2_context_gradient_summary.md` |
-| 512K feasibility analysis | `docs/week2_512k_feasibility_and_resource_analysis.md` |
-| Prefix Cache investigation | `docs/week2_prefix_cache_investigation_summary.md` |
-| Performance report | `docs/week2_performance_optimization_report.md` |
-| Figures | `figures/` |
+| FP32 vLLM launch log | `logs/new_2xa100_seed_oss_fp32_vllm_launch_20260528.log` |
+| W8A8 vLLM launch log | `logs/new_2xa100_seed_oss_w8a8_vllm_launch_20260528.log` |
+| W8A8 offline quantization inventory | `logs/new_2xa100_seed_oss_w8a8_offline_quantization_success_inventory_20260528.txt` |
+| FP32 summary CSV | `results/new_2xa100_seed_oss_fp32_batchprofile_concurrency_sweep_20260528_summary.csv` |
+| W8A8 summary CSV | `results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528_summary.csv` |
+| FP32 vs W8A8 improvement CSV | `results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv` |
+| QPS figure | `results/figures/seed_oss_fp32_vs_w8a8_qps.png` |
+| P95 latency figure | `results/figures/seed_oss_fp32_vs_w8a8_p95_latency.png` |
+| output tokens/s figure | `results/figures/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png` |
+| strict INT8 root-cause probe | `logs/new_2xa100_seed_oss_strict_int8_root_cause_probe_20260528.txt` |
+| quantization process appendix | `logs/new_2xa100_seed_oss_quantization_process_appendix_20260528.txt` |
 
-## 12. 结论
+## 10. 阶段结论
 
-当前阶段已完成 Seed-OSS-36B-Instruct 的 BF16 serving baseline、FP32 serving baseline、W8A8 compressed-tensors serving、FP32 vs W8A8 batch-profile benchmark、128K serving profile 边界验证和 KV cache / Prefix Cache 分析。strict INT8 / AWQ / GPTQ 仍未形成最终稳定 serving，主要限制来自量化格式、vLLM loading path 和模型结构兼容性。
+本阶段完成了 Seed-OSS-36B-Instruct 在 2×A100-SXM4-80GB 环境下的 FP32 baseline 与 W8A8 compressed-tensors 量化 serving 对比。W8A8 在相同 batch-profile serving 参数下，将 QPS 与 output tokens/s 提升约 31.4% 到 126.1%，并将 P95 latency 降低约 17.9% 到 58.4%。
 
-后续量化优化应优先推进：
+显存方面，W8A8 将 model loading memory 从 67.5901 GiB 降至 17.7109 GiB，下降约 73.8%，同时显著扩大 available KV cache memory、GPU KV cache size 和 concurrency headroom。由于 vLLM 会将释放出的显存用于 KV cache，运行时 `nvidia-smi` 总显存不一定同比下降，因此本报告将显存收益定义为模型权重加载显存下降和 KV cache/concurrency headroom 增加。
 
-1. FP32 feasibility test，用于明确高精度 baseline 的资源条件；
-2. FP8 KV Cache test，用于验证是否能提升长上下文 KV cache 容量；
-3. INT8/AWQ/GPTQ serving test，用于比较低比特权重量化下的显存、延迟、吞吐和输出质量；
-4. GSM8K / codegen mini eval，用于评估量化后的质量变化。
-
-该路线能够在不记录未经实测指标的前提下，继续推进 Seed-OSS-36B 推理服务的性能优化工作。
+本阶段未将 bitsandbytes INT8、INC INT8、compressed-tensors strict INT8、AWQ、GPTQ 或 FP8 KV cache 包装为已完成稳定 serving。相关探测保留为兼容性边界和后续优化方向。最终可复现、可对比、可写入性能报告的量化闭环为 FP32 baseline vs W8A8 compressed-tensors serving。

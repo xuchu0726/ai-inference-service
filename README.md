@@ -1,468 +1,333 @@
 # AI Inference Service
 
-一个面向 **AI 推理工程 / LLM Serving / AI Infra** 方向的推理服务原型项目。
+本项目是一个面向大模型推理服务、LLM Serving 和 AI Infra 场景的工程化推理系统。项目目标不是实现简单聊天机器人 demo，而是围绕真实大模型部署、API 服务化、vLLM serving、性能测试、长上下文验证、量化对比、Batch 调优和可观测性分析，构建一套可运行、可压测、可复现、可解释的推理服务实验平台。
 
-本项目目标不是做一个普通聊天机器人 demo，而是构建一个可运行、可压测、可扩展、可文档化的大模型推理服务，用于系统性训练和展示以下能力：
+当前核心链路：
 
-- 模型服务化
-- 推理接口封装
-- 可插拔推理后端
-- Thinking Budget 推理预算控制
-- Benchmark 数据采集
-- 延迟、吞吐、P50/P95、tokens/s 等指标分析
-- 并发压测
-- GPU 推理实验
-- KV Cache、Batch、量化等推理优化分析
-- Prometheus-style 监控
-- Docker / CX3 / Cloud GPU 部署准备
-- 技术文档、实验报告和失败复盘
+    Client / Benchmark Script
+      -> FastAPI /generate
+      -> VLLMBackend
+      -> vLLM OpenAI-Compatible Server
+      -> ByteDance-Seed/Seed-OSS-36B-Instruct
+      -> 2 x NVIDIA A100-SXM4-80GB GPU inference
 
-当前项目处于早期阶段，已经完成 FastAPI 服务骨架、MockBackend、Thinking Budget 参数传递、benchmark 脚本、CSV 结果保存、实验说明文档和 GitHub 版本管理。后续将逐步接入 Transformers 小模型、vLLM 后端、GPU benchmark、并发压测、Prometheus 指标和部署脚本。
+## 1. 核心进展
 
----
+当前项目已经完成以下关键能力：
 
-## 1. 项目定位
+1. 基于 FastAPI 实现 /health、/generate 和 /metrics 接口。
+2. 实现可插拔推理后端，包括 MockBackend、TransformersBackend 和 VLLMBackend。
+3. 完成 ByteDance-Seed/Seed-OSS-36B-Instruct 在 2 x NVIDIA A100-SXM4-80GB 上的 vLLM tensor parallel 部署。
+4. 完成 FastAPI + VLLMBackend + vLLM + Seed-OSS-36B-Instruct 端到端推理链路。
+5. 接入 Thinking Budget 参数链路。
+6. 完成 P50/P95 latency、QPS、tokens/s、error rate 等 benchmark 指标采集。
+7. 完成 concurrency = 1 / 2 / 4 / 8 / 16 的并发测试。
+8. 完成 64K 级别长上下文梯度测试。
+9. 完成 128K serving profile 边界验证。
+10. 完成 Prefix Cache 行为分析。
+11. 完成 max_num_batched_tokens batch-token 调优实验。
+12. 完成 FP32 baseline 与 W8A8 compressed-tensors 量化 serving 对比。
+13. 完成 GSM8K full benchmark。
+14. 完成代码生成 mini eval。
+15. 接入 FastAPI metrics、vLLM metrics、Prometheus 配置和 Grafana dashboard evidence。
+16. 保存原始日志、CSV、metrics、nvidia-smi、图表和 evidence 压缩包，用于复现和审计。
 
-本项目用于补齐 AI 推理 / AI Infra 求职中的工程短板，重点不在于做一个表层应用，而在于理解和验证大模型推理服务中的关键工程问题：
+## 2. 当前主要实验结果
 
-- 如何封装 LLM 推理服务
-- 如何设计可切换的推理 backend
-- 如何设计 benchmark 实验
-- 如何衡量 latency / throughput / tokens/s / GPU memory
-- 如何分析 batch、context length、KV Cache、量化之间的 trade-off
-- 如何将实验结果沉淀成可复现的工程文档
-- 如何从本地 mock 服务逐步扩展到真实模型、vLLM 和 GPU 环境
+### 2.1 Seed-OSS-36B 基础部署
 
----
+| 项目 | 结果 |
+|---|---|
+| 模型 | ByteDance-Seed/Seed-OSS-36B-Instruct |
+| 推理框架 | vLLM 0.11.2 |
+| GPU | 2 x NVIDIA A100-SXM4-80GB |
+| Tensor Parallel | TP=2 |
+| 精度 | BF16 |
+| API 服务 | FastAPI + VLLMBackend |
+| 服务状态 | 已完成端到端验证 |
 
-## 2. 当前已完成功能
+### 2.2 并发测试
 
-当前已经完成：
+在固定 128 output tokens 条件下，concurrency 从 1 提升到 16：
 
-- FastAPI 服务
-- `/health` 健康检查接口
-- `/generate` 推理接口
-- 可插拔 backend 初始架构
-- MockBackend
-- `thinking_budget` 参数
-- benchmark 脚本
-- benchmark 结果保存为 CSV
-- Thinking Budget 实验说明文档
-- GitHub 版本管理
+| 指标 | 结果 |
+|---|---|
+| QPS | 0.325 -> 3.848 |
+| 吞吐提升 | 约 11.84x |
+| P95 latency | 3.348s -> 3.532s |
+| error rate | 0 |
 
-当前尚未完成：
+结论：vLLM continuous batching 能显著提升吞吐，同时保持可控的尾延迟增长。
 
-- 真实小模型推理后端
-- TransformersBackend
-- vLLMBackend
-- GPU benchmark
-- 并发压测
-- P50 / P95 latency 统计
-- Prometheus-style metrics
-- Docker 部署
-- Seed-OSS-36B 可行性实验
-- BAGEL 多模态 PoC
+### 2.3 长上下文测试
 
----
+64K serving profile 下的长上下文梯度测试：
+
+| Context | Input tokens | Client latency | Status |
+|---|---:|---:|---|
+| 8K | 7,434 | 4.811523s | success |
+| 16K | 15,297 | 5.439229s | success |
+| 32K | 30,465 | 8.570771s | success |
+| 56K | 56,303 | 16.128279s | success |
+| 61.9K | 61,917 | 7.437081s | success, cache-affected |
+
+128K serving profile 边界验证：
+
+| Case | Input tokens | Status | Latency |
+|---|---:|---|---:|
+| 128K conservative | 126,222 | success | 84.350549s |
+| 128K near-limit | 130,608 | success, cache-affected | 10.089885s |
+| 128K over-limit | 134,991 | rejected by vLLM | 0.191030s |
+
+512K full-context 尚未完成实机验证。当前项目将其记录为后续资源与 KV cache optimization 方向，不将其包装为已完成结果。
+
+### 2.4 Batch-Token 调优
+
+围绕 vLLM max_num_batched_tokens 完成专项实验。结论是该参数不存在全局最优值，应根据 workload 类型选择 serving profile。
+
+| Workload | 结论 |
+|---|---|
+| short-output burst | 更适合 32768 profile |
+| long-output / mixed workload | 更适合 8192 profile |
+
+该结果已经沉淀为 workload-aware routing policy abstraction。
+
+### 2.5 量化实验
+
+当前稳定量化闭环是 FP32 baseline 与 W8A8 compressed-tensors serving 对比。
+
+| 项目 | 结果 |
+|---|---|
+| FP32 baseline | 已完成 serving、smoke test 和 batch-profile benchmark |
+| W8A8 compressed-tensors | 已完成离线量化、vLLM serving 和同参数对比 |
+| QPS / tokens/s 提升 | 约 31.4% 到 126.1% |
+| model loading memory | 约 67.59 GiB -> 17.71 GiB |
+| 显存收益解释 | 权重加载显存下降，KV cache/concurrency headroom 增加 |
+| 边界 | runtime nvidia-smi 总显存不会同比下降，因为 vLLM 会利用释放出的显存扩展 KV cache |
+
+plain INT8 / AWQ / GPTQ 稳定 serving 尚未完成，相关尝试记录为失败边界和兼容性分析，不能包装为最终成功路径。
+
+### 2.6 GSM8K 与代码生成验证
+
+GSM8K full benchmark：
+
+| 指标 | 结果 |
+|---|---:|
+| 总样本数 | 1319 |
+| API 成功样本数 | 1319 |
+| API error rate | 0 |
+| 正确样本数 | 999 |
+| Accuracy | 75.74% |
+| Client latency P50 | 5.51s |
+| Client latency P95 | 6.69s |
+
+代码生成 mini eval：
+
+| 指标 | 结果 |
+|---|---:|
+| 总样本数 | 5 |
+| API 成功样本数 | 5 |
+| API 失败样本数 | 0 |
+| 简单正确性检查 | 5 / 5 passed |
 
 ## 3. 项目结构
 
-```text
-ai-inference-service/
-├── app/
-│   ├── __init__.py
-│   ├── main.py
-│   ├── schemas.py
-│   ├── config.py
-│   ├── inference.py
-│   │
-│   ├── backends/
-│   │   ├── __init__.py
-│   │   ├── base.py
-│   │   ├── mock_backend.py
-│   │   ├── transformers_backend.py
-│   │   └── vllm_backend.py
-│   │
-│   ├── metrics/
-│   │   ├── __init__.py
-│   │   └── prometheus_metrics.py
-│   │
-│   └── utils/
-│       ├── __init__.py
-│       └── logging_utils.py
-│
-├── scripts/
-│   ├── benchmark.py
-│   ├── benchmark_concurrency.py
-│   ├── gpu_smoke_test.py
-│   └── plot_results.py
-│
-├── deployment/
-│   ├── Dockerfile
-│   ├── run_local.sh
-│   └── cx3_gpu_smoke.pbs
-│
-├── docs/
-│   ├── api_doc.md
-│   ├── environment_notes.md
-│   ├── week1_plan.md
-│   ├── thinking_budget_experiment.md
-│   ├── architecture.md
-│   ├── benchmark_report.md
-│   ├── failure_modes.md
-│   └── seed_oss_feasibility.md
-│
-├── results/
-│   ├── mock_benchmark.csv
-│   └── thinking_budget_benchmark.csv
-│
-├── tests/
-│   ├── __init__.py
-│   └── test_api.py
-│
-├── requirements.txt
-├── .gitignore
-└── README.md
-```
-
----
-
-## 4. 当前运行方式
-
-### 4.1 安装依赖
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4.2 启动服务
-
-```bash
-uvicorn app.main:app --reload
-```
-
-服务启动后，默认运行在：
-
-```text
-http://127.0.0.1:8000
-```
-
-### 4.3 查看 API 文档
-
-打开：
-
-```text
-http://127.0.0.1:8000/docs
-```
-
-### 4.4 运行 benchmark
-
-保持 FastAPI 服务运行，然后在另一个终端执行：
-
-```bash
-python scripts/benchmark.py
-```
-
-当前 benchmark 输出文件：
-
-```text
-results/thinking_budget_benchmark.csv
-```
-
----
-
-## 5. API 接口
-
-### 5.1 GET `/health`
-
-健康检查接口。
-
-示例返回：
-
-```json
-{
-  "status": "ok"
-}
-```
-
-### 5.2 POST `/generate`
-
-推理接口。
-
-示例请求：
-
-```json
-{
-  "prompt": "请用三句话解释什么是大模型推理。",
-  "max_new_tokens": 128,
-  "temperature": 0.7,
-  "thinking_budget": 128
-}
-```
-
-示例返回：
-
-```json
-{
-  "response": "[Mock Output] Received prompt with 16 characters. max_new_tokens=128, temperature=0.7, thinking_budget=128.",
-  "latency_seconds": 0.000002,
-  "input_chars": 16,
-  "max_new_tokens": 128,
-  "thinking_budget": 128,
-  "backend": "mock"
-}
-```
-
----
-
-## 6. 当前实验：Thinking Budget Benchmark
-
-当前实验测试 4 组 `thinking_budget`：
-
-```text
-0, 128, 512, 1024
-```
-
-测试使用 3 条 prompt：
-
-1. 中文大模型推理解释 prompt
-2. 中文法律文本摘要 prompt
-3. 英文 KV Cache 解释 prompt
-
-因此总实验记录数为：
-
-```text
-3 个 prompt × 4 个 thinking_budget = 12 条记录
-```
-
-当前记录字段包括：
-
-- `case_id`
-- `prompt_id`
-- `thinking_budget`
-- `status_code`
-- `client_latency_seconds`
-- `server_latency_seconds`
-- `input_chars`
-- `max_new_tokens`
-- `response`
-
-当前生成结果文件：
-
-```text
-results/thinking_budget_benchmark.csv
-```
-
-说明：当前后端仍为 mock backend，因此该实验主要验证 benchmark 框架、参数传递链路和结果落盘流程。接入真实模型后，将进一步记录：
-
-- output tokens
-- tokens/s
-- P50 / P95 latency
-- GPU memory
-- error rate
-- 输出质量差异
-
----
-
-## 7. Backend 设计
-
-当前已经初步拆分出可插拔推理后端结构：
-
-```text
-app/backends/
-├── base.py
-├── mock_backend.py
-├── transformers_backend.py
-└── vllm_backend.py
-```
-
-当前默认后端：
-
-```text
-MockBackend
-```
-
-后续计划支持：
-
-- TransformersBackend：用于本地或 Colab/CX3 上的小模型推理
-- vLLMBackend：用于更接近真实 LLM serving 的 GPU 推理服务
-- Seed-OSS-compatible backend：用于后续 Seed-OSS-36B 可行性实验
-
-目标是让 API 层保持稳定，通过替换 backend 来支持不同推理引擎。
-
----
-
-## 8. 后续路线
-
-### Stage 1：真实小模型后端
-
-目标：从 mock backend 升级到真实 Transformers backend。
-
-计划接入：
-
-- Qwen2.5-0.5B-Instruct
-- 或其他可在本地 / Colab / CX3 上运行的小模型
-
-核心链路：
-
-```text
-prompt → tokenizer → model.generate → decode → API response → benchmark CSV
-```
-
----
-
-### Stage 2：推理性能 Benchmark
-
-目标：对齐 AI 推理岗位核心指标。
-
-计划实现：
-
-- P50 / P95 latency
-- throughput
-- tokens/s
-- context length 对性能影响
-- thinking_budget 对 latency 和输出质量的影响
-- concurrency 对延迟和吞吐的影响
-
----
-
-### Stage 3：GPU / vLLM 实验
-
-目标：接近真实 LLM serving 场景。
-
-计划实现：
-
-- CX3 / Colab / Cloud GPU smoke test
-- vLLM backend
-- GPU memory 记录
-- batch / concurrency 实验
-- KV Cache 行为分析
-- Seed-OSS-36B 可行性评估
-
----
-
-### Stage 4：工程化与可观测性
-
-目标：从脚本 demo 升级为工程服务。
-
-计划实现：
-
-- structured logging
-- request_id
-- error handling
-- timeout handling
-- Prometheus-style metrics
-- Dockerfile
-- deployment guide
-- failure_modes.md
-- architecture.md
-
----
-
-### Stage 5：Seed-OSS / 多模态扩展
-
-目标：对齐 项目 原始任务书中的 Seed 模型、多模态和长上下文方向。
-
-计划探索：
-
-- Seed-OSS-36B 部署可行性分析
-- GQA / KV Cache / 长上下文推理约束分析
-- Seed-Coder 代码生成场景 PoC
-- BAGEL 多模态 API 设计与资源消耗评估
-- 高并发和低预算降级策略设计
-
----
-
-## 9. 当前限制
-
-当前项目仍处于早期阶段，存在以下限制：
-
-- 当前后端是 mock backend，不代表真实模型生成性能
-- 当前 benchmark 尚未统计 P50 / P95
-- 当前没有真实 GPU memory 数据
-- 当前没有接入 Transformers / vLLM
-- 当前没有并发压测
-- 当前没有量化实验
-- 当前没有 Prometheus / Grafana
-- 当前没有 Docker 部署
-
-这些限制会在后续阶段逐步补齐。
-
----
-
-## 10. 求职价值对应关系
-
-本项目最终希望覆盖 AI 推理 / AI Infra 岗位中的以下能力点：
-
-| 岗位能力 | 项目对应模块 |
+核心目录如下：
+
+    ai-inference-service/
+      app/
+        main.py
+        schemas.py
+        config.py
+        inference.py
+        routing.py
+        backends/
+      scripts/
+        benchmark_vllm_backend.py
+        analyze_vllm_benchmark.py
+        benchmark_context_length.py
+        sample_gpu_metrics.sh
+        snapshot_vllm_metrics.py
+      deployment/
+        cloud/
+        monitoring/
+      docs/
+        week1_delivery_report.md
+        week2_delivery_summary.md
+        week2_performance_optimization_report.md
+        week2_requirement_compliance_matrix.md
+        week2_batch_token_tuning_report.md
+        week2_quantization_feasibility_report.md
+        week2_observability_report.md
+        week2_eval_mini_report.md
+        week2/
+      results/
+      logs/
+      figures/
+      evidence/
+      artifacts/
+
+## 4. 关键文档入口
+
+建议阅读顺序：
+
+| 目的 | 文档 |
 |---|---|
-| LLM 服务化 | FastAPI `/generate` 接口 |
-| 推理后端封装 | `app/backends/` |
-| 推理预算控制 | `thinking_budget` 参数 |
-| 性能测试 | `scripts/benchmark.py` |
-| 延迟分析 | `client_latency_seconds` / `server_latency_seconds` |
-| P50/P95 | 后续 benchmark 扩展 |
-| 并发压测 | `benchmark_concurrency.py` |
-| GPU 实验 | `gpu_smoke_test.py` / CX3 |
-| vLLM serving | `vllm_backend.py` |
-| 量化实验 | 后续 INT8 / 4bit 对比 |
-| KV Cache 分析 | 后续长上下文实验 |
-| 可观测性 | `app/metrics/` |
-| 部署能力 | `deployment/` |
-| 技术文档 | `docs/` |
+| 快速了解 Week2 交付 | docs/week2_delivery_summary.md |
+| 查看 Week2 主性能报告 | docs/week2_performance_optimization_report.md |
+| 查看 Week2 验收映射 | docs/week2_requirement_compliance_matrix.md |
+| 查看 Batch-Token 调优 | docs/week2_batch_token_tuning_report.md |
+| 查看量化实验边界 | docs/week2_quantization_feasibility_report.md |
+| 查看可观测性分析 | docs/week2_observability_report.md |
+| 查看 GSM8K 与代码生成 | docs/week2_eval_mini_report.md |
+| 查看 128K 长上下文边界实验 | docs/week2/seed_oss_128k_context_boundary_review.md |
+| 查看 Week1 交付 | docs/week1_delivery_report.md |
 
----
+## 5. 运行方式
 
-## 11. 当前状态总结
+安装基础依赖：
 
-当前已经完成：
+    pip install -r requirements.txt
 
-```text
-FastAPI 服务骨架
-MockBackend
-Thinking Budget 参数传递
-Benchmark CSV 结果保存
-Thinking Budget 实验说明文档
-GitHub 版本管理
-基础工程目录重构
-```
+安装 vLLM 依赖：
 
-下一步核心任务：
+    pip install -r requirements-vllm.txt
 
-```text
-接入 Transformers 小模型后端，让项目从 mock 推理升级为真实模型推理。
-```
+启动 FastAPI：
 
-## Week2 RunPod Seed-OSS-36B 性能实验证据
+    uvicorn app.main:app --host 0.0.0.0 --port 8000
 
-本项目已完成 `ByteDance-Seed/Seed-OSS-36B-Instruct` 在真实云端 GPU 环境下的推理服务性能验证。服务架构采用 FastAPI + VLLMBackend + vLLM，部署环境为 RunPod 2×A100-SXM4-80GB。
+云端 vLLM 后端启动 FastAPI：
 
-核心配置：
+    bash deployment/cloud/run_fastapi_vllm.sh
 
-- 推理服务架构：FastAPI + VLLMBackend + vLLM 0.11.2
-- 模型：`ByteDance-Seed/Seed-OSS-36B-Instruct`
-- 精度：BF16
-- Tensor Parallel Size：2
-- 长上下文服务配置：`max_model_len=65536`
-- 已验证上下文长度：8K、16K、32K、56K、61.9K input tokens
-- 并发测试范围：1 / 2 / 4 / 8 / 16 concurrent requests
-- 已保存证据：启动日志、benchmark CSV、metrics snapshot、nvidia-smi 输出、图表、压缩归档包
+启动 Seed-OSS vLLM 服务：
 
-关键报告与证据路径：
+    VLLM_PORT=8002 \
+    TENSOR_PARALLEL_SIZE=2 \
+    MAX_MODEL_LEN=65536 \
+    MAX_NUM_BATCHED_TOKENS=8192 \
+    GPU_MEMORY_UTILIZATION=0.90 \
+    DTYPE=bfloat16 \
+    bash deployment/cloud/run_vllm_seed_oss_36b_tp2.sh
 
-| 内容 | 路径 |
-|---|---|
-| Week2 交付摘要 | `docs/week2_delivery_summary.md` |
-| Week2 性能优化报告 | `docs/week2_performance_optimization_report.md` |
-| 长上下文梯度测试汇总 | `docs/week2_context_gradient_summary.md` |
-| Prefix Cache 复测分析 | `docs/week2_prefix_cache_investigation_summary.md` |
-| RunPod 64K 长上下文证据 | `evidence/week2_64k_context/` |
-| Pre-32K 阶段证据 | `evidence/week2_pre_32k/` |
-| 原始证据压缩包 | `artifacts/` |
-| 性能图表 | `figures/` |
+检查服务状态：
 
-工程结论：
+    curl http://127.0.0.1:8000/health
+    curl http://127.0.0.1:8002/v1/models
+    curl http://127.0.0.1:8000/metrics
+    curl http://127.0.0.1:8002/metrics
 
-- 并发测试显示，concurrency 从 1 提升到 16 时，QPS 明显提升，P50/P95 latency 小幅上升，error rate 保持 0。
-- 长上下文首次梯度测试显示，input tokens 从 7.4K 增长到 56.3K 时，latency 上升、output tokens/s 下降，符合长上下文 prefill 成本增长预期。
-- 61.9K near-limit 测试结果单独解释，因为重复长文本 prompt 会受到 vLLM Prefix Cache 与 warm state 影响，不能直接作为冷启动长上下文性能点。
+## 6. API 示例
+
+GET /health：
+
+    curl http://127.0.0.1:8000/health
+
+POST /generate：
+
+    curl -X POST http://127.0.0.1:8000/generate \
+      -H "Content-Type: application/json" \
+      -d '{
+        "prompt": "请用三句话解释什么是 KV Cache。",
+        "max_new_tokens": 128,
+        "temperature": 0.0,
+        "thinking_budget": 512
+      }'
+
+核心返回字段包括：
+
+    response
+    latency_seconds
+    input_tokens
+    output_tokens
+    tokens_per_second
+    backend
+    model_name
+    device
+    thinking_budget
+
+## 7. Benchmark 与评测
+
+vLLM backend benchmark：
+
+    python scripts/benchmark_vllm_backend.py \
+      --url http://127.0.0.1:8000/generate \
+      --output results/benchmark.csv \
+      --concurrency 4 \
+      --repeat 10 \
+      --max-new-tokens 128 \
+      --temperature 0.0 \
+      --thinking-budgets 512 \
+      --timeout-seconds 600
+
+生成 summary：
+
+    python scripts/analyze_vllm_benchmark.py \
+      --input results/benchmark.csv \
+      --output results/benchmark_summary.csv
+
+长上下文 benchmark：
+
+    python scripts/benchmark_context_length.py \
+      --url http://127.0.0.1:8000/generate \
+      --output results/week2_context_length_benchmark.csv \
+      --context-targets 8k,16k,32k,64k \
+      --max-new-tokens 128 \
+      --thinking-budget 512
+
+## 8. 监控与证据保存
+
+项目已保存以下类型 evidence：
+
+1. vLLM 启动日志；
+2. FastAPI 服务日志；
+3. health、models、metrics 输出；
+4. benchmark CSV；
+5. summary CSV；
+6. nvidia-smi snapshot；
+7. nvidia-smi sampling；
+8. Prometheus scrape 配置；
+9. Grafana dashboard JSON 与截图；
+10. 性能图表；
+11. evidence 压缩包。
+
+核心证据目录：
+
+    results/
+    logs/
+    figures/
+    evidence/
+    artifacts/
+    deployment/monitoring/
+
+## 9. 当前边界
+
+当前不能夸大的内容：
+
+1. 512K full-context 尚未完成实机验证。
+2. plain INT8 / AWQ / GPTQ 稳定 serving 尚未完成。
+3. FP8 KV cache 尚未完成。
+4. 代码生成测试使用 Seed-OSS-36B-Instruct，不是 Seed-Coder 专项模型。
+5. 128K near-limit latency 受 prefix cache / warm state 影响，不能代表 cold prompt 128K 性能。
+6. W8A8 的显存收益应表述为模型权重加载显存下降和 KV cache headroom 增加，不能写成 runtime nvidia-smi 总显存同比下降。
+
+## 10. 阶段结论
+
+当前项目已经从早期 FastAPI demo 升级为真实大模型推理服务实验平台。
+
+截至 Week2，项目已经形成以下闭环：
+
+1. Seed-OSS-36B-Instruct 真实部署；
+2. FastAPI + VLLMBackend + vLLM serving；
+3. 多并发 benchmark；
+4. 64K / 128K 长上下文验证；
+5. Prefix Cache 分析；
+6. Batch-token serving profile 调优；
+7. FP32 vs W8A8 量化 serving 对比；
+8. GSM8K full benchmark；
+9. 代码生成 mini eval；
+10. Prometheus / Grafana / nvidia-smi 可观测性证据；
+11. 可复现文档、日志、CSV、图表和 evidence 归档。
+
+下一阶段重点是高可用架构、降级策略、多实例 serving profile、压测、告警规则、多模态或代码模型专项验证。
