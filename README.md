@@ -303,8 +303,6 @@ vLLM backend benchmark：
 
 ## 9. 当前边界
 
-当前不能夸大的内容：
-
 1. 512K full-context 尚未完成实机验证。
 2. plain INT8 / AWQ / GPTQ 稳定 serving 尚未完成。
 3. FP8 KV cache 尚未完成。
