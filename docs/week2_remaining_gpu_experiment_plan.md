@@ -55,10 +55,10 @@
 
 | Screenshot | Path |
 |---|---|
-| Grafana dashboard 总览 | `figures/week2_grafana_dashboard_overview.png` |
-| FastAPI 请求与延迟面板 | `figures/week2_grafana_fastapi_latency.png` |
-| vLLM running / waiting requests 面板 | `figures/week2_grafana_vllm_queue.png` |
-| vLLM KV cache / Prefix cache 面板 | `figures/week2_grafana_kv_prefix_cache.png` |
+| Grafana dashboard 总览 | `figures/week2/observability/week2_grafana_dashboard_overview.png` |
+| FastAPI 请求与延迟面板 | `figures/week2/observability/week2_grafana_fastapi_latency.png` |
+| vLLM running / waiting requests 面板 | `figures/week2/observability/week2_grafana_vllm_queue.png` |
+| vLLM KV cache / Prefix cache 面板 | `figures/week2/observability/week2_grafana_kv_prefix_cache.png` |
 
 ### 3.3 预期结论
 

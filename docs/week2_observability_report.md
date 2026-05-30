@@ -185,7 +185,7 @@ Dashboard 覆盖以下面板：
 | vLLM Prefix Cache Queries / Hits | `rate(vllm:prefix_cache_queries_total[1m])`, `rate(vllm:prefix_cache_hits_total[1m])` |
 | vLLM Prompt / Generation Tokens | `rate(vllm:prompt_tokens_total[1m])`, `rate(vllm:generation_tokens_total[1m])` |
 
-当前 dashboard JSON 已通过 `python -m json.tool` 格式校验，并已保存一次 Grafana live load probe 截图作为实机导入与负载观测证据：`figures/week2_grafana_seed_oss_live_load_probe.png`。
+当前 dashboard JSON 已通过 `python -m json.tool` 格式校验，并已保存一次 Grafana live load probe 截图作为实机导入与负载观测证据：`figures/week2/observability/week2_grafana_seed_oss_live_load_probe.png`。
 
 ## 7. 资源瓶颈分析
 

@@ -320,16 +320,16 @@ vLLM metrics 快照命令示例：
 
 已完成图表：
 
-    figures/week2_qps_vs_concurrency_report.png
-    figures/week2_latency_p50_p95_vs_concurrency.png
-    figures/week2_tokens_per_second_vs_concurrency_report.png
-    figures/week2_error_rate_vs_concurrency_report.png
-    figures/week2_context_latency_first_pass_only.png
-    figures/week2_context_tokens_per_second_first_pass_only.png
-    figures/week2_prefix_cache_repeat_latency.png
-    results/figures/seed_oss_fp32_vs_w8a8_qps.png
-    results/figures/seed_oss_fp32_vs_w8a8_p95_latency.png
-    results/figures/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png
+    figures/week2/concurrency/week2_qps_vs_concurrency_report.png
+    figures/week2/concurrency/week2_latency_p50_p95_vs_concurrency.png
+    figures/week2/concurrency/week2_tokens_per_second_vs_concurrency_report.png
+    figures/week2/concurrency/week2_error_rate_vs_concurrency_report.png
+    figures/week2/context/week2_context_latency_first_pass_only.png
+    figures/week2/context/week2_context_tokens_per_second_first_pass_only.png
+    figures/week2/prefix_cache/week2_prefix_cache_repeat_latency.png
+    figures/week2/quantization/seed_oss_fp32_vs_w8a8_qps.png
+    figures/week2/quantization/seed_oss_fp32_vs_w8a8_p95_latency.png
+    figures/week2/quantization/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png
 
 ---
 
@@ -422,39 +422,39 @@ vLLM 启动日志显示：
 
 | Figure | Path | Purpose |
 |---|---|---|
-| QPS vs concurrency | `figures/week2_qps_vs_concurrency_report.png` | 展示 concurrency 提升带来的吞吐提升 |
-| P50/P95 latency vs concurrency | `figures/week2_latency_p50_p95_vs_concurrency.png` | 展示并发增加下的尾延迟变化 |
-| Tokens/s vs concurrency | `figures/week2_tokens_per_second_vs_concurrency_report.png` | 展示单请求生成速率随并发变化的 trade-off |
-| Error rate vs concurrency | `figures/week2_error_rate_vs_concurrency_report.png` | 展示并发测试下 error rate 保持 0 |
-| Long-context latency first-pass | `figures/week2_context_latency_first_pass_only.png` | 展示 8K/16K/32K/56K 首次长上下文 latency 趋势 |
-| Long-context tokens/s first-pass | `figures/week2_context_tokens_per_second_first_pass_only.png` | 展示首次长上下文 tokens/s 下降趋势 |
-| Prefix cache repeat latency | `figures/week2_prefix_cache_repeat_latency.png` | 展示重复长文本请求在 prefix cache/warm state 下的 latency 变化 |
-| FP32 vs W8A8 QPS | `results/figures/seed_oss_fp32_vs_w8a8_qps.png` | 展示 W8A8 量化 serving 相比 FP32 baseline 的吞吐提升 |
-| FP32 vs W8A8 P95 latency | `results/figures/seed_oss_fp32_vs_w8a8_p95_latency.png` | 展示 W8A8 量化 serving 对尾延迟的改善 |
-| FP32 vs W8A8 output tokens/s | `results/figures/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png` | 展示量化前后生成吞吐变化 |
+| QPS vs concurrency | `figures/week2/concurrency/week2_qps_vs_concurrency_report.png` | 展示 concurrency 提升带来的吞吐提升 |
+| P50/P95 latency vs concurrency | `figures/week2/concurrency/week2_latency_p50_p95_vs_concurrency.png` | 展示并发增加下的尾延迟变化 |
+| Tokens/s vs concurrency | `figures/week2/concurrency/week2_tokens_per_second_vs_concurrency_report.png` | 展示单请求生成速率随并发变化的 trade-off |
+| Error rate vs concurrency | `figures/week2/concurrency/week2_error_rate_vs_concurrency_report.png` | 展示并发测试下 error rate 保持 0 |
+| Long-context latency first-pass | `figures/week2/context/week2_context_latency_first_pass_only.png` | 展示 8K/16K/32K/56K 首次长上下文 latency 趋势 |
+| Long-context tokens/s first-pass | `figures/week2/context/week2_context_tokens_per_second_first_pass_only.png` | 展示首次长上下文 tokens/s 下降趋势 |
+| Prefix cache repeat latency | `figures/week2/prefix_cache/week2_prefix_cache_repeat_latency.png` | 展示重复长文本请求在 prefix cache/warm state 下的 latency 变化 |
+| FP32 vs W8A8 QPS | `figures/week2/quantization/seed_oss_fp32_vs_w8a8_qps.png` | 展示 W8A8 量化 serving 相比 FP32 baseline 的吞吐提升 |
+| FP32 vs W8A8 P95 latency | `figures/week2/quantization/seed_oss_fp32_vs_w8a8_p95_latency.png` | 展示 W8A8 量化 serving 对尾延迟的改善 |
+| FP32 vs W8A8 output tokens/s | `figures/week2/quantization/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png` | 展示量化前后生成吞吐变化 |
 
 
 ### 6.7 关键图表
 
 #### 并发吞吐与延迟
 
-![QPS vs concurrency](../figures/week2_qps_vs_concurrency_report.png)
+![QPS vs concurrency](../figures/week2/concurrency/week2_qps_vs_concurrency_report.png)
 
-![P50/P95 latency vs concurrency](../figures/week2_latency_p50_p95_vs_concurrency.png)
+![P50/P95 latency vs concurrency](../figures/week2/concurrency/week2_latency_p50_p95_vs_concurrency.png)
 
-![Tokens/s vs concurrency](../figures/week2_tokens_per_second_vs_concurrency_report.png)
+![Tokens/s vs concurrency](../figures/week2/concurrency/week2_tokens_per_second_vs_concurrency_report.png)
 
-![Error rate vs concurrency](../figures/week2_error_rate_vs_concurrency_report.png)
+![Error rate vs concurrency](../figures/week2/concurrency/week2_error_rate_vs_concurrency_report.png)
 
 #### 长上下文首次梯度测试
 
-![Long-context latency first-pass](../figures/week2_context_latency_first_pass_only.png)
+![Long-context latency first-pass](../figures/week2/context/week2_context_latency_first_pass_only.png)
 
-![Long-context tokens/s first-pass](../figures/week2_context_tokens_per_second_first_pass_only.png)
+![Long-context tokens/s first-pass](../figures/week2/context/week2_context_tokens_per_second_first_pass_only.png)
 
 #### Prefix Cache 复测
 
-![Prefix cache repeat latency](../figures/week2_prefix_cache_repeat_latency.png)
+![Prefix cache repeat latency](../figures/week2/prefix_cache/week2_prefix_cache_repeat_latency.png)
 
 
 ## 7. FP32 vs W8A8 量化性能对比
@@ -471,11 +471,11 @@ vLLM 启动日志显示：
 
 W8A8 在所有并发设置下均提升 QPS 和 output tokens/s，提升范围约为 31.4% 到 126.1%。P95 latency 也在所有并发设置下低于 FP32 baseline，说明该量化路径不仅降低模型权重加载显存，也改善了 batch serving 吞吐与尾延迟。
 
-![FP32 vs W8A8 QPS](../results/figures/seed_oss_fp32_vs_w8a8_qps.png)
+![FP32 vs W8A8 QPS](../figures/week2/quantization/seed_oss_fp32_vs_w8a8_qps.png)
 
-![FP32 vs W8A8 P95 latency](../results/figures/seed_oss_fp32_vs_w8a8_p95_latency.png)
+![FP32 vs W8A8 P95 latency](../figures/week2/quantization/seed_oss_fp32_vs_w8a8_p95_latency.png)
 
-![FP32 vs W8A8 output tokens/s](../results/figures/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png)
+![FP32 vs W8A8 output tokens/s](../figures/week2/quantization/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png)
 
 显存方面，FP32 baseline 的 model loading memory 为 67.5901 GiB，W8A8 为 17.7109 GiB，下降约 73.8%。同时，available KV cache memory 从 9.43 GiB 提升到 53.04 GiB，GPU KV cache size 从 38,624 tokens 提升到 434,480 tokens。该收益应解释为模型权重加载显存降低与 KV cache/concurrency headroom 增加，而不是运行时 `nvidia-smi` 总显存同比下降。
 

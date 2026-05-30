@@ -134,7 +134,7 @@ Evidence：
 - `docs/week2_observability_report.md`
 - `deployment/monitoring/prometheus_week2.yml`
 - `deployment/monitoring/grafana_week2_seed_oss_dashboard.json`
-- `figures/week2_grafana_seed_oss_live_load_probe.png`
+- `figures/week2/observability/week2_grafana_seed_oss_live_load_probe.png`
 
 ### 3.8 GSM8K 全量评测
 
