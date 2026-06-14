@@ -1,0 +1,92 @@
+===== Seed-OSS-36B 4×A100 512K BF16 KV 与 FP8 KV 对比总结 =====
+
+一、实验目标
+
+本实验用于验证 Seed-OSS-36B-Instruct 在 4×A100-SXM4-80GB、Tensor Parallel=4 的推理服务配置下，对 512K 长上下文边界的实际承载能力，并补充 FP8 KV Cache 的实测证据。
+
+实验重点不是评估回答质量，而是验证以下工程问题：
+1. vLLM 是否能够在 max_model_len=524288 配置下完成服务启动；
+2. 500K 级输入 tokens 是否能够完成真实请求的 prefill、KV Cache 分配和 decode；
+3. FP8 KV Cache 是否能够提升 KV Cache 容量与长上下文并发余量；
+4. BF16 KV 与 FP8 KV 在同等 512K 服务配置下的容量、延迟和稳定性差异。
+
+二、硬件与服务配置
+
+- GPU: 4 × NVIDIA A100-SXM4-80GB
+- Serving engine: vLLM 0.23.0
+- Model: ByteDance-Seed/Seed-OSS-36B-Instruct
+- Tensor parallel size: 4
+- max_model_len: 524288
+- max_num_seqs: 1
+- max_num_batched_tokens: 32768
+- model dtype: bfloat16
+- API: OpenAI-compatible /v1/chat/completions
+- Model source: local HuggingFace snapshot
+
+三、BF16 KV baseline 结果
+
+服务启动结果：
+- max_model_len=524288 配置被 vLLM 接受；
+- 服务成功启动并完成 Application startup；
+- /v1/models 返回模型 metadata；
+- GPU KV cache size: 909,360 tokens；
+- Maximum concurrency for 524,288-token requests: 1.73x。
+
+500K near-limit 请求结果：
+- Target input tokens: 500,000
+- Constructed prompt tokens estimate: 500,025
+- Actual prompt_tokens: 500,033
+- Total tokens: 500,065
+- Completion tokens: 32
+- HTTP status: 200
+- Latency: 533.85s
+- Result: 请求成功完成，无 OOM、进程退出或 RuntimeError。
+
+四、FP8 KV Cache 结果
+
+服务启动结果：
+- max_model_len=524288 与 kv_cache_dtype=fp8 配置被 vLLM 接受；
+- 服务成功启动并完成 Application startup；
+- vLLM 日志确认使用 FP8 数据类型存储 KV Cache；
+- GPU KV cache size: 1,807,008 tokens；
+- Maximum concurrency for 524,288-token requests: 3.45x。
+
+500K near-limit 请求结果：
+- Target input tokens: 500,000
+- Constructed prompt tokens estimate: 500,029
+- Actual prompt_tokens: 500,037
+- Total tokens: 500,069
+- Completion tokens: 32
+- HTTP status: 200
+- Latency: 770.60s
+- Result: 请求成功完成，无 OOM、进程退出或 RuntimeError。
+
+五、对比结论
+
+1. KV Cache 容量提升
+
+FP8 KV Cache 将 GPU KV cache size 从 909,360 tokens 提升到 1,807,008 tokens，约为 BF16 KV 的 1.99 倍。
+
+2. 512K 请求并发余量提升
+
+在相同 max_model_len=524288、TP=4、gpu_memory_utilization=0.95 配置下，vLLM 报告的 524,288-token request concurrency 从 1.73x 提升到 3.45x，约为 BF16 KV 的 1.99 倍。
+
+3. 单请求延迟没有改善
+
+在本次 500K near-limit 单请求测试中，FP8 KV 的 latency 为 770.60s，高于 BF16 KV 的 533.85s。该结果说明，在当前 vLLM 0.23.0、Seed-OSS-36B、4×A100-SXM4-80GB 与 FlashInfer backend 组合下，FP8 KV 的主要收益体现在 KV Cache 容量和长上下文并发余量，而不是必然降低单请求延迟。
+
+4. 长上下文服务边界验证成立
+
+BF16 KV 与 FP8 KV 两种配置均成功完成约 500K prompt tokens 的 near-limit 请求，证明该 4×A100 TP=4 配置能够承载 Seed-OSS-36B-Instruct 的 512K 级长上下文推理服务。由于实际请求还需要包含 chat template overhead 与输出 tokens，因此本实验采用约 500K input tokens，而不是直接构造 524,288 input tokens，以避免超过 max_model_len 上限。
+
+六、注意事项
+
+1. 输出内容被 max_output_tokens=32 截断，并出现 Seed-OSS thinking tag。这不影响本实验结论，因为本实验目标是验证长上下文 prefill、KV Cache 分配、API 稳定性和请求完成状态，不用于评估回答质量。
+
+2. FP8 KV Cache 可能带来精度或稳定性影响，vLLM 日志中也提示缺少合适 scaling factor 时可能存在 accuracy drop。因此，FP8 KV 更适合作为容量与并发优化手段；若用于生产推理，还需要结合数学推理、代码生成等任务进行质量回归测试。
+
+3. 本实验仅覆盖单请求 near-limit 场景。后续如需进一步评估生产负载，应补充多并发长上下文请求、不同 prompt 长度分布、Prefix Cache 命中率和端到端吞吐/延迟曲线。
+
+七、工程结论
+
+在 4×A100-SXM4-80GB、TP=4 的部署条件下，Seed-OSS-36B-Instruct 可以通过 vLLM 成功启动 512K 上下文服务，并完成约 500K prompt tokens 的真实 near-limit 请求。FP8 KV Cache 将 KV Cache 容量和 512K 请求并发余量提升约 2 倍，但在本次单请求 near-limit 测试中没有降低 latency。该结果表明 FP8 KV Cache 的主要价值是扩展长上下文服务容量边界，而不是保证单请求延迟优化。
