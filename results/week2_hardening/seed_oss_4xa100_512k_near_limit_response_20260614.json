@@ -1,0 +1,44 @@
+{
+  "created_at": "2026-06-14T23:18:17.704509Z",
+  "ok": true,
+  "status": 200,
+  "latency_s": 533.8537616729736,
+  "response": {
+    "id": "chatcmpl-a05b4965499f14bc",
+    "object": "chat.completion",
+    "created": 1781478565,
+    "model": "ByteDance-Seed/Seed-OSS-36B-Instruct",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "<seed:think>\nGot it, let's see. The user provided a very long text that's a deterministic long-context validation block for Seed-OSS 51",
+          "refusal": null,
+          "annotations": null,
+          "audio": null,
+          "function_call": null,
+          "tool_calls": [],
+          "reasoning": null
+        },
+        "logprobs": null,
+        "finish_reason": "length",
+        "stop_reason": null,
+        "token_ids": null,
+        "routed_experts": null
+      }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.23.0-tp4-230a1e2a",
+    "usage": {
+      "prompt_tokens": 500033,
+      "total_tokens": 500065,
+      "completion_tokens": 32,
+      "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+  }
+}

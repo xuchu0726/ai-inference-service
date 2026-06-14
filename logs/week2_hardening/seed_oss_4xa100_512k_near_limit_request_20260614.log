@@ -1,0 +1,30 @@
+===== Seed-OSS 512K near-limit request generation =====
+time: 2026-06-14T23:08:32.355678Z
+model: ByteDance-Seed/Seed-OSS-36B-Instruct
+target_input_tokens: 500000
+constructed_prompt_tokens_est: 500025
+request_payload_saved: results/week2_hardening/seed_oss_4xa100_512k_near_limit_request_20260614.json
+===== Sending request =====
+===== Summary =====
+{
+  "created_at": "2026-06-14T23:18:17.706588Z",
+  "model": "ByteDance-Seed/Seed-OSS-36B-Instruct",
+  "model_snapshot": "/workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots/497f1dca95ebdec98e41d517b9f060ee753c902f",
+  "target_input_tokens": 500000,
+  "constructed_prompt_tokens_est": 500025,
+  "max_model_len": 524288,
+  "max_output_tokens": 32,
+  "ok": true,
+  "status": 200,
+  "latency_s": 533.8537616729736,
+  "usage": {
+    "prompt_tokens": 500033,
+    "total_tokens": 500065,
+    "completion_tokens": 32,
+    "prompt_tokens_details": null
+  },
+  "finish_reason": "length",
+  "content_preview": "<seed:think>\nGot it, let's see. The user provided a very long text that's a deterministic long-context validation block for Seed-OSS 51",
+  "request_path": "results/week2_hardening/seed_oss_4xa100_512k_near_limit_request_20260614.json",
+  "response_path": "results/week2_hardening/seed_oss_4xa100_512k_near_limit_response_20260614.json"
+}

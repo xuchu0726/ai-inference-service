@@ -1,0 +1,61 @@
+===== 512K near-limit post-request GPU snapshot =====
+Sun Jun 14 23:18:18 UTC 2026
+Sun Jun 14 23:18:18 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:0F:00.0 Off |                    0 |
+| N/A   46C    P0            120W /  400W |   79597MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:47:00.0 Off |                    0 |
+| N/A   47C    P0            118W /  400W |   79597MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA A100-SXM4-80GB          On  |   00000000:4E:00.0 Off |                    0 |
+| N/A   47C    P0            118W /  400W |   79597MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA A100-SXM4-80GB          On  |   00000000:87:00.0 Off |                    0 |
+| N/A   54C    P0            123W /  400W |   79597MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A           10610      C   VLLM::Worker_TP0                      79586MiB |
+|    1   N/A  N/A           10611      C   VLLM::Worker_TP1                      79586MiB |
+|    2   N/A  N/A           10612      C   VLLM::Worker_TP2                      79586MiB |
+|    3   N/A  N/A           10613      C   VLLM::Worker_TP3                      79586MiB |
++-----------------------------------------------------------------------------------------+
+
+===== 512K near-limit summary =====
+{
+  "created_at": "2026-06-14T23:18:17.706588Z",
+  "model": "ByteDance-Seed/Seed-OSS-36B-Instruct",
+  "model_snapshot": "/workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots/497f1dca95ebdec98e41d517b9f060ee753c902f",
+  "target_input_tokens": 500000,
+  "constructed_prompt_tokens_est": 500025,
+  "max_model_len": 524288,
+  "max_output_tokens": 32,
+  "ok": true,
+  "status": 200,
+  "latency_s": 533.8537616729736,
+  "usage": {
+    "prompt_tokens": 500033,
+    "total_tokens": 500065,
+    "completion_tokens": 32,
+    "prompt_tokens_details": null
+  },
+  "finish_reason": "length",
+  "content_preview": "<seed:think>\nGot it, let's see. The user provided a very long text that's a deterministic long-context validation block for Seed-OSS 51",
+  "request_path": "results/week2_hardening/seed_oss_4xa100_512k_near_limit_request_20260614.json",
+  "response_path": "results/week2_hardening/seed_oss_4xa100_512k_near_limit_response_20260614.json"
+}
