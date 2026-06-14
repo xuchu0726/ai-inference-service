@@ -1,0 +1,4 @@
+===== vLLM serve help key options =====
+Sun Jun 14 22:15:25 UTC 2026
+
+For a flag:               vllm serve --help=max-model-len  (_ or - accepted)

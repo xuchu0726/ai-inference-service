@@ -1,0 +1,240 @@
+===== vLLM key flag compatibility check =====
+Sun Jun 14 22:16:36 UTC 2026
+
+
+----- tensor-parallel-size -----
+Arguments matching 'tensor-parallel-size':
+  --tensor-parallel-size TENSOR_PARALLEL_SIZE, -tp TENSOR_PARALLEL_SIZE
+                        Number of tensor parallel groups. (default: 1)
+
+When passing JSON CLI arguments, the following sets of arguments are equivalent:
+   --json-arg '{"key1": "value1", "key2": {"key3": "value2"}}'
+   --json-arg.key1 value1 --json-arg.key2.key3 value2
+
+Additionally, list elements can be passed individually using +:
+   --json-arg '{"key4": ["value3", "value4", "value5"]}'
+   --json-arg.key4+ value3 --json-arg.key4+='value4,value5'
+
+----- max-model-len -----
+Arguments matching 'max-model-len':
+  --max-model-len MAX_MODEL_LEN
+                        Model context length (prompt and output). If unspecified, will be automatically derived from the model config.
+                        When passing via `--max-model-len`, supports k/m/g/K/M/G in human-readable format. Examples:
+                        - 1k -> 1000
+                        - 1K -> 1024
+                        - 25.6k -> 25,600
+                        - -1 or 'auto' -> Automatically choose the maximum model length that fits in GPU memory. This will use the model's
+                        maximum context length if it fits, otherwise it will find the largest length that can be accommodated.
+                        Parse human-readable integers like '1k', '2M', etc. Including decimal values with decimal multipliers. Also accepts -1 or
+                        'auto' as a special value for auto-detection.
+                            Examples:
+                            - '1k' -> 1,000
+                            - '1K' -> 1,024
+                            - '25.6k' -> 25,600
+                            - '-1' or 'auto' -> -1 (special value for auto-detection) (default: None)
+
+When passing JSON CLI arguments, the following sets of arguments are equivalent:
+   --json-arg '{"key1": "value1", "key2": {"key3": "value2"}}'
+   --json-arg.key1 value1 --json-arg.key2.key3 value2
+
+Additionally, list elements can be passed individually using +:
+   --json-arg '{"key4": ["value3", "value4", "value5"]}'
+   --json-arg.key4+ value3 --json-arg.key4+='value4,value5'
+
+----- gpu-memory-utilization -----
+Arguments matching 'gpu-memory-utilization':
+  --gpu-memory-utilization GPU_MEMORY_UTILIZATION
+                        The fraction of GPU memory to be used for the model executor, which can range from 0 to 1. For example, a value of 0.5
+                        would imply 50% GPU memory utilization. If unspecified, will use the default value of 0.92. This is a per-instance limit,
+                        and only applies to the current vLLM instance. It does not matter if you have another vLLM instance running on the same
+                        GPU. For example, if you have two vLLM instances running on the same GPU, you can set the GPU memory utilization to 0.5
+                        for each instance. (default: 0.92)
+
+When passing JSON CLI arguments, the following sets of arguments are equivalent:
+   --json-arg '{"key1": "value1", "key2": {"key3": "value2"}}'
+   --json-arg.key1 value1 --json-arg.key2.key3 value2
+
+Additionally, list elements can be passed individually using +:
+   --json-arg '{"key4": ["value3", "value4", "value5"]}'
+   --json-arg.key4+ value3 --json-arg.key4+='value4,value5'
+
+----- max-num-seqs -----
+Arguments matching 'max-num-seqs':
+  --max-num-seqs MAX_NUM_SEQS
+                        Maximum number of sequences to be processed in a single iteration.
+                        The default value here is mainly for convenience when testing. In real usage, this should be set in
+                        `EngineArgs.create_engine_config`. (default: None)
+
+When passing JSON CLI arguments, the following sets of arguments are equivalent:
+   --json-arg '{"key1": "value1", "key2": {"key3": "value2"}}'
+   --json-arg.key1 value1 --json-arg.key2.key3 value2
+
+Additionally, list elements can be passed individually using +:
+   --json-arg '{"key4": ["value3", "value4", "value5"]}'
+   --json-arg.key4+ value3 --json-arg.key4+='value4,value5'
+
+----- max-num-batched-tokens -----
+Arguments matching 'max-num-batched-tokens':
+  --max-num-batched-tokens MAX_NUM_BATCHED_TOKENS
+                        Maximum number of tokens that can be processed in a single iteration.
+                        The default value here is mainly for convenience when testing. In real usage, this should be set in
+                        `EngineArgs.create_engine_config`.
+                        Parse human-readable integers like '1k', '2M', etc. Including decimal values with decimal multipliers.
+                            Examples:
+                            - '1k' -> 1,000
+                            - '1K' -> 1,024
+                            - '25.6k' -> 25,600 (default: None)
+
+When passing JSON CLI arguments, the following sets of arguments are equivalent:
+   --json-arg '{"key1": "value1", "key2": {"key3": "value2"}}'
+   --json-arg.key1 value1 --json-arg.key2.key3 value2
+
+Additionally, list elements can be passed individually using +:
+   --json-arg '{"key4": ["value3", "value4", "value5"]}'
+   --json-arg.key4+ value3 --json-arg.key4+='value4,value5'
+
+----- kv-cache-dtype -----
+Arguments matching 'kv-cache-dtype':
+  --kv-cache-dtype {auto,bfloat16,float16,fp8,fp8_ds_mla,fp8_e4m3,fp8_e5m2,fp8_inc,fp8_per_token_head,int8_per_token_head,nvfp4,turboquant_3bit_nc,turboquant_4bit_nc,turboquant_k3v4_nc,turboquant_k8v4}
+                        Data type for kv cache storage. If "auto", will use model data type. CUDA 11.8+ supports fp8 (=fp8_e4m3) and fp8_e5m2.
+                        ROCm (AMD GPU) supports fp8 (=fp8_e4m3). Intel Gaudi (HPU) supports fp8 (using fp8_inc). Some models (namely
+                        DeepSeekV3.2) default to fp8, set to bfloat16 to use bfloat16 instead, this is an invalid option for models that do not
+                        default to fp8. (default: auto)
+  --kv-cache-dtype-skip-layers KV_CACHE_DTYPE_SKIP_LAYERS [KV_CACHE_DTYPE_SKIP_LAYERS ...]
+                        Layer patterns to skip KV cache quantization. Accepts layer indices (e.g., '0', '2', '4') or attention type names (e.g.,
+                        'sliding_window'). (default: [])
+
+When passing JSON CLI arguments, the following sets of arguments are equivalent:
+   --json-arg '{"key1": "value1", "key2": {"key3": "value2"}}'
+   --json-arg.key1 value1 --json-arg.key2.key3 value2
+
+Additionally, list elements can be passed individually using +:
+   --json-arg '{"key4": ["value3", "value4", "value5"]}'
+   --json-arg.key4+ value3 --json-arg.key4+='value4,value5'
+
+----- dtype -----
+Arguments matching 'dtype':
+  --dtype {auto,bfloat16,float,float16,float32,half}
+                        Data type for model weights and activations:
+                        - "auto" will use FP16 precision for FP32 and FP16 models, and BF16 precision for BF16 models.
+                        - "half" for FP16. Recommended for AWQ quantization.
+                        - "float16" is the same as "half".
+                        - "bfloat16" for a balance between precision and range.
+                        - "float" is shorthand for FP32 precision.
+                        - "float32" for FP32 precision. (default: auto)
+  --kv-cache-dtype {auto,bfloat16,float16,fp8,fp8_ds_mla,fp8_e4m3,fp8_e5m2,fp8_inc,fp8_per_token_head,int8_per_token_head,nvfp4,turboquant_3bit_nc,turboquant_4bit_nc,turboquant_k3v4_nc,turboquant_k8v4}
+                        Data type for kv cache storage. If "auto", will use model data type. CUDA 11.8+ supports fp8 (=fp8_e4m3) and fp8_e5m2.
+                        ROCm (AMD GPU) supports fp8 (=fp8_e4m3). Intel Gaudi (HPU) supports fp8 (using fp8_inc). Some models (namely
+                        DeepSeekV3.2) default to fp8, set to bfloat16 to use bfloat16 instead, this is an invalid option for models that do not
+                        default to fp8. (default: auto)
+  --kv-cache-dtype-skip-layers KV_CACHE_DTYPE_SKIP_LAYERS [KV_CACHE_DTYPE_SKIP_LAYERS ...]
+                        Layer patterns to skip KV cache quantization. Accepts layer indices (e.g., '0', '2', '4') or attention type names (e.g.,
+                        'sliding_window'). (default: [])
+  --lora-dtype {auto,bfloat16,float16}
+                        Data type for LoRA. If auto, will default to base model dtype. (default: auto)
+  --mamba-cache-dtype {auto,bfloat16,float16,float32}
+                        The data type to use for the Mamba cache (both the conv as well as the ssm state). If set to 'auto', the data type will
+                        be inferred from the model config. (default: auto)
+  --mamba-ssm-cache-dtype {auto,bfloat16,float16,float32}
+                        The data type to use for the Mamba cache (ssm state only, conv state will still be controlled by mamba_cache_dtype). If
+                        set to 'auto', the data type for the ssm state will be determined by mamba_cache_dtype. (default: auto)
+  --mm-encoder-attn-dtype {fp8,None}
+                        Optional dtype override for ViT encoder attention. Set to `"fp8"` to enable FP8 quantization via the FlashInfer cuDNN
+                        backend. When set to `"fp8"` without a scale file, dynamic scaling is used automatically. See
+                        docs/features/quantization/fp8_vit_attn.md for details. (default: None)
+  --override-attention-dtype OVERRIDE_ATTENTION_DTYPE
+                        Override dtype for attention (default: None)
+
+When passing JSON CLI arguments, the following sets of arguments are equivalent:
+   --json-arg '{"key1": "value1", "key2": {"key3": "value2"}}'
+   --json-arg.key1 value1 --json-arg.key2.key3 value2
+
+Additionally, list elements can be passed individually using +:
+   --json-arg '{"key4": ["value3", "value4", "value5"]}'
+   --json-arg.key4+ value3 --json-arg.key4+='value4,value5'
+
+----- trust-remote-code -----
+Arguments matching 'trust-remote-code':
+  --trust-remote-code, --no-trust-remote-code
+                        Trust remote code (e.g., from HuggingFace) when downloading the model and tokenizer. (default: False)
+
+When passing JSON CLI arguments, the following sets of arguments are equivalent:
+   --json-arg '{"key1": "value1", "key2": {"key3": "value2"}}'
+   --json-arg.key1 value1 --json-arg.key2.key3 value2
+
+Additionally, list elements can be passed individually using +:
+   --json-arg '{"key4": ["value3", "value4", "value5"]}'
+   --json-arg.key4+ value3 --json-arg.key4+='value4,value5'
+
+----- enable-auto-tool-choice -----
+Arguments matching 'enable-auto-tool-choice':
+  --enable-auto-tool-choice, --no-enable-auto-tool-choice
+
+When passing JSON CLI arguments, the following sets of arguments are equivalent:
+   --json-arg '{"key1": "value1", "key2": {"key3": "value2"}}'
+   --json-arg.key1 value1 --json-arg.key2.key3 value2
+
+Additionally, list elements can be passed individually using +:
+   --json-arg '{"key4": ["value3", "value4", "value5"]}'
+   --json-arg.key4+ value3 --json-arg.key4+='value4,value5'
+
+----- tool-call-parser -----
+Arguments matching 'tool-call-parser':
+  --tool-call-parser {apertus,cohere_command3,cohere_command4,deepseek_v3,deepseek_v31,deepseek_v32,deepseek_v4,ernie45,functiongemma,gemma4,gigachat3,glm45,glm47,granite,granite-20b-fc,granite4,hermes,hunyuan_a13b,hy_v3,internlm,jamba,kimi_k2,lfm2,llama3_json,llama4_json,llama4_pythonic,longcat,mimo,minicpm5,minimax,minimax_m2,mistral,olmo3,openai,phi4_mini_json,poolside_v1,pythonic,qwen3_coder,qwen3_xml,seed_oss,step3,step3p5,xlam} or name registered in --tool-parser-plugin
+
+When passing JSON CLI arguments, the following sets of arguments are equivalent:
+   --json-arg '{"key1": "value1", "key2": {"key3": "value2"}}'
+   --json-arg.key1 value1 --json-arg.key2.key3 value2
+
+Additionally, list elements can be passed individually using +:
+   --json-arg '{"key4": ["value3", "value4", "value5"]}'
+   --json-arg.key4+ value3 --json-arg.key4+='value4,value5'
+
+----- host -----
+Arguments matching 'host':
+  --host HOST  Host name. (default: None)
+
+When passing JSON CLI arguments, the following sets of arguments are equivalent:
+   --json-arg '{"key1": "value1", "key2": {"key3": "value2"}}'
+   --json-arg.key1 value1 --json-arg.key2.key3 value2
+
+Additionally, list elements can be passed individually using +:
+   --json-arg '{"key4": ["value3", "value4", "value5"]}'
+   --json-arg.key4+ value3 --json-arg.key4+='value4,value5'
+
+----- port -----
+Arguments matching 'port':
+  --data-parallel-multi-port-external-lb, -dpm
+                        Run a node-local supervisor that launches one external-LB API server per local data parallel rank and exposes aggregated
+                        health on a supervisor port. (default: False)
+  --data-parallel-rpc-port DATA_PARALLEL_RPC_PORT, -dpp DATA_PARALLEL_RPC_PORT
+                        Port for data parallel RPC communication. (default: None)
+  --data-parallel-supervisor-port DATA_PARALLEL_SUPERVISOR_PORT
+                        HTTP port for aggregated health endpoints in multi-port external LB mode. (default: 9256)
+  --master-port MASTER_PORT
+                        distributed master port for multi-node distributed  inference when distributed_executor_backend is mp. (default: 29501)
+  --port PORT           Port number. (default: 8000)
+
+When passing JSON CLI arguments, the following sets of arguments are equivalent:
+   --json-arg '{"key1": "value1", "key2": {"key3": "value2"}}'
+   --json-arg.key1 value1 --json-arg.key2.key3 value2
+
+Additionally, list elements can be passed individually using +:
+   --json-arg '{"key4": ["value3", "value4", "value5"]}'
+   --json-arg.key4+ value3 --json-arg.key4+='value4,value5'
+
+----- served-model-name -----
+Arguments matching 'served-model-name':
+  --served-model-name SERVED_MODEL_NAME [SERVED_MODEL_NAME ...]
+                        The model name(s) used in the API. If multiple names are provided, the server will respond to any of the provided names.
+                        The model name in the model field of a response will be the first name in this list. If not specified, the model name
+                        will be the same as the `--model` argument. Noted that this name(s) will also be used in `model_name` tag content of
+                        prometheus metrics, if multiple names provided, metrics tag will take the first one. (default: None)
+
+When passing JSON CLI arguments, the following sets of arguments are equivalent:
+   --json-arg '{"key1": "value1", "key2": {"key3": "value2"}}'
+   --json-arg.key1 value1 --json-arg.key2.key3 value2
+
+Additionally, list elements can be passed individually using +:
+   --json-arg '{"key4": ["value3", "value4", "value5"]}'
+   --json-arg.key4+ value3 --json-arg.key4+='value4,value5'
