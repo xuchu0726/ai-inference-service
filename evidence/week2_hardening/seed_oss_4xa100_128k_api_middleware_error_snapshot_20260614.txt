@@ -1,0 +1,72 @@
+===== Seed-OSS 4xA100 128K API middleware error snapshot =====
+Sun Jun 14 22:52:47 UTC 2026
+
+Observed state:
+- vLLM server started and listened on port 8002.
+- 4xA100 TP workers loaded the model and reserved about 76.5 GiB per GPU.
+- /v1/models returned HTTP 500 due to prometheus_fastapi_instrumentator route-name middleware error.
+
+===== Process =====
+    PID     ELAPSED STAT CMD
+   8126       08:16 Sl   /usr/bin/python /usr/local/bin/vllm serve /workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots/497f
+
+===== Port =====
+LISTEN 0      2048         0.0.0.0:8002       0.0.0.0:*    users:(("vllm",pid=8126,fd=32))            
+
+===== GPU =====
+Sun Jun 14 22:52:48 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:0F:00.0 Off |                    0 |
+| N/A   29C    P0             84W /  400W |   76557MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:47:00.0 Off |                    0 |
+| N/A   30C    P0             83W /  400W |   76557MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA A100-SXM4-80GB          On  |   00000000:4E:00.0 Off |                    0 |
+| N/A   29C    P0             83W /  400W |   76557MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA A100-SXM4-80GB          On  |   00000000:87:00.0 Off |                    0 |
+| N/A   38C    P0             84W /  400W |   76557MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            8530      C   VLLM::Worker_TP0                      76546MiB |
+|    1   N/A  N/A            8531      C   VLLM::Worker_TP1                      76546MiB |
+|    2   N/A  N/A            8532      C   VLLM::Worker_TP2                      76546MiB |
+|    3   N/A  N/A            8533      C   VLLM::Worker_TP3                      76546MiB |
++-----------------------------------------------------------------------------------------+
+
+===== API check =====
+{"error":{"message":"'_IncludedRouter' object has no attribute 'path'","type":"InternalServerError","param":null,"code":500}}
+===== Key log lines =====
+10:(APIServer pid=8126) INFO 06-14 22:44:38 [model.py:1745] Using max model len 131072
+54:(Worker_TP0 pid=8530) INFO 06-14 22:46:54 [gpu_model_runner.py:5187] Model loading took 17.12 GiB memory and 116.178866 seconds
+178:(APIServer pid=8126) INFO:     Application startup complete.
+179:(APIServer pid=8126) INFO:     127.0.0.1:48022 - "GET /v1/models HTTP/1.1" 500 Internal Server Error
+210:(APIServer pid=8126) AttributeError: '_IncludedRouter' object has no attribute 'path'
+211:(APIServer pid=8126) INFO:     127.0.0.1:56404 - "GET /v1/models HTTP/1.1" 500 Internal Server Error
+242:(APIServer pid=8126) AttributeError: '_IncludedRouter' object has no attribute 'path'
+243:(APIServer pid=8126) INFO:     127.0.0.1:47262 - "GET /v1/models HTTP/1.1" 500 Internal Server Error
+274:(APIServer pid=8126) AttributeError: '_IncludedRouter' object has no attribute 'path'
+275:(APIServer pid=8126) INFO:     127.0.0.1:49604 - "GET /v1/models HTTP/1.1" 500 Internal Server Error
+306:(APIServer pid=8126) AttributeError: '_IncludedRouter' object has no attribute 'path'
+307:(APIServer pid=8126) INFO:     127.0.0.1:54488 - "GET /v1/models HTTP/1.1" 500 Internal Server Error
+338:(APIServer pid=8126) AttributeError: '_IncludedRouter' object has no attribute 'path'
+339:(APIServer pid=8126) INFO:     127.0.0.1:57022 - "GET /v1/models HTTP/1.1" 500 Internal Server Error
+370:(APIServer pid=8126) AttributeError: '_IncludedRouter' object has no attribute 'path'
+371:(APIServer pid=8126) INFO:     127.0.0.1:41846 - "GET /v1/models HTTP/1.1" 500 Internal Server Error
+402:(APIServer pid=8126) AttributeError: '_IncludedRouter' object has no attribute 'path'

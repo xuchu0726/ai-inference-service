@@ -1,0 +1,92 @@
+===== Seed-OSS 4xA100 128K ready evidence =====
+Sun Jun 14 22:58:14 UTC 2026
+
+Experiment profile:
+- Model: ByteDance-Seed/Seed-OSS-36B-Instruct
+- Source: local HuggingFace snapshot
+- GPUs: 4 x NVIDIA A100-SXM4-80GB
+- Tensor parallel size: 4
+- max_model_len: 131072
+- max_num_seqs: 1
+- max_num_batched_tokens: 32768
+- dtype: bfloat16
+- gpu_memory_utilization: 0.95
+
+Key result:
+- vLLM server started successfully after local snapshot predownload and middleware patch.
+- /v1/models returned model metadata with max_model_len=131072.
+- vLLM reported GPU KV cache size of 909,968 tokens and maximum concurrency 6.94x for 131,072-token requests.
+
+===== Process =====
+    PID     ELAPSED STAT CMD
+   9325       03:08 Sl   /usr/bin/python /usr/local/bin/vllm serve /workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots/497f
+
+===== Port =====
+LISTEN 0      2048         0.0.0.0:8002       0.0.0.0:*    users:(("vllm",pid=9325,fd=32))            
+
+===== Models API =====
+{"object":"list","data":[{"id":"ByteDance-Seed/Seed-OSS-36B-Instruct","object":"model","created":1781477814,"owned_by":"vllm","root":"/workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots/497f1dca95ebdec98e41d517b9f060ee753c902f","parent":null,"max_model_len":131072,"permission":[{"id":"modelperm-8d939ae4679d57a7","object":"model_permission","created":1781477814,"allow_create_engine":false,"allow_sampling":true,"allow_logprobs":true,"allow_search_indices":false,"allow_view":true,"allow_fine_tuning":false,"organization":"*","group":null,"is_blocking":false}]}]}
+===== Short chat smoke =====
+===== Seed-OSS 4xA100 128K short smoke =====
+Sun Jun 14 22:58:01 UTC 2026
+
+===== Request =====
+{
+  "model": "ByteDance-Seed/Seed-OSS-36B-Instruct",
+  "messages": [
+    {"role": "user", "content": "Reply with exactly one short sentence: 128K service is ready."}
+  ],
+  "max_tokens": 32,
+  "temperature": 0
+}
+
+===== Response =====
+{"id":"chatcmpl-ad6961bf006e4284","object":"chat.completion","created":1781477881,"model":"ByteDance-Seed/Seed-OSS-36B-Instruct","choices":[{"index":0,"message":{"role":"assistant","content":"<seed:think>\nGot it, the user wants a reply with exactly one short sentence, and the input is \"128K service is ready.\" So I need","refusal":null,"annotations":null,"audio":null,"function_call":null,"tool_calls":[],"reasoning":null},"logprobs":null,"finish_reason":"length","stop_reason":null,"token_ids":null,"routed_experts":null}],"service_tier":null,"system_fingerprint":"vllm-0.23.0-tp4-23211aa7","usage":{"prompt_tokens":24,"total_tokens":56,"completion_tokens":32,"prompt_tokens_details":null},"prompt_logprobs":null,"prompt_token_ids":null,"prompt_text":null,"kv_transfer_params":null}
+
+===== GPU =====
+Sun Jun 14 22:58:14 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:0F:00.0 Off |                    0 |
+| N/A   30C    P0             84W /  400W |   76557MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:47:00.0 Off |                    0 |
+| N/A   30C    P0             83W /  400W |   76557MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA A100-SXM4-80GB          On  |   00000000:4E:00.0 Off |                    0 |
+| N/A   29C    P0             83W /  400W |   76557MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA A100-SXM4-80GB          On  |   00000000:87:00.0 Off |                    0 |
+| N/A   38C    P0             84W /  400W |   76557MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            9729      C   VLLM::Worker_TP0                      76546MiB |
+|    1   N/A  N/A            9730      C   VLLM::Worker_TP1                      76546MiB |
+|    2   N/A  N/A            9731      C   VLLM::Worker_TP2                      76546MiB |
+|    3   N/A  N/A            9732      C   VLLM::Worker_TP3                      76546MiB |
++-----------------------------------------------------------------------------------------+
+
+===== Key log lines =====
+10:(APIServer pid=9325) INFO 06-14 22:55:13 [model.py:1745] Using max model len 131072
+33:(Worker_TP0 pid=9729) INFO 06-14 22:55:35 [weight_utils.py:922] Filesystem type for checkpoints: FUSE. Checkpoint size: 67.34 GiB. Available RAM: 1940.85 GiB.
+53:(Worker_TP0 pid=9729) INFO 06-14 22:55:40 [default_loader.py:397] Loading weights took 5.72 seconds
+54:(Worker_TP0 pid=9729) INFO 06-14 22:55:41 [gpu_model_runner.py:5187] Model loading took 17.12 GiB memory and 6.341573 seconds
+76:(Worker_TP0 pid=9729) INFO 06-14 22:55:54 [gpu_worker.py:480] Available KV cache memory: 55.54 GiB
+81:(EngineCore pid=9529) INFO 06-14 22:55:54 [kv_cache_utils.py:1744] GPU KV cache size: 909,968 tokens
+82:(EngineCore pid=9529) INFO 06-14 22:55:54 [kv_cache_utils.py:1745] Maximum concurrency for 131,072 tokens per request: 6.94x
+169:(APIServer pid=9325) INFO 06-14 22:55:58 [api_server.py:583] Starting vLLM server on http://0.0.0.0:8002
+178:(APIServer pid=9325) INFO:     Application startup complete.

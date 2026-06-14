@@ -1,0 +1,29 @@
+===== Seed-OSS 36B predownload success check =====
+Sun Jun 14 22:44:26 UTC 2026
+
+MODEL_SNAPSHOT=/workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots/497f1dca95ebdec98e41d517b9f060ee753c902f
+
+===== Snapshot size =====
+991K	/workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots/497f1dca95ebdec98e41d517b9f060ee753c902f
+
+===== Snapshot files =====
+
+===== Safetensors count =====
+0
+
+===== Remaining incomplete files =====
+0
+
+===== Download log tail =====
+/usr/local/lib/python3.11/dist-packages/huggingface_hub/utils/_validators.py:189: UserWarning: The `resume_download` argument is deprecated and ignored in `snapshot_download`. Downloads always resume whenever possible.
+  warnings.warn(
+===== Seed-OSS HF predownload without Xet =====
+time: 2026-06-14T22:39:08.383565Z
+repo: ByteDance-Seed/Seed-OSS-36B-Instruct
+cache_dir: /workspace/hf_cache
+HF_HUB_DISABLE_XET=1
+max_workers=2
+Fetching 27 files:   0%|          | 0/27 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 27 files:  11%|█         | 3/27 [00:00<00:01, 18.37it/s]Fetching 27 files:  11%|█         | 3/27 [00:19<00:01, 18.37it/s]Fetching 27 files:  30%|██▉       | 8/27 [01:10<03:08,  9.93s/it]Fetching 27 files:  41%|████      | 11/27 [01:54<03:07, 11.70s/it]Fetching 27 files:  48%|████▊     | 13/27 [01:55<02:01,  8.71s/it]Fetching 27 files:  52%|█████▏    | 14/27 [02:25<02:37, 12.11s/it]Fetching 27 files:  59%|█████▉    | 16/27 [02:54<02:21, 12.90s/it]Fetching 27 files:  63%|██████▎   | 17/27 [02:56<01:48, 10.89s/it]Fetching 27 files:  67%|██████▋   | 18/27 [03:23<02:08, 14.31s/it]Fetching 27 files:  70%|███████   | 19/27 [03:24<01:28, 11.10s/it]Fetching 27 files:  74%|███████▍  | 20/27 [04:31<02:54, 24.94s/it]Fetching 27 files: 100%|██████████| 27/27 [04:31<00:00, 10.06s/it]
+snapshot_path: /workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots/497f1dca95ebdec98e41d517b9f060ee753c902f
+DONE

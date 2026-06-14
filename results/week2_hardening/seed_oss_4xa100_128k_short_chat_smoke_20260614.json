@@ -1,0 +1,15 @@
+===== Seed-OSS 4xA100 128K short smoke =====
+Sun Jun 14 22:58:01 UTC 2026
+
+===== Request =====
+{
+  "model": "ByteDance-Seed/Seed-OSS-36B-Instruct",
+  "messages": [
+    {"role": "user", "content": "Reply with exactly one short sentence: 128K service is ready."}
+  ],
+  "max_tokens": 32,
+  "temperature": 0
+}
+
+===== Response =====
+{"id":"chatcmpl-ad6961bf006e4284","object":"chat.completion","created":1781477881,"model":"ByteDance-Seed/Seed-OSS-36B-Instruct","choices":[{"index":0,"message":{"role":"assistant","content":"<seed:think>\nGot it, the user wants a reply with exactly one short sentence, and the input is \"128K service is ready.\" So I need","refusal":null,"annotations":null,"audio":null,"function_call":null,"tool_calls":[],"reasoning":null},"logprobs":null,"finish_reason":"length","stop_reason":null,"token_ids":null,"routed_experts":null}],"service_tier":null,"system_fingerprint":"vllm-0.23.0-tp4-23211aa7","usage":{"prompt_tokens":24,"total_tokens":56,"completion_tokens":32,"prompt_tokens_details":null},"prompt_logprobs":null,"prompt_token_ids":null,"prompt_text":null,"kv_transfer_params":null}
