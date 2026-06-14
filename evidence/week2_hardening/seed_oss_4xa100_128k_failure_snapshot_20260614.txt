@@ -1,0 +1,65 @@
+===== Seed-OSS 4xA100 128K failure snapshot =====
+Sun Jun 14 22:36:59 UTC 2026
+
+Root cause summary:
+- The 4xA100 TP=4 vLLM launch accepted max_model_len=131072 and created TP workers.
+- Engine initialization failed during model weight download/loading.
+- The root cause was HuggingFace/Xet file reconstruction IO failure, not CUDA OOM or KV cache capacity.
+
+Key root-cause line:
+160:(Worker_TP3 pid=7277) ERROR 06-14 22:31:53 [multiproc_executor.py:888] RuntimeError: Task error: File reconstruction error: IO Error: Input/output error (os error 5)
+
+===== Process =====
+
+===== GPU =====
+Sun Jun 14 22:36:59 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:0F:00.0 Off |                    0 |
+| N/A   26C    P0             62W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:47:00.0 Off |                    0 |
+| N/A   27C    P0             61W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA A100-SXM4-80GB          On  |   00000000:4E:00.0 Off |                    0 |
+| N/A   26C    P0             61W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA A100-SXM4-80GB          On  |   00000000:87:00.0 Off |                    0 |
+| N/A   35C    P0             64W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== HF cache =====
+60G	/workspace/hf_cache
+
+===== Error context =====
+50:(Worker_TP3 pid=7277) ERROR 06-14 22:31:53 [multiproc_executor.py:888] WorkerProc failed to start.
+51:(Worker_TP3 pid=7277) ERROR 06-14 22:31:53 [multiproc_executor.py:888] Traceback (most recent call last):
+142:(Worker_TP3 pid=7277) ERROR 06-14 22:31:53 [multiproc_executor.py:888]     raise self._exception
+160:(Worker_TP3 pid=7277) ERROR 06-14 22:31:53 [multiproc_executor.py:888] RuntimeError: Task error: File reconstruction error: IO Error: Input/output error (os error 5)
+165:Exception raised from recvBytes at /pytorch/torch/csrc/distributed/c10d/Utils.hpp:682 (most recent call first):
+176:Exception raised from sendBytes at /pytorch/torch/csrc/distributed/c10d/Utils.hpp:653 (most recent call first):
+187:(EngineCore pid=7075) ERROR 06-14 22:32:01 [core.py:1195] EngineCore failed to start.
+188:(EngineCore pid=7075) ERROR 06-14 22:32:01 [core.py:1195] Traceback (most recent call last):
+212:(EngineCore pid=7075) ERROR 06-14 22:32:01 [core.py:1195] Exception: WorkerProc initialization failed due to an exception in a background process. See stack trace for root cause.
+214:(EngineCore pid=7075) Traceback (most recent call last):
+244:(EngineCore pid=7075) Exception: WorkerProc initialization failed due to an exception in a background process. See stack trace for root cause.
+245:(APIServer pid=6631) Traceback (most recent call last):
+302:(APIServer pid=6631)     raise RuntimeError(
+303:(APIServer pid=6631) RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}
