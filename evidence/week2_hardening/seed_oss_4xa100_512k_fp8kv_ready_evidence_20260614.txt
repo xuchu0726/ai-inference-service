@@ -1,0 +1,77 @@
+===== Seed-OSS 4xA100 512K FP8 KV ready evidence =====
+Sun Jun 14 23:29:44 UTC 2026
+
+Experiment profile:
+- Model: ByteDance-Seed/Seed-OSS-36B-Instruct
+- Source: local HuggingFace snapshot
+- GPUs: 4 x NVIDIA A100-SXM4-80GB
+- Tensor parallel size: 4
+- max_model_len: 524288
+- max_num_seqs: 1
+- max_num_batched_tokens: 32768
+- dtype: bfloat16
+- kv_cache_dtype: fp8
+- gpu_memory_utilization: 0.95
+
+Key result:
+- vLLM accepted max_model_len=524288 with FP8 KV cache.
+- GPU KV cache size increased from 909,360 tokens under BF16 KV to 1,807,008 tokens under FP8 KV.
+- Maximum concurrency for 524,288-token requests increased from 1.73x to 3.45x.
+- The OpenAI-compatible API server reached Application startup complete.
+
+===== Process =====
+    PID     ELAPSED STAT CMD
+  11547       05:13 Sl   /usr/bin/python /usr/local/bin/vllm serve /workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots/497f
+
+===== Port =====
+LISTEN 0      2048         0.0.0.0:8002       0.0.0.0:*    users:(("vllm",pid=11547,fd=32))            
+
+===== Models API =====
+{"object":"list","data":[{"id":"ByteDance-Seed/Seed-OSS-36B-Instruct","object":"model","created":1781479784,"owned_by":"vllm","root":"/workspace/hf_cache/models--ByteDance-Seed--Seed-OSS-36B-Instruct/snapshots/497f1dca95ebdec98e41d517b9f060ee753c902f","parent":null,"max_model_len":524288,"permission":[{"id":"modelperm-b2992f630e3287b7","object":"model_permission","created":1781479784,"allow_create_engine":false,"allow_sampling":true,"allow_logprobs":true,"allow_search_indices":false,"allow_view":true,"allow_fine_tuning":false,"organization":"*","group":null,"is_blocking":false}]}]}
+===== GPU =====
+Sun Jun 14 23:29:45 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:0F:00.0 Off |                    0 |
+| N/A   29C    P0             84W /  400W |   76585MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:47:00.0 Off |                    0 |
+| N/A   30C    P0             83W /  400W |   76585MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA A100-SXM4-80GB          On  |   00000000:4E:00.0 Off |                    0 |
+| N/A   29C    P0             83W /  400W |   76587MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA A100-SXM4-80GB          On  |   00000000:87:00.0 Off |                    0 |
+| N/A   38C    P0             84W /  400W |   76587MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A           11951      C   VLLM::Worker_TP0                      76574MiB |
+|    1   N/A  N/A           11952      C   VLLM::Worker_TP1                      76574MiB |
+|    2   N/A  N/A           11953      C   VLLM::Worker_TP2                      76574MiB |
+|    3   N/A  N/A           11954      C   VLLM::Worker_TP3                      76574MiB |
++-----------------------------------------------------------------------------------------+
+
+===== Key log lines =====
+10:(APIServer pid=11547) INFO 06-14 23:24:37 [model.py:1745] Using max model len 524288
+11:(APIServer pid=11547) INFO 06-14 23:24:37 [cache.py:269] Using fp8 data type to store kv cache. It reduces the GPU memory footprint and boosts the performance. Meanwhile, it may cause accuracy drop without a proper scaling factor
+53:(Worker_TP0 pid=11951) INFO 06-14 23:25:03 [default_loader.py:397] Loading weights took 5.63 seconds
+54:(Worker_TP0 pid=11951) INFO 06-14 23:25:04 [gpu_model_runner.py:5187] Model loading took 17.12 GiB memory and 6.264647 seconds
+78:(Worker_TP0 pid=11951) INFO 06-14 23:26:11 [gpu_worker.py:480] Available KV cache memory: 55.15 GiB
+80:(EngineCore pid=11752) INFO 06-14 23:26:11 [kv_cache_utils.py:1744] GPU KV cache size: 1,807,008 tokens
+81:(EngineCore pid=11752) INFO 06-14 23:26:11 [kv_cache_utils.py:1745] Maximum concurrency for 524,288 tokens per request: 3.45x
+172:(APIServer pid=11547) INFO 06-14 23:26:15 [api_server.py:583] Starting vLLM server on http://0.0.0.0:8002
+181:(APIServer pid=11547) INFO:     Application startup complete.
