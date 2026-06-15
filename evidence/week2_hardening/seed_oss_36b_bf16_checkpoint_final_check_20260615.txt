@@ -1,0 +1,17 @@
+===== Seed-OSS-36B 原始模型最终完整性检查 =====
+时间：Mon Jun 15 16:27:19 UTC 2026
+
+完整 safetensors 数：
+15
+
+model-00002：
+-rw-rw-rw- 1 root root 4.7G Jun 15 16:16 /workspace/models/Seed-OSS-36B-Instruct/model-00002-of-00015.safetensors
+
+必要配置：
+-rw-rw-rw- 1 root root 770 Jun 15 16:14 /workspace/models/Seed-OSS-36B-Instruct/config.json
+-rw-rw-rw- 1 root root 62K Jun 15 16:18 /workspace/models/Seed-OSS-36B-Instruct/model.safetensors.index.json
+-rw-rw-rw- 1 root root 12M Jun 15 16:18 /workspace/models/Seed-OSS-36B-Instruct/tokenizer.json
+-rw-rw-rw- 1 root root 24K Jun 15 16:18 /workspace/models/Seed-OSS-36B-Instruct/tokenizer_config.json
+
+目录大小：
+68G	/workspace/models/Seed-OSS-36B-Instruct

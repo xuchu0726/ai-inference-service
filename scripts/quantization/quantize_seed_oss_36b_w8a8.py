@@ -8,8 +8,8 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from llmcompressor.modifiers.quantization import QuantizationModifier
 from llmcompressor import oneshot
 
-MODEL_ID = "ByteDance-Seed/Seed-OSS-36B-Instruct"
-OUTPUT_DIR = "/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8"
+MODEL_ID = "/workspace/models/Seed-OSS-36B-Instruct"
+OUTPUT_DIR = "/workspace/models/Seed-OSS-36B-Instruct-W8A8"
 HF_CACHE_DIR = "/workspace/hf_cache"
 
 NUM_CALIBRATION_SAMPLES = int(os.environ.get("NUM_CALIBRATION_SAMPLES", "16"))

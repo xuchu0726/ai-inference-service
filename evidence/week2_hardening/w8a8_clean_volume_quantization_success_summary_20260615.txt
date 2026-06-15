@@ -1,0 +1,75 @@
+===== W8A8 离线量化成功摘要 =====
+时间：Mon Jun 15 16:34:01 UTC 2026
+
+结论：Seed-OSS-36B 原始 BF16 checkpoint 已成功完成 W8A8 compressed-tensors 离线量化。
+
+原始模型目录：/workspace/models/Seed-OSS-36B-Instruct
+量化模型目录：/workspace/models/Seed-OSS-36B-Instruct-W8A8
+
+原始模型大小：
+68G	/workspace/models/Seed-OSS-36B-Instruct
+
+W8A8模型大小：
+36G	/workspace/models/Seed-OSS-36B-Instruct-W8A8
+
+W8A8权重分片：
+-rw-rw-rw- 1 root root 4.7G Jun 15 16:31 /workspace/models/Seed-OSS-36B-Instruct-W8A8/model-00001-of-00008.safetensors
+-rw-rw-rw- 1 root root 4.6G Jun 15 16:31 /workspace/models/Seed-OSS-36B-Instruct-W8A8/model-00002-of-00008.safetensors
+-rw-rw-rw- 1 root root 4.6G Jun 15 16:31 /workspace/models/Seed-OSS-36B-Instruct-W8A8/model-00003-of-00008.safetensors
+-rw-rw-rw- 1 root root 4.6G Jun 15 16:32 /workspace/models/Seed-OSS-36B-Instruct-W8A8/model-00004-of-00008.safetensors
+-rw-rw-rw- 1 root root 4.6G Jun 15 16:32 /workspace/models/Seed-OSS-36B-Instruct-W8A8/model-00005-of-00008.safetensors
+-rw-rw-rw- 1 root root 4.6G Jun 15 16:32 /workspace/models/Seed-OSS-36B-Instruct-W8A8/model-00006-of-00008.safetensors
+-rw-rw-rw- 1 root root 4.6G Jun 15 16:32 /workspace/models/Seed-OSS-36B-Instruct-W8A8/model-00007-of-00008.safetensors
+-rw-rw-rw- 1 root root 3.4G Jun 15 16:32 /workspace/models/Seed-OSS-36B-Instruct-W8A8/model-00008-of-00008.safetensors
+
+量化配置摘录：
+{
+  "config_groups": {
+    "group_0": {
+      "format": "int-quantized",
+      "input_activations": {
+        "actorder": null,
+        "block_structure": null,
+        "dynamic": true,
+        "group_size": null,
+        "num_bits": 8,
+        "observer": null,
+        "observer_kwargs": {},
+        "scale_dtype": null,
+        "strategy": "token",
+        "symmetric": true,
+        "type": "int",
+        "zp_dtype": null
+      },
+      "output_activations": null,
+      "targets": [
+        "Linear"
+      ],
+      "weights": {
+        "actorder": null,
+        "block_structure": null,
+        "dynamic": false,
+        "group_size": null,
+        "num_bits": 8,
+        "observer": "memoryless_minmax",
+        "observer_kwargs": {},
+        "scale_dtype": null,
+        "strategy": "channel",
+        "symmetric": true,
+        "type": "int",
+        "zp_dtype": null
+      }
+    }
+  },
+  "format": "int-quantized",
+  "global_compression_ratio": null,
+  "ignore": [
+    "lm_head"
+  ],
+  "kv_cache_scheme": null,
+  "quant_method": "compressed-tensors",
+  "quantization_status": "compressed",
+  "sparsity_config": {},
+  "transform_config": {},
+  "version": "0.14.0"
+}

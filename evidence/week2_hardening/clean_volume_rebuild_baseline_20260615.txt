@@ -1,0 +1,67 @@
+===== 新 Volume 重建基线 =====
+时间：Mon Jun 15 16:07:03 UTC 2026
+
+===== Git =====
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	evidence/week2_hardening/clean_volume_rebuild_baseline_20260615.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+d5c2ab3 清理 Week2 hardening 无用 Jupyter checkpoint
+caee4aa 记录 Week2 hardening GPU 服务停止快照
+6beeb61 记录 Week2 hardening GSM8K W8A8精度评测缺口
+812cf25 补充 Week2 hardening 50题代码生成验证与GSM8K证据扫描
+742a9c3 补充 Week2 hardening 50题代码生成轻量验证证据
+
+===== GPU =====
+Mon Jun 15 16:07:04 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:87:00.0 Off |                    0 |
+| N/A   34C    P0             63W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:90:00.0 Off |                    0 |
+| N/A   33C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== Disk =====
+Filesystem                         Size  Used Avail Use% Mounted on
+overlay                             50G   16M   50G   1% /
+tmpfs                               64M     0   64M   0% /dev
+mfs#us-md-1.runpod.net:9421        334T  241T   93T  73% /workspace
+shm                                233G     0  233G   0% /dev/shm
+/dev/mapper/ubuntu--vg-ubuntu--lv  1.8T   44G  1.6T   3% /usr/bin/nvidia-smi
+/dev/mapper/xfsdata-xfs_lv          21T  5.6T   16T  27% /etc/hosts
+tmpfs                              201G   38M  201G   1% /run/nvidia-persistenced/socket
+tmpfs                              4.0K  4.0K     0 100% /run/nvidia-ctk-hook9ac1acae-3016-4a3b-b22f-e23719adcd00
+tmpfs                             1002G     0 1002G   0% /proc/acpi
+tmpfs                             1002G     0 1002G   0% /proc/scsi
+tmpfs                             1002G     0 1002G   0% /sys/devices/virtual/powercap
+tmpfs                             1002G     0 1002G   0% /sys/firmware
+
+===== Workspace =====
+total 4.8M
+drwxrwxrwx  6 root root 2.0M Jun 15 16:07 .
+drwxr-xr-x  1 root root  109 Jun 15 15:59 ..
+drwxrwxrwx 14 root root 2.0M Jun 15 16:06 ai-inference-service
+drwxrwxrwx  2 root root 977K Jun 15 16:01 evidence_bootstrap
+drwxrwxrwx  4 root root    1 Jun 15 16:07 models
+drwxrwxrwx  2 root root    1 Jun 15 16:07 venvs
