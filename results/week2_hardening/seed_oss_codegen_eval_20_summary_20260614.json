@@ -1,0 +1,11 @@
+{
+  "created_at": "2026-06-14T23:55:23.494015Z",
+  "model": "ByteDance-Seed/Seed-OSS-36B-Instruct",
+  "service_profile": "Seed-OSS-36B 512K FP8 KV, 4xA100 TP=4",
+  "num_cases": 20,
+  "passed": 0,
+  "failed": 20,
+  "pass_rate": 0.0,
+  "mean_latency_s": 5.8527867436409,
+  "note": "This is a lightweight HumanEval/MBPP-style validation with local unit tests, not a full official HumanEval or MBPP benchmark."
+}

@@ -1,0 +1,322 @@
+[
+  {
+    "id": "codegen_001_add",
+    "function": "add",
+    "status": 200,
+    "latency_s": 1.7929961681365967,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 48,
+      "total_tokens": 152,
+      "completion_tokens": 104,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, let's see. The task is to write a Python function called add that takes two parameters a and b and returns their sum. So first, I need to define the function with def add(a, b):. Then, inside the function, just return a + b. That's straightforward. Let me check: the function name is add, parameters a and b, returns the sum. Yep, that should do it.</seed:think>def add(a, b):\n    return a + b",
+    "extracted_code": "def add(a, b):. Then, inside the function, just return a + b. That's straightforward. Let me check: the function name is add, parameters a and b, returns the sum. Yep, that should do it.</seed:think>def add(a, b):\n    return a + b",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 1\n    def add(a, b):. Then, inside the function, just return a + b. That's straightforward. Let me check: the function name is add, parameters a and b, returns the sum. Yep, that should do it.</seed:think>def add(a, b):\n                                                                      ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+  },
+  {
+    "id": "codegen_002_palindrome",
+    "function": "is_palindrome",
+    "status": 200,
+    "latency_s": 6.201817274093628,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 60,
+      "total_tokens": 444,
+      "completion_tokens": 384,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, I need to write a Python function called is_palindrome that checks if a string s is a palindrome, ignoring case. Let's think about what a palindrome is: a string that reads the same forwards and backwards. And ignoring case means 'A' and 'a' are considered the same.\n\nFirst, I should process the input string to make it case-insensitive. So maybe convert the entire string to lowercase (or uppercase) first. Like s.lower() would turn all characters to lowercase, so 'AbBa' become",
+    "extracted_code": "<seed:think>\nGot it, I need to write a Python function called is_palindrome that checks if a string s is a palindrome, ignoring case. Let's think about what a palindrome is: a string that reads the same forwards and backwards. And ignoring case means 'A' and 'a' are considered the same.\n\nFirst, I should process the input string to make it case-insensitive. So maybe convert the entire string to lowercase (or uppercase) first. Like s.lower() would turn all characters to lowercase, so 'AbBa' becomes 'abba', which is easier to check.\n\nThen, I need to check if this processed string is equal to its reverse. How do you reverse a string in Python? Oh right, slicing with [::-1] reverses the string. So if the lowercase version of s is equal to its reverse, then it's a palindrome.\n\nWait, but what about non-alphanumeric characters? The problem statement doesn't mention ignoring them, just ignoring case. So the task says \"ignoring case\"—so we don't have to remove spaces, punctuation, etc. Only case. For example, \"Racecar\" is a palindrome (lowercase is 'racecar', reverse is same). \"Race Car\" would become 'race car', reversed is 'rac ecar'—wait no, 'race car' reversed is 'rac ecar'? Let's see: 'race car' is r a c e  c a r. Reversed is r a c  e c a r. Oh right, so 'race car' lowercase is 'race car', reversed is 'rac ecar'—so that's not equal. So the function would return False for \"Race Car\" because of the space. But according to the problem statement, that's correct because the task",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 2\n    Got it, I need to write a Python function called is_palindrome that checks if a string s is a palindrome, ignoring case. Let's think about what a palindrome is: a string that reads the same forwards and backwards. And ignoring case means 'A' and 'a' are considered the same.\n                                                                                                                                                                                                                                                            ^\nSyntaxError: unterminated string literal (detected at line 2)\n"
+  },
+  {
+    "id": "codegen_003_factorial",
+    "function": "factorial",
+    "status": 200,
+    "latency_s": 6.201409339904785,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 50,
+      "total_tokens": 434,
+      "completion_tokens": 384,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, I need to write a Python function called factorial that returns the factorial of a non-negative integer n. Let's think about what a factorial is. The factorial of n (n!) is the product of all positive integers less than or equal to n. And by definition, 0! is 1.\n\nFirst, I should handle the base case. If n is 0, return 1. Then, for n greater than 0, it's n multiplied by factorial(n-1). That sounds like a recursive approach. But wait, what about non-negative integers? So n can",
+    "extracted_code": "def factorial(n):\n    if n == 0:\n        return 1\n    else:",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 4\n    else:\n         ^\nIndentationError: expected an indented block after 'else' statement on line 4\n"
+  },
+  {
+    "id": "codegen_004_fibonacci",
+    "function": "fibonacci",
+    "status": 200,
+    "latency_s": 6.200731992721558,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 63,
+      "total_tokens": 447,
+      "completion_tokens": 384,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, I need to write a Python function called fibonacci that returns the nth Fibonacci number. The problem says fibonacci(0) is 0 and fibonacci(1) is 1. Let's think about how to approach this.\n\nFirst, what's the Fibonacci sequence here? So fib(0) = 0, fib(1)=1, fib(2) should be fib(1)+fib(0)=1, fib(3)=fib(2)+fib(1)=2, etc. Right.\n\nSo the function needs to take n as input. Let's consider base cases first. If n is 0, return 0. If n is 1, return 1. For n greater than 1, we need to c",
+    "extracted_code": "<seed:think>\nGot it, I need to write a Python function called fibonacci that returns the nth Fibonacci number. The problem says fibonacci(0) is 0 and fibonacci(1) is 1. Let's think about how to approach this.\n\nFirst, what's the Fibonacci sequence here? So fib(0) = 0, fib(1)=1, fib(2) should be fib(1)+fib(0)=1, fib(3)=fib(2)+fib(1)=2, etc. Right.\n\nSo the function needs to take n as input. Let's consider base cases first. If n is 0, return 0. If n is 1, return 1. For n greater than 1, we need to compute the sum of the previous two numbers.\n\nHow to compute that efficiently? Well, for small n, a recursive approach might work, but recursion can be inefficient for large n because of repeated calculations. Alternatively, an iterative approach would be better for performance, especially with larger n.\n\nLet's think about iterative. Let's say we start with a and b representing fib(0) and fib(1). Then for each step from 2 to n, we compute the next value as a + b, then update a to be b, and b to be the new value. At the end, b would be fib(n).\n\nWait, let's test that. For n=0: return 0. n=1: return 1. For n=2: a=0, b=1. Next is 0+1=1. Then a becomes 1, b becomes 1. So return b (1), which is correct. For n=3: next after 2 is 1+1=2. a becomes 1, b becomes 2",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 2\n    Got it, I need to write a Python function called fibonacci that returns the nth Fibonacci number. The problem says fibonacci(0) is 0 and fibonacci(1) is 1. Let's think about how to approach this.\n                                                                                                                                                                   ^\nSyntaxError: unterminated string literal (detected at line 2)\n"
+  },
+  {
+    "id": "codegen_005_count_vowels",
+    "function": "count_vowels",
+    "status": 200,
+    "latency_s": 6.19976806640625,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 52,
+      "total_tokens": 436,
+      "completion_tokens": 384,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, I need to write a Python function called count_vowels that takes a string s and counts the vowels. Let's think about the steps. First, what are the vowels? A, E, I, O, U, and maybe lowercase too. So I should consider both cases. Maybe convert the input string to lowercase (or uppercase) to make the check case-insensitive.\n\nSo the plan: initialize a counter to 0. Then iterate over each character in the string. For each character, check if it's one of the vowels (a, e, i, o, u",
+    "extracted_code": "def count_vowels(s):\n    vowels = {'a', 'e', 'i', 'o', 'u'}\n    count = 0\n    for char in s.lower():\n        if char in vowels:\n            count +=1\n    return count\n\nYes, that should work. Let's test with examples. Like s = \"Hello World\" → lowercase is \"hello world\". Vowels are e, o, o → count 3. The function would return 3. That seems right. What about empty string? Returns 0. What about uppercase letters? Like \"AEIOU\" → lowercases to same, count 5. Yep. So this should handle all cases.</seed:think>def count_vowels(s):\n    vowels = {'a', 'e', 'i', 'o', 'u'}",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 9\n    Yes, that should work. Let's test with examples. Like s = \"Hello World\" → lowercase is \"hello world\". Vowels are e, o, o → count 3. The function would return 3. That seems right. What about empty string? Returns 0. What about uppercase letters? Like \"AEIOU\" → lowercases to same, count 5. Yep. So this should handle all cases.</seed:think>def count_vowels(s):\n                              ^\nSyntaxError: unterminated string literal (detected at line 9)\n"
+  },
+  {
+    "id": "codegen_006_flatten",
+    "function": "flatten",
+    "status": 200,
+    "latency_s": 6.2004172801971436,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 51,
+      "total_tokens": 435,
+      "completion_tokens": 384,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, I need to write a Python function called flatten that takes a list of lists and flattens it by one level. Let's think about what \"flattens by one level\" means. Oh right, so if the input is like [[1,2], [3,4], [5]], the output should be [1,2,3,4,5]. But if there's a deeper nested list, like [[1,[2,3]], [4]], then it should become [1,[2,3],4], right? Because it's only one level.\n\nSo the task is to take each element in the input list, which are themselves lists (or maybe not? W",
+    "extracted_code": "<seed:think>\nGot it, I need to write a Python function called flatten that takes a list of lists and flattens it by one level. Let's think about what \"flattens by one level\" means. Oh right, so if the input is like [[1,2], [3,4], [5]], the output should be [1,2,3,4,5]. But if there's a deeper nested list, like [[1,[2,3]], [4]], then it should become [1,[2,3],4], right? Because it's only one level.\n\nSo the task is to take each element in the input list, which are themselves lists (or maybe not? Wait, the problem says \"list of lists\", so maybe we can assume that each element of xs is a list. But maybe the function should handle cases where elements are not lists? Like, if xs is [1, [2,3], 4], then flattening by one level would give [1,2,3,4]? Or wait, the problem statement says \"list of lists\", so perhaps the input is a list where each element is a list. But maybe the function should iterate over each sublist and collect their elements, regardless of whether the sublist is a list? Or maybe the problem expects that any element that is a list is flattened, but the question says \"list of lists by one level\". Hmm.\n\nWait, the standard definition of flattening by one level (sometimes called shallow flattening) is to take all the elements of the sublists and put them into a single list, one level up. So for example, if the input is a list where each element is an iterable (but in Python, lists are the case here), then flattening one level would concatenate all the sublists.\n\nSo the function flatten(x",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 2\n    Got it, I need to write a Python function called flatten that takes a list of lists and flattens it by one level. Let's think about what \"flattens by one level\" means. Oh right, so if the input is like [[1,2], [3,4], [5]], the output should be [1,2,3,4,5]. But if there's a deeper nested list, like [[1,[2,3]], [4]], then it should become [1,[2,3],4], right? Because it's only one level.\n                                                                                                                                                                                                                                                                                                                                                                                     ^\nSyntaxError: unterminated string literal (detected at line 2)\n"
+  },
+  {
+    "id": "codegen_007_unique_order",
+    "function": "unique_preserve_order",
+    "status": 200,
+    "latency_s": 6.200484991073608,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 54,
+      "total_tokens": 438,
+      "completion_tokens": 384,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, I need to write a Python function called unique_preserve_order that removes duplicates from a list while keeping the original order. Let's think about how to do that.\n\nFirst, the key points: remove duplicates, preserve the order of the first occurrence of each element. So, for example, if the input is [1,2,2,3,1], the output should be [1,2,3].\n\nHow to track seen elements? Oh right, a set can keep track of elements we've already seen. Then, iterate through the input list, and",
+    "extracted_code": "<seed:think>\nGot it, I need to write a Python function called unique_preserve_order that removes duplicates from a list while keeping the original order. Let's think about how to do that.\n\nFirst, the key points: remove duplicates, preserve the order of the first occurrence of each element. So, for example, if the input is [1,2,2,3,1], the output should be [1,2,3].\n\nHow to track seen elements? Oh right, a set can keep track of elements we've already seen. Then, iterate through the input list, and for each element, if it's not in the seen set, add it to the result list and mark it as seen.\n\nWait, but what about the order? Since we iterate through the original list in order, and add elements to the result only the first time we see them, the order should be preserved. That makes sense.\n\nSo the steps are:\n\n1. Initialize an empty list to hold the result.\n2. Initialize an empty set to keep track of seen elements.\n3. Loop over each element in the input list xs.\n4. For each element, if it's not in seen:\n   a. Append it to the result list.\n   b. Add it to the seen set.\n5. Return the result list.\n\nLet me test this logic with an example. Let's say xs = [2,1,2,3,1]. Then:\n\n- Start with result = [], seen = set()\n- First element 2: not in seen. Append to result → [2]. Add to seen → {2}\n- Second element 1: not in seen. Append → [2,1]. seen → {2,1}\n- Third element 2: in seen, skip.\n- Fourth element",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 2\n    Got it, I need to write a Python function called unique_preserve_order that removes duplicates from a list while keeping the original order. Let's think about how to do that.\n                                                                                                                                                    ^\nSyntaxError: unterminated string literal (detected at line 2)\n"
+  },
+  {
+    "id": "codegen_008_binary_search",
+    "function": "binary_search",
+    "status": 200,
+    "latency_s": 6.20048451423645,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 58,
+      "total_tokens": 442,
+      "completion_tokens": 384,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, I need to write a Python function called binary_search that takes a sorted list xs and a target, and returns the index of the target or -1 if it's not found. Let's think about how binary search works.\n\nFirst, binary search works on sorted lists. So the list is already sorted, which I don't need to check. The idea is to divide the list into halves, check the middle element. If it's the target, return the index. If the target is less than the middle, search the left half. If i",
+    "extracted_code": "<seed:think>\nGot it, I need to write a Python function called binary_search that takes a sorted list xs and a target, and returns the index of the target or -1 if it's not found. Let's think about how binary search works.\n\nFirst, binary search works on sorted lists. So the list is already sorted, which I don't need to check. The idea is to divide the list into halves, check the middle element. If it's the target, return the index. If the target is less than the middle, search the left half. If it's greater, search the right half. Repeat until found or the search space is empty.\n\nSo I need to keep track of the low and high indices. Initialize low to 0 and high to len(xs) - 1. Then, while low <= high, calculate mid. Mid can be (low + high) // 2 to avoid overflow, but in Python that's not a problem, but it's still the right way.\n\nThen compare the middle element (xs[mid]) with target. If equal, return mid. If target is less than xs[mid], set high to mid - 1. If target is greater, set low to mid + 1. If the loop ends without returning, return -1.\n\nWait, what if the list is empty? Then len(xs) is 0, high is -1, loop doesn't run, returns -1. That's correct.\n\nLet me test some cases. For example, xs = [1,3,5,7], target 3. Low=0, high=3. Mid=1. xs[1] is 3, return 1. Correct.\n\nAnother case: target 4. Let's see. Low=0, high=3. Mid=1, 3 <4,",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 4\n    First, binary search works on sorted lists. So the list is already sorted, which I don't need to check. The idea is to divide the list into halves, check the middle element. If it's the target, return the index. If the target is less than the middle, search the left half. If it's greater, search the right half. Repeat until found or the search space is empty.\n                                                                                                                                                                                                                                                                                          ^\nSyntaxError: unterminated string literal (detected at line 4)\n"
+  },
+  {
+    "id": "codegen_009_merge_sorted",
+    "function": "merge_sorted",
+    "status": 200,
+    "latency_s": 6.200885057449341,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 55,
+      "total_tokens": 439,
+      "completion_tokens": 384,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, I need to write a Python function called merge_sorted that takes two sorted lists a and b and merges them into one sorted list. Let's think about how to approach this.\n\nFirst, since both a and b are already sorted, the goal is to combine them efficiently without re-sorting the entire result. The standard way to merge two sorted lists is using a two-pointer technique. That way, we can iterate through both lists once, which is O(n + m) time complexity, where n and m are the le",
+    "extracted_code": "<seed:think>\nGot it, I need to write a Python function called merge_sorted that takes two sorted lists a and b and merges them into one sorted list. Let's think about how to approach this.\n\nFirst, since both a and b are already sorted, the goal is to combine them efficiently without re-sorting the entire result. The standard way to merge two sorted lists is using a two-pointer technique. That way, we can iterate through both lists once, which is O(n + m) time complexity, where n and m are the lengths of a and b.\n\nSo, let's initialize two pointers, i and j, starting at 0. These will track the current position in a and b, respectively. Then, we'll create an empty list to store the merged result.\n\nWe'll loop while both i is less than the length of a and j is less than the length of b. In each iteration, we compare the elements at a[i] and b[j]. Whichever is smaller, we append it to the result list and increment the corresponding pointer.\n\nOnce we exit that loop, one of the lists might still have remaining elements. Because the lists are sorted, we can just extend the result list with the remaining elements of a (from i onwards) or b (from j onwards).\n\nLet's outline the steps:\n\n1. Initialize i = 0, j = 0, merged = []\n2. While i < len(a) and j < len(b):\n   a. If a[i] <= b[j], append a[i] to merged, i += 1\n   b. Else, append b[j] to merged, j += 1\n3. Append the remaining elements of a (if any) starting from i\n4. Append the remaining elements of b (if any) starting from j\n5. Return merged",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 2\n    Got it, I need to write a Python function called merge_sorted that takes two sorted lists a and b and merges them into one sorted list. Let's think about how to approach this.\n                                                                                                                                               ^\nSyntaxError: unterminated string literal (detected at line 2)\n"
+  },
+  {
+    "id": "codegen_010_gcd",
+    "function": "gcd",
+    "status": 200,
+    "latency_s": 6.2009499073028564,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 56,
+      "total_tokens": 440,
+      "completion_tokens": 384,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, I need to write a Python function called gcd that uses Euclid's algorithm to find the greatest common divisor of a and b. Let's remember how Euclid's algorithm works. The basic idea is that the GCD of two numbers also divides their difference, but more efficiently, we use the remainder. So the GCD of a and b is the same as the GCD of b and a mod b, right? And we repeat this until the remainder is zero. The non-zero number at that point is the GCD.\n\nWait, but what if one of t",
+    "extracted_code": "<seed:think>\nGot it, I need to write a Python function called gcd that uses Euclid's algorithm to find the greatest common divisor of a and b. Let's remember how Euclid's algorithm works. The basic idea is that the GCD of two numbers also divides their difference, but more efficiently, we use the remainder. So the GCD of a and b is the same as the GCD of b and a mod b, right? And we repeat this until the remainder is zero. The non-zero number at that point is the GCD.\n\nWait, but what if one of the numbers is zero? Oh right, the GCD of a and 0 is a, but only if a is non-zero. But maybe I should handle cases where a or b is negative? Because GCD is usually considered for non-negative integers. But the problem statement doesn't specify, but maybe the function should take absolute values first? Or does Euclid's algorithm handle negatives? Let me think. For example, gcd(-4,6) is 2. So maybe the function should first convert a and b to their absolute values.\n\nBut let's start with the basic algorithm. Let's say a and b are positive integers. The steps are: while b is not zero, set a, b = b, a mod b. Then return a. But wait, what if a is smaller than b? Like gcd(4,6). Then a mod b is 4, so then next step a becomes 6, b becomes 4. Then 6 mod 4 is 2, then a=4, b=2. Then 4 mod 2 is 0, so return 4? Wait no, wait let's step through:\n\ngcd(4,6):\n\nFirst iteration: a=4, b=6",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 2\n    Got it, I need to write a Python function called gcd that uses Euclid's algorithm to find the greatest common divisor of a and b. Let's remember how Euclid's algorithm works. The basic idea is that the GCD of two numbers also divides their difference, but more efficiently, we use the remainder. So the GCD of a and b is the same as the GCD of b and a mod b, right? And we repeat this until the remainder is zero. The non-zero number at that point is the GCD.\n                                                                                                                                                               ^\nSyntaxError: unterminated string literal (detected at line 2)\n"
+  },
+  {
+    "id": "codegen_011_is_prime",
+    "function": "is_prime",
+    "status": 200,
+    "latency_s": 6.199726343154907,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 50,
+      "total_tokens": 434,
+      "completion_tokens": 384,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, I need to write a Python function called is_prime that returns True if n is a prime number. Let's think about what a prime number is. A prime number is a natural number greater than 1 that has no positive divisors other than 1 and itself. So first, I need to handle cases where n is less than or equal to 1—those are not prime.\n\nWait, what about n=2? That's the smallest prime. Then even numbers greater than 2 can't be primes. So maybe start by checking if n is less than 2: ret",
+    "extracted_code": "def is_prime(n):\n    if n <= 1",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 2\n    if n <= 1\n             ^\nSyntaxError: expected ':'\n"
+  },
+  {
+    "id": "codegen_012_transpose",
+    "function": "transpose",
+    "status": 200,
+    "latency_s": 6.199296474456787,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 47,
+      "total_tokens": 431,
+      "completion_tokens": 384,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, I need to write a Python function called transpose that takes a matrix and returns its transpose. Let's think about what transposing a matrix means. The transpose of a matrix is a new matrix where the rows are the columns of the original, and vice versa. So if the original matrix has dimensions m x n (m rows, n columns), the transposed one will be n x m.\n\nFor example, if the input is [[1,2,3], [4,5,6]], the transpose should be [[1,4], [2,5], [3,6]]. \n\nHow to approach this? L",
+    "extracted_code": "<seed:think>\nGot it, I need to write a Python function called transpose that takes a matrix and returns its transpose. Let's think about what transposing a matrix means. The transpose of a matrix is a new matrix where the rows are the columns of the original, and vice versa. So if the original matrix has dimensions m x n (m rows, n columns), the transposed one will be n x m.\n\nFor example, if the input is [[1,2,3], [4,5,6]], the transpose should be [[1,4], [2,5], [3,6]]. \n\nHow to approach this? Let's consider the elements. The element at position (i,j) in the original matrix moves to (j,i) in the transposed matrix. So for each column index j in the original, we need to collect all the elements from each row i at that j, which becomes the j-th row in the transposed matrix.\n\nSo maybe we can iterate over the column indices first. For each j from 0 to len(matrix[0])-1 (assuming matrix is non-empty and all rows are same length), then collect matrix[i][j] for each i from 0 to len(matrix)-1. That collection is the j-th row of the result.\n\nBut wait, what if the input matrix is empty? Or has rows of varying lengths? The problem says \"rectangular matrix\", so I guess we can assume all rows are of the same length. So no need to handle jagged matrices here.\n\nSo steps:\n\n1. Check if the input matrix is empty. If it is, return empty.\n2. Determine the number of rows (m) and columns (n) in the original matrix. m is len(matrix), n is len(matrix[0]) if m >",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 2\n    Got it, I need to write a Python function called transpose that takes a matrix and returns its transpose. Let's think about what transposing a matrix means. The transpose of a matrix is a new matrix where the rows are the columns of the original, and vice versa. So if the original matrix has dimensions m x n (m rows, n columns), the transposed one will be n x m.\n                                                                                                                 ^\nSyntaxError: unterminated string literal (detected at line 2)\n"
+  },
+  {
+    "id": "codegen_013_safe_divide",
+    "function": "safe_divide",
+    "status": 200,
+    "latency_s": 3.6415228843688965,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 55,
+      "total_tokens": 280,
+      "completion_tokens": 225,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, I need to write a Python function called safe_divide that takes a, b, and default (which defaults to None). The function should return the default when b is zero, otherwise return a divided by b. Let's think about the steps.\n\nFirst, check if b is zero. If yes, return default. Otherwise, compute a divided by b. Wait, but what about division by zero errors? Oh right, the problem says to return default when b is zero, so we can just check if b is zero first.\n\nSo the structure w",
+    "extracted_code": "def safe_divide(a, b, default=None): then if b == 0: return default else: return a / b. That's straightforward. Let me test some cases. Like if b is 0, returns default. If not, does normal division. What about data types? The problem doesn't specify, so assume a and b are numbers. Yeah, that should work.</seed:think>def safe_divide(a, b, default=None):\n    return default if b == 0 else a / b",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 1\n    def safe_divide(a, b, default=None): then if b == 0: return default else: return a / b. That's straightforward. Let me test some cases. Like if b is 0, returns default. If not, does normal division. What about data types? The problem doesn't specify, so assume a and b are numbers. Yeah, that should work.</seed:think>def safe_divide(a, b, default=None):\n                                                       ^\nSyntaxError: invalid syntax\n"
+  },
+  {
+    "id": "codegen_014_chunk_list",
+    "function": "chunk_list",
+    "status": 200,
+    "latency_s": 6.207499980926514,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 53,
+      "total_tokens": 437,
+      "completion_tokens": 384,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, I need to write a Python function called chunk_list that takes a list xs and a size, and splits xs into chunks of length size. Let's think about how to approach this.\n\nFirst, what's the expected output? For example, if xs is [1,2,3,4,5] and size is 2, the chunks should be [[1,2], [3,4], [5]]? Or maybe [1,2], [3,4], and then the last one is shorter if there's remaining elements. Oh right, usually chunking allows the last chunk to be smaller if the total length isn't divisible",
+    "extracted_code": "<seed:think>\nGot it, I need to write a Python function called chunk_list that takes a list xs and a size, and splits xs into chunks of length size. Let's think about how to approach this.\n\nFirst, what's the expected output? For example, if xs is [1,2,3,4,5] and size is 2, the chunks should be [[1,2], [3,4], [5]]? Or maybe [1,2], [3,4], and then the last one is shorter if there's remaining elements. Oh right, usually chunking allows the last chunk to be smaller if the total length isn't divisible by size.\n\nSo how to generate these chunks. Let's see. One way is to iterate over the list in steps of size. Like, start at index 0, take elements from 0 to size, then size to 2*size, etc.\n\nSo for i in range 0 to len(xs) with step size. Then for each i, the chunk is xs[i:i+size]. That makes sense. Because list slicing in Python is up to but not including the end index, so xs[i:i+size] will give exactly size elements if there are enough, otherwise whatever is left.\n\nSo the function can be written using a list comprehension that loops over i in range(0, len(xs), size), and for each i, append xs[i:i+size].\n\nLet me test this logic with an example. If xs is [1,2,3,4,5], size 2. len(xs) is 5. range(0,5,2) gives 0,2,4. Then:\n\ni=0: xs[0:2] → [1,2]\n\ni=2: xs[2:4",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 2\n    Got it, I need to write a Python function called chunk_list that takes a list xs and a size, and splits xs into chunks of length size. Let's think about how to approach this.\n                                                                                                                                              ^\nSyntaxError: unterminated string literal (detected at line 2)\n"
+  },
+  {
+    "id": "codegen_015_longest_common_prefix",
+    "function": "longest_common_prefix",
+    "status": 200,
+    "latency_s": 6.199812889099121,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 51,
+      "total_tokens": 435,
+      "completion_tokens": 384,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, I need to write a Python function called longest_common_prefix that takes a list of strings and returns the longest common prefix. Let's think about how to approach this.\n\nFirst, what's a common prefix? It's the starting characters that all strings in the list share. So, for example, if the input is [\"flower\", \"flow\", \"flight\"], the common prefix is \"fl\".\n\nHmm, edge cases. What if the list is empty? Then return an empty string. What if there's only one string? Then return th",
+    "extracted_code": "<seed:think>\nGot it, I need to write a Python function called longest_common_prefix that takes a list of strings and returns the longest common prefix. Let's think about how to approach this.\n\nFirst, what's a common prefix? It's the starting characters that all strings in the list share. So, for example, if the input is [\"flower\", \"flow\", \"flight\"], the common prefix is \"fl\".\n\nHmm, edge cases. What if the list is empty? Then return an empty string. What if there's only one string? Then return that string. What if the strings have different lengths? We need to check up to the shortest string's length.\n\nSo steps: \n\n1. Handle edge case: if the input list is empty, return \"\".\n2. Find the shortest string in the list because the common prefix can't be longer than that.\n3. Iterate over each character position from 0 to the length of the shortest string minus 1.\n4. For each position, check if all strings have the same character at that position.\n5. If all do, add that character to the prefix. If not, break the loop.\n6. Return the accumulated prefix.\n\nLet's think about how to implement this.\n\nFirst, check if the list is empty: if not strings, return \"\".\n\nThen, find the shortest string. Maybe using min(strings, key=len). Let's call that min_str.\n\nThen, for each index i in range(len(min_str)):\n    take the character c = min_str[i]\n    check for all s in strings: s[i] == c. If any s[i] != c, then return the prefix up to i.\n    If all have c, add to prefix.\n\nSo initialize prefix as empty string. Then loop through each index.",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 2\n    Got it, I need to write a Python function called longest_common_prefix that takes a list of strings and returns the longest common prefix. Let's think about how to approach this.\n                                                                                                                                                  ^\nSyntaxError: unterminated string literal (detected at line 2)\n"
+  },
+  {
+    "id": "codegen_016_parse_kv",
+    "function": "parse_key_value_lines",
+    "status": 200,
+    "latency_s": 6.20164942741394,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 58,
+      "total_tokens": 442,
+      "completion_tokens": 384,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, I need to write a Python function called parse_key_value_lines that takes a text input and parses lines of key=value into a dictionary. Let's think about the steps.\n\nFirst, the input is a text, which probably has multiple lines. So I should split the text into lines. Maybe using splitlines() method. Then, for each line, I need to check if it's in the form key=value.\n\nWait, but what about empty lines? Maybe I should skip lines that are empty or don't have an equals sign. So f",
+    "extracted_code": "<seed:think>\nGot it, I need to write a Python function called parse_key_value_lines that takes a text input and parses lines of key=value into a dictionary. Let's think about the steps.\n\nFirst, the input is a text, which probably has multiple lines. So I should split the text into lines. Maybe using splitlines() method. Then, for each line, I need to check if it's in the form key=value.\n\nWait, but what about empty lines? Maybe I should skip lines that are empty or don't have an equals sign. So for each line in the split lines, strip whitespace first? Because maybe there are leading or trailing spaces. Like \"  name =  john  \" should become \"name=john\" after stripping? Or split on the first equals sign, after stripping.\n\nSo process each line: strip whitespace. If the line is empty after stripping, skip. Then, split the line into key and value parts using the first '=' as the separator. Because what if the value contains an '='? Like \"key=val=ue\" — then the key is 'key' and value is 'val=ue'.\n\nSo for a non-empty line, split into two parts on the first '='. How to do that? Using partition('='). The partition method returns a tuple (before, sep, after). So for line.partition('='), if the sep is present (i.e., the line has at least one '='), then key is the before part stripped, value is the after part stripped. If there's no '=', then maybe we skip that line? Because it's not a key=value line.\n\nSo the plan:\n\n1. Initialize an empty dictionary.\n2. Split the input text into lines.\n3. For each line in lines:\n   a. Strip leading/t",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 2\n    Got it, I need to write a Python function called parse_key_value_lines that takes a text input and parses lines of key=value into a dictionary. Let's think about the steps.\n                                                                                                                                                       ^\nSyntaxError: unterminated string literal (detected at line 2)\n"
+  },
+  {
+    "id": "codegen_017_moving_average",
+    "function": "moving_average",
+    "status": 200,
+    "latency_s": 6.2012152671813965,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 55,
+      "total_tokens": 439,
+      "completion_tokens": 384,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, I need to write a Python function called moving_average that takes xs (a list of numbers, I assume) and window (an integer), and returns the simple moving averages for each full window. Let's think about what a simple moving average is. Oh right, it's the average of a fixed number of consecutive elements in the list. \n\nFirst, what's a \"full window\"? So if the window size is, say, 3, then the first moving average is the average of the first 3 elements (indices 0,1,2), the nex",
+    "extracted_code": "<seed:think>\nGot it, I need to write a Python function called moving_average that takes xs (a list of numbers, I assume) and window (an integer), and returns the simple moving averages for each full window. Let's think about what a simple moving average is. Oh right, it's the average of a fixed number of consecutive elements in the list. \n\nFirst, what's a \"full window\"? So if the window size is, say, 3, then the first moving average is the average of the first 3 elements (indices 0,1,2), the next is indices 1,2,3, and so on, until we don't have enough elements left. So the number of moving averages should be len(xs) - window + 1, but only if len(xs) >= window. If len(xs) is less than window, maybe return an empty list?\n\nLet's outline the steps. For each i starting from 0 to (len(xs) - window), inclusive, take the sublist xs[i:i+window], compute the average of that sublist, and collect all those averages.\n\nSo how to implement this. Let's see. First, check if the window is larger than the length of xs. If yes, return empty list. Otherwise, iterate over the possible starting indices. For each start in 0 to len(xs)-window, get the slice xs[start:start+window], sum those elements, divide by window, add to the result list.\n\nLet's test with an example. Suppose xs = [1,2,3,4,5], window=3. Then the moving averages would be (1+2+3)/3=2, (2+3+4)/3=3, (3+4+5)/3=4. So the result should",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 6\n    Let's outline the steps. For each i starting from 0 to (len(xs) - window), inclusive, take the sublist xs[i:i+window], compute the average of that sublist, and collect all those averages.\n       ^\nSyntaxError: unterminated string literal (detected at line 6)\n"
+  },
+  {
+    "id": "codegen_018_top_k_frequent",
+    "function": "top_k_frequent",
+    "status": 200,
+    "latency_s": 6.202048301696777,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 63,
+      "total_tokens": 447,
+      "completion_tokens": 384,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, I need to write a Python function called top_k_frequent that takes a list xs and an integer k, and returns the k most frequent elements. Hmm, let's think about how to approach this.\n\nFirst, I need to count the frequency of each element in xs. Oh right, the collections module has a Counter class that's perfect for this. So I can use Counter to get a dictionary-like object where keys are the elements and values are their counts.\n\nOnce I have the frequencies, I need to get the ",
+    "extracted_code": "<seed:think>\nGot it, I need to write a Python function called top_k_frequent that takes a list xs and an integer k, and returns the k most frequent elements. Hmm, let's think about how to approach this.\n\nFirst, I need to count the frequency of each element in xs. Oh right, the collections module has a Counter class that's perfect for this. So I can use Counter to get a dictionary-like object where keys are the elements and values are their counts.\n\nOnce I have the frequencies, I need to get the top k elements based on their counts. How do I sort the elements by their frequency? The Counter has a most_common() method which returns a list of (element, count) tuples ordered by count descending. Oh right! So if I call most_common(k), that gives me the top k elements along with their counts. Then I just need to extract the elements from those tuples.\n\nWait, let's outline the steps:\n\n1. Import Counter from collections.\n2. Count the frequencies of elements in xs using Counter(xs).\n3. Get the most common k elements with most_common(k). This gives a list of (element, count) pairs.\n4. Extract the elements from each pair, so we take the first element of each tuple in that list.\n5. Return that list of elements.\n\nLet me test this logic with an example. Suppose xs = [1,1,1,2,2,3], k=2. Counter(xs) would be {1:3, 2:2, 3:1}. most_common(2) is [(1,3), (2,2)]. Extracting the elements gives [1,2], which is correct.\n\nWhat about ties? The problem says ties can be in any order, so that's fine because most_common handles",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 2\n    Got it, I need to write a Python function called top_k_frequent that takes a list xs and an integer k, and returns the k most frequent elements. Hmm, let's think about how to approach this.\n                                                                                                                                                             ^\nSyntaxError: unterminated string literal (detected at line 2)\n"
+  },
+  {
+    "id": "codegen_019_group_by_first_letter",
+    "function": "group_by_first_letter",
+    "status": 200,
+    "latency_s": 6.202507257461548,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 59,
+      "total_tokens": 443,
+      "completion_tokens": 384,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, I need to write a Python function called group_by_first_letter that takes a list of words and returns a dictionary where the keys are the first letters of the words, and the values are lists of words that start with that letter. Let's think about how to approach this.\n\nFirst, the input is a list of words. For each word in the list, I need to get its first character. Then, I need to group the word into the list corresponding to that first character in the dictionary.\n\nSo, the",
+    "extracted_code": "<seed:think>\nGot it, I need to write a Python function called group_by_first_letter that takes a list of words and returns a dictionary where the keys are the first letters of the words, and the values are lists of words that start with that letter. Let's think about how to approach this.\n\nFirst, the input is a list of words. For each word in the list, I need to get its first character. Then, I need to group the word into the list corresponding to that first character in the dictionary.\n\nSo, the steps are: initialize an empty dictionary. Then iterate over each word in the input list. For each word, check if the first letter is already a key in the dictionary. If it is, append the word to the list. If not, create a new key with the first letter and set the value to a list containing the current word.\n\nWait, but what if a word is an empty string? The problem probably assumes that words are non-empty, but maybe we should handle that? The question says \"words\", so maybe we can assume each word has at least one character. So no need to handle empty strings unless specified, but the problem doesn't mention that, so proceed under the assumption that all words are non-empty.\n\nSo, for example, if words is [\"apple\", \"banana\", \"apricot\", \"cherry\"], the output should be {'a': ['apple', 'apricot'], 'b': ['banana'], 'c': ['cherry']}.\n\nHow to implement this. Let's see. Initialize the dict, say result = {}. Then for word in words: first_letter = word[0]. Then, if first_letter in result, append word to result[first_letter], else result[first_letter] = [word].\n\nYes, that makes sense.",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 2\n    Got it, I need to write a Python function called group_by_first_letter that takes a list of words and returns a dictionary where the keys are the first letters of the words, and the values are lists of words that start with that letter. Let's think about how to approach this.\n                                                                                                                                                                                                                                                    ^\nSyntaxError: unterminated string literal (detected at line 2)\n"
+  },
+  {
+    "id": "codegen_020_normalize_vector",
+    "function": "normalize_vector",
+    "status": 200,
+    "latency_s": 6.200511455535889,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 61,
+      "total_tokens": 445,
+      "completion_tokens": 384,
+      "prompt_tokens_details": null
+    },
+    "output_preview": "<seed:think>\nGot it, I need to write a Python function called normalize_vector that takes a list xs and returns a list scaled to unit L2 norm. If the norm is zero, return xs unchanged. Let's think about the steps.\n\nFirst, what's the L2 norm? Oh right, it's the square root of the sum of the squares of each element. So for a vector xs, the L2 norm is sqrt(sum(x^2 for x in xs)).\n\nSo the plan is: calculate the norm first. Then, if the norm is not zero, divide each element by the norm. If it is zero,",
+    "extracted_code": "<seed:think>\nGot it, I need to write a Python function called normalize_vector that takes a list xs and returns a list scaled to unit L2 norm. If the norm is zero, return xs unchanged. Let's think about the steps.\n\nFirst, what's the L2 norm? Oh right, it's the square root of the sum of the squares of each element. So for a vector xs, the L2 norm is sqrt(sum(x^2 for x in xs)).\n\nSo the plan is: calculate the norm first. Then, if the norm is not zero, divide each element by the norm. If it is zero, return the original list.\n\nWait, but how to handle the calculation? Let's break it down.\n\nStep 1: Compute the sum of squares of each element in xs. Let's call that sum_sq. Then norm is sqrt(sum_sq).\n\nStep 2: Check if norm is zero. If norm is zero (or very close to zero? But the problem says if norm is zero, so maybe exact zero? But in practice, with floating points, maybe we should check if it's zero within a tolerance? But the problem statement probably expects exact zero check. Let's see the problem statement: \"if norm is zero, return xs unchanged\". So if the norm is exactly zero, return xs. Otherwise, divide each element by the norm.\n\nSo code steps:\n\nDefine function normalize_vector(xs):\n\nFirst, compute sum_sq = sum(x**2 for x in xs)\n\nThen norm = sum_sq ** 0.5  # or math.sqrt(sum_sq), but need to import math?\n\nWait, using math.sqrt is better maybe. So need to import math.\n\nWait, but what if xs is empty? Well, the problem probably assumes xs is a non-empty list of numbers. But",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_20_20260614.py\", line 177, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 2\n    Got it, I need to write a Python function called normalize_vector that takes a list xs and returns a list scaled to unit L2 norm. If the norm is zero, return xs unchanged. Let's think about the steps.\n                                                                                                                                                                                   ^\nSyntaxError: unterminated string literal (detected at line 2)\n"
+  }
+]

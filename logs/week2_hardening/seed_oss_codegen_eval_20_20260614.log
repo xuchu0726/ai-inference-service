@@ -1,0 +1,55 @@
+===== Seed-OSS code generation eval: 20 HumanEval/MBPP-style tasks =====
+time: 2026-06-14T23:53:26.406894Z
+model: ByteDance-Seed/Seed-OSS-36B-Instruct
+[01/20] codegen_001_add
+{"id": "codegen_001_add", "passed": false, "latency_s": 1.7929961681365967, "status": 200}
+[02/20] codegen_002_palindrome
+{"id": "codegen_002_palindrome", "passed": false, "latency_s": 6.201817274093628, "status": 200}
+[03/20] codegen_003_factorial
+{"id": "codegen_003_factorial", "passed": false, "latency_s": 6.201409339904785, "status": 200}
+[04/20] codegen_004_fibonacci
+{"id": "codegen_004_fibonacci", "passed": false, "latency_s": 6.200731992721558, "status": 200}
+[05/20] codegen_005_count_vowels
+{"id": "codegen_005_count_vowels", "passed": false, "latency_s": 6.19976806640625, "status": 200}
+[06/20] codegen_006_flatten
+{"id": "codegen_006_flatten", "passed": false, "latency_s": 6.2004172801971436, "status": 200}
+[07/20] codegen_007_unique_order
+{"id": "codegen_007_unique_order", "passed": false, "latency_s": 6.200484991073608, "status": 200}
+[08/20] codegen_008_binary_search
+{"id": "codegen_008_binary_search", "passed": false, "latency_s": 6.20048451423645, "status": 200}
+[09/20] codegen_009_merge_sorted
+{"id": "codegen_009_merge_sorted", "passed": false, "latency_s": 6.200885057449341, "status": 200}
+[10/20] codegen_010_gcd
+{"id": "codegen_010_gcd", "passed": false, "latency_s": 6.2009499073028564, "status": 200}
+[11/20] codegen_011_is_prime
+{"id": "codegen_011_is_prime", "passed": false, "latency_s": 6.199726343154907, "status": 200}
+[12/20] codegen_012_transpose
+{"id": "codegen_012_transpose", "passed": false, "latency_s": 6.199296474456787, "status": 200}
+[13/20] codegen_013_safe_divide
+{"id": "codegen_013_safe_divide", "passed": false, "latency_s": 3.6415228843688965, "status": 200}
+[14/20] codegen_014_chunk_list
+{"id": "codegen_014_chunk_list", "passed": false, "latency_s": 6.207499980926514, "status": 200}
+[15/20] codegen_015_longest_common_prefix
+{"id": "codegen_015_longest_common_prefix", "passed": false, "latency_s": 6.199812889099121, "status": 200}
+[16/20] codegen_016_parse_kv
+{"id": "codegen_016_parse_kv", "passed": false, "latency_s": 6.20164942741394, "status": 200}
+[17/20] codegen_017_moving_average
+{"id": "codegen_017_moving_average", "passed": false, "latency_s": 6.2012152671813965, "status": 200}
+[18/20] codegen_018_top_k_frequent
+{"id": "codegen_018_top_k_frequent", "passed": false, "latency_s": 6.202048301696777, "status": 200}
+[19/20] codegen_019_group_by_first_letter
+{"id": "codegen_019_group_by_first_letter", "passed": false, "latency_s": 6.202507257461548, "status": 200}
+[20/20] codegen_020_normalize_vector
+{"id": "codegen_020_normalize_vector", "passed": false, "latency_s": 6.200511455535889, "status": 200}
+===== Summary =====
+{
+  "created_at": "2026-06-14T23:55:23.494015Z",
+  "model": "ByteDance-Seed/Seed-OSS-36B-Instruct",
+  "service_profile": "Seed-OSS-36B 512K FP8 KV, 4xA100 TP=4",
+  "num_cases": 20,
+  "passed": 0,
+  "failed": 20,
+  "pass_rate": 0.0,
+  "mean_latency_s": 5.8527867436409,
+  "note": "This is a lightweight HumanEval/MBPP-style validation with local unit tests, not a full official HumanEval or MBPP benchmark."
+}
