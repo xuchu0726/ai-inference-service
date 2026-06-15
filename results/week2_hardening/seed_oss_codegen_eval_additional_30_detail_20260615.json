@@ -1,0 +1,482 @@
+[
+  {
+    "id": "codegen_021_reverse_words",
+    "function": "reverse_words",
+    "status": 200,
+    "latency_s": 0.4706144332885742,
+    "passed": true,
+    "usage": {
+      "prompt_tokens": 83,
+      "total_tokens": 109,
+      "completion_tokens": 26,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\n```python\ndef reverse_words(s):\n    return ' '.join(reversed(s.split()))\n```",
+    "extracted_code": "def reverse_words(s):\n    return ' '.join(reversed(s.split()))",
+    "error": ""
+  },
+  {
+    "id": "codegen_022_anagram",
+    "function": "are_anagrams",
+    "status": 200,
+    "latency_s": 0.8015749454498291,
+    "passed": true,
+    "usage": {
+      "prompt_tokens": 91,
+      "total_tokens": 139,
+      "completion_tokens": 48,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\n```python\ndef are_anagrams(a, b):\n    import re\n    return sorted(re.sub(r'\\s', '', a.lower())) == sorted(re.sub(r'\\s', '', b.lower()))\n```",
+    "extracted_code": "def are_anagrams(a, b):\n    import re\n    return sorted(re.sub(r'\\s', '', a.lower())) == sorted(re.sub(r'\\s', '', b.lower()))",
+    "error": ""
+  },
+  {
+    "id": "codegen_023_second_largest",
+    "function": "second_largest",
+    "status": 200,
+    "latency_s": 0.8666479587554932,
+    "passed": true,
+    "usage": {
+      "prompt_tokens": 91,
+      "total_tokens": 143,
+      "completion_tokens": 52,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\n```python\ndef second_largest(xs):\n    unique_sorted = sorted(set(xs), reverse=True)\n    return unique_sorted[1] if len(unique_sorted) >= 2 else None\n```",
+    "extracted_code": "def second_largest(xs):\n    unique_sorted = sorted(set(xs), reverse=True)\n    return unique_sorted[1] if len(unique_sorted) >= 2 else None",
+    "error": ""
+  },
+  {
+    "id": "codegen_024_running_sum",
+    "function": "running_sum",
+    "status": 200,
+    "latency_s": 10.893404483795166,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 84,
+      "total_tokens": 760,
+      "completion_tokens": 676,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\nGot it, I need to write a Python function called running_sum that takes a list of numbers and returns the prefix sums. Let's think about what prefix sums are. Oh right, the prefix sum at each position is the sum of all elements up to and including that position. \n\nSo for example, if the input is [1,2,3], the output should be [1, 1+2=3, 1+2+3=6]. \n\nHow to approach this? Let's see. I can initialize a result list. Then keep a running total as I iterate through the input list. For each element, add it to the running total and append that to the result.\n\nWait, let's outline steps:\n\n1. Check if the input list is empty? Maybe, but even if it is, returning an empty list is fine.\n2. Initialize a variable to keep track of the current sum, starting at 0.\n3. Initialize an empty list for the result.\n4. Loop over each number in xs:\n   a. Add the number to current sum.\n   b. Append current sum to result.\n5. Return the result list.\n\nLet's test this logic with an example. In",
+    "extracted_code": "def running_sum(xs):\n    current_sum = 0\n    result = []\n    for num in xs:\n        current_sum += num\n        result.append(current_sum)\n    return result\n\nThat's the function. Let me check if there are edge cases. Like negative numbers? For example, [-1, 2, -3]. The running sum would be [-1, 1, -2]. Let's see: current_sum starts at 0. Add -1 → -1, append. Then +2 → 1, append. Then +(-3) → -2, append. Correct.\n\nWhat about floats? [1.5, 2.5], running sum [1.5, 4.0]. Yep, that works too.\n\nSo this function should handle all numeric types, since addition is supported. And it works for empty list. Looks good.def running_sum(xs):\n    current_sum = 0\n    result = []\n    for num in xs:\n        current_sum += num\n        result.append(current_sum)\n    return result",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_additional_30_20260615.py\", line 84, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 9\n    That's the function. Let me check if there are edge cases. Like negative numbers? For example, [-1, 2, -3]. The running sum would be [-1, 1, -2]. Let's see: current_sum starts at 0. Add -1 → -1, append. Then +2 → 1, append. Then +(-3) → -2, append. Correct.\n                                                                                                                                                                                                 ^\nSyntaxError: invalid character '→' (U+2192)\n"
+  },
+  {
+    "id": "codegen_025_matrix_add",
+    "function": "matrix_add",
+    "status": 200,
+    "latency_s": 14.530987024307251,
+    "passed": true,
+    "usage": {
+      "prompt_tokens": 83,
+      "total_tokens": 986,
+      "completion_tokens": 903,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\nGot it, I need to write a Python function called matrix_add that adds two matrices. First, I should remember how matrix addition works. Matrices must have the same dimensions—same number of rows and each row has the same number of columns. So first, maybe check if they are compatible? Wait, but what if the user passes incompatible matrices? The problem statement might not specify error handling, but maybe I should assume that the inputs are valid? Or maybe the function should handle that? Hmm, the task just says \"adds two matrices\", so perhaps we can assume they are the same size.\n\nSo, matrix addition is element-wise. For each row i, and each column j, a[i][j] + b[i][j].\n\nSo the steps: iterate over each row pair from a and b, then iterate over each element pair in the rows, add them, and collect into a new matrix.\n\nHow to implement this? Let's think. For each i in range(len(a)), then for each j in range(len(a[i])), but wait, need to make sure that each row of a and b has t",
+    "extracted_code": "def matrix_add(a, b):\n    return [[x + y for x, y in zip(row_a, row_b)] for row_a, row_b in zip(a, b)]",
+    "error": ""
+  },
+  {
+    "id": "codegen_026_dot_product",
+    "function": "dot_product",
+    "status": 200,
+    "latency_s": 8.36228346824646,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 85,
+      "total_tokens": 603,
+      "completion_tokens": 518,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\nGot it, I need to write a Python function called dot_product that takes two lists a and b and returns their dot product. First, what's a dot product? Oh right, it's the sum of the products of corresponding elements. So for each index i, multiply a[i] by b[i], then add all those up.\n\nWait, but first, the lists have to be equal length. Oh, but the problem statement says \"two equal-length lists\" so maybe I don't need to handle that case? The function can assume they are equal length.\n\nSo steps: iterate over each pair of elements from a and b, multiply them, sum all the products.\n\nHow to do that in Python. Let's think. For example, if a is [1,2,3] and b is [4,5,6], the dot product is 1*4 + 2*5 + 3*6 = 4 +10 +18=32.\n\nSo possible ways: use a loop, or use zip and sum with a generator expression.\n\nUsing zip: zip(a,b) gives pairs of elements. Then for each pair (x,y) in zip(a,b), compute x*y, sum all those.\n\nSo the function can be written as sum(x*y for x,y in zip(a,",
+    "extracted_code": "def dot_product(a, b):\n    return sum(x * y for x, y in zip(a, b))\n\nDo I need any imports? No, because zip is built-in, sum is built-in. So no imports required.\n\nSo that's the function. Let me make sure. The function is named dot_product, takes a and b, returns the sum of products of corresponding elements. Yep. That should do it.def dot_product(a, b):\n    return sum(x * y for x, y in zip(a, b))",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_additional_30_20260615.py\", line 84, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 6\n    So that's the function. Let me make sure. The function is named dot_product, takes a and b, returns the sum of products of corresponding elements. Yep. That should do it.def dot_product(a, b):\n           ^\nSyntaxError: unterminated string literal (detected at line 6)\n"
+  },
+  {
+    "id": "codegen_027_remove_none",
+    "function": "remove_none",
+    "status": 200,
+    "latency_s": 4.956213474273682,
+    "passed": true,
+    "usage": {
+      "prompt_tokens": 85,
+      "total_tokens": 391,
+      "completion_tokens": 306,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\nGot it, I need to write a Python function called remove_none that takes a list xs and returns a new list with all None values removed. Let's think about how to do that.\n\nFirst, the function should iterate over each element in the input list xs. For each element, check if it is not None. If it's not None, include it in the new list.\n\nSo, a list comprehension would be perfect here. Like [x for x in xs if x is not None]. That would loop through each x in xs, and only keep x where x is not None.\n\nWait, what about the input type? The problem says xs is a list, so we don't have to handle other iterables. So the function can just return that list comprehension.\n\nSo the function definition would be:\n\ndef remove_none(xs):\n    return [x for x in xs if x is not None]\n\nThat's it. Let me test this logic. If xs is [1, None, 2, None, 3], the result should be [1,2,3]. Yep, the list comprehension would do that. What if there are no Nones? Then it returns the same list. If all are Nones, re",
+    "extracted_code": "def remove_none(xs):\n    return [x for x in xs if x is not None]",
+    "error": ""
+  },
+  {
+    "id": "codegen_028_clamp",
+    "function": "clamp",
+    "status": 200,
+    "latency_s": 10.170562028884888,
+    "passed": true,
+    "usage": {
+      "prompt_tokens": 88,
+      "total_tokens": 719,
+      "completion_tokens": 631,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\nGot it, I need to write a Python function called clamp that takes x, low, high and returns x clamped to the range [low, high]. So first, what does clamping mean? Oh right, if x is less than low, return low. If x is greater than high, return high. Otherwise return x. \n\nWait, let's think about the steps. Let's see: the function should check if x is below low. If yes, return low. If x is above high, return high. Else return x. \n\nSo the logic is: max(low, min(x, high)). Oh right! Because min(x, high) will give x if x is <= high, else high. Then max of that with low will give low if the min result is <= low, else the min result. That's a concise way to write it. \n\nSo the function can be written as return max(low, min(x, high)). Let me test that logic. For example, if x is 5, low 3, high 7: min(5,7)=5, max(3,5)=5. Correct. If x is 2, low 3: min(2,7)=2, max(3,2)=3. Correct. If x is 8, high 7: min(8,7)=7, max(3,7)=7. Correct. What if low is higher than high? Wait, the problem says",
+    "extracted_code": "def clamp(x, low, high):\n    return max(low, min(x, high))",
+    "error": ""
+  },
+  {
+    "id": "codegen_029_count_words",
+    "function": "count_words",
+    "status": 200,
+    "latency_s": 7.191346883773804,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 87,
+      "total_tokens": 532,
+      "completion_tokens": 445,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\nGot it, I need to write a Python function called count_words that takes a text and returns a dictionary with word frequencies, splitting on whitespace. Let's think.\n\nFirst, splitting the text on whitespace. Oh right, the split() method without arguments splits on any whitespace, which is good. So text.split() will give a list of words.\n\nThen, I need to count how many times each word appears. So initialize an empty dictionary. Then loop through each word in the split list. For each word, if it's already a key in the dict, increment the count, else set it to 1.\n\nWait, or use a defaultdict from the collections module? But maybe the user doesn't want to import anything extra? Wait, the problem says \"any required imports\" are allowed. But maybe a simple approach without imports is better unless needed. Let's see. For example, using a regular dictionary:\n\ndef count_words(text):\n    words = text.split()\n    freq = {}\n    for word in words:\n        if word in freq:\n",
+    "extracted_code": "def count_words(text):\n    words = text.split()\n    freq = {}\n    for word in words:\n        if word in freq:\n            freq[word] += 1\n        else:\n            freq[word] = 1\n    return freq\n\nThat works. Let's test with an example. If text is \"hello world hello\", split gives [\"hello\", \"world\", \"hello\"], then freq would be {'hello':2, 'world':1}. That's correct.\n\nWhat about edge cases? Like empty string: text.split() returns empty list, so returns empty dict. That's right. What about multiple spaces? Like \"a   b  c\" splits to [\"a\",\"b\",\"c\"], which is correct.\n\nSo this should work. Do I need to import anything? No, because split() is a string method, and dictionaries are built-in. So the code doesn't require any imports. So the function is as above.def count_words(text):\n    word_list = text.split()\n    frequency = {}\n    for word in word_list:\n        frequency[word] = frequency.get(word, 0) + 1\n    return frequency",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_additional_30_20260615.py\", line 84, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 13\n    What about edge cases? Like empty string: text.split() returns empty list, so returns empty dict. That's right. What about multiple spaces? Like \"a   b  c\" splits to [\"a\",\"b\",\"c\"], which is correct.\n                                                                                                          ^\nSyntaxError: unterminated string literal (detected at line 13)\n"
+  },
+  {
+    "id": "codegen_030_title_case",
+    "function": "title_case",
+    "status": 200,
+    "latency_s": 0.5449867248535156,
+    "passed": true,
+    "usage": {
+      "prompt_tokens": 87,
+      "total_tokens": 119,
+      "completion_tokens": 32,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\n```python\ndef title_case(s):\n    return ' '.join(word.capitalize() for word in s.split())\n```",
+    "extracted_code": "def title_case(s):\n    return ' '.join(word.capitalize() for word in s.split())",
+    "error": ""
+  },
+  {
+    "id": "codegen_031_intersection",
+    "function": "list_intersection",
+    "status": 200,
+    "latency_s": 14.116530895233154,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 94,
+      "total_tokens": 971,
+      "completion_tokens": 877,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\nGot it, I need to write a Python function called list_intersection that takes two lists a and b, returns elements common to both, preserves the order from a, and removes duplicates. Let's think about how to approach this.\n\nFirst, the elements need to be in the order they appear in list a. So I should iterate through list a and check for each element if it's also in list b. But also, I need to remove duplicates. So even if an element appears multiple times in a, if it's in b, we include it only once, the first time it appears in a?\n\nWait, the problem says \"removing duplicates\". So the result should have unique elements, right? So for example, if a is [2,2,3] and b is [2,3], the intersection should be [2,3]? Or wait, maybe if a has duplicates but the element is in b, we take the first occurrence and skip the rest.\n\nSo steps:\n\n1. Iterate through each element in list a in order.\n2. For each element, check if it exists in list b.\n3. Also, check if we haven't alre",
+    "extracted_code": "def list_intersection(a, b):\n    b_set = set(b)\n    seen = set()\n    result = []\n    for elem in a:\n        if elem in b_set and elem not in seen:\n            result.append(elem)\n            seen.add(elem)\n    return result\n\nWait, but what about the data types? Like, if the elements are not hashable (e.g., lists), then converting to a set would fail. But the problem statement probably assumes that the elements are hashable, since otherwise checking membership in a set isn't possible. The question doesn't specify, but in general, for such problems, we assume elements are hashable.\n\nTesting some examples:\n\nExample 1: a = [1,2,3,4], b = [2,4,6]. Then the result should be [2,4], which the code produces.\n\nExample 2: a = [2,2,3], b = [2,3]. The code would add 2 (first occurrence), then next 2 is in seen, so skipped, then 3 is added. Result [2,3].\n\nExample 3: a = [5,3,5,2,3,3], b = [3,5]. Then the order in a is 5,3,5,2,3,3. So first 5 is in b and not seen: add to result. Then 3 is in b and not seen: add. Then 5 is in seen, skip. So result [5,3].\n\nYes, that preserves the order from a (the first occurrences) and removes duplicates.\n\nWhat if a has elements not in b? They are skipped. So that's correct.\n\nSo this code should work. Need to make sure to import nothing, since sets are built-in. The function is called list_intersection, takes a and b. So that's the code.def list_intersection(a, b):\n    b_elements = set(b)\n    seen = set()\n    intersection = []\n    for element in a:\n        if element in b_elements and element not in seen:\n            intersection.append(element)\n            seen.add(element)\n    return intersection",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_additional_30_20260615.py\", line 84, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 23\n    What if a has elements not in b? They are skipped. So that's correct.\n                                                              ^\nSyntaxError: unterminated string literal (detected at line 23)\n"
+  },
+  {
+    "id": "codegen_032_rotate_left",
+    "function": "rotate_left",
+    "status": 200,
+    "latency_s": 20.6948664188385,
+    "passed": true,
+    "usage": {
+      "prompt_tokens": 84,
+      "total_tokens": 1371,
+      "completion_tokens": 1287,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\nGot it, I need to write a Python function called rotate_left that takes a list xs and an integer k, and rotates the list left by k positions. Let's think about what rotating left means. Oh right, rotating left by k positions moves the first k elements to the end of the list. For example, if the list is [1,2,3,4,5] and k is 2, then rotating left by 2 would give [3,4,5,1,2]. \n\nWait, but what if k is larger than the length of the list? Like if the list has 5 elements and k is 7. Then rotating left 7 times is the same as rotating left 7 mod 5 = 2 times. Because after 5 rotations, you get back the original list. So first, maybe I should handle that case by taking k modulo the length of the list. Oh, but what if the list is empty? Then maybe we just return it as is. Or if k is 0, then return the original list too.\n\nSo steps: \n\n1. Handle edge cases: if the list is empty, or k is 0 (or k is a multiple of the length), return the original list.\n2. Otherwise, compute t",
+    "extracted_code": "def rotate_left(xs, k):\n    if not xs:\n        return xs\n    n = len(xs)\n    k = k % n\n    return xs[k:] + xs[:k]",
+    "error": ""
+  },
+  {
+    "id": "codegen_033_is_sorted",
+    "function": "is_sorted",
+    "status": 200,
+    "latency_s": 10.319936037063599,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 89,
+      "total_tokens": 729,
+      "completion_tokens": 640,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\nGot it, I need to write a Python function called is_sorted that checks if a list is sorted in nondecreasing order. Let's think about what nondecreasing means—each element should be less than or equal to the next one. \n\nFirst, how do I check that for all consecutive elements? Maybe loop through the list from the second element to the end, and compare each element with the previous one. If any element is smaller than the previous, return False. If all are okay, return True.\n\nWait, what about empty lists or single-element lists? Oh right, an empty list is considered sorted, and a single element is also sorted. So those cases should return True.\n\nLet's outline the steps:\n\n1. If the length of xs is less than 2, return True immediately.\n2. Otherwise, iterate from index 1 to len(xs)-1:\n   a. For each i, check if xs[i] < xs[i-1]. If yes, return False.\n3. If the loop completes without finding any such case, return True.\n\nAlternatively, I could use zip to pair each el",
+    "extracted_code": "def is_sorted(xs): return all(a <= b for a, b in zip(xs, xs[1:])). Wait, does that handle empty lists? Let's see: if xs is empty, xs[1:] is also empty, so zip(xs, xs[1:]) is empty. The all() function returns True when the iterable is empty. Oh right! Because all() on an empty collection is True (vacuous truth). And for a single element list, xs[1:] is empty, same thing. So that works.\n\nSo that one line should do it. Let me test some cases. For [1,2,3,4], zip gives (1,2), (2,3), (3,4)—all a<=b, so True. For [1,3,2], (1,3) is ok, (3,2) is not, so all() returns False. Empty list returns True. Single element [5] returns True. What about [2,2,2]? All pairs are 2<=2, so True. That's correct.\n\nSo the function can be written as:\n\ndef is_sorted(xs):\n    return all(a <= b for a, b in zip(xs, xs[1:]))\n\nNo imports needed. That's it.def is_sorted(xs):\n    return all(a <= b for a, b in zip(xs, xs[1:]))",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_additional_30_20260615.py\", line 84, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 1\n    def is_sorted(xs): return all(a <= b for a, b in zip(xs, xs[1:])). Wait, does that handle empty lists? Let's see: if xs is empty, xs[1:] is also empty, so zip(xs, xs[1:]) is empty. The all() function returns True when the iterable is empty. Oh right! Because all() on an empty collection is True (vacuous truth). And for a single element list, xs[1:] is empty, same thing. So that works.\n                                                                                                              ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
+  },
+  {
+    "id": "codegen_034_compress_runs",
+    "function": "compress_runs",
+    "status": 200,
+    "latency_s": 24.33555769920349,
+    "passed": true,
+    "usage": {
+      "prompt_tokens": 90,
+      "total_tokens": 1604,
+      "completion_tokens": 1514,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\nGot it, I need to write a Python function called compress_runs that takes a list xs and returns a list of (value, count) pairs for consecutive runs. Let's think about how to approach this.\n\nFirst, what's a consecutive run? Like, if the input is [1,1,2,3,3,3], the output should be [(1,2), (2,1), (3,3)]. Right.\n\nSo, the steps: I need to iterate through the list, track the current value and the current count. When the next element is the same as current, increment count. When it's different, add (current value, count) to the result, then update current value and reset count to 1.\n\nBut wait, what if the input list is empty? Then return an empty list. What if it has one element? Then return [(that element, 1)].\n\nLet's outline the steps:\n\n1. Handle edge case: if xs is empty, return empty list.\n2. Initialize the result list.\n3. Set current_value to the first element of xs, current_count to 1.\n4. Iterate over the rest of the elements (from index 1 onwards):\n   a. For each element,",
+    "extracted_code": "def compress_runs(xs):\n    if not xs:\n        return []\n    result = []\n    current_val = xs[0]\n    current_cnt = 1\n    for val in xs[1:]:\n        if val == current_val:\n            current_cnt += 1\n        else:\n            result.append((current_val, current_cnt))\n            current_val = val\n            current_cnt = 1\n    result.append((current_val, current_cnt))\n    return result",
+    "error": ""
+  },
+  {
+    "id": "codegen_035_expand_runs",
+    "function": "expand_runs",
+    "status": 200,
+    "latency_s": 7.7220988273620605,
+    "passed": true,
+    "usage": {
+      "prompt_tokens": 88,
+      "total_tokens": 566,
+      "completion_tokens": 478,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\nGot it, I need to write a Python function called expand_runs that takes pairs as input and expands them into a flat list. Let's think about what the input looks like. The pairs are probably a list of tuples where each tuple has a value and a count. For example, if pairs is [(2,3), (5,1)], the output should be [2,2,2,5]. \n\nSo the task is, for each (value, count) in pairs, add value to the result list count times. \n\nFirst, I need to process each pair in the input list. For each pair, iterate count times and append the value each time. Or maybe use a list comprehension that loops through each pair, then for each count, adds the value.\n\nWait, how to handle the pairs? Let's assume that each element in pairs is a tuple (value, count), where count is a non-negative integer. Oh, but what if count is zero? Then we add nothing for that pair.\n\nSo the steps: initialize an empty list. Then for each (val, cnt) in pairs, extend the list with [val] * cnt. Because [val] * cnt creates a lis",
+    "extracted_code": "def expand_runs(pairs):\n    expanded = []\n    for value, count in pairs:\n        expanded.extend([value] * count)\n    return expanded",
+    "error": ""
+  },
+  {
+    "id": "codegen_036_mean",
+    "function": "mean",
+    "status": 200,
+    "latency_s": 5.101935148239136,
+    "passed": true,
+    "usage": {
+      "prompt_tokens": 84,
+      "total_tokens": 399,
+      "completion_tokens": 315,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\nGot it, I need to write a Python function called mean that takes a list xs and returns the arithmetic mean, or None if the list is empty. Let's think about the steps.\n\nFirst, check if the input list is empty. If len(xs) is 0, return None. Otherwise, calculate the sum of the elements divided by the number of elements.\n\nWait, but what if the list has non-numeric elements? The problem statement probably assumes xs contains numbers, since it's about arithmetic mean. So no need to handle type errors here, unless specified, but the task doesn't mention that. So proceed under the assumption that xs is a list of numbers.\n\nSo the steps are:\n\n1. Check if xs is empty. If yes, return None.\n2. Else, compute sum(xs) / len(xs).\n\nLet me structure the function.\n\nDef mean(xs):\n    if not xs:  # checks if the list is empty\n        return None\n    return sum(xs) / len(xs)\n\nThat's it. Do I need any imports? No, because sum and len are built-in functions. So no imports required.\n",
+    "extracted_code": "def mean(xs):\n    if not xs:\n        return None\n    return sum(xs) / len(xs)",
+    "error": ""
+  },
+  {
+    "id": "codegen_037_median",
+    "function": "median",
+    "status": 200,
+    "latency_s": 1.6554088592529297,
+    "passed": true,
+    "usage": {
+      "prompt_tokens": 88,
+      "total_tokens": 189,
+      "completion_tokens": 101,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\n```python\ndef median(xs):\n    if not xs:\n        return None\n    sorted_xs = sorted(xs)\n    n = len(sorted_xs)\n    mid = n // 2\n    if n % 2 == 1:\n        return sorted_xs[mid]\n    else:\n        return (sorted_xs[mid - 1] + sorted_xs[mid]) / 2\n```",
+    "extracted_code": "def median(xs):\n    if not xs:\n        return None\n    sorted_xs = sorted(xs)\n    n = len(sorted_xs)\n    mid = n // 2\n    if n % 2 == 1:\n        return sorted_xs[mid]\n    else:\n        return (sorted_xs[mid - 1] + sorted_xs[mid]) / 2",
+    "error": ""
+  },
+  {
+    "id": "codegen_038_mode",
+    "function": "mode",
+    "status": 200,
+    "latency_s": 1.1410582065582275,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 93,
+      "total_tokens": 162,
+      "completion_tokens": 69,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\n```python\nfrom collections import Counter\n\ndef mode(xs):\n    if not xs:\n        return None\n    count = Counter(xs)\n    max_count = max(count.values())\n    for elem in xs:\n        if count[elem] == max_count:\n            return elem\n```",
+    "extracted_code": "def mode(xs):\n    if not xs:\n        return None\n    count = Counter(xs)\n    max_count = max(count.values())\n    for elem in xs:\n        if count[elem] == max_count:\n            return elem",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_additional_30_20260615.py\", line 86, in run_tests\n    exec(t, ns, ns)\n  File \"<string>\", line 1, in <module>\n  File \"<string>\", line 4, in mode\nNameError: name 'Counter' is not defined\n"
+  },
+  {
+    "id": "codegen_039_zip_dict",
+    "function": "zip_to_dict",
+    "status": 200,
+    "latency_s": 3.651533842086792,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 88,
+      "total_tokens": 313,
+      "completion_tokens": 225,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\nGot it, let's see. I need to write a Python function called zip_to_dict that takes keys and values and returns a dictionary by zipping them. Oh right, the zip function in Python combines elements from iterables. So first, I should import zip if needed? Wait no, zip is a built-in function, so no import needed. Then, the function takes keys and values as parameters. Then, I need to pair each key with the corresponding value. Using zip(keys, values) will give pairs. Then convert that to a dict. So the function can be as simple as returning dict(zip(keys, values)). Let me check: if keys and values are of different lengths, zip stops at the shorter one, which is the standard behavior for dict(zip(...)). Yeah, that's right. So the function is straightforward. Let me write that.\n\ndef zip_to_dict(keys, values):\n    return dict(zip(keys, values))</seed:think>def zip_to_dict(keys, values):\n    return dict(zip(keys, values))",
+    "extracted_code": "def zip_to_dict(keys, values):\n    return dict(zip(keys, values))def zip_to_dict(keys, values):\n    return dict(zip(keys, values))",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_additional_30_20260615.py\", line 84, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 2\n    return dict(zip(keys, values))def zip_to_dict(keys, values):\n                                  ^^^\nSyntaxError: invalid syntax\n"
+  },
+  {
+    "id": "codegen_040_invert_dict",
+    "function": "invert_dict",
+    "status": 200,
+    "latency_s": 6.531625747680664,
+    "passed": true,
+    "usage": {
+      "prompt_tokens": 90,
+      "total_tokens": 494,
+      "completion_tokens": 404,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\nGot it, I need to write a Python function called invert_dict that takes a dictionary d and returns a new dictionary where the keys are the values from d and the values are the keys from d. Oh right, the problem says to assume values are unique and hashable, so I don't have to handle duplicates. \n\nSo, how do I do that? Let's think. For each key-value pair in the original dictionary, I want to swap them. Like, if d is {'a': 1, 'b': 2}, then the inverted should be {1: 'a', 2: 'b'}.\n\nSo I can iterate over items in d.items(). For each (k, v) in d.items(), the new dict will have v as key and k as value.\n\nHow to construct this? Maybe using a dictionary comprehension. That would be concise. Like {v: k for k, v in d.items()}. Oh right, that's straightforward. Because for each key k and value v in the original dict, we create a new entry where the key is v and the value is k. Since the values are unique, there's no overwriting issues.\n\nSo the function can just return ",
+    "extracted_code": "def invert_dict(d):\n    return {v: k for k, v in d.items()}",
+    "error": ""
+  },
+  {
+    "id": "codegen_041_find_duplicates",
+    "function": "find_duplicates",
+    "status": 200,
+    "latency_s": 18.948697090148926,
+    "passed": true,
+    "usage": {
+      "prompt_tokens": 95,
+      "total_tokens": 1273,
+      "completion_tokens": 1178,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\nGot it, I need to write a Python function called find_duplicates that takes a list xs and returns a list of values that occur more than once, preserving the order of their first duplicate discovery. Let's think about how to approach this.\n\nFirst, what's the requirement? For each element in xs, if it appears more than once, we need to include it in the result list, but only once, and the order should be the order in which we first find that it's a duplicate.\n\nSo, for example, if xs is [1, 2, 3, 2, 1, 4, 5, 4], the duplicates are 2 (first duplicate at index 3), then 1 (index 4), then 4 (index 7). Wait, but wait: the first occurrence of 2 is index 1, then when we hit index 3 (second 2), that's the first time we find a duplicate. So 2 should be added then. Then 1: first at 0, second at 4—so when we process index 4, we find 1 is a duplicate, add it. Then 4: first at 5, second at 7—add 4. So the result would be [2,1,4].\n\nSo the key is to track which elements we've seen before, a",
+    "extracted_code": "def find_duplicates(xs):\n    seen = set()\n    added = set()\n    duplicates = []\n    for x in xs:\n        if x in seen:\n            if x not in added:\n                duplicates.append(x)\n                added.add(x)\n        else:\n            seen.add(x)\n    return duplicates",
+    "error": ""
+  },
+  {
+    "id": "codegen_042_strip_punctuation",
+    "function": "strip_punctuation",
+    "status": 200,
+    "latency_s": 6.965980768203735,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 85,
+      "total_tokens": 516,
+      "completion_tokens": 431,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\nGot it, I need to write a Python function called strip_punctuation that removes all ASCII punctuation from a string. First, I should figure out what counts as ASCII punctuation. Oh right, the string module has a punctuation attribute that contains all ASCII punctuation characters. So I need to import string.\n\nThe function takes a string s as input. The goal is to return a new string with all punctuation characters removed. How to do that? Maybe iterate over each character in s, check if it's not in string.punctuation, and collect those characters.\n\nSo steps: Import string. Define function strip_punctuation with parameter s. Then, for each char in s, if char not in string.punctuation, keep it. Join those kept chars into a new string and return.\n\nWait, how to implement that? Using a list comprehension maybe: ''.join([char for char in s if char not in string.punctuation]). That should work.\n\nLet me make sure. String.punctuation includes !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~. So an",
+    "extracted_code": "def strip_punctuation(s):\n    return ''.join(char for char in s if char not in string.punctuation)",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_additional_30_20260615.py\", line 86, in run_tests\n    exec(t, ns, ns)\n  File \"<string>\", line 1, in <module>\n  File \"<string>\", line 2, in strip_punctuation\n  File \"<string>\", line 2, in <genexpr>\nNameError: name 'string' is not defined\n"
+  },
+  {
+    "id": "codegen_043_word_lengths",
+    "function": "word_lengths",
+    "status": 200,
+    "latency_s": 4.440021991729736,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 83,
+      "total_tokens": 357,
+      "completion_tokens": 274,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\nGot it, let's see. I need to write a Python function called word_lengths that takes a list of words and maps each word to its length. So the input is a list called words, and the output should be a mapping—probably a dictionary where the keys are the words and the values are their lengths.\n\nWait, right, mapping each word to its length. So for each word in the words list, the key is the word itself, value is len(word).\n\nSo the function can be written using a dictionary comprehension. Like, {word: len(word) for word in words}. That makes sense.\n\nDo I need any imports? No, because len is a built-in function, and dictionary comprehensions are standard. So the function is straightforward.\n\nLet me structure it: define def word_lengths(words): then return the dictionary comprehension.\n\nSo putting it all together:\n\ndef word_lengths(words):\n    return {word: len(word) for word in words}\n\nYes, that should do it. Let me check. If words is [\"apple\", \"banana\"], then the ",
+    "extracted_code": "def word_lengths(words): then return the dictionary comprehension.\n\nSo putting it all together:\n\ndef word_lengths(words):\n    return {word: len(word) for word in words}\n\nYes, that should do it. Let me check. If words is [\"apple\", \"banana\"], then the output is {\"apple\":5, \"banana\":6}, which is correct.def word_lengths(words):\n    return {word: len(word) for word in words}",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_additional_30_20260615.py\", line 84, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 1\n    def word_lengths(words): then return the dictionary comprehension.\n                                  ^^^^^^\nSyntaxError: invalid syntax\n"
+  },
+  {
+    "id": "codegen_044_even_numbers",
+    "function": "even_numbers",
+    "status": 200,
+    "latency_s": 9.770049333572388,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 84,
+      "total_tokens": 690,
+      "completion_tokens": 606,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\nGot it, I need to write a Python function called even_numbers that takes a list xs and returns only the even integers from it. Let's think about how to approach this.\n\nFirst, what's an even integer? An even number is divisible by 2 with no remainder. So for each element in the input list, I need to check two things: is it an integer, and is it even?\n\nWait, the problem says \"even integers from a list\". So the input list might have elements that are not integers, right? Like strings, floats, etc. So I need to filter out elements that are not integers first, then check if they're even.\n\nWait, but what about floats that are whole numbers? Like 4.0. Is that considered an integer here? The problem says \"even integers\", so probably only actual int types. Because 4.0 is a float, not an int. So we should check the type of each element is int first.\n\nSo steps:\n\n1. Iterate over each element in xs.\n2. For each element, check if it is an instance of int. Because if it's ",
+    "extracted_code": "def even_numbers(xs):\n    return [x for x in xs if isinstance(x, int) and x % 2 == 0]\n\nYes, that should work. Let me check if there are any edge cases. Like empty list: returns empty. List with no even integers: returns empty. All elements are non-int: returns empty. That seems right.def even_numbers(xs):\n    return [x for x in xs if isinstance(x, int) and x % 2 == 0]",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_additional_30_20260615.py\", line 84, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 4\n    Yes, that should work. Let me check if there are any edge cases. Like empty list: returns empty. List with no even integers: returns empty. All elements are non-int: returns empty. That seems right.def even_numbers(xs):\n                                  ^^^^^^^^^^^^^^\nSyntaxError: expected 'else' after 'if' expression\n"
+  },
+  {
+    "id": "codegen_045_sum_nested",
+    "function": "sum_nested",
+    "status": 200,
+    "latency_s": 24.690526962280273,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 89,
+      "total_tokens": 1625,
+      "completion_tokens": 1536,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\nGot it, let's see. I need to write a Python function called sum_nested that takes a list of lists (xs) and sums all the numbers by one level. Wait, what does \"by one level\" mean here? Oh right, probably like if the input is a list where each element is a list (or maybe not? Wait, the task says \"nested list of lists by one level\"—so maybe the input is a list containing lists, and we need to sum all the elements in those sublists. Wait, no, let's think again. For example, if xs is [[1,2], [3,4]], then sum_nested should return 1+2+3+4=10? Because that's summing all numbers in the nested lists, one level deep. Oh right, because it's a nested list by one level—so the top level is a list of lists, and we need to sum all elements in the sublists.\n\nWait, but what if some elements are not lists? Wait, the task says \"nested list of lists\"—so maybe the input is a list where each element is a list. But maybe the function should handle cases where elements are numbers? W",
+    "extracted_code": "Got it, let's see. I need to write a Python function called sum_nested that takes a list of lists (xs) and sums all the numbers by one level. Wait, what does \"by one level\" mean here? Oh right, probably like if the input is a list where each element is a list (or maybe not? Wait, the task says \"nested list of lists by one level\"—so maybe the input is a list containing lists, and we need to sum all the elements in those sublists. Wait, no, let's think again. For example, if xs is [[1,2], [3,4]], then sum_nested should return 1+2+3+4=10? Because that's summing all numbers in the nested lists, one level deep. Oh right, because it's a nested list by one level—so the top level is a list of lists, and we need to sum all elements in the sublists.\n\nWait, but what if some elements are not lists? Wait, the task says \"nested list of lists\"—so maybe the input is a list where each element is a list. But maybe the function should handle cases where elements are numbers? Wait no, the task says \"nested list of lists by one level\"—so perhaps the structure is that xs is a list, and each element of xs is either a list or a number? Wait no, let's re-read the task: \"sums all numbers in a nested list of lists by one level\". Oh, maybe \"by one level\" means that we go one level deep. So for example, if the input is [1, [2,3], 4], then sum_nested would sum 1 + 2+3 +4? Wait no, but the task says \"nested list of lists\"—so maybe the input is a list of lists, so each element is a list. But perhaps the function should iterate through each element in xs, and if the element is a list, sum its elements, otherwise add the element? Wait no, the task says \"nested list of lists by one level\"—so maybe the input is a list where each element is a list (so one level of nesting), and we need to sum all the elements in those sublists. So for example, [[1,2], [3,4]] → 1+2+3+4=10. Or [[5], [6,7]] → 5+6+7=18.\n\nWait, but how to approach this. Let's think: the function sum_nested(xs) takes xs, which is a list (possibly of lists). We need to sum all numbers in the nested structure, but only one level deep. Wait, maybe \"by one level\" means that we don't go deeper than one level. So for example, if there's a list like [1, [2, [3,4]]], then sum_nested would sum 1 + 2 + [3,4]? No, that can't be. Wait no, perhaps the problem is that the input is a list where each element is a list (so one level nested), and we need to sum all the elements in those sublists. So the steps are: iterate over each sublist in xs, sum the elements of each sublist, then sum all those sums. Oh right! Because for each sublist in xs, sum its elements, then add all those sums together.\n\nWait for example: xs = [[1,2], [3,4]] → sum each sublist: 1+2=3, 3+4=7 → total 3+7=10. Which is the same as summing all elements. Oh right, because sum of sums is sum of all elements. So in that case, sum_nested(xs) is equal to sum of all elements in all sublists. But how to handle if the sublists have non-list elements? Wait the task says \"nested list of lists\"—so perhaps all elements of xs are lists. But maybe the function should handle cases where elements are not lists? Wait, the problem statement says \"sums all numbers in a nested list of lists by one level\". So maybe the input is a list that may contain numbers or lists (one level deep), and we need to sum all numbers, adding lists' elements (but only one level). Wait, perhaps the correct approach is to iterate through each item in xs. For each item, if it's a list, sum its elements; if it's a number, add it to the total. Wait but the task says \"nested list of lists by one level\"—maybe \"by one level\" means that we don't recurse deeper than one level. So for example, if an element is a list, we sum its elements (which could be numbers or lists?), but wait no, the task says \"nested list of lists by one level\"—so perhaps the input is a list of lists, so each element is a list, and we sum all elements in those lists.\n\nWait perhaps the problem is that the input is a list where each element is a list (so one level of nesting), and we need to sum all the elements in those sublists. So the code would be: take each sublist in xs, sum their elements, then sum all those. So sum(sum(sublist) for sublist in xs). But wait, what if xs is not a list of lists? Like, what if xs has a non-list element? For example, xs = [1, 2, [3,4]]. Then sum(sum(sublist) for sublist in xs) would throw an error because 1 is not iterable. But the task says \"nested list of lists by one level\"—so perhaps the input is guaranteed to be a list of lists. But maybe the function should handle cases where elements are numbers? Like, if an element is a number, add it, if it's a list, sum its elements. For example, xs = [1, [2,3], 4] → 1 + (2+3) +4 = 10. How to do that?\n\nWait the problem statement is a bit ambiguous. Let's re-read: \"sums all numbers in a nested list of lists by one level\". Oh, \"nested list of lists\"—so the structure is a list containing lists (so one level deep). So the input is a list where each element is a list. So for example, [[1,2], [3,4]] is a nested list of lists by one level. Then sum_nested would sum all the numbers in those sublists. So sum(sum(sublist) for sublist in xs). That would work.\n\nBut what if the input is something like [1, 2, 3]—a flat list? Then sum_nested would sum each element (since each is a list? No, 1 is not a list. So sum(sum(sublist) for sublist in [1,2,3]) would throw an error. But the task says \"nested list of lists\", so perhaps the input is always a list of lists. So the function can assume that each element in xs is",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_additional_30_20260615.py\", line 84, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 1\n    Got it, let's see. I need to write a Python function called sum_nested that takes a list of lists (xs) and sums all the numbers by one level. Wait, what does \"by one level\" mean here? Oh right, probably like if the input is a list where each element is a list (or maybe not? Wait, the task says \"nested list of lists by one level\"—so maybe the input is a list containing lists, and we need to sum all the elements in those sublists. Wait, no, let's think again. For example, if xs is [[1,2], [3,4]], then sum_nested should return 1+2+3+4=10? Because that's summing all numbers in the nested lists, one level deep. Oh right, because it's a nested list by one level—so the top level is a list of lists, and we need to sum all elements in the sublists.\n                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ^\nSyntaxError: invalid character '—' (U+2014)\n"
+  },
+  {
+    "id": "codegen_046_min_max",
+    "function": "min_max",
+    "status": 200,
+    "latency_s": 6.395221710205078,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 91,
+      "total_tokens": 487,
+      "completion_tokens": 396,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\nGot it, I need to write a Python function called min_max that takes a list xs and returns a tuple of (min_value, max_value). If the list is empty, return None. Let's think about how to approach this.\n\nFirst, check if the input list xs is empty. If len(xs) == 0, then return None. Otherwise, find the minimum and maximum values in the list and return them as a tuple.\n\nWait, but what if the list has elements? Then using the built-in min() and max() functions would work. So the steps are:\n\n1. Check if xs is empty. If yes, return None.\n2. Else, compute min_val = min(xs), max_val = max(xs), then return (min_val, max_val).\n\nThat seems straightforward. Let me test some cases. For example, if xs is [3,1,2], then min is 1, max is 3, so return (1,3). If xs is empty, return None. What if there's one element? Like [5], then (5,5). That should work.\n\nSo the code would be:\n\ndef min_max(xs):\n    if not xs:\n        return None\n    return (min(xs), max(xs))\n\nWait, that's it? L",
+    "extracted_code": "def min_max(xs):\n    if not xs:\n        return None\n    return (min(xs), max(xs))\n\nWait, that's it? Let me make sure. What about different data types? The problem probably assumes the list has comparable elements, as per normal min/max usage. So no need to handle that. The function just uses the built-in min and max, which should handle any comparable elements.\n\nYes, that should do. So the function checks if the list is empty first. If not, returns the tuple of min and max.def min_max(xs):\n    if not xs:\n        return None\n    return (min(xs), max(xs))",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_additional_30_20260615.py\", line 84, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 6\n    Wait, that's it? Let me make sure. What about different data types? The problem probably assumes the list has comparable elements, as per normal min/max usage. So no need to handle that. The function just uses the built-in min and max, which should handle any comparable elements.\n              ^\nSyntaxError: unterminated string literal (detected at line 6)\n"
+  },
+  {
+    "id": "codegen_047_hamming_distance",
+    "function": "hamming_distance",
+    "status": 200,
+    "latency_s": 9.772247076034546,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 89,
+      "total_tokens": 695,
+      "completion_tokens": 606,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\nGot it, I need to write a Python function called hamming_distance that takes two strings a and b, and returns the number of positions where they differ. First, I should make sure that the strings are of equal length, but wait, the problem statement says \"two equal-length strings\", so maybe I don't need to handle that case? The task just says to return the number of differing positions, so assume they are same length.\n\nSo, how to compute the Hamming distance. For each index i, compare a[i] and b[i]. If they are not equal, count it. Sum all those.\n\nSo, possible steps: iterate over each pair of characters from a and b, check if they differ, sum the differences.\n\nHow to do that in Python. Let's think. For example, using a loop:\n\nInitialize a counter to 0. Then loop over each index from 0 to len(a)-1. For each i, if a[i] != b[i], increment counter. Return counter.\n\nAlternatively, use a generator expression with sum. Like sum(1 for x, y in zip(a, b) if x != y). Be",
+    "extracted_code": "def hamming_distance(a, b):\n    return sum(x != y for x, y in zip(a, b))\n\nWait, because in Python, True is 1 and False is 0, so sum(x != y ...) will automatically count the number of Trues, which is the number of differing positions. Oh right, that's even better. So instead of 1 for x!=y, we can just sum the boolean values, since they are equivalent to 1 and 0.\n\nSo that's a concise way. Let me test with an example. If a is \"abc\", b is \"adc\", then zip gives ('a','a'), ('b','d'), ('c','c'). x!=y is False, True, False. Sum is 1. Which is correct.\n\nAnother example: a=\"1010\", b=\"1111\". The differences are at position 1 (0 vs 1) and position 3 (0 vs 1). So sum is 2. Let's see: zip gives (1,1) → False, (0,1)→True, (1,1)→False, (0,1)→True. Sum is 2. Correct.\n\nSo that should work. So the function is straightforward. No imports needed. Because zip is built-in. So the code is just defining the function as above.def hamming_distance(a, b):\n    return sum(x != y for x, y in zip(a, b))",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_additional_30_20260615.py\", line 84, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 4\n    Wait, because in Python, True is 1 and False is 0, so sum(x != y ...) will automatically count the number of Trues, which is the number of differing positions. Oh right, that's even better. So instead of 1 for x!=y, we can just sum the boolean values, since they are equivalent to 1 and 0.\n                                                                                                                                                                                  ^\nSyntaxError: unterminated string literal (detected at line 4)\n"
+  },
+  {
+    "id": "codegen_048_cartesian_product",
+    "function": "cartesian_product",
+    "status": 200,
+    "latency_s": 8.215439796447754,
+    "passed": false,
+    "usage": {
+      "prompt_tokens": 90,
+      "total_tokens": 599,
+      "completion_tokens": 509,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\n</seed:think>\n\nGot it, I need to write a Python function called cartesian_product that takes two lists a and b, and returns their Cartesian product as a list of pairs. Let's think about what the Cartesian product is. Oh right, it's all possible pairs where the first element is from a and the second is from b. So for each element in a, I pair it with each element in b.\n\nSo how to do that? Let's see. For example, if a is [1,2] and b is [3,4], the result should be [(1,3), (1,4), (2,3), (2,4)] or maybe [[1,3], ...]? Wait, the question says \"pairs\". In Python, pairs can be tuples or lists. The problem statement doesn't specify, but usually, Cartesian product pairs are tuples. Let me check the problem statement again: \"list of pairs\". Hmm. Let's see, maybe the user expects tuples. Let's assume tuples unless told otherwise.\n\nSo the approach is to iterate over each element in a, then for each of those, iterate over each element in b, and collect the pair (x, y) where x is from a a",
+    "extracted_code": "def cartesian_product(a, b):\n    return [ (x, y) for x in a for y in b ]\n\nIs that all? Let me test with an example. If a is [1,2], b is ['x'], then the result should be [(1,'x'), (2,'x')]. That's correct.\n\nWhat about if a is empty? Then the list is empty. Same if b is empty.\n\nYes, that seems right. So the function is straightforward with a list comprehension. No imports needed. So the code is just defining that function.def cartesian_product(a, b):\n    return [(x, y) for x in a for y in b]",
+    "error": "Traceback (most recent call last):\n  File \"/workspace/ai-inference-service/scripts/run_seed_oss_codegen_eval_additional_30_20260615.py\", line 84, in run_tests\n    exec(code, ns, ns)\n  File \"<string>\", line 4\n    Is that all? Let me test with an example. If a is [1,2], b is ['x'], then the result should be [(1,'x'), (2,'x')]. That's correct.\n                                                                                                                           ^\nSyntaxError: unterminated string literal (detected at line 4)\n"
+  },
+  {
+    "id": "codegen_049_partition",
+    "function": "partition",
+    "status": 200,
+    "latency_s": 8.16926908493042,
+    "passed": true,
+    "usage": {
+      "prompt_tokens": 85,
+      "total_tokens": 591,
+      "completion_tokens": 506,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\nGot it, I need to write a Python function called partition that takes a list xs and a predicate, and returns a tuple of two lists: items_true (elements where predicate returns True) and items_false (elements where it returns False). \n\nFirst, let's think about how to process each element in xs. For each element x in xs, I check if predicate(x) is True. If yes, add to items_true; else, add to items_false.\n\nSo I can initialize two empty lists, items_true and items_false. Then loop through each element in xs, apply the predicate, and append to the respective list.\n\nWait, what's the type of predicate? It's a function that takes an element of xs and returns a boolean. So for each x in xs, predicate(x) should evaluate to True or False.\n\nSo the steps are:\n\n1. Initialize items_true as empty list.\n2. Initialize items_false as empty list.\n3. Iterate over each x in xs:\n   a. If predicate(x) is True, append x to items_true.\n   b. Else, append x to items_false.\n4. Return a tuple (items_",
+    "extracted_code": "def partition(xs, predicate):\n    items_true = []\n    items_false = []\n    for x in xs:\n        if predicate(x):\n            items_true.append(x)\n        else:\n            items_false.append(x)\n    return (items_true, items_false)",
+    "error": ""
+  },
+  {
+    "id": "codegen_050_apply_discount",
+    "function": "apply_discount",
+    "status": 200,
+    "latency_s": 4.812042236328125,
+    "passed": true,
+    "usage": {
+      "prompt_tokens": 86,
+      "total_tokens": 383,
+      "completion_tokens": 297,
+      "prompt_tokens_details": null
+    },
+    "raw_output_preview": "<seed:think>\nGot it, let's see. I need to write a Python function called apply_discount that takes price and percent, then returns the price after discount. \n\nFirst, the formula for discounted price is original price minus (original price times discount percentage). Wait, right, so that's price * (1 - percent/100). Because percent is a percentage, like 20 for 20%. \n\nWait, what about data types? Should I handle cases where percent is 0 or 100? Probably not necessary unless specified, but the problem doesn't mention error checking, so just the basic calculation. \n\nSo the function would be: take price and percent, compute price * (1 - percent / 100). Let's test with an example: if price is 100, percent 20, then 100*(0.8) = 80. That's correct. \n\nDo I need any imports? No, because it's just basic arithmetic. \n\nSo the function definition: def apply_discount(price, percent): return price * (1 - percent / 100). \n\nWait, what if percent is a float? Like 15.5? That's okay, the calculation still w",
+    "extracted_code": "def apply_discount(price, percent):\n    return price * (1 - percent / 100)",
+    "error": ""
+  }
+]

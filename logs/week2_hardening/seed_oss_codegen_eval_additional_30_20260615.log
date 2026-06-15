@@ -1,0 +1,75 @@
+===== Seed-OSS additional code generation eval: 30 HumanEval/MBPP-style tasks =====
+time: 2026-06-15T00:04:25.488358Z
+model: ByteDance-Seed/Seed-OSS-36B-Instruct
+[01/30] codegen_021_reverse_words
+{"id": "codegen_021_reverse_words", "passed": true, "latency_s": 0.4706144332885742, "status": 200}
+[02/30] codegen_022_anagram
+{"id": "codegen_022_anagram", "passed": true, "latency_s": 0.8015749454498291, "status": 200}
+[03/30] codegen_023_second_largest
+{"id": "codegen_023_second_largest", "passed": true, "latency_s": 0.8666479587554932, "status": 200}
+[04/30] codegen_024_running_sum
+{"id": "codegen_024_running_sum", "passed": false, "latency_s": 10.893404483795166, "status": 200}
+[05/30] codegen_025_matrix_add
+{"id": "codegen_025_matrix_add", "passed": true, "latency_s": 14.530987024307251, "status": 200}
+[06/30] codegen_026_dot_product
+{"id": "codegen_026_dot_product", "passed": false, "latency_s": 8.36228346824646, "status": 200}
+[07/30] codegen_027_remove_none
+{"id": "codegen_027_remove_none", "passed": true, "latency_s": 4.956213474273682, "status": 200}
+[08/30] codegen_028_clamp
+{"id": "codegen_028_clamp", "passed": true, "latency_s": 10.170562028884888, "status": 200}
+[09/30] codegen_029_count_words
+{"id": "codegen_029_count_words", "passed": false, "latency_s": 7.191346883773804, "status": 200}
+[10/30] codegen_030_title_case
+{"id": "codegen_030_title_case", "passed": true, "latency_s": 0.5449867248535156, "status": 200}
+[11/30] codegen_031_intersection
+{"id": "codegen_031_intersection", "passed": false, "latency_s": 14.116530895233154, "status": 200}
+[12/30] codegen_032_rotate_left
+{"id": "codegen_032_rotate_left", "passed": true, "latency_s": 20.6948664188385, "status": 200}
+[13/30] codegen_033_is_sorted
+{"id": "codegen_033_is_sorted", "passed": false, "latency_s": 10.319936037063599, "status": 200}
+[14/30] codegen_034_compress_runs
+{"id": "codegen_034_compress_runs", "passed": true, "latency_s": 24.33555769920349, "status": 200}
+[15/30] codegen_035_expand_runs
+{"id": "codegen_035_expand_runs", "passed": true, "latency_s": 7.7220988273620605, "status": 200}
+[16/30] codegen_036_mean
+{"id": "codegen_036_mean", "passed": true, "latency_s": 5.101935148239136, "status": 200}
+[17/30] codegen_037_median
+{"id": "codegen_037_median", "passed": true, "latency_s": 1.6554088592529297, "status": 200}
+[18/30] codegen_038_mode
+{"id": "codegen_038_mode", "passed": false, "latency_s": 1.1410582065582275, "status": 200}
+[19/30] codegen_039_zip_dict
+{"id": "codegen_039_zip_dict", "passed": false, "latency_s": 3.651533842086792, "status": 200}
+[20/30] codegen_040_invert_dict
+{"id": "codegen_040_invert_dict", "passed": true, "latency_s": 6.531625747680664, "status": 200}
+[21/30] codegen_041_find_duplicates
+{"id": "codegen_041_find_duplicates", "passed": true, "latency_s": 18.948697090148926, "status": 200}
+[22/30] codegen_042_strip_punctuation
+{"id": "codegen_042_strip_punctuation", "passed": false, "latency_s": 6.965980768203735, "status": 200}
+[23/30] codegen_043_word_lengths
+{"id": "codegen_043_word_lengths", "passed": false, "latency_s": 4.440021991729736, "status": 200}
+[24/30] codegen_044_even_numbers
+{"id": "codegen_044_even_numbers", "passed": false, "latency_s": 9.770049333572388, "status": 200}
+[25/30] codegen_045_sum_nested
+{"id": "codegen_045_sum_nested", "passed": false, "latency_s": 24.690526962280273, "status": 200}
+[26/30] codegen_046_min_max
+{"id": "codegen_046_min_max", "passed": false, "latency_s": 6.395221710205078, "status": 200}
+[27/30] codegen_047_hamming_distance
+{"id": "codegen_047_hamming_distance", "passed": false, "latency_s": 9.772247076034546, "status": 200}
+[28/30] codegen_048_cartesian_product
+{"id": "codegen_048_cartesian_product", "passed": false, "latency_s": 8.215439796447754, "status": 200}
+[29/30] codegen_049_partition
+{"id": "codegen_049_partition", "passed": true, "latency_s": 8.16926908493042, "status": 200}
+[30/30] codegen_050_apply_discount
+{"id": "codegen_050_apply_discount", "passed": true, "latency_s": 4.812042236328125, "status": 200}
+===== Summary =====
+{
+  "created_at": "2026-06-15T00:08:41.760437Z",
+  "model": "ByteDance-Seed/Seed-OSS-36B-Instruct",
+  "service_profile": "Seed-OSS-36B 512K FP8 KV, 4xA100 TP=4",
+  "num_cases": 30,
+  "passed": 16,
+  "failed": 14,
+  "pass_rate": 0.5333333333333333,
+  "mean_latency_s": 8.54128897190094,
+  "note": "Additional 30 HumanEval/MBPP-style tasks with local unit tests. Combined with the repaired 20-task run, this provides a 50-task lightweight code generation validation, not a full official benchmark."
+}

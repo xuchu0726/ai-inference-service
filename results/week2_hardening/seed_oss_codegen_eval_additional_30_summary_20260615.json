@@ -1,0 +1,11 @@
+{
+  "created_at": "2026-06-15T00:08:41.760437Z",
+  "model": "ByteDance-Seed/Seed-OSS-36B-Instruct",
+  "service_profile": "Seed-OSS-36B 512K FP8 KV, 4xA100 TP=4",
+  "num_cases": 30,
+  "passed": 16,
+  "failed": 14,
+  "pass_rate": 0.5333333333333333,
+  "mean_latency_s": 8.54128897190094,
+  "note": "Additional 30 HumanEval/MBPP-style tasks with local unit tests. Combined with the repaired 20-task run, this provides a 50-task lightweight code generation validation, not a full official benchmark."
+}

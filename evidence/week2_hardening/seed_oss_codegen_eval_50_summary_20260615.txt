@@ -1,0 +1,67 @@
+===== Seed-OSS-36B 代码生成轻量验证总结（50题）=====
+
+一、实验目标
+
+本实验用于补充代码生成验证样本数量，避免仅依赖少量手写函数样例判断模型代码生成能力。实验采用 HumanEval/MBPP-style 的轻量函数生成任务，并为每个生成结果配置本地 Python 单元测试。
+
+本实验不作为官方 HumanEval 或 MBPP 完整评测，只用于验证当前推理服务配置下模型输出代码的可执行性、基本正确性、延迟表现和自动判题链路可行性。
+
+二、服务配置
+
+- Model: ByteDance-Seed/Seed-OSS-36B-Instruct
+- Serving profile: 512K FP8 KV
+- GPU: 4 × NVIDIA A100-SXM4-80GB
+- Tensor parallel size: 4
+- API: OpenAI-compatible /v1/chat/completions
+- Evaluation type: lightweight HumanEval/MBPP-style function generation
+- Validation method: local Python unit tests
+
+三、评测过程
+
+初版 20 题评测中，所有 API 请求均返回 HTTP 200，但生成结果未能通过本地单元测试。检查后判断主要问题不是服务不可用，而是初版 prompt 和 generation budget 对 Seed-OSS 的输出格式控制不足，模型输出容易被 thinking tag 或非最终代码内容占用，导致自动提取代码和执行测试失败。
+
+随后进行修正版 20 题评测，调整包括：
+- 增加 max_tokens；
+- 使用更严格的 code-only system prompt；
+- 增强代码块和函数定义提取逻辑；
+- 保留每题原始输出、提取代码、错误信息和单元测试结果。
+
+在修正版 20 题基础上，又追加 30 题，形成共 50 题的轻量代码生成验证。
+
+四、结果汇总
+
+修正版 20 题结果：
+- Number of cases: 20
+- Passed: 10
+- Failed: 10
+- Pass rate: 50.0%
+- Mean latency: 7.19s
+
+追加 30 题结果：
+- Number of cases: 30
+- Passed: 16
+- Failed: 14
+- Pass rate: 53.3%
+- Mean latency: 8.54s
+
+合计 50 题结果：
+- Number of cases: 50
+- Passed: 26
+- Failed: 24
+- Pass rate: 52.0%
+- Weighted mean latency: approximately 8.00s
+
+五、结论
+
+在当前 512K FP8 KV 推理服务配置下，Seed-OSS-36B-Instruct 能够稳定响应代码生成请求，所有任务均通过 HTTP 200 返回。经修正 prompt 和代码提取逻辑后，50 个轻量 HumanEval/MBPP-style 函数生成任务中有 26 个通过本地单元测试，通过率为 52.0%。
+
+该结果说明当前服务具备基础代码生成能力，但自动单元测试通过率并不高，不能将其表述为完整代码生成能力评测或与专业代码模型等价的结论。更合理的解释是：本实验完成了轻量代码生成验证，并暴露出 Seed-OSS 在 code-only 输出控制、thinking tag 处理、边界条件实现和自动评测适配方面仍存在改进空间。
+
+六、注意事项
+
+1. 本实验不是官方 HumanEval/MBPP 完整 benchmark，不应直接与公开榜单分数对比。
+2. 评测任务为自定义 HumanEval/MBPP-style 子集，覆盖字符串、列表、字典、数学函数、排序/搜索、统计和简单算法。
+3. 初版 0/20 结果主要反映 prompt/harness 设计问题，因此不作为模型代码能力结论；修正版 20 题和追加 30 题构成主要分析依据。
+4. 当前服务配置重点是 512K 长上下文与 FP8 KV Cache 边界验证，并非专门针对代码生成任务优化。
+5. 若后续需要更严格评估，应使用官方 HumanEval/MBPP 子集，并与 Seed-Coder 等代码专用模型进行相同脚本下的对照实验。
+
