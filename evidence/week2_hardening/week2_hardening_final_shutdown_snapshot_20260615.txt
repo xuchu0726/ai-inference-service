@@ -1,0 +1,67 @@
+===== Week2 hardening final GPU shutdown snapshot =====
+Mon Jun 15 00:20:44 UTC 2026
+
+Final GPU-side completed items:
+- 512K BF16 KV startup and 500K near-limit request.
+- 512K FP8 KV startup and 500K near-limit request.
+- FP8 KV capacity/concurrency comparison.
+- 50-task lightweight HumanEval/MBPP-style code generation validation.
+- GSM8K/W8A8 evidence scan and checkpoint availability check.
+
+Remaining non-GPU documentation tasks:
+- INT8/AWQ/GPTQ failure-path analysis.
+- Quantization memory-savings wording correction.
+- W8A8 GSM8K accuracy gap explanation and future validation plan.
+
+===== Remaining vLLM-related processes =====
+
+===== GPU state =====
+Mon Jun 15 00:20:44 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:0F:00.0 Off |                    0 |
+| N/A   27C    P0             62W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:47:00.0 Off |                    0 |
+| N/A   27C    P0             61W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA A100-SXM4-80GB          On  |   00000000:4E:00.0 Off |                    0 |
+| N/A   27C    P0             62W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA A100-SXM4-80GB          On  |   00000000:87:00.0 Off |                    0 |
+| N/A   36C    P0             64W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== Git status =====
+## main...origin/main
+ D evidence/week2_hardening/.ipynb_checkpoints/gpu_environment_snapshot_20260614_2144-checkpoint.txt
+?? evidence/week2_hardening/week2_hardening_final_shutdown_snapshot_20260615.txt
+
+===== Recent commits =====
+6beeb61 记录 Week2 hardening GSM8K W8A8精度评测缺口
+812cf25 补充 Week2 hardening 50题代码生成验证与GSM8K证据扫描
+742a9c3 补充 Week2 hardening 50题代码生成轻量验证证据
+7d32931 补充 Week2 hardening 代码生成20题修正版验证证据
+a5082cc 总结 Week2 hardening 512K BF16 与 FP8 KV 对比结论
+a67c884 补充 Week2 hardening 512K FP8 KV 启动与 near-limit 请求证据
+a4ff553 补充 Week2 hardening 512K near-limit 上下文请求成功证据
+d4f5674 补充 Week2 hardening 4xA100 512K 启动与 smoke 证据
+e39e35c 补充 Week2 hardening 512K 尝试前决策快照
+6ece3db 补充 Week2 hardening 4xA100 128K 启动与 smoke 证据
