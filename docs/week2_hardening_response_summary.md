@@ -243,7 +243,7 @@ W8A8 量化实验中的显存收益需要区分“模型加载显存”和“运
 
 ## 7. 当前状态总结
 
-已完成的 GPU 侧补充验证包括：
+本次补充验证已完成以下 GPU 侧实验与证据归档：
 
 - 128K BF16 启动与 smoke validation；
 - 512K BF16 启动与 500K near-limit 请求；
@@ -254,9 +254,10 @@ W8A8 量化实验中的显存收益需要区分“模型加载显存”和“运
 - W8A8 checkpoint 可用性检查；
 - GPU 服务停止快照。
 
-仍需在文档中保持严格口径的内容包括：
+基于当前证据，本文档的结论范围如下：
 
-- INT8/AWQ/GPTQ 等量化路径需要按失败日志说明边界；
-- 显存收益应限定为模型加载显存下降；
-- W8A8 GSM8K accuracy 未完成实测，应列为后续补测项；
-- 代码生成 50 题结果只能作为轻量验证，不作为完整 benchmark 结论。
+- W8A8 compressed-tensors 路径已完成 serving、smoke test、并发压测和 FP32/W8A8 性能对比；
+- INT8/AWQ/GPTQ 等其他量化路径未形成稳定 serving 结果，当前只作为兼容性边界和失败日志记录；
+- W8A8 显存收益对应模型加载显存下降，不代表运行时总 GPU 显存等比例下降；
+- GSM8K 75.74% 是 BF16/vLLM serving baseline，不代表 W8A8 量化模型精度；
+- 50 题代码生成结果是轻量验证结果，不等同于官方 HumanEval 或 MBPP 完整 benchmark。
