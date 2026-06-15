@@ -1,0 +1,64 @@
+===== GSM8K 与 W8A8 精度评测缺口说明 =====
+
+一、当前已有证据
+
+当前仓库中已有 Seed-OSS-36B-Instruct 的 GSM8K baseline 评测结果：
+
+- results/week2_gsm8k_full_seed_oss_budget0.csv
+- total cases: 1319
+- correct cases: 999
+- accuracy: 75.74%
+- backend: vLLM
+- max_new_tokens: 256
+
+该结果可作为 Seed-OSS-36B-Instruct 在当前 vLLM serving 路径下的数学推理基线。
+
+当前仓库中也已有 W8A8 compressed-tensors 量化服务相关证据，包括：
+
+- 离线 W8A8 量化 checkpoint 生成记录；
+- W8A8 compressed-tensors vLLM serving ready 记录；
+- CompressedTensorsW8A8Int8 / CutlassScaledMMLinearKernel 日志；
+- W8A8 smoke test；
+- W8A8 concurrency sweep；
+- FP32 vs W8A8 batch profile 性能对比结果。
+
+二、当前缺口
+
+当前仓库未发现同时满足以下条件的结果文件：
+
+- GSM8K；
+- W8A8 compressed-tensors serving profile；
+- accuracy / correct / total 等精度字段。
+
+因此，当前 75.74% GSM8K accuracy 不能解释为 W8A8 量化模型的精度结果，也不能据此判断 W8A8 相比 BF16 baseline 的精度损耗。
+
+三、当前环境限制
+
+本次 Week2 hardening 使用的 4×A100 Pod 中不存在此前生成的 W8A8 量化 checkpoint：
+
+- /workspace/quantized_models 不存在；
+- /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8 不存在。
+
+因此，无法在当前环境中直接启动 W8A8 compressed-tensors 服务并复用同一 GSM8K 脚本补充量化模型精度评测。
+
+四、处理原则
+
+后续报告中应明确区分：
+
+1. GSM8K 75.74%：
+   - 只作为 Seed-OSS-36B-Instruct 的 vLLM serving baseline 数学推理结果；
+   - 不标注为 W8A8 accuracy；
+   - 不用于证明 W8A8 精度损耗合规。
+
+2. W8A8 量化收益：
+   - 主要使用模型加载显存、serving ready、QPS、P95 latency、tokens/s、concurrency sweep 等性能指标；
+   - 显存收益应限定为模型加载显存下降，而不是运行时 nvidia-smi 总显存下降。
+
+3. W8A8 精度缺口：
+   - 记录为未完成项；
+   - 后续需在保留 W8A8 checkpoint 的 GPU Volume 上，使用与 BF16 baseline 相同的 GSM8K 评测脚本补充 W8A8 accuracy；
+   - 推荐至少先补充 200-case subset，再视资源补充 full GSM8K。
+
+五、结论
+
+当前项目已经具备 BF16 GSM8K baseline 和 W8A8 serving 性能证据，但缺少 W8A8 GSM8K accuracy。该缺口不应通过文字推断补齐，应在后续保留量化 checkpoint 的环境中进行实测。当前报告应采用严格口径：GSM8K 75.74% 是 BF16/vLLM serving baseline，不代表 W8A8 量化模型精度。

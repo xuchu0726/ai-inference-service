@@ -1,0 +1,17 @@
+===== W8A8 checkpoint availability check =====
+Mon Jun 15 00:15:22 UTC 2026
+
+===== Check /workspace/quantized_models =====
+
+===== Check W8A8 directory =====
+
+===== W8A8 directory size =====
+
+===== Key files =====
+
+===== Git status =====
+## main...origin/main
+ M logs/week2_hardening/seed_oss_4xa100_512k_fp8kv_vllm_launch_20260614.log
+?? evidence/week2_hardening/.ipynb_checkpoints/seed_oss_codegen_eval_50_summary_20260615-checkpoint.txt
+?? evidence/week2_hardening/gsm8k_w8a8_existing_evidence_scan_20260615.txt
+?? evidence/week2_hardening/w8a8_checkpoint_availability_check_20260615.txt
