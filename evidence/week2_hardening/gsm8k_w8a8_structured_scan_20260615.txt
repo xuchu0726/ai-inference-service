@@ -1,0 +1,850 @@
+===== GSM8K / W8A8 structured scan =====
+Candidate files: 101
+
+FILE: docs/week2_quantization_feasibility_report.md
+  type: text
+  contains: ['W8A8', 'compressed', 'quantized', 'w8a8']
+  L1: # Seed-OSS-36B W8A8 量化实验报告
+  L5: 本实验用于验证 Seed-OSS-36B-Instruct 在真实 2×A100-SXM4-80GB 环境下的低比特权重量化 serving 能力，并对比 FP32 baseline 与 W8A8 compressed-tensors serving 在显存、吞吐、延迟和并发能力上的差异。
+  L10: 2. 是否可以通过离线量化生成 W8A8 compressed-tensors checkpoint；
+  L11: 3. W8A8 量化后是否可以被 vLLM 正常加载并提供 OpenAI-compatible API；
+  L12: 4. 在相同 batch-profile serving 参数下，W8A8 相比 FP32 是否带来可量化的吞吐和延迟收益；
+  L27: | 量化方案 | W8A8 compressed-tensors |
+  L30: 本实验使用 FP32 serving 作为对照基线，使用 W8A8 compressed-tensors serving 作为量化优化方案。两组服务均完成了启动、ready check、smoke test 和 concurrency sweep。
+  L52: ## 4. W8A8 compressed-tensors 离线量化与 Serving
+
+FILE: docs/week2_quantization_strategy.md
+  type: text
+  contains: []
+
+FILE: evidence/week2_64k_context/docs/week2_quantization_strategy.md
+  type: text
+  contains: []
+
+FILE: evidence/week2_hardening/gsm8k_w8a8_existing_evidence_scan_20260615.txt
+  type: text
+  contains: ['GSM8K', 'W8A8', 'accuracy', 'gsm8k', 'w8a8']
+  L1: ===== Existing GSM8K / W8A8 evidence file index =====
+  L7: evidence/week2_hardening/gsm8k_w8a8_existing_evidence_scan_20260615.txt
+  L8: logs/new_2xa100_seed_oss_batch_profile_fp32_vs_w8a8_summary_20260529.txt
+  L10: logs/new_2xa100_seed_oss_fp32_vs_w8a8_chart_generation_20260529.txt
+  L11: logs/new_2xa100_seed_oss_fp32_vs_w8a8_final_acceptance_snapshot_20260529.txt
+  L12: logs/new_2xa100_seed_oss_fp32_vs_w8a8_quantization_summary_20260528.txt
+  L15: logs/new_2xa100_seed_oss_w8a8_batch_profile_launch_snapshot_20260528.txt
+  L16: logs/new_2xa100_seed_oss_w8a8_batch_profile_shutdown_20260528.txt
+
+FILE: evidence/week2_hardening/gsm8k_w8a8_file_index_20260615.txt
+  type: text
+  contains: ['GSM8K', 'W8A8', 'gsm8k', 'w8a8']
+  L1: ===== GSM8K / W8A8 candidate files only =====
+  L7: evidence/week2_hardening/gsm8k_w8a8_existing_evidence_scan_20260615.txt
+  L8: evidence/week2_hardening/gsm8k_w8a8_file_index_20260615.txt
+  L9: logs/new_2xa100_seed_oss_batch_profile_fp32_vs_w8a8_summary_20260529.txt
+  L11: logs/new_2xa100_seed_oss_fp32_vs_w8a8_chart_generation_20260529.txt
+  L12: logs/new_2xa100_seed_oss_fp32_vs_w8a8_final_acceptance_snapshot_20260529.txt
+  L13: logs/new_2xa100_seed_oss_fp32_vs_w8a8_quantization_summary_20260528.txt
+  L16: logs/new_2xa100_seed_oss_w8a8_batch_profile_launch_snapshot_20260528.txt
+
+FILE: evidence/week2_hardening/gsm8k_w8a8_structured_scan_20260615.txt
+  type: text
+  contains: []
+
+FILE: logs/new_2xa100_seed_oss_batch_profile_fp32_vs_w8a8_summary_20260529.txt
+  type: text
+  contains: ['GSM8K', 'W8A8', 'compressed', 'gsm8k', 'quantized', 'w8a8']
+  L3: 本实验在 2×NVIDIA A100-SXM4-80GB 环境中，对 ByteDance-Seed/Seed-OSS-36B-Instruct 的 FP32 serving profile 与离线 W8A8 compressed-tensors 量化 serving profile 进行了公平对比。
+  L16: W8A8 量化路径：
+  L18: - quantization scheme: W8A8
+  L19: - serving backend: vLLM compressed-tensors
+  L20: - quantized checkpoint path: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+  L21: - vLLM kernel: CompressedTensorsW8A8Int8 / CutlassScaledMMLinearKernel
+  L27: - W8A8 QPS: 0.4096
+  L30: - W8A8 P95 latency: 2.5703 s
+
+FILE: logs/new_2xa100_seed_oss_bnb_quantization_shutdown_and_boundary_20260528.txt
+  type: text
+  contains: ['W8A8', 'w8a8']
+  L5: 归档 Seed-OSS-36B bitsandbytes 量化服务最终状态，然后停止服务，释放 GPU，为严格 INT8/W8A8 路径探测做准备。
+
+FILE: logs/new_2xa100_seed_oss_compressed_tensors_int8_failure_summary_20260528.txt
+  type: text
+  contains: ['W8A8', 'compressed', 'w8a8']
+  L5: 归档 Seed-OSS-36B compressed-tensors 严格量化路径失败证据。
+  L6: 本实验用于验证原始 Seed-OSS BF16 权重是否可以直接通过 vLLM compressed-tensors 后端实现 W8A8 / INT8 类 serving。
+  L9: 1. vLLM 0.11.2 支持 compressed-tensors 量化后端。
+  L12: 4. 失败根因是原始 BF16 checkpoint 缺少 compressed-tensors 所需的 target_scheme_map、quant_format、sparsity_scheme_map 等预量化配置。
+  L13: 5. 因此，当前原始 Seed-OSS BF16 权重不能直接通过 compressed-tensors 实现严格 INT8/W8A8 serving；该路径需要预量化 checkpoint 或离线量化产物。
+  L17: [1;36m(APIServer pid=6797)[0;0m INFO 05-28 22:06:22 [utils.py:253] non-default args: {'host': '0.0.0.0', 'port': 8002, 'model': 'ByteDance-Seed/Seed-OSS-36B-Instruct', 'trust_remote_code': True, 'dtype': 'bfloat16', 'm
+  L21: [1;36m(APIServer pid=6797)[0;0m TypeError: CompressedTensorsConfig.__init__() missing 5 required positional arguments: 'target_scheme_map', 'ignore', 'quant_format', 'sparsity_scheme_map', and 'sparsity_ignore_list'
+  L53: [1;36m(APIServer pid=6797)[0;0m INFO 05-28 22:06:22 [utils.py:253] non-default args: {'host': '0.0.0.0', 'port': 8002, 'model': 'ByteDance-Seed/Seed-OSS-36B-Instruct', 'trust_remote_code': True, 'dtype': 'bfloat16', 'm
+
+FILE: logs/new_2xa100_seed_oss_compressed_tensors_int8_launch_snapshot_20260528.txt
+  type: text
+  contains: ['W8A8', 'compressed', 'w8a8']
+  L5: 记录 Seed-OSS-36B compressed-tensors 严格量化路径启动后的初始状态。
+  L6: 本实验目标：验证当前 vLLM 0.11.2 是否能对原始 Seed-OSS BF16 权重执行 compressed-tensors / W8A8 / INT8 类 serving。
+  L14:    6797    1424 Rl         00:05  229  0.0 python -m vllm.entrypoints.openai.api_server --model ByteDance-Seed/Seed-OSS-36B-Instruct --served-model-name ByteDance-Seed/Seed-OSS-36B-Instruct --host 0.0.0.0 --port 8002 --t
+  L15:    6797    1424 Rl         00:05  230  0.0 python -m vllm.entrypoints.openai.api_server --model ByteDance-Seed/Seed-OSS-36B-Instruct --served-model-name ByteDance-Seed/Seed-OSS-36B-Instruct --host 0.0.0.0 --port 8002 --t
+  L16:    6865    1424 S+         00:00  0.0  0.0 tee logs/new_2xa100_seed_oss_compressed_tensors_int8_launch_snapshot_20260528.txt
+
+FILE: logs/new_2xa100_seed_oss_compressed_tensors_int8_status_check_20260528_220635.txt
+  type: text
+  contains: ['compressed']
+  L5: 检查 Seed-OSS-36B compressed-tensors 严格量化路径：是否进入 EngineCore/Worker、是否加载权重、是否 API ready、是否因缺少预量化配置或模型不兼容失败。
+  L12:    7125    1424 S+         00:00  0.0  0.0 tee logs/new_2xa100_seed_oss_compressed_tensors_int8_status_check_20260528_220635.txt
+  L44: -rw-r--r-- 1 root root 5.7K May 28 22:06 logs/new_2xa100_seed_oss_compressed_tensors_int8_vllm_launch_20260528.log
+  L45:   File: logs/new_2xa100_seed_oss_compressed_tensors_int8_vllm_launch_20260528.log
+  L58: [1;36m(APIServer pid=6797)[0;0m INFO 05-28 22:06:22 [utils.py:253] non-default args: {'host': '0.0.0.0', 'port': 8002, 'model': 'ByteDance-Seed/Seed-OSS-36B-Instruct', 'trust_remote_code': True, 'dtype': 'bfloat16', 'm
+  L107: [1;36m(APIServer pid=6797)[0;0m TypeError: CompressedTensorsConfig.__init__() missing 5 required positional arguments: 'target_scheme_map', 'ignore', 'quant_format', 'sparsity_scheme_map', and 'sparsity_ignore_list'
+
+FILE: logs/new_2xa100_seed_oss_compressed_tensors_int8_vllm_launch_20260528.log
+  type: text
+  contains: ['compressed']
+  L4: [1;36m(APIServer pid=6797)[0;0m INFO 05-28 22:06:22 [utils.py:253] non-default args: {'host': '0.0.0.0', 'port': 8002, 'model': 'ByteDance-Seed/Seed-OSS-36B-Instruct', 'trust_remote_code': True, 'dtype': 'bfloat16', 'm
+  L53: [1;36m(APIServer pid=6797)[0;0m TypeError: CompressedTensorsConfig.__init__() missing 5 required positional arguments: 'target_scheme_map', 'ignore', 'quant_format', 'sparsity_scheme_map', and 'sparsity_ignore_list'
+
+FILE: logs/new_2xa100_seed_oss_fp32_vs_w8a8_chart_generation_20260529.txt
+  type: text
+  contains: ['W8A8', 'w8a8']
+  L5: 基于已完成的 FP32 与 W8A8 batch profile concurrency sweep 结果，生成量化优化对比表和图表。
+  L10: -rw-r--r-- 1 root root 572 May 28 23:38 results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528_summary.csv
+  L13: saved: results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv
+  L15:  concurrency  qps_fp32  qps_w8a8  qps_improvement_pct  p95_latency_seconds_fp32  p95_latency_seconds_w8a8  p95_latency_reduction_pct  aggregate_output_tokens_per_second_fp32  aggregate_output_tokens_per_second_w8a8  outp
+  L21: saved: results/figures/seed_oss_fp32_vs_w8a8_qps.png
+  L22: saved: results/figures/seed_oss_fp32_vs_w8a8_p95_latency.png
+  L23: saved: results/figures/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png
+  L26: -rw-r--r-- 1 root root 72K May 29 00:09 results/figures/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png
+
+FILE: logs/new_2xa100_seed_oss_fp32_vs_w8a8_final_acceptance_snapshot_20260529.txt
+  type: text
+  contains: ['W8A8', 'compressed', 'w8a8']
+  L5: 在停止 FP32 batch profile 服务前，汇总 Seed-OSS-36B FP32 与 W8A8 量化优化验收证据。
+  L6: 重点验证：INT8/W8A8 是否成功 serving、速度提升是否超过 20%、model loading memory 是否降低超过 30%、QPS/P95 图表和对比表是否已生成。
+  L10: 6c8237f 生成 Seed-OSS FP32 与 W8A8 batch profile 对比图表
+  L11: 9d07ed7 总结 Seed-OSS FP32 与 W8A8 batch profile 对比结果
+  L13: 1e0b727 记录 Seed-OSS W8A8 batch profile 停止状态
+  L14: 71c3d46 记录 Seed-OSS W8A8 batch profile 并发吞吐优化结果
+  L15: abcfaef 记录 Seed-OSS W8A8 conservative profile 停止状态
+  L16: bab96e0 总结 Seed-OSS FP32 与 W8A8 量化对比结果
+
+FILE: logs/new_2xa100_seed_oss_fp32_vs_w8a8_quantization_summary_20260528.txt
+  type: text
+  contains: ['W8A8', 'compressed', 'quantized', 'w8a8']
+  L3: 本实验在 2×NVIDIA A100-SXM4-80GB 环境中，对 ByteDance-Seed/Seed-OSS-36B-Instruct 进行了 FP32 baseline 与离线 W8A8 量化 serving 对比。
+  L14: W8A8 量化配置：
+  L16: - quantization scheme: W8A8
+  L17: - serving backend: vLLM compressed-tensors
+  L18: - model path: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+  L23: - vLLM kernel: CompressedTensorsW8A8Int8 / CutlassScaledMMLinearKernel
+  L34: W8A8:
+  L49: W8A8 significantly reduces model weight loading memory. However, vLLM uses the released memory to allocate a much larger KV cache, so nvidia-smi runtime memory does not drop proportionally. Therefore, the main serving-si
+
+FILE: logs/new_2xa100_seed_oss_quantization_feasibility_probe_20260528.txt
+  type: text
+  contains: []
+
+FILE: logs/new_2xa100_seed_oss_quantization_process_appendix_20260528.txt
+  type: text
+  contains: ['W8A8', 'compressed', 'w8a8']
+  L2: 本文件归档 Seed-OSS-36B bitsandbytes 在线量化、compressed-tensors 严格量化、INC 严格量化路径的补充日志。
+  L3: 用途：保存 FP32 baseline 之后的量化路径探索证据，区分 bnb low-bit online quantization 与严格 INT8/W8A8 serving。
+  L4: 当前结论：bnb 路径可服务但未证明为严格 INT8；compressed-tensors 与 INC 对原始 BF16 checkpoint 无法直接 serving，需要预量化配置或离线量化产物。
+
+FILE: logs/new_2xa100_seed_oss_w8a8_batch_profile_launch_snapshot_20260528.txt
+  type: text
+  contains: ['W8A8', 'compressed', 'quantized', 'w8a8']
+  L5: 记录 Seed-OSS-36B W8A8 batch-oriented serving profile 启动后的初始状态。
+  L13:    9127    1424 Sl         05:40  3.1  0.0 python -m vllm.entrypoints.openai.api_server --model /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8-BatchProfile --host 0.
+  L14:    9127    1424 Sl         05:40  3.1  0.0 python -m vllm.entrypoints.openai.api_server --model /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8-BatchProfile --host 0.
+  L53: [1;36m(APIServer pid=9127)[0;0m INFO 05-28 23:26:14 [utils.py:253] non-default args: {'host': '0.0.0.0', 'port': 8002, 'model': '/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8', 'trust_remote_code': True, 'dtyp
+  L59: [1;36m(APIServer pid=9127)[0;0m The tokenizer you are loading from '/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instru
+  L60: [1;36m(EngineCore_DP0 pid=9175)[0;0m INFO 05-28 23:26:22 [core.py:93] Initializing a V1 LLM engine (v0.11.2) with config: model='/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8', speculative_config=None, tokeniz
+  L80: [1;36m(Worker_TP0 pid=9197)[0;0m INFO 05-28 23:26:31 [gpu_model_runner.py:3259] Starting to load model /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8...
+  L81: [1;36m(Worker_TP0 pid=9197)[0;0m INFO 05-28 23:26:32 [compressed_tensors_w8a8_int8.py:62] Using CutlassScaledMMLinearKernel for CompressedTensorsW8A8Int8
+
+FILE: logs/new_2xa100_seed_oss_w8a8_batch_profile_shutdown_20260528.txt
+  type: text
+  contains: ['W8A8', 'compressed', 'quantized', 'w8a8']
+  L5: 停止当前 Seed-OSS-36B W8A8 batch-oriented serving profile。
+  L6: 该服务已完成 W8A8 concurrency sweep，现在释放 GPU，为启动 FP32 batch-oriented baseline 做准备。
+  L20: ?? logs/new_2xa100_seed_oss_w8a8_batch_profile_shutdown_20260528.txt
+  L21: ?? logs/new_2xa100_seed_oss_w8a8_batch_profile_vllm.pid
+  L22: ?? logs/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528.log
+  L23: ?? logs/new_2xa100_seed_oss_w8a8_offline_quantization.pid
+  L24: ?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry.pid
+  L25: ?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2.pid
+
+FILE: logs/new_2xa100_seed_oss_w8a8_batch_profile_vllm_launch_20260528.log
+  type: text
+  contains: ['W8A8', 'compressed', 'quantized', 'w8a8']
+  L4: [1;36m(APIServer pid=9127)[0;0m INFO 05-28 23:26:14 [utils.py:253] non-default args: {'host': '0.0.0.0', 'port': 8002, 'model': '/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8', 'trust_remote_code': True, 'dtyp
+  L10: [1;36m(APIServer pid=9127)[0;0m The tokenizer you are loading from '/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instru
+  L11: [1;36m(EngineCore_DP0 pid=9175)[0;0m INFO 05-28 23:26:22 [core.py:93] Initializing a V1 LLM engine (v0.11.2) with config: model='/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8', speculative_config=None, tokeniz
+  L31: [1;36m(Worker_TP0 pid=9197)[0;0m INFO 05-28 23:26:31 [gpu_model_runner.py:3259] Starting to load model /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8...
+  L32: [1;36m(Worker_TP0 pid=9197)[0;0m INFO 05-28 23:26:32 [compressed_tensors_w8a8_int8.py:62] Using CutlassScaledMMLinearKernel for CompressedTensorsW8A8Int8
+  L33: [1;36m(Worker_TP1 pid=9198)[0;0m INFO 05-28 23:26:32 [compressed_tensors_w8a8_int8.py:62] Using CutlassScaledMMLinearKernel for CompressedTensorsW8A8Int8
+  L66: [1;36m(EngineCore_DP0 pid=9175)[0;0m The tokenizer you are loading from '/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-I
+  L110: [1;36m(APIServer pid=9127)[0;0m ERROR 05-28 23:32:58 [serving_chat.py:173] Error with model error=ErrorInfo(message='The model `Seed-OSS-36B-Instruct-W8A8` does not exist.', type='NotFoundError', param=None, code=404)
+
+FILE: logs/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_summary_20260528.txt
+  type: text
+  contains: ['W8A8', 'compressed', 'quantized', 'w8a8']
+  L3: 本实验在 2×NVIDIA A100-SXM4-80GB 环境中，对 Seed-OSS-36B W8A8 compressed-tensors 量化模型启动 batch-oriented serving profile，并执行并发压力 sweep。
+  L6: - model path: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+  L7: - served model name: Seed-OSS-36B-Instruct-W8A8-BatchProfile
+  L8: - quantization backend: compressed-tensors
+  L9: - kernel: CompressedTensorsW8A8Int8 / CutlassScaledMMLinearKernel
+  L75: 本实验说明，W8A8 量化模型在 batch-oriented serving profile 下可以有效承载更高并发请求。随着 concurrency 从 1 增加到 16，系统吞吐量和输出 token 吞吐量接近线性提升，同时 P95 latency 只小幅上升，未出现排队失控或错误率上升。
+  L82: 1. 离线 W8A8 量化 checkpoint 已生成并可被 vLLM compressed-tensors 后端加载。
+
+FILE: logs/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528.log
+  type: text
+  contains: ['W8A8', 'quantized', 'w8a8']
+  L5: 修正模型名后，重新对 Seed-OSS-36B W8A8 batch-oriented serving profile 执行 concurrency sweep。
+  L6: 上一次 sweep 全部 404，原因是请求 model name 使用了 Seed-OSS-36B-Instruct-W8A8，而当前服务实际 served model name 为 Seed-OSS-36B-Instruct-W8A8-BatchProfile。
+  L10: {"object":"list","data":[{"id":"Seed-OSS-36B-Instruct-W8A8-BatchProfile","object":"model","created":1780011367,"owned_by":"vllm","root":"/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8","parent":null,"max_model_le
+  L43: vllm:num_requests_running{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8-BatchProfile"} 0.0
+  L46: vllm:num_requests_waiting{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8-BatchProfile"} 0.0
+  L49: vllm:kv_cache_usage_perc{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8-BatchProfile"} 0.0
+  L52: vllm:prefix_cache_queries_total{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8-BatchProfile"} 0.0
+  L55: vllm:prefix_cache_hits_total{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8-BatchProfile"} 0.0
+
+FILE: logs/new_2xa100_seed_oss_w8a8_checkpoint_metadata_preservation_20260529.txt
+  type: text
+  contains: ['W8A8', 'compressed', 'quantized', 'w8a8']
+  L5: 在释放 RunPod Volume 前，补充保存 Seed-OSS-36B W8A8 量化 checkpoint 的小型 metadata。
+  L7: 这些文件用于证明离线 W8A8 checkpoint 已真实生成，并且可被 vLLM compressed-tensors serving 路径识别。
+  L10: 102383 results/quantized_model_metadata/seed_oss_36b_w8a8/model.safetensors.index.json
+  L11: 169 results/quantized_model_metadata/seed_oss_36b_w8a8/recipe.yaml
+  L12: 189 results/quantized_model_metadata/seed_oss_36b_w8a8/generation_config.json
+  L13: 2088 results/quantized_model_metadata/seed_oss_36b_w8a8/config.json
+  L14: 23849 results/quantized_model_metadata/seed_oss_36b_w8a8/tokenizer_config.json
+  L15: 432 results/quantized_model_metadata/seed_oss_36b_w8a8/special_tokens_map.json
+
+FILE: logs/new_2xa100_seed_oss_w8a8_cleanup_incomplete_output_20260528.txt
+  type: text
+  contains: ['W8A8', 'quantized', 'w8a8']
+  L5: 清理上一次 W8A8 离线量化失败后留下的不完整输出目录，避免后续 checkpoint 混入脏结果。
+  L8: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/calibration_prompts.json
+  L9: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/config.json
+  L10: 2.0M	/workspace/quantized_models
+  L11: 979K	/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+  L13: ===== 清理不完整 W8A8 输出 =====
+  L16: 512	/workspace/quantized_models
+  L45:  M scripts/quantization/quantize_seed_oss_36b_w8a8.py
+
+FILE: logs/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528.log
+  type: text
+  contains: ['W8A8', 'quantized', 'w8a8']
+  L5: 对 Seed-OSS-36B W8A8 batch-oriented serving profile 执行 concurrency sweep。
+  L10: {"object":"list","data":[{"id":"Seed-OSS-36B-Instruct-W8A8-BatchProfile","object":"model","created":1780011178,"owned_by":"vllm","root":"/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8","parent":null,"max_model_le
+  L43: vllm:num_requests_running{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8-BatchProfile"} 0.0
+  L46: vllm:num_requests_waiting{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8-BatchProfile"} 0.0
+  L49: vllm:kv_cache_usage_perc{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8-BatchProfile"} 0.0
+  L52: vllm:prefix_cache_queries_total{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8-BatchProfile"} 0.0
+  L55: vllm:prefix_cache_hits_total{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8-BatchProfile"} 0.0
+  L58: vllm:request_success_total{engine="0",finished_reason="stop",model_name="Seed-OSS-36B-Instruct-W8A8-BatchProfile"} 0.0
+
+FILE: logs/new_2xa100_seed_oss_w8a8_conservative_shutdown_20260528.txt
+  type: text
+  contains: ['W8A8', 'compressed', 'quantized', 'w8a8']
+  L5: 停止当前 Seed-OSS-36B W8A8 conservative serving profile。
+  L20: ?? logs/new_2xa100_seed_oss_w8a8_conservative_shutdown_20260528.txt
+  L21: ?? logs/new_2xa100_seed_oss_w8a8_offline_quantization.pid
+  L22: ?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry.pid
+  L23: ?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2.pid
+  L24: ?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225050.txt
+  L25: ?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225112.txt
+  L26: ?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225143.txt
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_20260528.log
+  type: text
+  contains: ['W8A8', 'w8a8']
+  L3:   File "/root/ai-inference-service/scripts/quantization/quantize_seed_oss_36b_w8a8.py", line 9, in <module>
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_launch_snapshot_20260528.txt
+  type: text
+  contains: ['W8A8', 'quantized', 'w8a8']
+  L5: 记录 Seed-OSS-36B 离线 W8A8 量化任务启动后的初始状态。
+  L47: 512	/workspace/quantized_models
+  L52:   File "/root/ai-inference-service/scripts/quantization/quantize_seed_oss_36b_w8a8.py", line 9, in <module>
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_20260528.log
+  type: text
+  contains: ['W8A8', 'compressed', 'quantized', 'w8a8']
+  L3: ===== Offline W8A8 quantization config =====
+  L5: output_dir: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+  L35: ===== Sanitizing generation config before saving quantized checkpoint =====
+  L36: ===== Starting W8A8 quantization =====
+  L390: output_dir: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+  L409: quantization_config: {'config_groups': {'group_0': {'format': 'int-quantized', 'input_activations': {'actorder': None, 'block_structure': None, 'dynamic': True, 'group_size': None, 'num_bits': 8, 'observer': None, 'obser
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225050.txt
+  type: text
+  contains: ['W8A8', 'quantized', 'w8a8']
+  L5: 继续监控 Seed-OSS-36B W8A8 离线量化压缩阶段，确认 Compressing model 是否推进到保存 checkpoint。
+  L9:    8361    1424 Rl         05:34 91.8  0.1 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+  L39: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/calibration_prompts.json
+  L44: ===== Offline W8A8 quantization config =====
+  L46: output_dir: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+  L76: ===== Sanitizing generation config before saving quantized checkpoint =====
+  L77: ===== Starting W8A8 quantization =====
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225112.txt
+  type: text
+  contains: ['W8A8', 'quantized', 'w8a8']
+  L5: 继续监控 Seed-OSS-36B W8A8 离线量化压缩阶段，确认 Compressing model 是否推进到保存 checkpoint。
+  L9:    8361    1424 Rl         05:56  108  0.1 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+  L39: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/calibration_prompts.json
+  L44: ===== Offline W8A8 quantization config =====
+  L46: output_dir: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+  L76: ===== Sanitizing generation config before saving quantized checkpoint =====
+  L77: ===== Starting W8A8 quantization =====
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225143.txt
+  type: text
+  contains: ['W8A8', 'quantized', 'w8a8']
+  L5: 继续监控 Seed-OSS-36B W8A8 离线量化压缩阶段，确认 Compressing model 是否推进到保存 checkpoint。
+  L9:    8361    1424 Rl         06:27  118  0.5 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+  L39: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/calibration_prompts.json
+  L40: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/config.json
+  L41: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/generation_config.json
+  L42: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/model-00001-of-00008.safetensors
+  L47: ===== Offline W8A8 quantization config =====
+  L49: output_dir: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_compress_check_20260528_225148.txt
+  type: text
+  contains: ['W8A8', 'quantized', 'w8a8']
+  L5: 继续监控 Seed-OSS-36B W8A8 离线量化压缩阶段，确认 Compressing model 是否推进到保存 checkpoint。
+  L9:    8361    1424 Rl         06:32  118  0.2 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+  L39: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/calibration_prompts.json
+  L40: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/config.json
+  L41: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/generation_config.json
+  L42: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/model-00001-of-00008.safetensors
+  L47: ===== Offline W8A8 quantization config =====
+  L49: output_dir: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_launch_snapshot_20260528.txt
+  type: text
+  contains: ['W8A8', 'quantized', 'w8a8']
+  L5: 记录修复 generation_config 后，Seed-OSS-36B 离线 W8A8 量化 retry2 启动状态。
+  L13:    8361    1424 Rl         00:04  146  0.0 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+  L15:    8361    1424 Rl         00:04  147  0.0 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+  L44: 512	/workspace/quantized_models
+  L60: ?? logs/new_2xa100_seed_oss_w8a8_offline_quantization.pid
+  L61: ?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry.pid
+  L62: ?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2.pid
+  L63: ?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_20260528.log
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224821.txt
+  type: text
+  contains: ['W8A8', 'quantized', 'w8a8']
+  L5: 轻量监控 Seed-OSS-36B W8A8 离线量化 retry2，不执行 du，避免 Network Volume 阻塞。
+  L9:    8361    1424 Rl         03:05 29.9  0.2 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+  L39: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/calibration_prompts.json
+  L44: ===== Offline W8A8 quantization config =====
+  L46: output_dir: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224908.txt
+  type: text
+  contains: ['W8A8', 'quantized', 'w8a8']
+  L5: 继续轻量监控 Seed-OSS-36B W8A8 离线量化 retry2，确认 checkpoint 加载是否继续推进。
+  L9:    8361    1424 Rl         03:52 29.2  0.1 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+  L41: ===== Offline W8A8 quantization config =====
+  L43: output_dir: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224940.txt
+  type: text
+  contains: ['W8A8', 'quantized', 'w8a8']
+  L5: 继续轻量监控 Seed-OSS-36B W8A8 离线量化 retry2，确认 checkpoint 加载是否继续推进。
+  L9:    8361    1424 Dl         04:24 30.9  0.0 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+  L41: ===== Offline W8A8 quantization config =====
+  L43: output_dir: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_light_check_20260528_224956.txt
+  type: text
+  contains: ['W8A8', 'quantized', 'w8a8']
+  L5: 继续轻量监控 Seed-OSS-36B W8A8 离线量化 retry2，确认 checkpoint 加载是否继续推进。
+  L9:    8361    1424 Rl         04:40 42.4  0.1 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+  L41: ===== Offline W8A8 quantization config =====
+  L43: output_dir: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+  L73: ===== Sanitizing generation config before saving quantized checkpoint =====
+  L74: ===== Starting W8A8 quantization =====
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_save_check_20260528_225306.txt
+  type: text
+  contains: ['W8A8', 'quantized', 'w8a8']
+  L5: 继续监控 Seed-OSS-36B W8A8 离线量化 checkpoint 保存阶段，确认 8 个 safetensors 分片是否持续生成。
+  L9:    8361    1424 Rl         07:50  111  0.5 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+  L39: 2026-05-28 22:45:23.0000000000 843 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/calibration_prompts.json
+  L40: 2026-05-28 22:51:31.0000000000 189 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/generation_config.json
+  L41: 2026-05-28 22:51:31.0000000000 788 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/config.json
+  L42: 2026-05-28 22:51:45.0000000000 4945314032 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/model-00001-of-00008.safetensors
+  L43: 2026-05-28 22:52:00.0000000000 4861975184 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/model-00002-of-00008.safetensors
+  L44: 2026-05-28 22:52:15.0000000000 4861975256 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/model-00003-of-00008.safetensors
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_save_check_20260528_225433.txt
+  type: text
+  contains: ['W8A8', 'compressed', 'quantized', 'w8a8']
+  L5: 继续监控 Seed-OSS-36B W8A8 离线量化 checkpoint 保存阶段，确认 8 个 safetensors 分片是否持续生成。
+  L37: 2026-05-28 22:45:23.0000000000 843 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/calibration_prompts.json
+  L38: 2026-05-28 22:51:31.0000000000 189 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/generation_config.json
+  L39: 2026-05-28 22:51:45.0000000000 4945314032 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/model-00001-of-00008.safetensors
+  L40: 2026-05-28 22:52:00.0000000000 4861975184 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/model-00002-of-00008.safetensors
+  L41: 2026-05-28 22:52:15.0000000000 4861975256 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/model-00003-of-00008.safetensors
+  L42: 2026-05-28 22:52:29.0000000000 4861975256 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/model-00004-of-00008.safetensors
+  L43: 2026-05-28 22:52:44.0000000000 4861975256 /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/model-00005-of-00008.safetensors
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry2_status_check_20260528_224730.txt
+  type: text
+  contains: ['W8A8', 'quantized', 'w8a8']
+  L5: 等待 2 分钟后检查 Seed-OSS-36B W8A8 离线量化 retry2 是否进入模型加载、量化或保存阶段。
+  L9:    8361    1424 Dl         02:14 32.3  0.1 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+  L11:    8361    1424 Dl         02:14 32.3  0.1 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+  L41: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/calibration_prompts.json
+  L42: 166K	/workspace/quantized_models
+  L43: 84K	/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+  L48: ===== Offline W8A8 quantization config =====
+  L50: output_dir: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_20260528.log
+  type: text
+  contains: ['W8A8', 'compressed', 'quantized', 'w8a8']
+  L3: ===== Offline W8A8 quantization config =====
+  L5: output_dir: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+  L35: ===== Starting W8A8 quantization =====
+  L388:   File "/root/ai-inference-service/scripts/quantization/quantize_seed_oss_36b_w8a8.py", line 108, in <module>
+  L390:   File "/root/ai-inference-service/scripts/quantization/quantize_seed_oss_36b_w8a8.py", line 83, in main
+  L398:   File "/usr/local/lib/python3.11/dist-packages/llmcompressor/transformers/compression/compressed_tensors_utils.py", line 97, in save_pretrained_wrapper
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223546.txt
+  type: text
+  contains: ['W8A8', 'quantized', 'w8a8']
+  L5: 检查修复 oneshot 导入路径后，Seed-OSS-36B 离线 W8A8 量化任务是否真正进入模型加载或量化阶段。
+  L12:    8211    1424 Sl         00:08  108  0.0 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+  L14:    8211    1424 Sl         00:08  108  0.0 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+  L43: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/calibration_prompts.json
+  L44: 166K	/workspace/quantized_models
+  L61: ?? logs/new_2xa100_seed_oss_w8a8_offline_quantization.pid
+  L62: ?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry.pid
+  L63: ?? logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_20260528.log
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223556.txt
+  type: text
+  contains: ['W8A8', 'quantized', 'w8a8']
+  L5: 检查修复 oneshot 导入路径后，Seed-OSS-36B 离线 W8A8 量化任务是否真正进入模型加载或量化阶段。
+  L12:    8211    1424 Rl         00:18 77.3  0.2 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+  L14:    8211    1424 Dl         00:18 77.4  0.2 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+  L44: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/calibration_prompts.json
+  L45: 166K	/workspace/quantized_models
+  L50: ===== Offline W8A8 quantization config =====
+  L52: output_dir: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+  L76: ?? logs/new_2xa100_seed_oss_w8a8_offline_quantization.pid
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_223611.txt
+  type: text
+  contains: ['W8A8', 'quantized', 'w8a8']
+  L5: 检查修复 oneshot 导入路径后，Seed-OSS-36B 离线 W8A8 量化任务是否真正进入模型加载或量化阶段。
+  L12:    8211    1424 Rl         00:33 60.2  0.2 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+  L14:    8211    1424 Dl         00:33 60.2  0.2 python scripts/quantization/quantize_seed_oss_36b_w8a8.py
+  L44: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/calibration_prompts.json
+  L45: 166K	/workspace/quantized_models
+  L50: ===== Offline W8A8 quantization config =====
+  L52: output_dir: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+  L77: ?? logs/new_2xa100_seed_oss_w8a8_offline_quantization.pid
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_retry_status_check_20260528_224151.txt
+  type: text
+  contains: ['W8A8', 'compressed', 'quantized', 'w8a8']
+  L5: 持续监控 Seed-OSS-36B 离线 W8A8 量化任务。
+  L6: 重点判断：模型 checkpoint 是否继续加载、是否进入 W8A8 calibration/quantization 阶段、是否 OOM、输出目录是否增长。
+  L39: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/config.json
+  L40: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8/calibration_prompts.json
+  L41: 2.0M	/workspace/quantized_models
+  L42: 979K	/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+  L47: ===== Offline W8A8 quantization config =====
+  L49: output_dir: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_status_check_20260528_223237.txt
+  type: text
+  contains: ['W8A8', 'quantized', 'w8a8']
+  L5: 监控 Seed-OSS-36B 离线 W8A8 量化任务进展。
+  L39: 512	/workspace/quantized_models
+  L44:   File "/root/ai-inference-service/scripts/quantization/quantize_seed_oss_36b_w8a8.py", line 9, in <module>
+
+FILE: logs/new_2xa100_seed_oss_w8a8_offline_quantization_success_inventory_20260528.txt
+  type: text
+  contains: ['W8A8', 'compressed', 'quantized', 'w8a8']
+  L5: 归档 Seed-OSS-36B 离线 W8A8 量化成功证据。
+  L6: 注意：量化 checkpoint 权重保存在 /workspace/quantized_models，不提交 GitHub；仓库仅保存配置、文件清单、日志摘录和可复现实验记录。
+  L9: /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+  L31: 36G	/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8
+  L41:       "format": "int-quantized",
+  L76:   "format": "int-quantized",
+  L82:   "quant_method": "compressed-tensors",
+  L83:   "quantization_status": "compressed",
+
+FILE: logs/new_2xa100_seed_oss_w8a8_openai_benchmark_3req_20260528.log
+  type: text
+  contains: ['W8A8', 'compressed', 'w8a8']
+  L5: 直接调用 vLLM OpenAI-compatible API，对 Seed-OSS-36B W8A8 compressed-tensors 量化服务执行 3 次最小 benchmark。
+  L37: saved_csv: results/new_2xa100_seed_oss_w8a8_openai_benchmark_3req_20260528.csv
+  L75: vllm:num_requests_running{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+  L78: vllm:num_requests_waiting{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+  L81: vllm:kv_cache_usage_perc{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+  L84: vllm:prefix_cache_queries_total{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 69.0
+  L87: vllm:prefix_cache_queries_created{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.7800091345092275e+09
+  L90: vllm:prefix_cache_hits_total{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 16.0
+
+FILE: logs/new_2xa100_seed_oss_w8a8_ready_evidence_20260528.txt
+  type: text
+  contains: ['W8A8', 'compressed', 'quantized', 'w8a8']
+  L5: 确认 Seed-OSS-36B W8A8 compressed-tensors vLLM serving 是否完成加载并进入 API ready 状态。
+  L6: 关键判断：8 个 safetensors 分片是否加载完成、是否使用 CompressedTensorsW8A8Int8 kernel、显存占用、KV cache capacity、/v1/models 是否返回。
+  L11:    8602    1424 Sl         04:16  4.3  0.0 python -m vllm.entrypoints.openai.api_server --model /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8 --host 0.0.0.0 --port 
+  L12:    8602    1424 Sl         04:16  4.3  0.0 python -m vllm.entrypoints.openai.api_server --model /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8 --host 0.0.0.0 --port 
+  L45: {"object":"list","data":[{"id":"Seed-OSS-36B-Instruct-W8A8","object":"model","created":1780009302,"owned_by":"vllm","root":"/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8","parent":null,"max_model_len":512,"permi
+  L49: [1;36m(Worker_TP0 pid=8657)[0;0m INFO 05-28 22:57:52 [compressed_tensors_w8a8_int8.py:62] Using CutlassScaledMMLinearKernel for CompressedTensorsW8A8Int8
+  L50: [1;36m(Worker_TP1 pid=8658)[0;0m INFO 05-28 22:57:52 [compressed_tensors_w8a8_int8.py:62] Using CutlassScaledMMLinearKernel for CompressedTensorsW8A8Int8
+  L84: [1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:57:33 [utils.py:253] non-default args: {'host': '0.0.0.0', 'port': 8002, 'model': '/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8', 'trust_remote_code': True, 'dtyp
+
+FILE: logs/new_2xa100_seed_oss_w8a8_script_preflight_20260528.txt
+  type: text
+  contains: ['W8A8', 'compressed', 'quantized', 'w8a8']
+  L5: 保存 Seed-OSS-36B 离线 W8A8 量化脚本的语法检查和执行前状态。
+  L6: 该脚本用于从原始 BF16 checkpoint 生成 W8A8 量化 checkpoint，后续用于 vLLM serving 对比。
+  L19: ?? logs/new_2xa100_seed_oss_w8a8_script_preflight_20260528.txt
+  L21: a598017 安装 Seed-OSS 离线 W8A8 量化工具链
+  L25: 84da485 记录 Seed-OSS compressed-tensors 严格量化路径边界
+  L35: OUTPUT_DIR = "/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8"
+  L48:         scheme="W8A8",
+  L61: compressed_tensors: 0.14.0.1
+
+FILE: logs/new_2xa100_seed_oss_w8a8_toolchain_install_20260528.txt
+  type: text
+  contains: ['W8A8', 'compressed', 'w8a8']
+  L5: 安装并验证 LLM Compressor 与 compressed-tensors 工具链，用于 Seed-OSS-36B 离线 W8A8 INT8 量化。
+  L19: ?? logs/new_2xa100_seed_oss_w8a8_toolchain_install_20260528.txt
+  L23: 84da485 记录 Seed-OSS compressed-tensors 严格量化路径边界
+  L41: Requirement already satisfied: compressed-tensors in /usr/local/lib/python3.11/dist-packages (0.12.2)
+  L59: Collecting compressed-tensors
+  L60:   Downloading compressed_tensors-0.14.0.1-py3-none-any.whl.metadata (7.1 kB)
+  L61: Requirement already satisfied: pydantic>=2.0 in /usr/local/lib/python3.11/dist-packages (from compressed-tensors) (2.13.4)
+  L121: Requirement already satisfied: annotated-types>=0.6.0 in /usr/local/lib/python3.11/dist-packages (from pydantic>=2.0->compressed-tensors) (0.7.0)
+
+FILE: logs/new_2xa100_seed_oss_w8a8_vllm_launch_20260528.log
+  type: text
+  contains: ['W8A8', 'compressed', 'quantized', 'w8a8']
+  L4: [1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:57:33 [utils.py:253] non-default args: {'host': '0.0.0.0', 'port': 8002, 'model': '/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8', 'trust_remote_code': True, 'dtyp
+  L10: [1;36m(APIServer pid=8602)[0;0m The tokenizer you are loading from '/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instru
+  L11: [1;36m(EngineCore_DP0 pid=8635)[0;0m INFO 05-28 22:57:42 [core.py:93] Initializing a V1 LLM engine (v0.11.2) with config: model='/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8', speculative_config=None, tokeniz
+  L31: [1;36m(Worker_TP0 pid=8657)[0;0m INFO 05-28 22:57:52 [gpu_model_runner.py:3259] Starting to load model /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8...
+  L32: [1;36m(Worker_TP0 pid=8657)[0;0m INFO 05-28 22:57:52 [compressed_tensors_w8a8_int8.py:62] Using CutlassScaledMMLinearKernel for CompressedTensorsW8A8Int8
+  L33: [1;36m(Worker_TP1 pid=8658)[0;0m INFO 05-28 22:57:52 [compressed_tensors_w8a8_int8.py:62] Using CutlassScaledMMLinearKernel for CompressedTensorsW8A8Int8
+  L66: [1;36m(EngineCore_DP0 pid=8635)[0;0m The tokenizer you are loading from '/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-I
+  L109: [1;36m(APIServer pid=8602)[0;0m The tokenizer you are loading from '/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instru
+
+FILE: logs/new_2xa100_seed_oss_w8a8_vllm_ready_check_20260528.txt
+  type: text
+  contains: ['W8A8', 'compressed', 'quantized', 'w8a8']
+  L5: 检查本地 Seed-OSS-36B W8A8 compressed-tensors checkpoint 是否能被 vLLM serving 成功加载。
+  L12:    8602    1424 Sl         00:22 47.8  0.0 python -m vllm.entrypoints.openai.api_server --model /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8 --host 0.0.0.0 --port 
+  L13:    8602    1424 Sl         00:22 47.8  0.0 python -m vllm.entrypoints.openai.api_server --model /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8 --host 0.0.0.0 --port 
+  L15:    8694    1424 S+         00:00  0.0  0.0 tee logs/new_2xa100_seed_oss_w8a8_vllm_ready_check_20260528.txt
+  L51: [1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:57:33 [utils.py:253] non-default args: {'host': '0.0.0.0', 'port': 8002, 'model': '/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8', 'trust_remote_code': True, 'dtyp
+  L57: [1;36m(APIServer pid=8602)[0;0m The tokenizer you are loading from '/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instru
+  L58: [1;36m(EngineCore_DP0 pid=8635)[0;0m INFO 05-28 22:57:42 [core.py:93] Initializing a V1 LLM engine (v0.11.2) with config: model='/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8', speculative_config=None, tokeniz
+  L62: [1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:57:33 [utils.py:253] non-default args: {'host': '0.0.0.0', 'port': 8002, 'model': '/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8', 'trust_remote_code': True, 'dtyp
+
+FILE: logs/new_2xa100_seed_oss_w8a8_vllm_status_check_20260528_225827.txt
+  type: text
+  contains: ['W8A8', 'compressed', 'quantized', 'w8a8']
+  L5: 继续检查 Seed-OSS-36B W8A8 compressed-tensors vLLM serving 是否进入 Worker 加载、API ready 或报错退出。
+  L10:    8602    1424 Sl         01:01 17.2  0.0 python -m vllm.entrypoints.openai.api_server --model /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8 --host 0.0.0.0 --port 
+  L11:    8602    1424 Sl         01:01 17.2  0.0 python -m vllm.entrypoints.openai.api_server --model /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8 --host 0.0.0.0 --port 
+  L15:    8847    1424 S+         00:00  0.0  0.0 tee logs/new_2xa100_seed_oss_w8a8_vllm_status_check_20260528_225827.txt
+  L52: [1;36m(APIServer pid=8602)[0;0m INFO 05-28 22:57:33 [utils.py:253] non-default args: {'host': '0.0.0.0', 'port': 8002, 'model': '/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8', 'trust_remote_code': True, 'dtyp
+  L58: [1;36m(APIServer pid=8602)[0;0m The tokenizer you are loading from '/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instru
+  L59: [1;36m(EngineCore_DP0 pid=8635)[0;0m INFO 05-28 22:57:42 [core.py:93] Initializing a V1 LLM engine (v0.11.2) with config: model='/workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8', speculative_config=None, tokeniz
+  L79: [1;36m(Worker_TP0 pid=8657)[0;0m INFO 05-28 22:57:52 [gpu_model_runner.py:3259] Starting to load model /workspace/quantized_models/Seed-OSS-36B-Instruct-W8A8...
+
+FILE: logs/week2_fastapi_gsm8k_seed_oss.log
+  type: text
+  contains: []
+
+FILE: logs/week2_gsm8k_diagnostic_budget0_10.log
+  type: text
+  contains: ['GSM8K', 'accuracy', 'gsm8k']
+  L1: [1/10] gsm8k_0001 status=200 ok=True expected=18 predicted=18 correct=True latency=5.022s
+  L2: [2/10] gsm8k_0002 status=200 ok=True expected=3 predicted=3 correct=True latency=3.240s
+  L3: [3/10] gsm8k_0003 status=200 ok=True expected=70000 predicted=3 correct=False latency=6.680s
+  L4: [4/10] gsm8k_0004 status=200 ok=True expected=540 predicted=540 correct=True latency=4.204s
+  L5: [5/10] gsm8k_0005 status=200 ok=True expected=20 predicted=20 correct=True latency=5.442s
+  L6: [6/10] gsm8k_0006 status=200 ok=True expected=64 predicted=64 correct=True latency=6.650s
+  L7: [7/10] gsm8k_0007 status=200 ok=True expected=260 predicted=260 correct=True latency=6.289s
+  L8: [8/10] gsm8k_0008 status=200 ok=True expected=160 predicted=100 correct=False latency=6.683s
+
+FILE: logs/week2_gsm8k_diagnostic_budget512_10.log
+  type: text
+  contains: ['GSM8K', 'accuracy', 'gsm8k']
+  L1: [1/10] gsm8k_0001 status=200 ok=True expected=18 predicted=18 correct=True latency=13.285s
+  L2: [2/10] gsm8k_0002 status=200 ok=True expected=3 predicted=3 correct=True latency=10.167s
+  L3: [3/10] gsm8k_0003 status=200 ok=True expected=70000 predicted=130000 correct=False latency=20.023s
+  L4: [4/10] gsm8k_0004 status=200 ok=True expected=540 predicted=540 correct=True latency=14.338s
+  L5: [5/10] gsm8k_0005 status=200 ok=True expected=20 predicted=20 correct=True latency=17.603s
+  L6: [6/10] gsm8k_0006 status=200 ok=True expected=64 predicted=8 correct=False latency=20.019s
+  L7: [7/10] gsm8k_0007 status=200 ok=True expected=260 predicted=260 correct=True latency=16.106s
+  L8: [8/10] gsm8k_0008 status=200 ok=True expected=160 predicted=4 correct=False latency=20.021s
+
+FILE: logs/week2_gsm8k_full_seed_oss.log
+  type: text
+  contains: ['GSM8K', 'gsm8k']
+  L1: dataset_missing: data/eval/gsm8k_test.jsonl
+  L3: saved_dataset: data/eval/gsm8k_test.jsonl bytes=749738
+  L4: [1/1319] gsm8k_0001 status=200 ok=True expected=18 predicted=9 correct=False latency=6.703s
+  L5: [2/1319] gsm8k_0002 status=200 ok=True expected=3 predicted=256 correct=False latency=6.686s
+  L6: [3/1319] gsm8k_0003 status=200 ok=True expected=70000 predicted=150 correct=False latency=6.686s
+  L7: [4/1319] gsm8k_0004 status=200 ok=True expected=540 predicted=6 correct=False latency=6.678s
+  L8: [5/1319] gsm8k_0005 status=200 ok=True expected=20 predicted=25 correct=False latency=6.682s
+  L9: [6/1319] gsm8k_0006 status=200 ok=True expected=64 predicted=3 correct=False latency=6.679s
+
+FILE: logs/week2_gsm8k_full_seed_oss_budget0.log
+  type: text
+  contains: ['GSM8K', 'accuracy', 'gsm8k']
+  L1: [1/1319] gsm8k_0001 status=200 ok=True expected=18 predicted=18 correct=True latency=4.867s
+  L2: [2/1319] gsm8k_0002 status=200 ok=True expected=3 predicted=3 correct=True latency=3.236s
+  L3: [3/1319] gsm8k_0003 status=200 ok=True expected=70000 predicted=130000 correct=False latency=6.673s
+  L4: [4/1319] gsm8k_0004 status=200 ok=True expected=540 predicted=540 correct=True latency=4.197s
+  L5: [5/1319] gsm8k_0005 status=200 ok=True expected=20 predicted=20 correct=True latency=5.423s
+  L6: [6/1319] gsm8k_0006 status=200 ok=True expected=64 predicted=64 correct=True latency=6.643s
+  L7: [7/1319] gsm8k_0007 status=200 ok=True expected=260 predicted=260 correct=True latency=6.281s
+  L8: [8/1319] gsm8k_0008 status=200 ok=True expected=160 predicted=100 correct=False latency=6.671s
+
+FILE: logs/week2_gsm8k_full_seed_oss_max768.log
+  type: text
+  contains: []
+
+FILE: logs/week2_gsm8k_mini_seed_oss.log
+  type: text
+  contains: ['GSM8K', 'gsm8k']
+  L1: gsm8k_001 status=200 ok=True latency=7.551s correctness=pass
+  L2: gsm8k_002 status=200 ok=True latency=6.680s correctness=pass
+  L3: gsm8k_003 status=200 ok=True latency=6.685s correctness=pass
+  L4: gsm8k_004 status=200 ok=True latency=6.677s correctness=pass
+  L5: gsm8k_005 status=200 ok=True latency=6.685s correctness=pass
+  L6: saved_csv: results/week2_gsm8k_mini_seed_oss.csv
+
+FILE: logs/week2_gsm8k_vllm_import_failure_diagnostic.txt
+  type: text
+  contains: ['GSM8K', 'compressed', 'gsm8k']
+  L13: ac8a156 xuchu0726 <chuxu7678@gmail.com> | 新增完整 GSM8K benchmark 脚本
+  L14: c577a04 xuchu0726 <chuxu7678@gmail.com> | 新增 Week2 GSM8K 与代码生成 mini eval 框架
+  L54: ?? logs/week2_gsm8k_vllm_import_failure_diagnostic.txt
+  L99: ?? logs/week2_seed_oss_vllm_gsm8k_64k.log
+  L100: ?? logs/week2_seed_oss_vllm_gsm8k_64k.pid
+  L176: Requires: aiohttp, anthropic, blake3, cachetools, cbor2, cloudpickle, compressed-tensors, depyf, diskcache, einops, fastapi, filelock, flashinfer-python, gguf, lark, llguidance, lm-format-enforcer, mistral_common, model-
+  L211: root        1034     721  0 20:26 pts/2    00:00:00 tee logs/week2_gsm8k_vllm_import_failure_diagnostic.txt
+
+FILE: logs/week2_nvidia_smi_after_gsm8k_full_budget0.txt
+  type: text
+  contains: []
+
+FILE: logs/week2_nvidia_smi_after_gsm8k_mini_seed_oss.txt
+  type: text
+  contains: []
+
+FILE: logs/week2_nvidia_smi_after_vllm_gsm8k_startup.txt
+  type: text
+  contains: []
+
+FILE: logs/week2_quantization_current_state_check_20260527.txt
+  type: text
+  contains: ['GSM8K', 'gsm8k', 'quantized']
+  L62: docs/week2_performance_optimization_report.md:221:| BF16 baseline | 已完成 | 已完成真实部署、长上下文、并发、GSM8K full 和 codegen mini eval | 当前主基线 |
+  L71: docs/week2_performance_optimization_report.md:488:5. 工程局限方面，当前实验完成的是 BF16 baseline、并发测试、KV cache/prefix cache 分析、64K 级别长上下文验证、GSM8K full benchmark 和代码生成 mini eval。INT8 量化、FP32 对比、512K full-context 和 Seed-Coder 专项测试仍需要更多 
+  L73: docs/week2_delivery_summary.md:89:该结果说明当前服务已经不只是 smoke test，而是具备真实任务级评测结果。GSM8K full benchmark 为 Seed-OSS-36B-Instruct 的数学推理能力、服务稳定性和端到端延迟提供了可量化基线。
+  L74: docs/week2_delivery_summary.md:129:当前 Week2 已完成 BF16 baseline、并发测试、64K 级别长上下文验证、Prefix Cache 分析、GSM8K full 评测和代码生成 mini eval。
+  L129: docs/week2_quantization_feasibility_report.md:191:| INT8 | No | TBD | TBD | TBD | TBD | TBD | Requires quantized weights |
+  L150: docs/week2_quantization_feasibility_report.md:236:4. GSM8K / codegen mini eval，用于评估量化后的质量变化。
+  L197: docs/week2_performance_optimization_report.md:488:5. 工程局限方面，当前实验完成的是 BF16 baseline、并发测试、KV cache/prefix cache 分析、64K 级别长上下文验证、GSM8K full benchmark 和代码生成 mini eval。INT8 量化、FP32 对比、512K full-context 和 Seed-Coder 专项测试仍需要更多 
+
+FILE: logs/week2_quantization_language_polish_snapshot_20260527.txt
+  type: text
+  contains: ['quantized']
+  L76: docs/week2_quantization_feasibility_report.md:191:| INT8 | No | TBD | TBD | TBD | TBD | TBD | Requires quantized weights |
+
+FILE: logs/week2_quantization_pre_commit_review_20260527.txt
+  type: text
+  contains: []
+
+FILE: logs/week2_quantization_second_polish_snapshot_20260527.txt
+  type: text
+  contains: []
+
+FILE: logs/week2_seed_oss_vllm_gsm8k_64k.log
+  type: text
+  contains: []
+
+FILE: logs/week2_seed_oss_vllm_gsm8k_64k_clean_env.log
+  type: text
+  contains: []
+
+FILE: results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv
+  type: csv
+  rows: 5
+  columns: ['concurrency', 'total_requests_fp32', 'successful_requests_fp32', 'failed_requests_fp32', 'error_rate_fp32', 'wall_time_seconds_fp32', 'qps_fp32', 'avg_latency_seconds_fp32', 'p50_latency_seconds_fp32', 'p95_latency_seconds_fp32', 'avg_completion_tokens_per_second_per_request_fp32', 'aggregate_output_tokens_per_second_fp32', 'total_requests_w8a8', 'successful_requests_w8a8', 'failed_requests_w8a8', 'error_rate_w8a8', 'wall_time_seconds_w8a8', 'qps_w8a8', 'avg_latency_seconds_w8a8', 'p50_latency_seconds_w8a8', 'p95_latency_seconds_w8a8', 'avg_completion_tokens_per_second_per_request_w8a8', 'aggregate_output_tokens_per_second_w8a8', 'qps_improvement_pct', 'p95_latency_reduction_pct', 'output_tokens_per_second_improvement_pct']
+
+FILE: results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528.csv
+  type: csv
+  rows: 160
+  columns: ['concurrency', 'request_id', 'status_code', 'latency_seconds', 'prompt_tokens', 'completion_tokens', 'total_tokens', 'tokens_per_second', 'prompt', 'output', 'error_text']
+
+FILE: results/new_2xa100_seed_oss_w8a8_batchprofile_concurrency_sweep_20260528_summary.csv
+  type: csv
+  rows: 5
+  columns: ['concurrency', 'total_requests', 'successful_requests', 'failed_requests', 'error_rate', 'wall_time_seconds', 'qps', 'avg_latency_seconds', 'p50_latency_seconds', 'p95_latency_seconds', 'avg_completion_tokens_per_second_per_request', 'aggregate_output_tokens_per_second']
+
+FILE: results/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528.csv
+  type: csv
+  rows: 160
+  columns: ['request_id', 'concurrency', 'status_code', 'latency_seconds', 'prompt_tokens', 'completion_tokens', 'total_tokens', 'tokens_per_second', 'prompt', 'output', 'error_text']
+
+FILE: results/new_2xa100_seed_oss_w8a8_concurrency_sweep_20260528_summary.csv
+  type: csv
+  rows: 5
+  columns: ['concurrency', 'total_requests', 'successful_requests', 'failed_requests', 'error_rate', 'wall_time_seconds', 'qps', 'avg_latency_seconds', 'p50_latency_seconds', 'p95_latency_seconds', 'avg_completion_tokens_per_second_per_request', 'aggregate_output_tokens_per_second']
+
+FILE: results/new_2xa100_seed_oss_w8a8_openai_benchmark_3req_20260528.csv
+  type: csv
+  rows: 3
+  columns: ['request_id', 'status_code', 'latency_seconds', 'prompt_tokens', 'completion_tokens', 'total_tokens', 'tokens_per_second', 'prompt', 'output', 'error_text']
+
+FILE: results/new_2xa100_seed_oss_w8a8_smoke_test_20260528.txt
+  type: text
+  contains: ['W8A8', 'compressed', 'w8a8']
+  L5: 对 Seed-OSS-36B W8A8 compressed-tensors 量化服务进行最小单请求 smoke test。
+  L35: ===== W8A8 smoke request =====
+  L39: {"id":"chatcmpl-750aeae170044f8db90721cda85ac579","object":"chat.completion","created":1780009459,"model":"Seed-OSS-36B-Instruct-W8A8","choices":[{"index":0,"message":{"role":"assistant","content":"<seed:think>\n用户现在需要用一
+  L73: vllm:num_requests_running{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+  L76: vllm:num_requests_waiting{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+  L79: vllm:kv_cache_usage_perc{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 0.0
+  L82: vllm:prefix_cache_queries_total{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 18.0
+  L85: vllm:prefix_cache_queries_created{engine="0",model_name="Seed-OSS-36B-Instruct-W8A8"} 1.7800091345092275e+09
+
+FILE: results/quantized_model_metadata/seed_oss_36b_w8a8/calibration_prompts.json
+  type: json
+  list_len: 16
+
+FILE: results/quantized_model_metadata/seed_oss_36b_w8a8/chat_template.jinja
+  type: text
+  contains: []
+
+FILE: results/quantized_model_metadata/seed_oss_36b_w8a8/config.json
+  type: json
+  keys: ['architectures', 'attention_bias', 'attention_dropout', 'attention_out_bias', 'bos_token_id', 'dtype', 'eos_token_id', 'head_dim', 'hidden_act', 'hidden_size', 'initializer_range', 'intermediate_size', 'max_position_embeddings', 'mlp_bias', 'model_type', 'num_attention_heads', 'num_hidden_layers', 'num_key_value_heads', 'pad_token_id', 'pretraining_tp', 'quantization_config', 'residual_dropout', 'rms_norm_eps', 'rope_scaling', 'rope_theta', 'tie_word_embeddings', 'transformers_version', 'use_cache', 'vocab_size']
+  dtype: bfloat16
+
+FILE: results/quantized_model_metadata/seed_oss_36b_w8a8/generation_config.json
+  type: json
+  keys: ['_from_model_config', 'bos_token_id', 'eos_token_id', 'pad_token_id', 'temperature', 'top_k', 'top_p', 'transformers_version']
+
+FILE: results/quantized_model_metadata/seed_oss_36b_w8a8/model.safetensors.index.json
+  type: json
+  keys: ['metadata', 'weight_map']
+
+FILE: results/quantized_model_metadata/seed_oss_36b_w8a8/recipe.yaml
+  type: text
+  contains: ['W8A8', 'w8a8']
+  L6:       scheme: W8A8
+
+FILE: results/quantized_model_metadata/seed_oss_36b_w8a8/special_tokens_map.json
+  type: json
+  keys: ['bos_token', 'eos_token', 'pad_token']
+
+FILE: results/quantized_model_metadata/seed_oss_36b_w8a8/tokenizer_config.json
+  type: json
+  keys: ['added_tokens_decoder', 'bos_token', 'clean_up_tokenization_spaces', 'eos_token', 'extra_special_tokens', 'model_max_length', 'pad_token', 'tokenizer_class']
+
+FILE: results/week2_fastapi_metrics_after_gsm8k_full_budget0.txt
+  type: text
+  contains: []
+
+FILE: results/week2_gsm8k_diagnostic_budget0_10.csv
+  type: csv
+  rows: 10
+  columns: ['case_id', 'status_code', 'ok', 'correct', 'expected_answer', 'predicted_answer', 'client_latency_seconds', 'server_latency_seconds', 'backend', 'model_name', 'device', 'input_tokens', 'output_tokens', 'tokens_per_second', 'max_new_tokens', 'thinking_budget', 'question_preview', 'response_preview', 'error']
+  detected_metric: correct=7/10 (0.7000)
+  backend: ['vllm']
+  max_new_tokens: ['256']
+
+FILE: results/week2_gsm8k_diagnostic_budget0_10_summary.csv
+  type: csv
+  rows: 1
+  columns: ['total_cases', 'successful_api_cases', 'failed_api_cases', 'api_error_rate', 'parseable_answer_cases', 'correct_cases', 'accuracy_all_cases', 'accuracy_successful_api_cases', 'client_latency_avg', 'client_latency_p50', 'client_latency_p95', 'server_latency_avg', 'server_latency_p50', 'server_latency_p95', 'tokens_per_second_avg', 'tokens_per_second_p50', 'tokens_per_second_p95', 'output_tokens_avg']
+
+FILE: results/week2_gsm8k_diagnostic_budget512_10.csv
+  type: csv
+  rows: 10
+  columns: ['case_id', 'status_code', 'ok', 'correct', 'expected_answer', 'predicted_answer', 'client_latency_seconds', 'server_latency_seconds', 'backend', 'model_name', 'device', 'input_tokens', 'output_tokens', 'tokens_per_second', 'max_new_tokens', 'thinking_budget', 'question_preview', 'response_preview', 'error']
+  detected_metric: correct=6/10 (0.6000)
+  backend: ['vllm']
+  max_new_tokens: ['768']
+
+FILE: results/week2_gsm8k_diagnostic_budget512_10_summary.csv
+  type: csv
+  rows: 1
+  columns: ['total_cases', 'successful_api_cases', 'failed_api_cases', 'api_error_rate', 'parseable_answer_cases', 'correct_cases', 'accuracy_all_cases', 'accuracy_successful_api_cases', 'client_latency_avg', 'client_latency_p50', 'client_latency_p95', 'server_latency_avg', 'server_latency_p50', 'server_latency_p95', 'tokens_per_second_avg', 'tokens_per_second_p50', 'tokens_per_second_p95', 'output_tokens_avg']
+
+FILE: results/week2_gsm8k_fastapi_health.json
+  type: json
+  keys: ['status']
+
+FILE: results/week2_gsm8k_full_seed_oss.csv
+  type: csv
+  rows: 106
+  columns: ['case_id', 'status_code', 'ok', 'correct', 'expected_answer', 'predicted_answer', 'client_latency_seconds', 'server_latency_seconds', 'backend', 'model_name', 'device', 'input_tokens', 'output_tokens', 'tokens_per_second', 'max_new_tokens', 'thinking_budget', 'question_preview', 'response_preview', 'error']
+  detected_metric: correct=5/106 (0.0472)
+  backend: ['vllm']
+  max_new_tokens: ['256']
+
+FILE: results/week2_gsm8k_full_seed_oss_budget0.csv
+  type: csv
+  rows: 1319
+  columns: ['case_id', 'status_code', 'ok', 'correct', 'expected_answer', 'predicted_answer', 'client_latency_seconds', 'server_latency_seconds', 'backend', 'model_name', 'device', 'input_tokens', 'output_tokens', 'tokens_per_second', 'max_new_tokens', 'thinking_budget', 'question_preview', 'response_preview', 'error']
+  detected_metric: correct=999/1319 (0.7574)
+  backend: ['vllm']
+  max_new_tokens: ['256']
+
+FILE: results/week2_gsm8k_full_seed_oss_budget0_summary.csv
+  type: csv
+  rows: 1
+  columns: ['total_cases', 'successful_api_cases', 'failed_api_cases', 'api_error_rate', 'parseable_answer_cases', 'correct_cases', 'accuracy_all_cases', 'accuracy_successful_api_cases', 'client_latency_avg', 'client_latency_p50', 'client_latency_p95', 'server_latency_avg', 'server_latency_p50', 'server_latency_p95', 'tokens_per_second_avg', 'tokens_per_second_p50', 'tokens_per_second_p95', 'output_tokens_avg']
+
+FILE: results/week2_gsm8k_full_seed_oss_max768.csv
+  type: csv
+  rows: 55
+  columns: ['case_id', 'status_code', 'ok', 'correct', 'expected_answer', 'predicted_answer', 'client_latency_seconds', 'server_latency_seconds', 'backend', 'model_name', 'device', 'input_tokens', 'output_tokens', 'tokens_per_second', 'max_new_tokens', 'thinking_budget', 'question_preview', 'response_preview', 'error']
+  detected_metric: correct=35/55 (0.6364)
+  backend: ['vllm']
+  max_new_tokens: ['768']
+
+FILE: results/week2_gsm8k_mini_seed_oss.csv
+  type: csv
+  rows: 5
+  columns: ['case_id', 'task_type', 'status_code', 'ok', 'client_latency_seconds', 'server_latency_seconds', 'backend', 'model_name', 'device', 'input_tokens', 'output_tokens', 'tokens_per_second', 'max_new_tokens', 'thinking_budget', 'simple_correctness', 'response_preview', 'error']
+  backend: ['vllm']
+  max_new_tokens: ['256']
+
+FILE: results/week2_gsm8k_vllm_metrics_head.txt
+  type: text
+  contains: []
+
+FILE: results/week2_gsm8k_vllm_models.json
+  type: json
+  keys: ['object', 'data']
+
+FILE: results/week2_vllm_metrics_after_gsm8k_full_budget0.txt
+  type: text
+  contains: []
+
