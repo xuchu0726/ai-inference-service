@@ -1,0 +1,115 @@
+===== run_gsm8k_full_benchmark.py help =====
+usage: run_gsm8k_full_benchmark.py [-h] [--url URL] [--dataset DATASET]
+                                   [--dataset-url DATASET_URL]
+                                   [--download-if-missing] [--output OUTPUT]
+                                   [--summary-output SUMMARY_OUTPUT]
+                                   [--max-new-tokens MAX_NEW_TOKENS]
+                                   [--temperature TEMPERATURE]
+                                   [--thinking-budget THINKING_BUDGET]
+                                   [--timeout-seconds TIMEOUT_SECONDS]
+                                   [--limit LIMIT]
+                                   [--sleep-seconds SLEEP_SECONDS] [--resume]
+
+options:
+  -h, --help            show this help message and exit
+  --url URL
+  --dataset DATASET
+  --dataset-url DATASET_URL
+  --download-if-missing
+  --output OUTPUT
+  --summary-output SUMMARY_OUTPUT
+  --max-new-tokens MAX_NEW_TOKENS
+  --temperature TEMPERATURE
+  --thinking-budget THINKING_BUDGET
+  --timeout-seconds TIMEOUT_SECONDS
+  --limit LIMIT
+  --sleep-seconds SLEEP_SECONDS
+  --resume
+
+===== parser argument lines =====
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--url", default="http://127.0.0.1:8000/generate")
+    parser.add_argument("--dataset", default="data/eval/gsm8k_test.jsonl")
+    parser.add_argument("--dataset-url", default=DEFAULT_GSM8K_TEST_URL)
+    parser.add_argument("--download-if-missing", action="store_true")
+
+    parser.add_argument("--output", default="results/week2_gsm8k_full_seed_oss.csv")
+    parser.add_argument(
+        "--summary-output",
+        default="results/week2_gsm8k_full_seed_oss_summary.csv",
+    )
+
+    parser.add_argument("--max-new-tokens", type=int, default=256)
+    parser.add_argument("--temperature", type=float, default=0.0)
+    parser.add_argument("--thinking-budget", type=int, default=512)
+    parser.add_argument("--timeout-seconds", type=float, default=1800)
+
+    parser.add_argument("--limit", type=int, default=None)
+    parser.add_argument("--sleep-seconds", type=float, default=0.0)
+    parser.add_argument("--resume", action="store_true")
+
+    return parser.parse_args()
+
+
+if __name__ == "__main__":
+    run_benchmark(parse_args())
+
+===== request function lines =====
+    return ""
+
+
+def is_correct(expected: str, predicted: str) -> bool:
+    expected_dec = to_decimal_or_none(expected)
+    predicted_dec = to_decimal_or_none(predicted)
+
+    if expected_dec is not None and predicted_dec is not None:
+        return expected_dec == predicted_dec
+
+    return normalize_number_string(expected) == normalize_number_string(predicted)
+
+
+def build_prompt(question: str) -> str:
+    return (
+        "Solve the following grade-school math problem. "
+        "Show concise reasoning. "
+        "End your response exactly with the format: Final answer: <number>.\n\n"
+        f"Problem: {question}"
+    )
+
+
+def post_generate(
+    url: str,
+    prompt: str,
+    max_new_tokens: int,
+    temperature: float,
+    thinking_budget: int,
+    timeout_seconds: float,
+) -> tuple[int, float, dict[str, Any] | None, str]:
+    payload = {
+        "prompt": prompt,
+        "max_new_tokens": max_new_tokens,
+        "temperature": temperature,
+        "thinking_budget": thinking_budget,
+    }
+
+    request = urllib.request.Request(
+        url=url,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+
+    start = time.perf_counter()
+
+    try:
+        with urllib.request.urlopen(request, timeout=timeout_seconds) as response:
+            client_latency = time.perf_counter() - start
+            body = response.read().decode("utf-8")
+            return response.status, client_latency, json.loads(body), ""
+    except urllib.error.HTTPError as exc:
+        client_latency = time.perf_counter() - start
+        error_body = exc.read().decode("utf-8", errors="replace")
+        return exc.code, client_latency, None, error_body
+    except Exception as exc:

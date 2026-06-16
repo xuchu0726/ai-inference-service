@@ -1,0 +1,23 @@
+[1/3] gsm8k_0001 status=200 ok=True expected=18 predicted=9 correct=False latency=10.614s
+[2/3] gsm8k_0002 status=200 ok=True expected=3 predicted=1 correct=False latency=10.642s
+[3/3] gsm8k_0003 status=200 ok=True expected=70000 predicted=150 correct=False latency=10.644s
+===== GSM8K SUMMARY =====
+total_cases: 3
+successful_api_cases: 3
+failed_api_cases: 0
+api_error_rate: 0.0
+parseable_answer_cases: 3
+correct_cases: 0
+accuracy_all_cases: 0.0
+accuracy_successful_api_cases: 0.0
+client_latency_avg: 10.633586
+client_latency_p50: 10.642188
+client_latency_p95: 10.644264
+server_latency_avg: 10.630942
+server_latency_p50: 10.640623
+server_latency_p95: 10.64244
+tokens_per_second_avg: 24.080698
+tokens_per_second_p50: 24.058742
+tokens_per_second_p95: 24.122132
+output_tokens_avg: 256.0
+saved_summary: results/week2_hardening/gsm8k_w8a8_diagnostic_3_patchcheck_summary_20260616.csv

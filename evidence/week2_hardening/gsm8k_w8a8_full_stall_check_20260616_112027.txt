@@ -1,0 +1,79 @@
+===== time =====
+Tue Jun 16 11:20:27 UTC 2026
+
+===== csv progress =====
+150 results/week2_hardening/gsm8k_w8a8_full_budget0_fixed_20260616.csv
+
+===== latest csv rows =====
+gsm8k_0145,200,True,True,20,20,10.633308,10.63172866217792,vllm_w8a8,Seed-OSS-36B-Instruct-W8A8,vllm_server,316,254,23.890753,256,0,"Kim has started his own housekeeping business and is calculating how much profit he will make from his clients. He already has 
+gsm8k_0146,200,True,True,4000,4000,10.714935,10.713702615350485,vllm_w8a8,Seed-OSS-36B-Instruct-W8A8,vllm_server,231,256,23.894634,256,0,John has 10 hectares of a pineapple field. There are 100 pineapples per hectare. John can harvest his pineapples every 3 mo
+gsm8k_0147,200,True,True,2125,2125,8.350296,8.348743418231606,vllm_w8a8,Seed-OSS-36B-Instruct-W8A8,vllm_server,266,202,24.195258,256,0,"Johnny is picking up the toys on the floor of his room.  He'd dumped a lego boxed set with 500 pieces on the floor, and anot
+gsm8k_0148,200,True,False,75,6,10.652875,10.651357235386968,vllm_w8a8,Seed-OSS-36B-Instruct-W8A8,vllm_server,308,256,24.034496,256,0,"Debra is monitoring a beehive to see how many bees come and go in a day. She sees 30 bees leave the hive in the first 6 hours,
+gsm8k_0149,200,True,True,30,30,7.309921,7.308458741754293,vllm_w8a8,Seed-OSS-36B-Instruct-W8A8,vllm_server,248,175,23.944857,256,0,Brittany and her mom go to the museum. The cost of admission is $12 for adults and $10 for children. Brittany's mom gives the cas
+
+===== running processes =====
+root           1       0  0 10:11 ?        00:00:00 /sbin/docker-init -- vllm serve /workspace/models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8 --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --dtype bfloat16 --quantization compressed-tensors --max-model-len 4096 --max-num-batched-tokens 8192 --max-num-seqs 16 --gpu-memory-utilization 0.90 --trust-remote-code --enforce-eager
+root          57       1  0 10:11 ?        00:00:36 /usr/bin/python3 /usr/local/bin/vllm serve /workspace/models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8 --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --dtype bfloat16 --quantization compressed-tensors --max-model-len 4096 --max-num-batched-tokens 8192 --max-num-seqs 16 --gpu-memory-utilization 0.90 --trust-remote-code --enforce-eager
+root        1034     784 53 10:11 ?        00:37:00 VLLM::Worker_TP0
+root        1035     784 41 10:11 ?        00:28:13 VLLM::Worker_TP1
+root        2291     547  0 10:53 pts/0    00:00:00 python3 -u scripts/week2_hardening/vllm_generate_adapter.py
+root        2323     547  0 10:59 pts/0    00:00:00 python3 scripts/run_gsm8k_full_benchmark.py --url http://127.0.0.1:8010/generate --dataset data/eval/gsm8k_test.jsonl --output results/week2_hardening/gsm8k_w8a8_full_budget0_fixed_20260616.csv --summary-output results/week2_hardening/gsm8k_w8a8_full_budget0_fixed_summary_20260616.csv --max-new-tokens 256 --temperature 0 --thinking-budget 0 --timeout-seconds 1800 --sleep-seconds 0
+
+===== gpu =====
+Tue Jun 16 11:20:27 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:07:00.0 Off |                    0 |
+| N/A   44C    P0            201W /  400W |   73351MiB /  81920MiB |    100%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:BD:00.0 Off |                    0 |
+| N/A   44C    P0            204W /  400W |   73351MiB /  81920MiB |     47%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            1034      C   VLLM::Worker_TP0                      73342MiB |
+|    1   N/A  N/A            1035      C   VLLM::Worker_TP1                      73342MiB |
++-----------------------------------------------------------------------------------------+
+
+===== adapter log tail =====
+127.0.0.1 - - [16/Jun/2026 11:16:28] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:16:36] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:16:46] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:16:56] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:17:04] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:17:12] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:17:19] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:17:25] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:17:30] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:17:40] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:17:51] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:17:56] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:18:01] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:18:09] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:18:19] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:18:25] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:18:30] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:18:35] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:18:46] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:18:57] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:19:04] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:19:11] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:19:21] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:19:29] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:19:37] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:19:48] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:19:59] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:20:07] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:20:18] "POST /generate HTTP/1.1" 200 -
+127.0.0.1 - - [16/Jun/2026 11:20:25] "POST /generate HTTP/1.1" 200 -

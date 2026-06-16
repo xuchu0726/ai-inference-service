@@ -1,0 +1,45 @@
+===== GSM8K related file inventory =====
+time: Tue Jun 16 10:24:21 UTC 2026
+
+===== candidate scripts =====
+scripts/analyze_benchmark.py
+scripts/analyze_vllm_benchmark.py
+scripts/benchmark.py
+scripts/benchmark_concurrency.py
+scripts/benchmark_context_length.py
+scripts/benchmark_vllm_backend.py
+scripts/eval_week2_reasoning_codegen.py
+scripts/run_gsm8k_full_benchmark.py
+scripts/run_seed_oss_codegen_eval_20_20260614.py
+scripts/run_seed_oss_codegen_eval_20_repair_20260614.py
+scripts/run_seed_oss_codegen_eval_additional_30_20260615.py
+scripts/run_week2_eval_mini.py
+
+===== existing GSM8K result files =====
+logs/week2_fastapi_gsm8k_seed_oss.log
+logs/week2_gsm8k_diagnostic_budget0_10.log
+logs/week2_gsm8k_diagnostic_budget512_10.log
+logs/week2_gsm8k_full_seed_oss.log
+logs/week2_gsm8k_full_seed_oss_budget0.log
+logs/week2_gsm8k_full_seed_oss_max768.log
+logs/week2_gsm8k_mini_seed_oss.log
+logs/week2_gsm8k_vllm_import_failure_diagnostic.txt
+logs/week2_nvidia_smi_after_gsm8k_full_budget0.txt
+logs/week2_nvidia_smi_after_gsm8k_mini_seed_oss.txt
+logs/week2_nvidia_smi_after_vllm_gsm8k_startup.txt
+logs/week2_seed_oss_vllm_gsm8k_64k.log
+logs/week2_seed_oss_vllm_gsm8k_64k_clean_env.log
+results/week2_fastapi_metrics_after_gsm8k_full_budget0.txt
+results/week2_gsm8k_diagnostic_budget0_10.csv
+results/week2_gsm8k_diagnostic_budget0_10_summary.csv
+results/week2_gsm8k_diagnostic_budget512_10.csv
+results/week2_gsm8k_diagnostic_budget512_10_summary.csv
+results/week2_gsm8k_fastapi_health.json
+results/week2_gsm8k_full_seed_oss.csv
+results/week2_gsm8k_full_seed_oss_budget0.csv
+results/week2_gsm8k_full_seed_oss_budget0_summary.csv
+results/week2_gsm8k_full_seed_oss_max768.csv
+results/week2_gsm8k_mini_seed_oss.csv
+results/week2_gsm8k_vllm_metrics_head.txt
+results/week2_gsm8k_vllm_models.json
+results/week2_vllm_metrics_after_gsm8k_full_budget0.txt

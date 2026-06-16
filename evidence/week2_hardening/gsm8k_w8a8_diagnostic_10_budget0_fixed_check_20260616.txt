@@ -1,0 +1,23 @@
+===== W8A8 GSM8K diagnostic 10 budget0 fixed =====
+time: Tue Jun 16 10:58:20 UTC 2026
+
+===== summary =====
+total_cases,successful_api_cases,failed_api_cases,api_error_rate,parseable_answer_cases,correct_cases,accuracy_all_cases,accuracy_successful_api_cases,client_latency_avg,client_latency_p50,client_latency_p95,server_latency_avg,server_latency_p50,server_latency_p95,tokens_per_second_avg,tokens_per_second_p50,tokens_per_second_p95,output_tokens_avg
+10,10,0,0.0,10,8,0.8,0.8,9.248776,10.120254,10.87668,9.246895,10.118825,10.875063,23.67406,23.644757,23.893342,218.8
+
+===== compact check =====
+rows 10
+parseable 10
+correct 8
+has_seed_think 0
+output_tokens ['196', '112', '256', '161', '216', '256', '234', '245', '256', '256']
+gsm8k_0001 expected 18 predicted 18 correct True tokens 196
+gsm8k_0002 expected 3 predicted 3 correct True tokens 112
+gsm8k_0003 expected 70000 predicted 3 correct False tokens 256
+gsm8k_0004 expected 540 predicted 540 correct True tokens 161
+gsm8k_0005 expected 20 predicted 20 correct True tokens 216
+gsm8k_0006 expected 64 predicted 64 correct True tokens 256
+gsm8k_0007 expected 260 predicted 260 correct True tokens 234
+gsm8k_0008 expected 160 predicted 160 correct True tokens 245
+gsm8k_0009 expected 45 predicted 80 correct False tokens 256
+gsm8k_0010 expected 460 predicted 460 correct True tokens 256

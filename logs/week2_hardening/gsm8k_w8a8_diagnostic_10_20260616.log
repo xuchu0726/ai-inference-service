@@ -1,0 +1,30 @@
+[1/10] gsm8k_0001 status=200 ok=True expected=18 predicted= correct=False latency=10.630s
+[2/10] gsm8k_0002 status=200 ok=True expected=3 predicted= correct=False latency=10.647s
+[3/10] gsm8k_0003 status=200 ok=True expected=70000 predicted= correct=False latency=10.629s
+[4/10] gsm8k_0004 status=200 ok=True expected=540 predicted= correct=False latency=10.664s
+[5/10] gsm8k_0005 status=200 ok=True expected=20 predicted= correct=False latency=10.669s
+[6/10] gsm8k_0006 status=200 ok=True expected=64 predicted= correct=False latency=10.691s
+[7/10] gsm8k_0007 status=200 ok=True expected=260 predicted= correct=False latency=10.624s
+[8/10] gsm8k_0008 status=200 ok=True expected=160 predicted= correct=False latency=10.581s
+[9/10] gsm8k_0009 status=200 ok=True expected=45 predicted= correct=False latency=10.638s
+[10/10] gsm8k_0010 status=200 ok=True expected=460 predicted= correct=False latency=10.720s
+===== GSM8K SUMMARY =====
+total_cases: 10
+successful_api_cases: 10
+failed_api_cases: 0
+api_error_rate: 0.0
+parseable_answer_cases: 0
+correct_cases: 0
+accuracy_all_cases: 0.0
+accuracy_successful_api_cases: 0.0
+client_latency_avg: 10.649376
+client_latency_p50: 10.642581
+client_latency_p95: 10.706806
+server_latency_avg: 10.647466
+server_latency_p50: 10.640897
+server_latency_p95: 10.705127
+tokens_per_second_avg: 24.043567
+tokens_per_second_p50: 24.058127
+tokens_per_second_p95: 24.153459
+output_tokens_avg: 256.0
+saved_summary: results/week2_hardening/gsm8k_w8a8_diagnostic_10_summary_20260616.csv

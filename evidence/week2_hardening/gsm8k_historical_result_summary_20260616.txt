@@ -1,0 +1,46 @@
+===== GSM8K historical summaries =====
+time: Tue Jun 16 10:26:04 UTC 2026
+
+
+----- results/week2_gsm8k_full_seed_oss_budget0_summary.csv -----
+2 results/week2_gsm8k_full_seed_oss_budget0_summary.csv
+total_cases,successful_api_cases,failed_api_cases,api_error_rate,parseable_answer_cases,correct_cases,accuracy_all_cases,accuracy_successful_api_cases,client_latency_avg,client_latency_p50,client_latency_p95,server_latency_avg,server_latenc
+1319,1319,0,0.0,1319,999,0.757392,0.757392,5.399892,5.508889,6.690486,5.398112,5.507372,6.688461,38.300851,38.3083,38.3434,206.767248
+total_cases,successful_api_cases,failed_api_cases,api_error_rate,parseable_answer_cases,correct_cases,accuracy_all_cases,accuracy_successful_api_cases,client_latency_avg,client_latency_p50,client_latency_p95,server_latency_avg,server_latenc
+1319,1319,0,0.0,1319,999,0.757392,0.757392,5.399892,5.508889,6.690486,5.398112,5.507372,6.688461,38.300851,38.3083,38.3434,206.767248
+
+----- results/week2_gsm8k_full_seed_oss_budget0.csv -----
+1320 results/week2_gsm8k_full_seed_oss_budget0.csv
+case_id,status_code,ok,correct,expected_answer,predicted_answer,client_latency_seconds,server_latency_seconds,backend,model_name,device,input_tokens,output_tokens,tokens_per_second,max_new_tokens,thinking_budget,question_preview,response_pr
+gsm8k_0001,200,True,True,18,18,4.866792,4.863461,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,175,186,38.2444,256,0,Janet’s ducks lay 16 eggs per day. She eats three for breakfast every morning and bakes muffins for her friends e
+gsm8k_0002,200,True,True,3,3,3.236433,3.234645,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,137,124,38.335,256,0,A robe takes 2 bolts of blue fiber and half that much white fiber.  How many bolts in total does it take?,"To solve th
+gsm8k_1317,200,True,True,230,230,4.961998,4.960274,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,186,190,38.3043,256,0,Mark's car breaks down and he needs to get a new radiator.  The cost for a new radiator is $400 but he goes to ge
+gsm8k_1318,200,True,True,5,5,6.682511,6.680816,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,149,256,38.3187,256,0,"Farmer Brown has 20 animals on his farm, all either chickens or cows. They have a total of 70 legs, all together. Ho
+gsm8k_1319,200,True,True,14,14,3.555104,3.553387,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,157,136,38.2733,256,0,"Henry and 3 of his friends order 7 pizzas for lunch. Each pizza is cut into 8 slices. If Henry and his friends wan
+
+----- results/week2_gsm8k_full_seed_oss_max768.csv -----
+56 results/week2_gsm8k_full_seed_oss_max768.csv
+case_id,status_code,ok,correct,expected_answer,predicted_answer,client_latency_seconds,server_latency_seconds,backend,model_name,device,input_tokens,output_tokens,tokens_per_second,max_new_tokens,thinking_budget,question_preview,response_pr
+gsm8k_0001,200,True,True,18,18,13.291706,13.288285,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,189,509,38.3044,768,512,Janet’s ducks lay 16 eggs per day. She eats three for breakfast every morning and bakes muffins for her frien
+gsm8k_0002,200,True,True,3,3,10.168676,10.166916,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,151,390,38.3597,768,512,A robe takes 2 bolts of blue fiber and half that much white fiber.  How many bolts in total does it take?,"<seed:
+gsm8k_0053,200,True,False,15,2,20.01888,20.017133,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,187,768,38.3671,768,512,"Uriah's book bag is getting too heavy for him. He needs to remove 15 pounds from it. His comic books weigh 1/4 
+gsm8k_0054,200,True,True,40,40,16.42166,16.419907,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,225,630,38.3681,768,512,"A mechanic charges different rates to repair the tires of trucks and cars.  For each truck tire that is repaire
+gsm8k_0055,200,True,True,40,40,17.288275,17.285713,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,207,662,38.2975,768,512,The Doubtfire sisters are driving home with 7 kittens adopted from the local animal shelter when their mother c
+
+----- results/week2_gsm8k_full_seed_oss.csv -----
+107 results/week2_gsm8k_full_seed_oss.csv
+case_id,status_code,ok,correct,expected_answer,predicted_answer,client_latency_seconds,server_latency_seconds,backend,model_name,device,input_tokens,output_tokens,tokens_per_second,max_new_tokens,thinking_budget,question_preview,response_pr
+gsm8k_0001,200,True,False,18,9,6.702974,6.700482,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,189,256,38.2062,256,512,Janet’s ducks lay 16 eggs per day. She eats three for breakfast every morning and bakes muffins for her friends
+gsm8k_0002,200,True,False,3,256,6.685869,6.683998,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,151,256,38.3004,256,512,A robe takes 2 bolts of blue fiber and half that much white fiber.  How many bolts in total does it take?,"<seed
+gsm8k_0104,200,True,False,140,253,6.688588,6.686831,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,189,256,38.2842,256,512,"A fog bank rolls in from the ocean to cover a city. It takes 10 minutes to cover every 3 miles of the city. I
+gsm8k_0105,200,True,False,500,252,6.683492,6.681798,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,175,256,38.313,256,512,"Poppy is solving a 1000-piece jigsaw puzzle. She places a quarter of the pieces on the board, then her mom pla
+gsm8k_0106,200,True,True,20,20,6.678787,6.677285,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,154,256,38.3389,256,512,"Cody eats three times as many cookies as Amir eats. If Amir eats 5 cookies, how many cookies do both of them ea
+
+----- results/week2_gsm8k_mini_seed_oss.csv -----
+6 results/week2_gsm8k_mini_seed_oss.csv
+case_id,task_type,status_code,ok,client_latency_seconds,server_latency_seconds,backend,model_name,device,input_tokens,output_tokens,tokens_per_second,max_new_tokens,thinking_budget,simple_correctness,response_preview,error
+gsm8k_001,gsm8k,200,True,7.550717,7.545866,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,153,256,33.9259,256,512,pass,"<seed:think>\nGot it, let's see. The problem is about trees in a park. First, there are 15 trees. Then workers pl
+gsm8k_002,gsm8k,200,True,6.680467,6.678412,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,154,256,38.3325,256,512,pass,"<seed:think>\nGot it, let's see. The problem is about Alice buying notebooks and getting change. First, I need to
+gsm8k_003,gsm8k,200,True,6.684743,6.682847,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,152,256,38.307,256,512,pass,"<seed:think>\nGot it, let's try to solve this problem step by step. First, the problem says Tom starts with 12 app
+gsm8k_004,gsm8k,200,True,6.677434,6.675526,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,144,256,38.349,256,512,pass,"<seed:think>\nGot it, let's see. The problem is about a train traveling at 60 miles per hour for 2.5 hours, and we
+gsm8k_005,gsm8k,200,True,6.685054,6.683265,vllm,ByteDance-Seed/Seed-OSS-36B-Instruct,vllm_server,142,256,38.3046,256,512,pass,"<seed:think>\nGot it, let's see. The problem says there are 24 students in the class, and three quarters passed. 
