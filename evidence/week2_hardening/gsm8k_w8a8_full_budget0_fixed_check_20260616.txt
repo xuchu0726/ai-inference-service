@@ -1,0 +1,58 @@
+===== W8A8 量化模型 GSM8K 全量精度回归检查 =====
+记录时间：Tue Jun 16 14:21:54 UTC 2026
+
+一、实验目的
+本次记录用于确认 W8A8 量化模型在 GSM8K 全量测试集上的数学推理精度，并与既有 BF16 基线结果进行同口径对比。
+对比重点包括准确率变化、正确样本数、可解析答案数量、API 错误率和生成 token 统计，用于评估量化后是否存在明显精度损耗。
+
+二、评测口径
+测试集：GSM8K test split，本地文件为 data/eval/gsm8k_test.jsonl。
+样本数量检查：
+1319 data/eval/gsm8k_test.jsonl
+
+评测脚本：scripts/run_gsm8k_full_benchmark.py
+W8A8 结果文件：results/week2_hardening/gsm8k_w8a8_full_budget0_fixed_20260616.csv
+W8A8 汇总文件：results/week2_hardening/gsm8k_w8a8_full_budget0_fixed_summary_20260616.csv
+BF16 基线汇总文件：results/week2_gsm8k_full_seed_oss_budget0_summary.csv
+生成参数：temperature=0，max_new_tokens=256，thinking_budget=0。
+服务后端：vLLM OpenAI-compatible serving，经本地 adapter 转发到 /v1/chat/completions。
+
+三、全量完成性检查
+W8A8 明细 CSV 行数如下。由于 CSV 包含 1 行 header，1320 行表示 1319 条样本全部完成。
+1320 results/week2_hardening/gsm8k_w8a8_full_budget0_fixed_20260616.csv
+
+W8A8 明细最后 3 行预览：
+gsm8k_1317,200,True,True,230,230,8.803643,8.801985267549753,vllm_w8a8,Seed-OSS-36B-Instruct-W8A8,vllm_server,258,209,23.744643,256,0,Mark's car breaks down and he needs to get a new radiator.  The cost for a new radiator is $400 but he goes to get it at a junk
+gsm8k_1318,200,True,True,5,5,10.923023,10.921255454421043,vllm_w8a8,Seed-OSS-36B-Instruct-W8A8,vllm_server,221,256,23.440529,256,0,"Farmer Brown has 20 animals on his farm, all either chickens or cows. They have a total of 70 legs, all together. How many of th
+gsm8k_1319,200,True,True,14,14,5.482035,5.47966287471354,vllm_w8a8,Seed-OSS-36B-Instruct-W8A8,vllm_server,229,130,23.724087,256,0,"Henry and 3 of his friends order 7 pizzas for lunch. Each pizza is cut into 8 slices. If Henry and his friends want to share the 
+
+四、W8A8 汇总结果
+total_cases,successful_api_cases,failed_api_cases,api_error_rate,parseable_answer_cases,correct_cases,accuracy_all_cases,accuracy_successful_api_cases,client_latency_avg,client_latency_p50,client_latency_p95,server_latency_avg,server_latency_p50,server_latency_p95,tokens_per_second_avg,tokens_per_second_p50,tokens_per_second_p95,output_tokens_avg
+1319,1319,0,0.0,1319,986,0.747536,0.747536,8.652977,9.025098,10.833653,8.651388,9.023783,10.832297,23.837521,23.847953,24.188737,206.278999
+
+五、BF16 与 W8A8 同口径对比
+BF16 基线准确率：0.757392
+W8A8 量化模型准确率：0.747536
+准确率绝对变化：-0.009856
+准确率百分点变化：-0.9856 pp
+BF16 正确样本数：999 / 1319
+W8A8 正确样本数：986 / 1319
+W8A8 API 错误率：0.0
+W8A8 可解析答案样本数：1319
+W8A8 平均输出 token 数：206.278999
+W8A8 平均生成速度 tokens/s：23.837521
+
+结论：在当前评测口径下，W8A8 量化模型相较 BF16 基线准确率下降 0.9856 个百分点。
+
+六、运行环境状态快照
+当前关键进程：
+root           1       0  0 10:11 ?        00:00:00 /sbin/docker-init -- vllm serve /workspace/models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8 --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --dtype bfloat16 --quantization compressed-tensors --max-model-len 4096 --max-num-batched-tokens 8192 --max-num-seqs 16 --gpu-memory-utilization 0.90 --trust-remote-code --enforce-eager
+root          57       1  0 10:11 ?        00:01:32 /usr/bin/python3 /usr/local/bin/vllm serve /workspace/models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8 --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --dtype bfloat16 --quantization compressed-tensors --max-model-len 4096 --max-num-batched-tokens 8192 --max-num-seqs 16 --gpu-memory-utilization 0.90 --trust-remote-code --enforce-eager
+root        1034     784 99 10:11 ?        04:12:16 VLLM::Worker_TP0
+root        1035     784 79 10:11 ?        03:18:21 VLLM::Worker_TP1
+root        2291     547  0 10:53 pts/0    00:00:02 python3 -u scripts/week2_hardening/vllm_generate_adapter.py
+
+GPU 状态：
+index, utilization.gpu [%], memory.used [MiB], temperature.gpu, power.draw [W]
+0, 0 %, 73351 MiB, 34, 83.66 W
+1, 0 %, 73351 MiB, 34, 85.60 W

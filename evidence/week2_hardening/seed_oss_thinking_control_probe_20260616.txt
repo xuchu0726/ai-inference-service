@@ -1,0 +1,27 @@
+===== Seed-OSS thinking control probe =====
+time: Tue Jun 16 10:51:49 UTC 2026
+
+
+===== baseline =====
+content: <seed:think>\nGot it, let's see. The question is asking what 2 plus 2 is. That's a basic addition problem. I remember that when you add 2 and 2 together, the sum is 4. Let me double-check to make sure I didn't make a mistake. Starting with 2, adding 2 more would be 3, then 4. Yep, that's right. So the answer should be 4. Final answer: 4.</seed:think>2 + 2 equals 4. Final answer: 4.
+has_seed_think: True
+usage: {'prompt_tokens': 23, 'total_tokens': 138, 'completion_tokens': 115, 'prompt_tokens_details': None}
+error: None
+
+===== thinking_budget_0 =====
+content: <seed:think>\nGot it, let's see. The question is asking what 2 plus 2 is. That's a basic addition problem. I remember that when you add 2 and 2 together, the sum is 4. Let me double-check to make sure I didn't make a mistake. Starting with 2, adding 2 more would be 3, then 4. Yep, that's right. So the answer should be 4. Final answer: 4.</seed:think>2 + 2 equals 4. Final answer: 4.
+has_seed_think: True
+usage: {'prompt_tokens': 23, 'total_tokens': 138, 'completion_tokens': 115, 'prompt_tokens_details': None}
+error: None
+
+===== chat_template_kwargs_budget0 =====
+content: 2 + 2 equals 4. Final answer: 4.
+has_seed_think: False
+usage: {'prompt_tokens': 97, 'total_tokens': 112, 'completion_tokens': 15, 'prompt_tokens_details': None}
+error: None
+
+===== chat_template_kwargs_enable_false =====
+content: <seed:think>\nGot it, let's see. The question is asking what 2 plus 2 is. That's a basic addition problem. I remember that when you add 2 and 2 together, the sum is 4. Let me double-check to make sure I didn't make a mistake. Starting with 2, adding 2 more would be 3, then 4. Yep, that's right. So the answer should be 4. Final answer: 4.</seed:think>2 + 2 equals 4. Final answer: 4.
+has_seed_think: True
+usage: {'prompt_tokens': 23, 'total_tokens': 138, 'completion_tokens': 115, 'prompt_tokens_details': None}
+error: None

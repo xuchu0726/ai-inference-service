@@ -1,0 +1,35 @@
+===== W8A8 deterministic smoke check =====
+time: Tue Jun 16 10:20:57 UTC 2026
+
+===== /v1/models =====
+{"object":"list","data":[{"id":"Seed-OSS-36B-Instruct-W8A8","object":"model","created":1781605257,"owned_by":"vllm","root":"/workspace/models/Seed-OSS-36B-Instruct-W8A8","parent":null,"max_model_len":4096,"permission":[{"id":"modelperm-85bbec778ae0ea78","object":"model_permission","created":1781605257,"allow_create_engine":false,"allow_sampling":true,"allow_logprobs":true,"allow_search_indices":false,"allow_view":true,"allow_fine_tuning":false,"organization":"*","group":null,"is_blocking":false}]}]}
+
+===== deterministic generation =====
+{"id":"chatcmpl-84fae7dd14f28acd","object":"chat.completion","created":1781605257,"model":"Seed-OSS-36B-Instruct-W8A8","choices":[{"index":0,"message":{"role":"assistant","content":"<seed:think>\nGot it, let's see. The problem is to compute 2 plus 2. That's a simple addition problem. I remember that when you add 2 and 2 together, the sum is 4. Let me double-check to make sure I didn't make a mistake. Starting with 2","refusal":null,"annotations":null,"audio":null,"function_call":null,"tool_calls":[],"reasoning":null},"logprobs":null,"finish_reason":"length","stop_reason":null,"token_ids":null,"routed_experts":null}],"service_tier":null,"system_fingerprint":"vllm-0.23.0-tp2-c57d22e0","usage":{"prompt_tokens":20,"total_tokens":84,"completion_tokens":64,"prompt_tokens_details":null},"prompt_logprobs":null,"prompt_token_ids":null,"prompt_text":null,"kv_transfer_params":null}
+
+===== GPU =====
+Tue Jun 16 10:21:00 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:07:00.0 Off |                    0 |
+| N/A   39C    P0            202W /  400W |   73347MiB /  81920MiB |    100%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:BD:00.0 Off |                    0 |
+| N/A   45C    P0            205W /  400W |   73347MiB /  81920MiB |     47%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            1034      C   VLLM::Worker_TP0                      73338MiB |
+|    1   N/A  N/A            1035      C   VLLM::Worker_TP1                      73338MiB |
++-----------------------------------------------------------------------------------------+

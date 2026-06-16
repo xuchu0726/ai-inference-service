@@ -1,0 +1,2 @@
+total_cases,successful_api_cases,failed_api_cases,api_error_rate,parseable_answer_cases,correct_cases,accuracy_all_cases,accuracy_successful_api_cases,client_latency_avg,client_latency_p50,client_latency_p95,server_latency_avg,server_latency_p50,server_latency_p95,tokens_per_second_avg,tokens_per_second_p50,tokens_per_second_p95,output_tokens_avg
+1319,1319,0,0.0,1319,986,0.747536,0.747536,8.652977,9.025098,10.833653,8.651388,9.023783,10.832297,23.837521,23.847953,24.188737,206.278999

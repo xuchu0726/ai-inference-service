@@ -1,0 +1,30 @@
+===== 关机前持久化检查 =====
+Tue Jun 16 15:07:05 UTC 2026
+
+一、确认当前路径在 /workspace 下
+/workspace/ai-inference-service
+Filesystem                   Size  Used Avail Use% Mounted on
+mfs#us-md-1.runpod.net:9421  334T  242T   93T  73% /workspace
+mfs#us-md-1.runpod.net:9421  334T  242T   93T  73% /workspace
+
+二、确认关键结果文件存在
+-rw-rw-rw- 1 root root 4.4K Jun 16 14:21 evidence/week2_hardening/gsm8k_w8a8_full_budget0_fixed_check_20260616.txt
+-rw-rw-rw- 1 root root 124K Jun 16 14:09 logs/week2_hardening/gsm8k_w8a8_full_budget0_fixed_20260616.log
+-rw-rw-rw- 1 root root  90K Jun 16 14:09 logs/week2_hardening/w8a8_generate_adapter_20260616.log
+-rw-rw-rw- 1 root root 1.1M Jun 16 14:09 results/week2_hardening/gsm8k_w8a8_full_budget0_fixed_20260616.csv
+-rw-rw-rw- 1 root root  491 Jun 16 14:09 results/week2_hardening/gsm8k_w8a8_full_budget0_fixed_summary_20260616.csv
+
+三、确认 GSM8K 全量完成
+1320 results/week2_hardening/gsm8k_w8a8_full_budget0_fixed_20260616.csv
+total_cases,successful_api_cases,failed_api_cases,api_error_rate,parseable_answer_cases,correct_cases,accuracy_all_cases,accuracy_successful_api_cases,client_latency_avg,client_latency_p50,client_latency_p95,server_latency_avg,server_latency_p50,server_latency_p95,tokens_per_second_avg,tokens_per_second_p50,tokens_per_second_p95,output_tokens_avg
+1319,1319,0,0.0,1319,986,0.747536,0.747536,8.652977,9.025098,10.833653,8.651388,9.023783,10.832297,23.837521,23.847953,24.188737,206.278999
+
+四、查看最近 3 小时新生成/修改的项目文件
+2026-06-16 14:09 ./logs/week2_hardening/gsm8k_w8a8_full_budget0_fixed_20260616.log
+2026-06-16 14:09 ./logs/week2_hardening/w8a8_generate_adapter_20260616.log
+2026-06-16 14:09 ./results/week2_hardening/gsm8k_w8a8_full_budget0_fixed_20260616.csv
+2026-06-16 14:09 ./results/week2_hardening/gsm8k_w8a8_full_budget0_fixed_summary_20260616.csv
+2026-06-16 14:21 ./evidence/week2_hardening/gsm8k_w8a8_full_budget0_fixed_check_20260616.txt
+2026-06-16 15:07 ./evidence/week2_hardening/pre_gpu_release_persistence_check_20260616.txt
+
+五、检查是否有临时目录里可能丢失的项目文件

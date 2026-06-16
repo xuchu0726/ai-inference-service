@@ -1,0 +1,42 @@
+===== W8A8 vLLM ready check =====
+time: Tue Jun 16 10:13:08 UTC 2026
+
+===== process =====
+root           1       0  0 10:11 ?        00:00:00 /sbin/docker-init -- vllm serve /workspace/models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8 --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --dtype bfloat16 --quantization compressed-tensors --max-model-len 4096 --max-num-batched-tokens 8192 --max-num-seqs 16 --gpu-memory-utilization 0.90 --trust-remote-code --enforce-eager
+root          57       1 21 10:11 ?        00:00:25 /usr/bin/python3 /usr/local/bin/vllm serve /workspace/models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8 --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --dtype bfloat16 --quantization compressed-tensors --max-model-len 4096 --max-num-batched-tokens 8192 --max-num-seqs 16 --gpu-memory-utilization 0.90 --trust-remote-code --enforce-eager
+root         620      57  6 10:11 ?        00:00:06 [python3] <defunct>
+root         621      57  5 10:11 ?        00:00:04 [python3] <defunct>
+root         783      57  0 10:11 ?        00:00:00 /usr/bin/python3 -c from multiprocessing.resource_tracker import main;main(58)
+root        1566     547  0 10:13 pts/0    00:00:00 tee evidence/week2_hardening/w8a8_vllm_ready_smoke_20260616.txt
+
+===== GPU =====
+Tue Jun 16 10:13:08 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:07:00.0 Off |                    0 |
+| N/A   33C    P0             83W /  400W |   20045MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:BD:00.0 Off |                    0 |
+| N/A   39C    P0             87W /  400W |   19535MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            1034      C   VLLM::Worker_TP0                      20036MiB |
+|    1   N/A  N/A            1035      C   VLLM::Worker_TP1                      19526MiB |
++-----------------------------------------------------------------------------------------+
+
+===== /v1/models =====
+
+
+===== simple chat completion =====

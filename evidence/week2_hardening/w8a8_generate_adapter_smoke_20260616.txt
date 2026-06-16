@@ -1,0 +1,35 @@
+===== W8A8 /generate adapter smoke =====
+time: Tue Jun 16 10:31:14 UTC 2026
+
+===== adapter health =====
+{"status": "ok", "model_name": "Seed-OSS-36B-Instruct-W8A8", "upstream": "http://127.0.0.1:8002/v1/chat/completions"}
+
+===== adapter generate =====
+{"text": "<seed:think>\nGot it, let's see. The problem is asking what 2 plus 2 is. Hmm, I remember that when you add two numbers together, you're combining their quantities. So if I have 2 apples and someone gives me 2 more, how many do I have total? Let's count: 1, 2 (that's the first 2), then 3, 4 (the second 2). Oh right, 2 plus 2 equals 4. Yeah, that makes sense. I think that's the basic addition fact. No tricks here, just simple addition. So the answer should be 4.</seed:think>Final answer: 4.", "generated_text": "<seed:think>\nGot it, let's see. The problem is asking what 2 plus 2 is. Hmm, I remember that when you add two numbers together, you're combining their quantities. So if I have 2 apples and someone gives me 2 more, how many do I have total? Let's count: 1, 2 (that's the first 2), then 3, 4 (the second 2). Oh right, 2 plus 2 equals 4. Yeah, that makes sense. I think that's the basic addition fact. No tricks here, just simple addition. So the answer should be 4.</seed:think>Final answer: 4.", "backend": "vllm_w8a8", "model_name": "Seed-OSS-36B-Instruct-W8A8", "device": "vllm_server", "input_tokens": 40, "output_tokens": 141, "tokens_per_second": 24.062117, "latency_seconds": 5.859833458438516, "server_latency_seconds": 5.859833458438516, "finish_reason": "stop", "upstream_id": "chatcmpl-a48095882db29a06", "system_fingerprint": "vllm-0.23.0-tp2-c57d22e0"}
+
+===== GPU =====
+Tue Jun 16 10:31:20 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:07:00.0 Off |                    0 |
+| N/A   40C    P0            194W /  400W |   73347MiB /  81920MiB |    100%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:BD:00.0 Off |                    0 |
+| N/A   41C    P0            199W /  400W |   73347MiB /  81920MiB |     46%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            1034      C   VLLM::Worker_TP0                      73338MiB |
+|    1   N/A  N/A            1035      C   VLLM::Worker_TP1                      73338MiB |
++-----------------------------------------------------------------------------------------+

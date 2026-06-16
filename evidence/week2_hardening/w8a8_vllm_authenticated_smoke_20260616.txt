@@ -1,0 +1,35 @@
+===== W8A8 authenticated ready check =====
+time: Tue Jun 16 10:19:48 UTC 2026
+
+===== /v1/models =====
+{"object":"list","data":[{"id":"Seed-OSS-36B-Instruct-W8A8","object":"model","created":1781605188,"owned_by":"vllm","root":"/workspace/models/Seed-OSS-36B-Instruct-W8A8","parent":null,"max_model_len":4096,"permission":[{"id":"modelperm-ae7ad57d27791678","object":"model_permission","created":1781605188,"allow_create_engine":false,"allow_sampling":true,"allow_logprobs":true,"allow_search_indices":false,"allow_view":true,"allow_fine_tuning":false,"organization":"*","group":null,"is_blocking":false}]}]}
+
+===== simple chat completion =====
+{"id":"chatcmpl-ac43a0dd9c83a20d","object":"chat.completion","created":1781605188,"model":"Seed-OSS-36B-Instruct-W8A8","choices":[{"index":0,"message":{"role":"assistant","content":"<seed:think>\nGot it, let's see","refusal":null,"annotations":null,"audio":null,"function_call":null,"tool_calls":[],"reasoning":null},"logprobs":null,"finish_reason":"length","stop_reason":null,"token_ids":null,"routed_experts":null}],"service_tier":null,"system_fingerprint":"vllm-0.23.0-tp2-c57d22e0","usage":{"prompt_tokens":15,"total_tokens":23,"completion_tokens":8,"prompt_tokens_details":null},"prompt_logprobs":null,"prompt_token_ids":null,"prompt_text":null,"kv_transfer_params":null}
+
+===== GPU =====
+Tue Jun 16 10:19:49 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:07:00.0 Off |                    0 |
+| N/A   37C    P0            198W /  400W |   73347MiB /  81920MiB |     79%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:BD:00.0 Off |                    0 |
+| N/A   41C    P0            157W /  400W |   73347MiB /  81920MiB |     24%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            1034      C   VLLM::Worker_TP0                      73338MiB |
+|    1   N/A  N/A            1035      C   VLLM::Worker_TP1                      73338MiB |
++-----------------------------------------------------------------------------------------+
