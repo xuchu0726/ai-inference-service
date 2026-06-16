@@ -1,0 +1,123 @@
+===== vLLM 安装 I/O 错误诊断快照 =====
+时间：Mon Jun 15 17:20:53 UTC 2026
+
+结论：vLLM 0.11.2 在 /workspace/venvs/vllm-serving 安装阶段失败，错误为 OSError: [Errno 5] Input/output error。
+
+===== pip 进程 =====
+
+===== 安装日志尾部 =====
+Downloading pyzmq-27.1.0-cp311-cp311-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl (857 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 857.0/857.0 kB 257.7 MB/s  0:00:00
+Downloading ray-2.55.1-cp311-cp311-manylinux2014_x86_64.whl (73.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.7/73.7 MB 84.4 MB/s  0:00:00
+Downloading msgpack-1.2.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (423 kB)
+Downloading click-8.4.1-py3-none-any.whl (116 kB)
+Downloading protobuf-7.35.1-cp310-abi3-manylinux2014_x86_64.whl (327 kB)
+Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
+Downloading regex-2026.5.9-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (799 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 799.8/799.8 kB 827.7 MB/s  0:00:00
+Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+Downloading charset_normalizer-3.4.7-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (214 kB)
+Downloading urllib3-2.7.0-py3-none-any.whl (131 kB)
+Downloading certifi-2026.5.20-py3-none-any.whl (134 kB)
+Downloading rich_toolkit-0.20.1-py3-none-any.whl (35 kB)
+Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+Downloading pygments-2.20.0-py3-none-any.whl (1.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 833.6 MB/s  0:00:00
+Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Downloading rignore-0.7.6-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (959 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 959.5/959.5 kB 706.0 MB/s  0:00:00
+Downloading rpds_py-2026.5.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (378 kB)
+Downloading safetensors-0.8.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (516 kB)
+Downloading sentry_sdk-2.62.0-py3-none-any.whl (490 kB)
+Downloading supervisor-4.3.0-py2.py3-none-any.whl (320 kB)
+Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 289.9 MB/s  0:00:00
+Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 550.1 MB/s  0:00:00
+Downloading tiktoken-0.13.0-cp311-cp311-manylinux_2_28_x86_64.whl (1.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 581.8 MB/s  0:00:00
+Downloading tqdm-4.68.2-py3-none-any.whl (78 kB)
+Downloading typer-0.26.7-py3-none-any.whl (122 kB)
+Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+Downloading uvicorn-0.49.0-py3-none-any.whl (71 kB)
+Downloading httptools-0.8.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (464 kB)
+Downloading uvloop-0.22.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (3.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.8/3.8 MB 441.6 MB/s  0:00:00
+Downloading watchfiles-1.2.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (456 kB)
+Downloading websockets-16.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (184 kB)
+Downloading aiohttp-3.14.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 707.2 MB/s  0:00:00
+Downloading multidict-6.7.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (246 kB)
+Downloading yarl-1.24.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (106 kB)
+Downloading aiohappyeyeballs-2.6.2-py3-none-any.whl (15 kB)
+Downloading aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+Downloading frozenlist-1.8.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (231 kB)
+Downloading propcache-0.5.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (58 kB)
+Downloading astor-0.8.1-py2.py3-none-any.whl (27 kB)
+Downloading blake3-1.0.8-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (387 kB)
+Downloading cachetools-7.1.4-py3-none-any.whl (16 kB)
+Downloading cbor2-6.1.2-cp311-cp311-manylinux_2_28_x86_64.whl (468 kB)
+Downloading cloudpickle-3.1.2-py3-none-any.whl (22 kB)
+Downloading cupy_cuda12x-14.1.1-cp311-cp311-manylinux2014_x86_64.whl (134.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.0/134.0 MB 76.4 MB/s  0:00:01
+Downloading dill-0.4.1-py3-none-any.whl (120 kB)
+Downloading einops-0.8.2-py3-none-any.whl (65 kB)
+Downloading jmespath-1.1.0-py3-none-any.whl (20 kB)
+Downloading loguru-0.7.3-py3-none-any.whl (61 kB)
+Downloading msgspec-0.21.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (219 kB)
+Downloading ninja-1.13.0-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (180 kB)
+Downloading nvidia_ml_py-13.610.43-py3-none-any.whl (53 kB)
+Downloading partial_json_parser-0.2.1.1.post7-py3-none-any.whl (10 kB)
+Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
+Downloading py_cpuinfo-9.0.0-py3-none-any.whl (22 kB)
+Downloading pybase64-1.4.3-cp311-cp311-manylinux1_x86_64.manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_5_x86_64.whl (71 kB)
+Downloading python_json_logger-4.1.0-py3-none-any.whl (15 kB)
+Downloading scipy-1.17.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (35.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 35.3/35.3 MB 62.6 MB/s  0:00:00
+Downloading sentencepiece-0.2.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (1.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 167.3 MB/s  0:00:00
+Downloading setproctitle-1.3.7-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (32 kB)
+Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+Downloading tabulate-0.10.0-py3-none-any.whl (39 kB)
+Installing collected packages: supervisor, py-cpuinfo, nvidia-ml-py, nvidia-cusparselt-cu12, mpmath, websockets, uvloop, urllib3, typing_extensions, triton, tqdm, tabulate, sympy, sniffio, shellingham, setproctitle, sentencepiece, safetensors, rpds-py, rignore, regex, pyzmq, pyyaml, python-multipart, python-json-logger, python-dotenv, pygments, pycountry, pybase64, psutil, protobuf, propcache, prometheus_client, pillow, partial-json-parser, outlines_core, nvidia-nvtx-cu12, nvidia-nvshmem-cu12, nvidia-nvjitlink-cu12, nvidia-nccl-cu12, nvidia-curand-cu12, nvidia-cufile-cu12, nvidia-cudnn-frontend, nvidia-cuda-runtime-cu12, nvidia-cuda-nvrtc-cu12, nvidia-cuda-cupti-cu12, nvidia-cublas-cu12, numpy, ninja, networkx, multidict, msgspec, msgpack, mdurl, MarkupSafe, loguru, llvmlite, llguidance, lark, jmespath, jiter, interegular, idna, httptools, hf-xet, h11, fsspec, frozenlist, filelock, fastar, einops, docstring-parser, dnspython, distro, diskcache, dill, detect-installer, cuda-pathfinder, cloudpickle, click, charset_normalizer, certifi, cbor2, cachetools, attrs, astor, annotated-types, annotated-doc, aiohappyeyeballs, yarl, uvicorn, typing-inspection, sentry-sdk, scipy, requests, referencing, pydantic-core, opencv-python-headless, nvidia-cusparse-cu12, nvidia-cufft-cu12, nvidia-cudnn-cu12, numba, markdown-it-py, jinja2, httpcore, email-validator, depyf, cupy-cuda12x, cuda-core, cuda-bindings, blake3, apache-tvm-ffi, anyio, aiosignal, watchfiles, tiktoken, starlette, rich, pydantic, nvidia-cusolver-cu12, jsonschema-specifications, huggingface-hub, httpx, gguf, cuda-python, aiohttp, typer, torch, tokenizers, rich-toolkit, pydantic-settings, pydantic-extra-types, prometheus-fastapi-instrumentator, openai-harmony, openai, nvidia-cutlass-dsl-libs-base, lm-format-enforcer, jsonschema, fastapi, anthropic, xformers, transformers, torchvision, torchaudio, ray, nvidia-cutlass-dsl, model-hosting-container-standards, fastapi-cloud-cli, fastapi-cli, xgrammar, mistral_common, flashinfer-python, compressed-tensors, vllm
+ERROR: Could not install packages due to an OSError: [Errno 5] Input/output error
+
+
+
+===== 文件系统 =====
+Filesystem                         Size  Used Avail Use% Mounted on
+overlay                             50G  3.0G   48G   6% /
+tmpfs                               64M     0   64M   0% /dev
+mfs#us-md-1.runpod.net:9421        334T  241T   94T  73% /workspace
+shm                                233G     0  233G   0% /dev/shm
+/dev/mapper/ubuntu--vg-ubuntu--lv  1.8T   44G  1.6T   3% /usr/bin/nvidia-smi
+/dev/mapper/xfsdata-xfs_lv          21T  5.6T   16T  27% /etc/hosts
+tmpfs                              201G   38M  201G   1% /run/nvidia-persistenced/socket
+tmpfs                              4.0K  4.0K     0 100% /run/nvidia-ctk-hook9ac1acae-3016-4a3b-b22f-e23719adcd00
+tmpfs                             1002G     0 1002G   0% /proc/acpi
+tmpfs                             1002G     0 1002G   0% /proc/scsi
+tmpfs                             1002G     0 1002G   0% /sys/devices/virtual/powercap
+tmpfs                             1002G     0 1002G   0% /sys/firmware
+
+===== inode =====
+Filesystem                        Inodes IUsed IFree IUse% Mounted on
+overlay                             2.1G   15M  2.1G    1% /
+tmpfs                               251M    33  251M    1% /dev
+mfs#us-md-1.runpod.net:9421         1.1G   42M  1.1G    4% /workspace
+shm                                 251M     1  251M    1% /dev/shm
+/dev/mapper/ubuntu--vg-ubuntu--lv   112M  171K  112M    1% /usr/bin/nvidia-smi
+/dev/mapper/xfsdata-xfs_lv          2.1G   15M  2.1G    1% /etc/hosts
+tmpfs                               251M  9.7K  251M    1% /run/nvidia-persistenced/socket
+tmpfs                               251M     2  251M    1% /run/nvidia-ctk-hook9ac1acae-3016-4a3b-b22f-e23719adcd00
+tmpfs                               251M     1  251M    1% /proc/acpi
+tmpfs                               251M     1  251M    1% /proc/scsi
+tmpfs                               251M     1  251M    1% /sys/devices/virtual/powercap
+tmpfs                               251M     1  251M    1% /sys/firmware
+
+===== 当前 venv 大小 =====
+8.9G	/workspace/venvs/vllm-serving
+
+===== dmesg I/O 相关日志 =====

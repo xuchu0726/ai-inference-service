@@ -1,0 +1,10 @@
+===== /workspace 写入健康检查 =====
+时间：Mon Jun 15 17:21:22 UTC 2026
+
+测试1：创建大量小文件
+小文件数量：2000
+
+测试2：写入1GB连续文件
+-rw-rw-rw- 1 root root 1.0G Jun 15 17:21 /workspace/io_test_1g.bin
+
+测试完成

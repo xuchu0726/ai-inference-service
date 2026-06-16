@@ -1,0 +1,43 @@
+===== W8A8 serving 工具链检查 =====
+时间：Mon Jun 15 16:47:17 UTC 2026
+
+torch 2.9.0+cu128
+transformers 4.57.6
+vllm IMPORT_FAILED ModuleNotFoundError("No module named 'vllm'")
+compressed_tensors 0.14.0
+llmcompressor 0.10.0
+
+===== GPU =====
+Mon Jun 15 16:47:36 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:87:00.0 Off |                    0 |
+| N/A   41C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:90:00.0 Off |                    0 |
+| N/A   37C    P0             67W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== Git 状态 =====
+?? evidence/week2_hardening/seed_oss_36b_clean_download_complete_check_20260615.txt
+?? evidence/week2_hardening/seed_oss_36b_clean_download_launch_20260615.txt
+?? evidence/week2_hardening/seed_oss_36b_clean_download_progress_20260615.txt
+?? evidence/week2_hardening/w8a8_clean_volume_vllm_toolchain_check_20260615.txt
+?? logs/week2_hardening/seed_oss_36b_clean_download_20260615.log
+?? logs/week2_hardening/seed_oss_36b_missing_00002_download_20260615.log
+?? logs/week2_hardening/w8a8_clean_volume_vllm_install_20260615.log

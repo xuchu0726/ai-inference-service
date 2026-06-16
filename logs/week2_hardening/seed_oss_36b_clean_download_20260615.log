@@ -1,0 +1,62 @@
+nohup: ignoring input
+Fetching 27 files:   0%|                                                                                                   | 0/27 [00:00<?, ?it/s]Still waiting to acquire lock on /workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/.gitignore.lock (elapsed: 0.1 seconds)
+Still waiting to acquire lock on /workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/.gitignore.lock (elapsed: 0.1 seconds)
+Still waiting to acquire lock on /workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/.gitignore.lock (elapsed: 0.1 seconds)
+Still waiting to acquire lock on /workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/.gitignore.lock (elapsed: 0.1 seconds)
+Still waiting to acquire lock on /workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/.gitignore.lock (elapsed: 0.1 seconds)
+Downloading '.gitattributes' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/wPaCkH-WbT7GsmxMKKrNZTV4nSM=.d6e4176c9d2a29b43a226680174e69cc2db00fdc.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/.gitattributes
+Fetching 27 files:   4%|███▎                                                                                       | 1/27 [00:00<00:03,  6.75it/s]Downloading 'LICENSE.txt' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/cyBuwAu93UXke23CJCWORBYR70A=.5a2000549f4b40fd4604e9c49b8aff4420693728.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/LICENSE.txt
+Downloading 'model-00002-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/XS_xd2SFaBefCf4enbycB__MH1U=.3aa39357bfeb0a0601db504c6ee068f45c580df160f9da98ee9d0ec1815e9576.incomplete'
+Downloading 'model-00003-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/M2i4-lOf4zWJ4_Vy-NtRs3gfs3Y=.724dfc23348ea55f35135c582ed4b59b57a021d1448cedb479884a3b3fe89ed5.incomplete'
+Downloading 'config.json' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/8_PA_wEVGiVa2goH2H4KQOQpvVY=.e0944451ae2b83e0643ed832217a4322ed5e28db.incomplete'
+Downloading 'model-00001-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/NqyJv1Fa7ioEuXlIXGwMWSrVWEM=.834c2453087fdbce45b786e250d736727ec5f52d13721577d2bf3517b828ffcc.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/config.json
+Downloading 'MODEL_CARD.md' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/zgTjltNND4thlkEHwhEJ7y_X21I=.01e90b7edd6237eba1db24f394d26f4111c32c12.incomplete'
+Downloading 'chat_template.jinja' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/yIUQ6Jg7XpBWXEkozaEkS2ih05g=.903ebaaba77ed311bab4892f6a14324283852427.incomplete'
+Downloading 'README.md' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/Xn7B-BWUGOee2Y6hCZtEhtFu4BE=.1bbb93f794c0ff1ac02d784b9524605143992730.incomplete'
+Downloading 'generation_config.json' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/3EVKVggOldJcKSsGjSdoUCN1AyQ=.3a7b67b2ff117b28fee613608490c8eb4cba65c0.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/MODEL_CARD.md
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/chat_template.jinja
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/generation_config.json
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/README.md
+Fetching 27 files:  11%|██████████                                                                                 | 3/27 [00:00<00:03,  6.96it/s]Downloading 'model-00004-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/nVztsbS2v_h3Up4mupbBaw2ZhC4=.19752faebe38e21395701abacdaf0f9b06432be692efb60020b28752ef444d15.incomplete'
+Downloading 'model-00005-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/fTEmPwlgFR-g2oYUD7bbjlyPgU4=.8aa1816ca29458caf3269e5c3d1dd639736f945b4970368c6b7e7d27e52a143d.incomplete'
+Downloading 'model-00006-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/R-57kbzvar2SYgOukH6jAovSuf4=.e4ab51a947e938e0e92f2f0062ad652801e0b416a1f3bdb68874c880c3083bc6.incomplete'
+Downloading 'model-00008-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/QEX1a23Bfx1PLrK-j6Y5XKn7CS8=.d6328108446b779b73867a033ba16421974f44d64c1d40d01eba98ac0786a06a.incomplete'
+Downloading 'model-00007-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/O0rFIPOmgHxUkQDv9u0ywLuN6Jk=.d68e5465e342cf2c45001685b0623af71f67a13e73fc8417e163ad78da96cdd0.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/model-00003-of-00015.safetensors
+Downloading 'model-00009-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/QcnOnCeG2TmA-RfTN7PKG4ePLx4=.7928067d17eb6e3b208317c1bb9c03ae8d0ddf233e846c284ed29896dcabe4d4.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/model-00001-of-00015.safetensors
+Fetching 27 files:  30%|██████████████████████████▉                                                                | 8/27 [02:10<05:59, 18.91s/it]Downloading 'model-00010-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/ZV4lgZjIaUgL61rP66kTd4BU4_A=.2aab66b2b8ea7246faae1170444920f487ad45c7e1081a5dc97ec0b80ec2897c.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/model-00008-of-00015.safetensors
+Downloading 'model-00011-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/bzpP7nEHpZ-DBaz7Iw51I71e96I=.74340de3038f2469c7d7bcfa127f32baaa0f708a00698b6583d013f012feab07.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/model-00007-of-00015.safetensors
+Downloading 'model-00012-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/B-gXUptrtTlI4Dew_q8GK1W5CU4=.7ec20d327302f1a82685a660ee792f6319f861f8099882d3c53b59b5f18e487d.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/model-00004-of-00015.safetensors
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/model-00005-of-00015.safetensors
+Downloading 'model-00013-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/fHBmyz-x5C5mvdHE_KUcNXyQa6A=.b4efea0bf1a26fc0da3eb1fc4c963956fec43dc276270dfa8dd556477f758ce6.incomplete'
+Downloading 'model-00014-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/9IiDSrwwoaz4f6iOBq4teauCqno=.a2b5aeb2cc06fb4b5f06fc7bd88144ceae69f1d754944575e2a0fe177cd9ae45.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/model-00009-of-00015.safetensors
+Downloading 'model-00015-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/pU2Yl7aoZw88TleSaQnREzQrsk8=.e6b61535f8efaf570381bcb2d389cf660c1bce9f6b8976c3a92a251eac8d0285.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/model-00010-of-00015.safetensors
+Downloading 'model.safetensors.index.json' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/yVzAsSxRSINSz-tQbpx-TLpfkLU=.4757f05d44783fc4a75af17b7c3c4c7fa64c0059.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/model.safetensors.index.json
+Downloading 'special_tokens_map.json' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/ahkChHUJFxEmOdq5GDFEmerRzCY=.7dd43a535f9b404a917fb3d9acae8369939f2402.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/special_tokens_map.json
+Downloading 'thinking_budget.png' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/AX30lt-geYuLG_4L7xIV5QLiSpk=.3acc41ada52728454bd060fe5eddc8d3d0495cfdbdcb9eff41a0f49582442ab5.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/thinking_budget.png
+Downloading 'tokenizer.json' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/HgM_lKo9sdSCfRtVg7MMFS7EKqo=.f6bd848f52451824a3033a9f1e67eea5b399a13c90f845a332d3a29537e05827.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/tokenizer.json
+Downloading 'tokenizer_config.json' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/vzaExXFZNBay89bvlQv-ZcI6BTg=.c72b8f0c6e6bef225d3dfcb60a7579bf63a575f1.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/tokenizer_config.json
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/model-00011-of-00015.safetensors
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/model-00012-of-00015.safetensors
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/model-00014-of-00015.safetensors
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/model-00013-of-00015.safetensors
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/model-00015-of-00015.safetensors
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/model-00006-of-00015.safetensors
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/model-00002-of-00015.safetensors
+Fetching 27 files:  33%|██████████████████████████████                                                            | 9/27 [10:56<31:47, 105.99s/it]Fetching 27 files: 100%|██████████████████████████████████████████████████████████████████████████████████████████| 27/27 [10:56<00:00, 24.31s/it]
+/workspace/models/Seed-OSS-36B-Instruct

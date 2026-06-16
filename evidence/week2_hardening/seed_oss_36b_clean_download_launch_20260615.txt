@@ -1,0 +1,44 @@
+===== Seed-OSS-36B 干净下载启动检查 =====
+时间：Mon Jun 15 16:16:09 UTC 2026
+
+PID:
+1443
+
+UID          PID    PPID  C STIME TTY          TIME CMD
+root        1443     392 99 16:14 pts/0    00:01:56 /workspace/venvs/llmcompressor-w8a8/bin/python /workspace/venvs/llmcompressor-w8a8/bin/hf downl
+
+日志最后 60 行：
+nohup: ignoring input
+Fetching 27 files:   0%|                                                                                                   | 0/27 [00:00<?, ?it/s]Still waiting to acquire lock on /workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/.gitignore.lock (elapsed: 0.1 seconds)
+Still waiting to acquire lock on /workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/.gitignore.lock (elapsed: 0.1 seconds)
+Still waiting to acquire lock on /workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/.gitignore.lock (elapsed: 0.1 seconds)
+Still waiting to acquire lock on /workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/.gitignore.lock (elapsed: 0.1 seconds)
+Still waiting to acquire lock on /workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/.gitignore.lock (elapsed: 0.1 seconds)
+Downloading '.gitattributes' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/wPaCkH-WbT7GsmxMKKrNZTV4nSM=.d6e4176c9d2a29b43a226680174e69cc2db00fdc.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/.gitattributes
+Fetching 27 files:   4%|███▎                                                                                       | 1/27 [00:00<00:03,  6.75it/s]Downloading 'LICENSE.txt' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/cyBuwAu93UXke23CJCWORBYR70A=.5a2000549f4b40fd4604e9c49b8aff4420693728.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/LICENSE.txt
+Downloading 'model-00002-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/XS_xd2SFaBefCf4enbycB__MH1U=.3aa39357bfeb0a0601db504c6ee068f45c580df160f9da98ee9d0ec1815e9576.incomplete'
+Downloading 'model-00003-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/M2i4-lOf4zWJ4_Vy-NtRs3gfs3Y=.724dfc23348ea55f35135c582ed4b59b57a021d1448cedb479884a3b3fe89ed5.incomplete'
+Downloading 'config.json' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/8_PA_wEVGiVa2goH2H4KQOQpvVY=.e0944451ae2b83e0643ed832217a4322ed5e28db.incomplete'
+Downloading 'model-00001-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/NqyJv1Fa7ioEuXlIXGwMWSrVWEM=.834c2453087fdbce45b786e250d736727ec5f52d13721577d2bf3517b828ffcc.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/config.json
+Downloading 'MODEL_CARD.md' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/zgTjltNND4thlkEHwhEJ7y_X21I=.01e90b7edd6237eba1db24f394d26f4111c32c12.incomplete'
+Downloading 'chat_template.jinja' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/yIUQ6Jg7XpBWXEkozaEkS2ih05g=.903ebaaba77ed311bab4892f6a14324283852427.incomplete'
+Downloading 'README.md' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/Xn7B-BWUGOee2Y6hCZtEhtFu4BE=.1bbb93f794c0ff1ac02d784b9524605143992730.incomplete'
+Downloading 'generation_config.json' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/3EVKVggOldJcKSsGjSdoUCN1AyQ=.3a7b67b2ff117b28fee613608490c8eb4cba65c0.incomplete'
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/MODEL_CARD.md
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/chat_template.jinja
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/generation_config.json
+Download complete. Moving file to /workspace/models/Seed-OSS-36B-Instruct/README.md
+Fetching 27 files:  11%|██████████                                                                                 | 3/27 [00:00<00:03,  6.96it/s]Downloading 'model-00004-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/nVztsbS2v_h3Up4mupbBaw2ZhC4=.19752faebe38e21395701abacdaf0f9b06432be692efb60020b28752ef444d15.incomplete'
+Downloading 'model-00005-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/fTEmPwlgFR-g2oYUD7bbjlyPgU4=.8aa1816ca29458caf3269e5c3d1dd639736f945b4970368c6b7e7d27e52a143d.incomplete'
+Downloading 'model-00006-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/R-57kbzvar2SYgOukH6jAovSuf4=.e4ab51a947e938e0e92f2f0062ad652801e0b416a1f3bdb68874c880c3083bc6.incomplete'
+Downloading 'model-00008-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/QEX1a23Bfx1PLrK-j6Y5XKn7CS8=.d6328108446b779b73867a033ba16421974f44d64c1d40d01eba98ac0786a06a.incomplete'
+Downloading 'model-00007-of-00015.safetensors' to '/workspace/models/Seed-OSS-36B-Instruct/.cache/huggingface/download/O0rFIPOmgHxUkQDv9u0ywLuN6Jk=.d68e5465e342cf2c45001685b0623af71f67a13e73fc8417e163ad78da96cdd0.incomplete'
+
+正式目录文件数：
+6
+
+完整 safetensors 数：
+0
