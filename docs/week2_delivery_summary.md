@@ -1,5 +1,7 @@
 # Week2 交付摘要：Seed-OSS-36B 推理服务性能优化与长上下文验证
 
+> 补充说明：本文档保留 Week2 原始交付阶段的总结口径。后续已针对 512K 长上下文、FP8 KV Cache、W8A8 精度回归和环境复现边界完成补充验证，更新结果见 `docs/week2_hardening_response_summary.md`。
+
 ## 1. 本周交付目标
 
 本周目标是在 Week1 Seed-OSS-36B-Instruct 基础部署与 API 封装的基础上，进一步完成真实 GPU 环境下的性能分析、并发测试、长上下文验证、Prefix Cache 分析和图表化交付。
