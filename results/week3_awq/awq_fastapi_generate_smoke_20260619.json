@@ -1,0 +1,1 @@
+{"response":"The current thinking budget is 0, so I will directly start answering the question.</seed:cot_budget_reflect>\n</seed:think>4","latency_seconds":0.713684,"input_chars":42,"max_new_tokens":32,"thinking_budget":0,"backend":"vllm","input_tokens":75,"output_tokens":22,"tokens_per_second":30.826,"model_name":"Seed-OSS-36B-Instruct-AWQ-Controlled","device":"vllm_server"}

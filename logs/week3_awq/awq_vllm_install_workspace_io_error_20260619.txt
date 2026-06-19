@@ -1,0 +1,18 @@
+环境安装失败记录
+
+目标：
+在 /workspace/venvs/awq-vllm 中安装 vllm==0.11.2，
+以复现实验中与既有 W8A8 一致的 vLLM 版本。
+
+失败阶段：
+pip 安装过程中，进度停留在 torch 安装阶段，
+随后出现 OSError: [Errno 5] Input/output error。
+
+直接后果：
+/workspace/venvs/awq-vllm 中的 Torch 安装不完整；
+torch/lib/libtorch_global_deps.so 缺失，虚拟环境不可用。
+
+工程处理：
+不在 /workspace 重试该 venv。
+后续将 Python 虚拟环境迁移至容器本地磁盘 /root/venvs/awq-vllm；
+仓库、模型缓存、日志和结果仍保留在 /workspace。

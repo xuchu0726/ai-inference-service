@@ -1,0 +1,40 @@
+AWQ 受控服务配置兼容性记录
+
+一、实验目的
+验证第三方预量化 AWQ checkpoint 在 2×A100-SXM4-80GB、vLLM 0.11.2、
+Tensor Parallel=2 的受控服务配置下是否能够启动。
+
+二、首次启动配置
+- 量化后端：awq
+- 计算 dtype：bfloat16
+- max_model_len：4096
+- max_num_batched_tokens：8192
+- max_num_seqs：16
+- gpu_memory_utilization：0.90
+- enforce_eager：启用
+
+三、实际结果
+vLLM 在模型加载前完成量化配置校验，并拒绝 bfloat16。
+报错指出：AWQ 后端仅支持 torch.float16。
+
+同时，vLLM 自动检测到该 checkpoint 可使用 awq_marlin 路径。
+
+四、工程结论
+AWQ 的运行时 dtype 与 kernel 由量化后端约束，不能为了与 W8A8 保持形式一致而强制使用 bfloat16。
+后续 AWQ 服务将采用 FP16 + AWQ-Marlin。
+
+五、对照实验边界
+保持固定的变量包括：
+- GPU 型号与数量
+- Tensor Parallel 配置
+- vLLM 版本
+- context window
+- batch token budget
+- max_num_seqs
+- GPU memory utilization
+- GSM8K 数据、prompt、生成参数和判分逻辑
+
+FP16 与 AWQ-Marlin 被视为 AWQ 量化后端的必要运行组合，而非未控制的实验变量。
+
+六、原始日志
+logs/week3_awq/awq_controlled_vllm_launch_20260619.log

@@ -1,0 +1,14 @@
+/root/venvs/awq-vllm/bin/vllm serve /workspace/models/QuantTrio-Seed-OSS-36B-Instruct-AWQ \
+  --served-model-name Seed-OSS-36B-Instruct-AWQ-Controlled \
+  --host 0.0.0.0 \
+  --port 8002 \
+  --tensor-parallel-size 2 \
+  --dtype half \
+  --quantization awq_marlin \
+  --chat-template /workspace/models/QuantTrio-Seed-OSS-36B-Instruct-AWQ/chat_template.jinja \
+  --max-model-len 4096 \
+  --max-num-batched-tokens 8192 \
+  --max-num-seqs 16 \
+  --gpu-memory-utilization 0.90 \
+  --trust-remote-code \
+  --enforce-eager

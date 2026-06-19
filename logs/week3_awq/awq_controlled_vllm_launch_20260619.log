@@ -1,0 +1,50 @@
+nohup: ignoring input
+INFO 06-19 16:28:09 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=2048.
+[1;36m(APIServer pid=2846)[0;0m INFO 06-19 16:28:09 [api_server.py:1977] vLLM API server version 0.11.2
+[1;36m(APIServer pid=2846)[0;0m INFO 06-19 16:28:09 [utils.py:253] non-default args: {'model_tag': '/workspace/models/QuantTrio-Seed-OSS-36B-Instruct-AWQ', 'host': '0.0.0.0', 'port': 8002, 'chat_template': '/workspace/models/QuantTrio-Seed-OSS-36B-Instruct-AWQ/chat_template.jinja', 'model': '/workspace/models/QuantTrio-Seed-OSS-36B-Instruct-AWQ', 'trust_remote_code': True, 'dtype': 'bfloat16', 'max_model_len': 4096, 'quantization': 'awq', 'enforce_eager': True, 'served_model_name': ['Seed-OSS-36B-Instruct-AWQ-Controlled'], 'tensor_parallel_size': 2, 'max_num_batched_tokens': 8192, 'max_num_seqs': 16}
+[1;36m(APIServer pid=2846)[0;0m The argument `trust_remote_code` is to be used with Auto classes. It has no effect here and is ignored.
+[1;36m(APIServer pid=2846)[0;0m INFO 06-19 16:28:16 [model.py:631] Resolved architecture: SeedOssForCausalLM
+[1;36m(APIServer pid=2846)[0;0m INFO 06-19 16:28:16 [model.py:1745] Using max model len 4096
+[1;36m(APIServer pid=2846)[0;0m INFO 06-19 16:28:16 [awq_marlin.py:166] Detected that the model can run with awq_marlin, however you specified quantization=awq explicitly, so forcing awq. Use quantization=awq_marlin for faster inference
+[1;36m(APIServer pid=2846)[0;0m INFO 06-19 16:28:17 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=8192.
+[1;36m(APIServer pid=2846)[0;0m Traceback (most recent call last):
+[1;36m(APIServer pid=2846)[0;0m   File "/root/venvs/awq-vllm/bin/vllm", line 6, in <module>
+[1;36m(APIServer pid=2846)[0;0m     sys.exit(main())
+[1;36m(APIServer pid=2846)[0;0m              ^^^^^^
+[1;36m(APIServer pid=2846)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/vllm/entrypoints/cli/main.py", line 73, in main
+[1;36m(APIServer pid=2846)[0;0m     args.dispatch_function(args)
+[1;36m(APIServer pid=2846)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/vllm/entrypoints/cli/serve.py", line 60, in cmd
+[1;36m(APIServer pid=2846)[0;0m     uvloop.run(run_server(args))
+[1;36m(APIServer pid=2846)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/uvloop/__init__.py", line 92, in run
+[1;36m(APIServer pid=2846)[0;0m     return runner.run(wrapper())
+[1;36m(APIServer pid=2846)[0;0m            ^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=2846)[0;0m   File "/usr/lib/python3.11/asyncio/runners.py", line 118, in run
+[1;36m(APIServer pid=2846)[0;0m     return self._loop.run_until_complete(task)
+[1;36m(APIServer pid=2846)[0;0m            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=2846)[0;0m   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+[1;36m(APIServer pid=2846)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/uvloop/__init__.py", line 48, in wrapper
+[1;36m(APIServer pid=2846)[0;0m     return await main
+[1;36m(APIServer pid=2846)[0;0m            ^^^^^^^^^^
+[1;36m(APIServer pid=2846)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/vllm/entrypoints/openai/api_server.py", line 2024, in run_server
+[1;36m(APIServer pid=2846)[0;0m     await run_server_worker(listen_address, sock, args, **uvicorn_kwargs)
+[1;36m(APIServer pid=2846)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/vllm/entrypoints/openai/api_server.py", line 2043, in run_server_worker
+[1;36m(APIServer pid=2846)[0;0m     async with build_async_engine_client(
+[1;36m(APIServer pid=2846)[0;0m   File "/usr/lib/python3.11/contextlib.py", line 210, in __aenter__
+[1;36m(APIServer pid=2846)[0;0m     return await anext(self.gen)
+[1;36m(APIServer pid=2846)[0;0m            ^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=2846)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/vllm/entrypoints/openai/api_server.py", line 195, in build_async_engine_client
+[1;36m(APIServer pid=2846)[0;0m     async with build_async_engine_client_from_engine_args(
+[1;36m(APIServer pid=2846)[0;0m   File "/usr/lib/python3.11/contextlib.py", line 210, in __aenter__
+[1;36m(APIServer pid=2846)[0;0m     return await anext(self.gen)
+[1;36m(APIServer pid=2846)[0;0m            ^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=2846)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/vllm/entrypoints/openai/api_server.py", line 221, in build_async_engine_client_from_engine_args
+[1;36m(APIServer pid=2846)[0;0m     vllm_config = engine_args.create_engine_config(usage_context=usage_context)
+[1;36m(APIServer pid=2846)[0;0m                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=2846)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/vllm/engine/arg_utils.py", line 1772, in create_engine_config
+[1;36m(APIServer pid=2846)[0;0m     config = VllmConfig(
+[1;36m(APIServer pid=2846)[0;0m              ^^^^^^^^^^^
+[1;36m(APIServer pid=2846)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/pydantic/_internal/_dataclasses.py", line 121, in __init__
+[1;36m(APIServer pid=2846)[0;0m     s.__pydantic_validator__.validate_python(ArgsKwargs(args, kwargs), self_instance=s)
+[1;36m(APIServer pid=2846)[0;0m pydantic_core._pydantic_core.ValidationError: 1 validation error for VllmConfig
+[1;36m(APIServer pid=2846)[0;0m   Value error, torch.bfloat16 is not supported for quantization method awq. Supported dtypes: [torch.float16] [type=value_error, input_value=ArgsKwargs((), {'model_co...additional_config': {}}), input_type=ArgsKwargs]
+[1;36m(APIServer pid=2846)[0;0m     For further information visit https://errors.pydantic.dev/2.13/v/value_error

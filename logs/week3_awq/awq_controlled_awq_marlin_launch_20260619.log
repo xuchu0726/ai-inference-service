@@ -1,0 +1,143 @@
+nohup: ignoring input
+INFO 06-19 16:34:55 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=2048.
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:34:55 [api_server.py:1977] vLLM API server version 0.11.2
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:34:55 [utils.py:253] non-default args: {'model_tag': '/workspace/models/QuantTrio-Seed-OSS-36B-Instruct-AWQ', 'host': '0.0.0.0', 'port': 8002, 'chat_template': '/workspace/models/QuantTrio-Seed-OSS-36B-Instruct-AWQ/chat_template.jinja', 'model': '/workspace/models/QuantTrio-Seed-OSS-36B-Instruct-AWQ', 'trust_remote_code': True, 'dtype': 'half', 'max_model_len': 4096, 'quantization': 'awq_marlin', 'enforce_eager': True, 'served_model_name': ['Seed-OSS-36B-Instruct-AWQ-Controlled'], 'tensor_parallel_size': 2, 'max_num_batched_tokens': 8192, 'max_num_seqs': 16}
+[1;36m(APIServer pid=3405)[0;0m The argument `trust_remote_code` is to be used with Auto classes. It has no effect here and is ignored.
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:34:55 [model.py:631] Resolved architecture: SeedOssForCausalLM
+[1;36m(APIServer pid=3405)[0;0m WARNING 06-19 16:34:55 [model.py:1971] Casting torch.bfloat16 to torch.float16.
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:34:55 [model.py:1745] Using max model len 4096
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:34:56 [awq_marlin.py:162] The model is convertible to awq_marlin during runtime. Using awq_marlin kernel.
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:34:56 [scheduler.py:216] Chunked prefill is enabled with max_num_batched_tokens=8192.
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:34:56 [vllm.py:500] Cudagraph is disabled under eager mode
+[1;36m(APIServer pid=3405)[0;0m The following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+[1;36m(EngineCore_DP0 pid=3670)[0;0m INFO 06-19 16:35:03 [core.py:93] Initializing a V1 LLM engine (v0.11.2) with config: model='/workspace/models/QuantTrio-Seed-OSS-36B-Instruct-AWQ', speculative_config=None, tokenizer='/workspace/models/QuantTrio-Seed-OSS-36B-Instruct-AWQ', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float16, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=2, pipeline_parallel_size=1, data_parallel_size=1, disable_custom_all_reduce=False, quantization=awq_marlin, enforce_eager=True, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=0, served_model_name=Seed-OSS-36B-Instruct-AWQ-Controlled, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'level': None, 'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'splitting_ops': None, 'compile_mm_encoder': False, 'use_inductor': None, 'compile_sizes': [], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {}, 'max_cudagraph_capture_size': 0, 'local_cache_dir': None}
+[1;36m(EngineCore_DP0 pid=3670)[0;0m WARNING 06-19 16:35:03 [multiproc_executor.py:869] Reducing Torch parallelism from 128 threads to 1 to avoid unnecessary CPU contention. Set OMP_NUM_THREADS in the external environment to tune this value as needed.
+INFO 06-19 16:35:11 [parallel_state.py:1208] world_size=2 rank=0 local_rank=0 distributed_init_method=tcp://127.0.0.1:45275 backend=nccl
+INFO 06-19 16:35:11 [parallel_state.py:1208] world_size=2 rank=1 local_rank=1 distributed_init_method=tcp://127.0.0.1:45275 backend=nccl
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+INFO 06-19 16:35:11 [pynccl.py:111] vLLM is using nccl==2.27.5
+WARNING 06-19 16:35:11 [symm_mem.py:67] SymmMemCommunicator: Device capability 8.0 not supported, communicator is not available.
+WARNING 06-19 16:35:11 [symm_mem.py:67] SymmMemCommunicator: Device capability 8.0 not supported, communicator is not available.
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+INFO 06-19 16:35:12 [parallel_state.py:1394] rank 1 in world size 2 is assigned as DP rank 0, PP rank 0, TP rank 1, EP rank 1
+INFO 06-19 16:35:12 [parallel_state.py:1394] rank 0 in world size 2 is assigned as DP rank 0, PP rank 0, TP rank 0, EP rank 0
+[1;36m(Worker_TP0 pid=3804)[0;0m INFO 06-19 16:35:12 [gpu_model_runner.py:3259] Starting to load model /workspace/models/QuantTrio-Seed-OSS-36B-Instruct-AWQ...
+[1;36m(Worker_TP0 pid=3804)[0;0m INFO 06-19 16:35:31 [cuda.py:418] Valid backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION']
+[1;36m(Worker_TP0 pid=3804)[0;0m INFO 06-19 16:35:31 [cuda.py:427] Using FLASH_ATTN backend.
+[1;36m(Worker_TP1 pid=3805)[0;0m INFO 06-19 16:35:31 [cuda.py:418] Valid backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION']
+[1;36m(Worker_TP1 pid=3805)[0;0m INFO 06-19 16:35:31 [cuda.py:427] Using FLASH_ATTN backend.
+[1;36m(Worker_TP0 pid=3804)[0;0m Loading safetensors checkpoint shards:   0% Completed | 0/8 [00:00<?, ?it/s]
+[1;36m(Worker_TP0 pid=3804)[0;0m Loading safetensors checkpoint shards:  12% Completed | 1/8 [00:06<00:48,  6.96s/it]
+[1;36m(Worker_TP0 pid=3804)[0;0m Loading safetensors checkpoint shards:  25% Completed | 2/8 [00:17<00:54,  9.10s/it]
+[1;36m(Worker_TP0 pid=3804)[0;0m Loading safetensors checkpoint shards:  38% Completed | 3/8 [00:44<01:27, 17.42s/it]
+[1;36m(Worker_TP0 pid=3804)[0;0m Loading safetensors checkpoint shards:  50% Completed | 4/8 [00:45<00:42, 10.62s/it]
+[1;36m(Worker_TP0 pid=3804)[0;0m Loading safetensors checkpoint shards:  62% Completed | 5/8 [01:05<00:42, 14.12s/it]
+[1;36m(Worker_TP0 pid=3804)[0;0m Loading safetensors checkpoint shards:  75% Completed | 6/8 [01:26<00:32, 16.48s/it]
+[1;36m(Worker_TP0 pid=3804)[0;0m Loading safetensors checkpoint shards:  88% Completed | 7/8 [01:42<00:16, 16.36s/it]
+[1;36m(Worker_TP0 pid=3804)[0;0m Loading safetensors checkpoint shards: 100% Completed | 8/8 [01:50<00:00, 13.78s/it]
+[1;36m(Worker_TP0 pid=3804)[0;0m Loading safetensors checkpoint shards: 100% Completed | 8/8 [01:50<00:00, 13.85s/it]
+[1;36m(Worker_TP0 pid=3804)[0;0m 
+[1;36m(Worker_TP0 pid=3804)[0;0m INFO 06-19 16:37:22 [default_loader.py:314] Loading weights took 110.89 seconds
+[1;36m(Worker_TP0 pid=3804)[0;0m INFO 06-19 16:37:24 [gpu_model_runner.py:3338] Model loading took 10.0901 GiB memory and 130.950385 seconds
+[1;36m(Worker_TP0 pid=3804)[0;0m INFO 06-19 16:37:34 [gpu_worker.py:359] Available KV cache memory: 59.70 GiB
+[1;36m(EngineCore_DP0 pid=3670)[0;0m INFO 06-19 16:37:34 [kv_cache_utils.py:1229] GPU KV cache size: 489,072 tokens
+[1;36m(EngineCore_DP0 pid=3670)[0;0m INFO 06-19 16:37:34 [kv_cache_utils.py:1234] Maximum concurrency for 4,096 tokens per request: 119.40x
+[1;36m(EngineCore_DP0 pid=3670)[0;0m INFO 06-19 16:37:34 [kv_cache_utils.py:1234] Maximum concurrency for 4,096 tokens per request: 119.40x
+[1;36m(EngineCore_DP0 pid=3670)[0;0m INFO 06-19 16:37:36 [core.py:250] init engine (profile, create kv cache, warmup model) took 11.90 seconds
+[1;36m(EngineCore_DP0 pid=3670)[0;0m INFO 06-19 16:37:36 [vllm.py:500] Cudagraph is disabled under eager mode
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:37:37 [api_server.py:1725] Supported tasks: ['generate']
+[1;36m(APIServer pid=3405)[0;0m WARNING 06-19 16:37:37 [model.py:1568] Default sampling parameters have been overridden by the model's Hugging Face generation config recommended from the model creator. If this is not intended, please relaunch vLLM instance with `--generation-config vllm`.
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:37:37 [serving_responses.py:154] Using default chat sampling params from model: {'temperature': 1.1, 'top_p': 0.95}
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:37:37 [serving_chat.py:131] Using default chat sampling params from model: {'temperature': 1.1, 'top_p': 0.95}
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:37:37 [serving_completion.py:73] Using default completion sampling params from model: {'temperature': 1.1, 'top_p': 0.95}
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:37:37 [serving_chat.py:131] Using default chat sampling params from model: {'temperature': 1.1, 'top_p': 0.95}
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:37:37 [api_server.py:2052] Starting vLLM API server 0 on http://0.0.0.0:8002
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:37:37 [launcher.py:38] Available routes are:
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:37:37 [launcher.py:46] Route: /openapi.json, Methods: HEAD, GET
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:37:37 [launcher.py:46] Route: /docs, Methods: HEAD, GET
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:37:37 [launcher.py:46] Route: /docs/oauth2-redirect, Methods: HEAD, GET
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:37:37 [launcher.py:46] Route: /redoc, Methods: HEAD, GET
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:37:37 [launcher.py:46] Route: /metrics, Methods: GET
+[1;36m(APIServer pid=3405)[0;0m INFO:     Started server process [3405]
+[1;36m(APIServer pid=3405)[0;0m INFO:     Waiting for application startup.
+[1;36m(APIServer pid=3405)[0;0m INFO:     Application startup complete.
+[1;36m(APIServer pid=3405)[0;0m INFO:     127.0.0.1:59462 - "GET /v1/models HTTP/1.1" 500 Internal Server Error
+[1;36m(APIServer pid=3405)[0;0m ERROR:    Exception in ASGI application
+[1;36m(APIServer pid=3405)[0;0m Traceback (most recent call last):
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/uvicorn/protocols/http/httptools_impl.py", line 421, in run_asgi
+[1;36m(APIServer pid=3405)[0;0m     result = await app(  # type: ignore[func-returns-value]
+[1;36m(APIServer pid=3405)[0;0m              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/uvicorn/middleware/proxy_headers.py", line 62, in __call__
+[1;36m(APIServer pid=3405)[0;0m     return await self.app(scope, receive, send)
+[1;36m(APIServer pid=3405)[0;0m            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/fastapi/applications.py", line 1162, in __call__
+[1;36m(APIServer pid=3405)[0;0m     await super().__call__(scope, receive, send)
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/starlette/applications.py", line 90, in __call__
+[1;36m(APIServer pid=3405)[0;0m     await self.middleware_stack(scope, receive, send)
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/starlette/middleware/errors.py", line 186, in __call__
+[1;36m(APIServer pid=3405)[0;0m     raise exc
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/starlette/middleware/errors.py", line 164, in __call__
+[1;36m(APIServer pid=3405)[0;0m     await self.app(scope, receive, _send)
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/starlette/middleware/cors.py", line 88, in __call__
+[1;36m(APIServer pid=3405)[0;0m     await self.app(scope, receive, send)
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/prometheus_fastapi_instrumentator/middleware.py", line 131, in __call__
+[1;36m(APIServer pid=3405)[0;0m     handler, is_templated = self._get_handler(request)
+[1;36m(APIServer pid=3405)[0;0m                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/prometheus_fastapi_instrumentator/middleware.py", line 240, in _get_handler
+[1;36m(APIServer pid=3405)[0;0m     route_name = routing.get_route_name(request)
+[1;36m(APIServer pid=3405)[0;0m                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/prometheus_fastapi_instrumentator/routing.py", line 75, in get_route_name
+[1;36m(APIServer pid=3405)[0;0m     route_name = _get_route_name(scope, routes)
+[1;36m(APIServer pid=3405)[0;0m                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/prometheus_fastapi_instrumentator/routing.py", line 55, in _get_route_name
+[1;36m(APIServer pid=3405)[0;0m     route_name = route.path
+[1;36m(APIServer pid=3405)[0;0m                  ^^^^^^^^^^
+[1;36m(APIServer pid=3405)[0;0m AttributeError: '_IncludedRouter' object has no attribute 'path'
+[1;36m(APIServer pid=3405)[0;0m INFO:     127.0.0.1:59466 - "POST /v1/chat/completions HTTP/1.1" 500 Internal Server Error
+[1;36m(APIServer pid=3405)[0;0m ERROR:    Exception in ASGI application
+[1;36m(APIServer pid=3405)[0;0m Traceback (most recent call last):
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/uvicorn/protocols/http/httptools_impl.py", line 421, in run_asgi
+[1;36m(APIServer pid=3405)[0;0m     result = await app(  # type: ignore[func-returns-value]
+[1;36m(APIServer pid=3405)[0;0m              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/uvicorn/middleware/proxy_headers.py", line 62, in __call__
+[1;36m(APIServer pid=3405)[0;0m     return await self.app(scope, receive, send)
+[1;36m(APIServer pid=3405)[0;0m            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/fastapi/applications.py", line 1162, in __call__
+[1;36m(APIServer pid=3405)[0;0m     await super().__call__(scope, receive, send)
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/starlette/applications.py", line 90, in __call__
+[1;36m(APIServer pid=3405)[0;0m     await self.middleware_stack(scope, receive, send)
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/starlette/middleware/errors.py", line 186, in __call__
+[1;36m(APIServer pid=3405)[0;0m     raise exc
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/starlette/middleware/errors.py", line 164, in __call__
+[1;36m(APIServer pid=3405)[0;0m     await self.app(scope, receive, _send)
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/starlette/middleware/cors.py", line 88, in __call__
+[1;36m(APIServer pid=3405)[0;0m     await self.app(scope, receive, send)
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/prometheus_fastapi_instrumentator/middleware.py", line 131, in __call__
+[1;36m(APIServer pid=3405)[0;0m     handler, is_templated = self._get_handler(request)
+[1;36m(APIServer pid=3405)[0;0m                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/prometheus_fastapi_instrumentator/middleware.py", line 240, in _get_handler
+[1;36m(APIServer pid=3405)[0;0m     route_name = routing.get_route_name(request)
+[1;36m(APIServer pid=3405)[0;0m                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/prometheus_fastapi_instrumentator/routing.py", line 75, in get_route_name
+[1;36m(APIServer pid=3405)[0;0m     route_name = _get_route_name(scope, routes)
+[1;36m(APIServer pid=3405)[0;0m                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1;36m(APIServer pid=3405)[0;0m   File "/root/venvs/awq-vllm/lib/python3.11/site-packages/prometheus_fastapi_instrumentator/routing.py", line 55, in _get_route_name
+[1;36m(APIServer pid=3405)[0;0m     route_name = route.path
+[1;36m(APIServer pid=3405)[0;0m                  ^^^^^^^^^^
+[1;36m(APIServer pid=3405)[0;0m AttributeError: '_IncludedRouter' object has no attribute 'path'
+[1;36m(APIServer pid=3405)[0;0m INFO 06-19 16:41:40 [launcher.py:110] Shutting down FastAPI HTTP server.
+[1;36m(Worker_TP1 pid=3805)[0;0m INFO 06-19 16:41:40 [multiproc_executor.py:702] Parent process exited, terminating worker
+[1;36m(Worker_TP0 pid=3804)[0;0m INFO 06-19 16:41:40 [multiproc_executor.py:702] Parent process exited, terminating worker
+[1;36m(APIServer pid=3405)[0;0m INFO:     Shutting down
+[1;36m(APIServer pid=3405)[0;0m INFO:     Waiting for application shutdown.
+[1;36m(APIServer pid=3405)[0;0m INFO:     Application shutdown complete.

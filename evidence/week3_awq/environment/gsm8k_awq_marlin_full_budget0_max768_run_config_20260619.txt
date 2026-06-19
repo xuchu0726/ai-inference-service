@@ -1,0 +1,17 @@
+AWQ-Marlin GSM8K 全量质量评测配置
+
+- 数据集：data/eval/gsm8k_test.jsonl（1319 题）
+- 服务接口：http://127.0.0.1:8000/generate
+- 服务后端：vLLM 0.11.2
+- 模型：Seed-OSS-36B-Instruct-AWQ-Controlled
+- 量化 serving stack：FP16 + AWQ-Marlin
+- GPU：2×A100-SXM4-80GB
+- Tensor Parallel：2
+- max_model_len：4096
+- max_num_batched_tokens：8192
+- max_num_seqs：16
+- temperature：0
+- thinking_budget：0
+- max_new_tokens：768
+- timeout_seconds：180
+- 判分：现有 GSM8K exact numeric matching

@@ -1,0 +1,22 @@
+AWQ-Marlin 受控服务启动结果
+
+服务已成功启动。
+- 量化后端：awq_marlin
+- 运行时 dtype：FP16
+- GPU：2×NVIDIA A100-SXM4-80GB
+- Tensor Parallel：2
+- max_model_len：4096
+- max_num_batched_tokens：8192
+- max_num_seqs：16
+- gpu_memory_utilization：0.90
+- enforce_eager：启用
+- 服务端口：8002
+
+启动日志表明：
+- 8 个 safetensors 权重分片加载完成；
+- vLLM 识别并启用 AWQ-Marlin kernel；
+- 服务启动完成；
+- GPU KV cache 容量为 489072 tokens。
+
+原始日志：
+logs/week3_awq/awq_controlled_awq_marlin_launch_20260619.log

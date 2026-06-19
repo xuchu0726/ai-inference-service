@@ -1,0 +1,35 @@
+AWQ-Marlin GSM8K 全量评测与协议审计结论
+
+一、AWQ 全量评测结果
+- 数据集：GSM8K test split，1319 题。
+- 运行配置：2×A100-SXM4-80GB，Tensor Parallel=2，vLLM 0.11.2。
+- serving stack：FP16 + AWQ-Marlin。
+- 生成参数：temperature=0，thinking_budget=0，max_new_tokens=768。
+- 结果：1258/1319 正确，accuracy_all_cases=0.953753，API error rate=0。
+- 平均端到端延迟：7.798787 秒。
+- P50/P95 延迟：7.520447 / 11.649212 秒。
+- 平均端到端观测输出速率：30.861098 tokens/s。
+- 平均输出长度：240.588324 tokens。
+
+二、历史 BF16/W8A8 结果的协议审计
+历史 BF16 与 W8A8 全量 GSM8K 均使用 max_new_tokens=256、temperature=0、thinking_budget=0。
+输出上限审计显示：
+- BF16：366/1319（27.75%）样本触及 256-token 上限；其中 294 个样本错误。
+- W8A8：395/1319（29.95%）样本触及 256-token 上限；其中 310 个样本错误。
+- AWQ：3/1319（0.23%）样本触及 768-token 上限；3 个均错误。
+
+三、根因判断
+本次发现的主要问题是 max_new_tokens，而不是 vLLM 的 max_model_len。
+max_model_len=4096 是服务端 prompt 与输出合计的上下文上限；max_new_tokens 则限制单次生成长度。
+历史 256-token 配置会截断部分包含较长显式推理过程的 GSM8K 输出，导致答案抽取器读取中间数值而非最终答案。
+Seed-OSS 在 thinking_budget=0 的条件下仍可能输出较长的逐步推理文本，因此 256-token 上限不足以覆盖相当比例样本。
+
+四、结果使用边界
+1. 历史 BF16 与 W8A8 的约 75% 结果可保留为 256-token 短输出预算下的服务行为记录。
+2. 历史 BF16 与 W8A8 的约 75% 不再作为最终 GSM8K 模型质量结论。
+3. AWQ 的 95.3753% 表示该 AWQ artifact 在 FP16 + AWQ-Marlin、max_new_tokens=768 配置下的完整评测结果。
+4. AWQ 95.3753% 不能直接解释为 AWQ 比 BF16/W8A8 更准确，因为输出上限不同，且 AWQ 使用第三方 artifact 自带 chat template。
+5. 未触及输出上限样本的条件准确率不能替代完整准确率，因为较复杂、较长输出样本更易触顶，存在选择偏差。
+
+五、后续严格对比要求
+若要得出 BF16、W8A8、AWQ 的严格质量对比结论，必须在统一数据集、统一评测脚本、统一 prompt/chat template、统一 temperature=0、统一 thinking_budget=0、统一 max_new_tokens=768 下复测。

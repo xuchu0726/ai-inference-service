@@ -1,0 +1,39 @@
+
+===== BF16 historical =====
+rows: 1319
+max_new_tokens: 256
+cap_hit_rows: 366 (27.75%)
+cap_hit_wrong_rows: 294
+accuracy_all: 75.7392%
+accuracy_cap_hit: 19.6721%
+accuracy_not_cap_hit: 97.2718%
+sample_capped_wrong_cases:
+  gsm8k_0003 expected=70000 predicted=130000 tail= value increased by 150%. A 150% increase means the new value is the original purchase price plus 150% of the original purchase price:  \n\[\n\text{New Value} = \text{Original Pric
+  gsm8k_0008 expected=160 predicted=100 tail=frac{80 \text{ GB}}{2 \text{ GB/min}} = 40 \text{ minutes} \).  \n\n\n### **2. Restart and Update Time**  \n- After the restart, Windows installs updates for 20 minutes. This time 
+  gsm8k_0009 expected=45 predicted=2.5 tail=stance driven back home (4-hour return attempt)**  \nJohn’s return trip has three segments:  \n1. **First 2 hours: Standstill traffic**  \n   Speed = 0 mph, so distance covered = \
+
+===== W8A8 historical =====
+rows: 1319
+max_new_tokens: 256
+cap_hit_rows: 395 (29.95%)
+cap_hit_wrong_rows: 310
+accuracy_all: 74.7536%
+accuracy_cap_hit: 21.5190%
+accuracy_not_cap_hit: 97.5108%
+sample_capped_wrong_cases:
+  gsm8k_0003 expected=70000 predicted=3 tail=alue increases by 150%. This means the new value is the original purchase price plus 150% of the original purchase price:  \n\[\n\text{New Value} = \text{Original Price} \times (1 
+  gsm8k_0009 expected=45 predicted=80 tail=} \times 3 \, \text{hours} = 180 \, \text{miles}\).  \n\n\n### **Step 2: Distance Driven Back in 4 Hours**  \nJohn’s return trip has three segments:  \n1. **First 2 hours: Standsti
+  gsm8k_0014 expected=18 predicted=8 tail=frac{1}{2}L = 5 \)  \nSolving for \( L \): \( L = 5 \times 2 = 10 \).  \n\n\n### Step 2: After the red house  \nBefore the orange house, she had 10 vacuum cleaners, which is 2 more
+
+===== AWQ-Marlin =====
+rows: 1319
+max_new_tokens: 768
+cap_hit_rows: 3 (0.23%)
+cap_hit_wrong_rows: 3
+accuracy_all: 95.3753%
+accuracy_cap_hit: 0.0000%
+accuracy_not_cap_hit: 95.5927%
+sample_capped_wrong_cases:
+  gsm8k_0120 expected=95200 predicted=30 tail= \( L \) be Lylah's salary four years ago.  \nA 30% increase means Adrien's salary = \( L + 0.3L = 1.3L \).  \nThus:  \n\[ 1.3L = 40000 \]  \n\[ L = \frac{40000}{1.3} \approx 30769
+  gsm8k_0256 expected=192 predicted=2 tail=but then later mentions "each of the twenty stalls." Wait, rechecking: The first sentence might be a typo? Wait no—wait, let's read again:  \n"Ten stalls have 20 cows each. Mr. Syl
+  gsm8k_0641 expected=43500 predicted=500 tail=e**  \nThe base price of the truck is $30,000.\n\n\n### **Step 2: Calculate the cost of each added feature**  \n- **King cab upgrade**: Explicitly stated as $7,500.  \n- **Leather 

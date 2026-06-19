@@ -1,0 +1,13 @@
+{
+  "repo_id": "QuantTrio/Seed-OSS-36B-Instruct-AWQ",
+  "revision_sha": "e7a05d50620ee8bc1670fd76dffc7a724c2cb268",
+  "last_modified": "2025-09-15 05:48:39+00:00",
+  "config_name_or_path": "tclf90/Seed-OSS-36B-Instruct-AWQ",
+  "quantization_config": {
+    "quant_method": "awq",
+    "bits": 4,
+    "group_size": 128,
+    "version": "gemm",
+    "zero_point": true
+  }
+}

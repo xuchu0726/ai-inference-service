@@ -1,0 +1,58 @@
+AWQ Pod baseline
+
+===== TIME =====
+Fri Jun 19 15:45:19 UTC 2026
+
+===== GPU =====
+Fri Jun 19 15:45:19 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:0F:00.0 Off |                    0 |
+| N/A   28C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:90:00.0 Off |                    0 |
+| N/A   31C    P0             63W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+===== DISK =====
+Filesystem                         Size  Used Avail Use% Mounted on
+overlay                             50G   16M   50G   1% /
+tmpfs                               64M     0   64M   0% /dev
+mfs#us-md-1.runpod.net:9421        334T  248T   86T  75% /workspace
+shm                                267G     0  267G   0% /dev/shm
+/dev/mapper/ubuntu--vg-ubuntu--lv  1.8T   28G  1.7T   2% /usr/bin/nvidia-smi
+/dev/mapper/vg_data-lv_data         28T  3.6T   25T  13% /etc/hosts
+tmpfs                              201G   12M  201G   1% /run/nvidia-persistenced/socket
+tmpfs                              4.0K  4.0K     0 100% /run/nvidia-ctk-hook4febd6f6-d64d-47e0-be7b-91ef8d9c8495
+tmpfs                             1002G     0 1002G   0% /proc/acpi
+tmpfs                             1002G     0 1002G   0% /proc/scsi
+tmpfs                             1002G     0 1002G   0% /sys/devices/virtual/powercap
+tmpfs                             1002G     0 1002G   0% /sys/firmware
+
+===== PYTHON =====
+Python 3.11.10
+/usr/bin/python
+pip 24.2 from /usr/local/lib/python3.11/dist-packages/pip (python 3.11)
+
+===== TORCH =====
+torch: 2.4.1+cu124
+cuda available: True
+torch cuda: 12.4
+gpu count: 2
+gpu 0: NVIDIA A100-SXM4-80GB
+gpu 1: NVIDIA A100-SXM4-80GB

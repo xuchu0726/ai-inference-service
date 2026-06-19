@@ -1,0 +1,33 @@
+AWQ GSM8K 结果与历史 BF16/W8A8 结果的可比性审计
+
+一、AWQ 全量结果
+AWQ-Marlin 全量评测完成 1319 题，accuracy_all_cases 为 0.953753。
+AWQ 使用参数：
+- temperature=0
+- thinking_budget=0
+- max_new_tokens=768
+
+二、历史 BF16/W8A8 结果
+历史 BF16 与 W8A8 全量评测均使用：
+- temperature=0
+- thinking_budget=0
+- max_new_tokens=256
+
+历史准确率：
+- BF16：0.757392
+- W8A8：0.747536
+
+三、输出上限诊断
+AWQ 在 max_new_tokens=256 的 10 题 smoke 中仅得到 5/10 正确；
+多个错误样本的 output_tokens 恰为 256，表现为生成被截断后答案抽取器取到中间数字。
+将 max_new_tokens 提升至 768 后，同一 10 题 smoke 恢复为 10/10 正确。
+
+四、可比性结论
+AWQ 的 0.953753 与历史 BF16/W8A8 的约 0.75 不构成直接的量化精度横向结论。
+主要原因是 max_new_tokens 不一致；此外，AWQ 使用第三方 artifact 自带 chat template，
+与历史 BF16/W8A8 的实际 prompt/tokenization 也存在差异。
+
+五、后续使用边界
+AWQ 全量结果用于说明该 AWQ-Marlin serving stack 在可完成推理配置下的质量表现。
+若需要严格比较 BF16、W8A8 与 AWQ 的质量，必须在同一数据、同一脚本、
+同一 prompt/chat template、同一 max_new_tokens=768、同一 thinking_budget=0 下重新评测。
