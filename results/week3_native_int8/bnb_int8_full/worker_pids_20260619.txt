@@ -1,0 +1,7 @@
+gpu0_pid=7471
+gpu0_cases=0001-0660
+gpu1_pid=7830
+gpu1_cases=0661-1319
+batch_size=1
+max_new_tokens=256
+thinking_budget=0

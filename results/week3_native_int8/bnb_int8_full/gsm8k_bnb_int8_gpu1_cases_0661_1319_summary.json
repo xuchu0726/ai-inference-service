@@ -1,0 +1,20 @@
+{
+  "total_cases": 659,
+  "successful_cases": 659,
+  "failed_cases": 0,
+  "accuracy": 0.757208,
+  "batch_size": 1,
+  "batch_latency_avg_seconds": 51.193553,
+  "batch_latency_p50_seconds": 51.915074,
+  "batch_latency_p95_seconds": 63.877933,
+  "batch_total_output_tokens_avg": 207.412747,
+  "reference_csv": "",
+  "reference_prediction_mismatch_cases": 0,
+  "memory_snapshot": {
+    "cuda:0": {
+      "allocated_gib": 35.188,
+      "reserved_gib": 38.094,
+      "peak_allocated_gib": 35.89
+    }
+  }
+}

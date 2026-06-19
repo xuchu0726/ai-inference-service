@@ -1,0 +1,41 @@
+{
+  "生成时间（generated_at_utc）": "2026-06-19T22:07:55.571344+00:00",
+  "审计目的（purpose）": "审计 BnB INT8 在 max_new_tokens=256 条件下的输出上限触顶情况，用于区分 output truncation（输出截断）与 quantization quality regression（量化质量回归）的影响。",
+  "原始结果文件（source_csvs）": [
+    "results/week3_native_int8/bnb_int8_full/gsm8k_bnb_int8_gpu0_cases_0001_0660.csv",
+    "results/week3_native_int8/bnb_int8_full/gsm8k_bnb_int8_gpu1_cases_0661_1319.csv"
+  ],
+  "评测协议（evaluation_protocol）": {
+    "最大生成长度（max_new_tokens）": 256,
+    "触顶判定（cap_hit_definition）": "output_tokens == 256",
+    "判定说明（interpretation）": "达到输出上限不等于必然错误，但代表该样本可能受到 output truncation（输出截断）影响。"
+  },
+  "全量样本数（total_cases）": 1319,
+  "全量正确数（overall_correct）": 1009,
+  "全量错误数（overall_wrong）": 310,
+  "全量准确率（overall_accuracy）": 0.7649734647460197,
+  "触顶样本数（cap_hit_cases）": 348,
+  "触顶比例（cap_hit_rate）": 0.26383623957543595,
+  "触顶样本正确数（cap_hit_correct）": 69,
+  "触顶样本错误数（cap_hit_wrong）": 279,
+  "触顶样本条件准确率（cap_hit_accuracy）": 0.19827586206896552,
+  "未触顶样本数（non_cap_cases）": 971,
+  "未触顶样本正确数（non_cap_correct）": 940,
+  "未触顶样本条件准确率（non_cap_accuracy）": 0.9680741503604532,
+  "错误集中于触顶样本的比例（share_of_all_errors_in_cap_hit）": 0.9,
+  "后续定向复测范围（targeted_reevaluation_scope）": {
+    "复测对象（cases_to_rerun）": "全部 cap-hit 样本，不仅限于 cap-hit 且错误的样本。",
+    "样本数量（case_count）": 348,
+    "建议配置（recommended_config）": {
+      "max_new_tokens": 768,
+      "temperature": 0,
+      "thinking_budget": 0
+    }
+  },
+  "结论边界（interpretation_boundaries）": [
+    "未触顶样本条件准确率（non_cap_accuracy）不等同于真实全量模型质量，因为未触顶样本可能偏向输出较短或较容易完成的题目。",
+    "本审计证明 output truncation（输出截断）与错误高度相关，但不单独证明所有触顶错误都由截断造成。",
+    "后续若进行 768-token 定向复测，应重跑全部 cap-hit 样本，不能只重跑其中错误样本，以避免选择性样本偏差。",
+    "定向复测合并结果应命名为 targeted corrected evaluation，不能表述为 full 768-token rerun。"
+  ]
+}
