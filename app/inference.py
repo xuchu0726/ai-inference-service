@@ -8,11 +8,19 @@ from app.config import (
     VLLM_MODEL_NAME,
     VLLM_TIMEOUT_SECONDS,
     VLLM_ENABLE_SEED_THINKING_BUDGET,
+    TRANSFORMERS_LOAD_IN_8BIT,
+    TRANSFORMERS_DEVICE_MAP,
+    TRANSFORMERS_DEFAULT_THINKING_BUDGET,
 )
 
 
 if INFERENCE_BACKEND == "transformers":
-    backend = TransformersBackend(model_name=MODEL_NAME)
+    backend = TransformersBackend(
+        model_name=MODEL_NAME,
+        load_in_8bit=TRANSFORMERS_LOAD_IN_8BIT,
+        device_map=TRANSFORMERS_DEVICE_MAP,
+        default_thinking_budget=TRANSFORMERS_DEFAULT_THINKING_BUDGET,
+    )
 elif INFERENCE_BACKEND == "vllm":
     backend = VLLMBackend(
         base_url=VLLM_BASE_URL,

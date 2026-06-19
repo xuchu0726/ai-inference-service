@@ -1,0 +1,30 @@
+# HELP http_requests_total Total number of requests by method, status and handler.
+# TYPE http_requests_total counter
+http_requests_total{handler="/health",method="GET",status="2xx"} 1.0
+http_requests_total{handler="/generate",method="POST",status="2xx"} 4.0
+http_requests_total{handler="/metrics",method="GET",status="2xx"} 3.0
+# HELP http_request_duration_highr_seconds Latency with many buckets but no API specific labels. Made for more accurate percentile calculations. 
+# TYPE http_request_duration_highr_seconds histogram
+http_request_duration_highr_seconds_bucket{le="0.01"} 4.0
+http_request_duration_highr_seconds_bucket{le="0.025"} 4.0
+http_request_duration_highr_seconds_bucket{le="0.05"} 4.0
+http_request_duration_highr_seconds_bucket{le="0.075"} 4.0
+http_request_duration_highr_seconds_bucket{le="0.1"} 4.0
+http_request_duration_highr_seconds_bucket{le="0.25"} 4.0
+http_request_duration_highr_seconds_bucket{le="0.5"} 4.0
+http_request_duration_highr_seconds_bucket{le="0.75"} 4.0
+http_request_duration_highr_seconds_bucket{le="1.0"} 4.0
+http_request_duration_highr_seconds_bucket{le="1.5"} 4.0
+http_request_duration_highr_seconds_bucket{le="2.0"} 4.0
+http_request_duration_highr_seconds_bucket{le="2.5"} 7.0
+http_request_duration_highr_seconds_bucket{le="3.0"} 7.0
+http_request_duration_highr_seconds_bucket{le="3.5"} 7.0
+http_request_duration_highr_seconds_bucket{le="4.0"} 7.0
+http_request_duration_highr_seconds_bucket{le="4.5"} 7.0
+http_request_duration_highr_seconds_bucket{le="5.0"} 7.0
+http_request_duration_highr_seconds_bucket{le="7.5"} 7.0
+http_request_duration_highr_seconds_bucket{le="10.0"} 7.0
+http_request_duration_highr_seconds_bucket{le="30.0"} 7.0
+http_request_duration_highr_seconds_bucket{le="60.0"} 8.0
+http_request_duration_highr_seconds_bucket{le="+Inf"} 8.0
+http_request_duration_highr_seconds_count 8.0

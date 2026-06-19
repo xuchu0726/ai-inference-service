@@ -1,0 +1,6 @@
+===== request 1 =====
+{"response":"Paris is the capital of France.","latency_seconds":2.223339319229126,"input_chars":30,"max_new_tokens":32,"thinking_budget":0,"backend":"transformers","input_tokens":106,"output_tokens":8,"tokens_per_second":3.5982,"model_name":"/workspace/models/Seed-OSS-36B-Instruct","device":"cuda:0"}
+===== request 2 =====
+{"response":"Paris is the capital of France.","latency_seconds":2.192934989929199,"input_chars":30,"max_new_tokens":32,"thinking_budget":0,"backend":"transformers","input_tokens":106,"output_tokens":8,"tokens_per_second":3.6481,"model_name":"/workspace/models/Seed-OSS-36B-Instruct","device":"cuda:0"}
+===== request 3 =====
+{"response":"Paris is the capital of France.","latency_seconds":2.2123429775238037,"input_chars":30,"max_new_tokens":32,"thinking_budget":0,"backend":"transformers","input_tokens":106,"output_tokens":8,"tokens_per_second":3.6161,"model_name":"/workspace/models/Seed-OSS-36B-Instruct","device":"cuda:0"}

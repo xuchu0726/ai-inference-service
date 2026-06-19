@@ -26,3 +26,16 @@ VLLM_ENABLE_SEED_THINKING_BUDGET = (
     os.getenv("VLLM_ENABLE_SEED_THINKING_BUDGET", "false").lower() == "true"
 )
 
+
+TRANSFORMERS_LOAD_IN_8BIT = (
+    os.getenv("TRANSFORMERS_LOAD_IN_8BIT", "false").lower() == "true"
+)
+
+TRANSFORMERS_DEVICE_MAP = os.getenv(
+    "TRANSFORMERS_DEVICE_MAP",
+    "auto",
+)
+
+TRANSFORMERS_DEFAULT_THINKING_BUDGET = int(
+    os.getenv("TRANSFORMERS_DEFAULT_THINKING_BUDGET", "0")
+)
