@@ -1,4 +1,4 @@
-# Week3 量化评测协议审计与后续复测计划
+# Week2 量化评测协议审计与后续复测计划
 
 ## 1. 文档目的
 
@@ -79,7 +79,7 @@
 
 - BF16 summary: `results/week2_gsm8k_full_seed_oss_budget0_summary.csv`
 - W8A8 summary: `results/week2_hardening/gsm8k_w8a8_full_budget0_fixed_summary_20260616.csv`
-- BnB INT8 cap-hit audit: `evidence/week3_native_int8/bnb_int8_output_cap_audit_20260619.json`
-- BnB INT8 provenance: `evidence/week3_native_int8/bnb_int8_final_provenance_20260619.txt`
-- Historical BF16/W8A8/AWQ cap-hit audit: `evidence/week3_awq/checkpoint/gsm8k_output_cap_audit_20260619.txt`
+- BnB INT8 cap-hit audit: `evidence/week2_hardening/bnb_int8/bnb_int8_output_cap_audit_20260619.json`
+- BnB INT8 provenance: `evidence/week2_hardening/bnb_int8/bnb_int8_final_provenance_20260619.txt`
+- Historical BF16/W8A8/AWQ cap-hit audit: `evidence/week2_hardening/awq/checkpoint/gsm8k_output_cap_audit_20260619.txt`
 - Historical BF16/W8A8 quality report: `docs/week2_hardening_response_summary.md`

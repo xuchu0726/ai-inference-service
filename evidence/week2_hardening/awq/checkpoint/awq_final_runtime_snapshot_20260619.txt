@@ -3,9 +3,9 @@ Fri Jun 19 20:14:43 UTC 2026
 
 ===== GIT =====
 0e21ffaec660fe0f5a8b9040c34882b535a37820
-?? evidence/week3_awq/
-?? logs/week3_awq/
-?? results/week3_awq/
+?? evidence/week2_hardening/awq/
+?? logs/week2_hardening/awq/
+?? results/week2_hardening/awq/
 
 ===== GPU =====
 Fri Jun 19 20:14:43 2026       
@@ -59,40 +59,40 @@ b6f5b4ea13929450e8b7ff4d88b832199d40efc975c0d0a3377599ff62498ddb  app/main.py
 310d44d30ce2ded58cdacc3c8a78e4f50c7e1511d2b8b82c2ff8451df7b7baf6  app/inference.py
 
 ===== AWQ RESULT FILES =====
-evidence/week3_awq/checkpoint/awq_artifact_identity_20260619.json	369 bytes
-evidence/week3_awq/checkpoint/awq_dtype_compatibility_20260619.txt	1249 bytes
-evidence/week3_awq/checkpoint/awq_final_runtime_snapshot_20260619.txt	4257 bytes
-evidence/week3_awq/checkpoint/awq_gsm8k_final_findings_20260619.txt	2437 bytes
-evidence/week3_awq/checkpoint/awq_gsm8k_protocol_comparability_20260619.txt	1341 bytes
-evidence/week3_awq/checkpoint/gsm8k_output_cap_audit_20260619.txt	2686 bytes
-evidence/week3_awq/environment/awq_api_middleware_compatibility_20260619.txt	859 bytes
-evidence/week3_awq/environment/awq_controlled_awq_marlin.pid	5 bytes
-evidence/week3_awq/environment/awq_controlled_awq_marlin_api_fixed.pid	5 bytes
-evidence/week3_awq/environment/awq_controlled_awq_marlin_launch_command_20260619.txt	515 bytes
-evidence/week3_awq/environment/awq_controlled_launch_command_20260619.txt	512 bytes
-evidence/week3_awq/environment/awq_controlled_service_ready_20260619.txt	583 bytes
-evidence/week3_awq/environment/awq_controlled_vllm.pid	5 bytes
-evidence/week3_awq/environment/awq_fastapi_gateway.pid	5 bytes
-evidence/week3_awq/environment/awq_vllm_environment_20260619.txt	2388 bytes
-evidence/week3_awq/environment/gsm8k_awq_marlin_full_budget0_max768.pid	5 bytes
-evidence/week3_awq/environment/gsm8k_awq_marlin_full_budget0_max768_run_config_20260619.txt	523 bytes
-evidence/week3_awq/environment/pod_baseline.txt	3391 bytes
-logs/week3_awq/awq_controlled_awq_marlin_launch_20260619.log	18293 bytes
-logs/week3_awq/awq_controlled_awq_marlin_launch_api_fixed_20260619.log	421982 bytes
-logs/week3_awq/awq_controlled_vllm_launch_20260619.log	5804 bytes
-logs/week3_awq/awq_fastapi_gateway_20260619.log	82073 bytes
-logs/week3_awq/awq_vllm_install_workspace_io_error_20260619.txt	624 bytes
-logs/week3_awq/gsm8k_awq_marlin_full_budget0_max768_20260619.log	125853 bytes
-logs/week3_awq/gsm8k_awq_marlin_smoke10_budget0_20260619.log	1506 bytes
-logs/week3_awq/gsm8k_awq_marlin_smoke10_budget0_max768_20260619.log	1519 bytes
-results/week3_awq/awq_direct_vllm_models_api_fixed_20260619.json	539 bytes
-results/week3_awq/awq_direct_vllm_models_middleware_500_20260619.txt	21 bytes
-results/week3_awq/awq_direct_vllm_smoke_api_fixed_20260619.json	756 bytes
-results/week3_awq/awq_direct_vllm_smoke_middleware_500_20260619.txt	21 bytes
-results/week3_awq/awq_fastapi_generate_smoke_20260619.json	379 bytes
-results/week3_awq/gsm8k_awq_marlin_full_budget0_max768_20260619.csv	1084849 bytes
-results/week3_awq/gsm8k_awq_marlin_full_budget0_max768_20260619_summary.json	489 bytes
-results/week3_awq/gsm8k_awq_marlin_smoke10_budget0_20260619.csv	8483 bytes
-results/week3_awq/gsm8k_awq_marlin_smoke10_budget0_20260619_summary.json	463 bytes
-results/week3_awq/gsm8k_awq_marlin_smoke10_budget0_max768_20260619.csv	8488 bytes
-results/week3_awq/gsm8k_awq_marlin_smoke10_budget0_max768_20260619_summary.json	467 bytes
+evidence/week2_hardening/awq/checkpoint/awq_artifact_identity_20260619.json	369 bytes
+evidence/week2_hardening/awq/checkpoint/awq_dtype_compatibility_20260619.txt	1249 bytes
+evidence/week2_hardening/awq/checkpoint/awq_final_runtime_snapshot_20260619.txt	4257 bytes
+evidence/week2_hardening/awq/checkpoint/awq_gsm8k_final_findings_20260619.txt	2437 bytes
+evidence/week2_hardening/awq/checkpoint/awq_gsm8k_protocol_comparability_20260619.txt	1341 bytes
+evidence/week2_hardening/awq/checkpoint/gsm8k_output_cap_audit_20260619.txt	2686 bytes
+evidence/week2_hardening/awq/environment/awq_api_middleware_compatibility_20260619.txt	859 bytes
+evidence/week2_hardening/awq/environment/awq_controlled_awq_marlin.pid	5 bytes
+evidence/week2_hardening/awq/environment/awq_controlled_awq_marlin_api_fixed.pid	5 bytes
+evidence/week2_hardening/awq/environment/awq_controlled_awq_marlin_launch_command_20260619.txt	515 bytes
+evidence/week2_hardening/awq/environment/awq_controlled_launch_command_20260619.txt	512 bytes
+evidence/week2_hardening/awq/environment/awq_controlled_service_ready_20260619.txt	583 bytes
+evidence/week2_hardening/awq/environment/awq_controlled_vllm.pid	5 bytes
+evidence/week2_hardening/awq/environment/awq_fastapi_gateway.pid	5 bytes
+evidence/week2_hardening/awq/environment/awq_vllm_environment_20260619.txt	2388 bytes
+evidence/week2_hardening/awq/environment/gsm8k_awq_marlin_full_budget0_max768.pid	5 bytes
+evidence/week2_hardening/awq/environment/gsm8k_awq_marlin_full_budget0_max768_run_config_20260619.txt	523 bytes
+evidence/week2_hardening/awq/environment/pod_baseline.txt	3391 bytes
+logs/week2_hardening/awq/awq_controlled_awq_marlin_launch_20260619.log	18293 bytes
+logs/week2_hardening/awq/awq_controlled_awq_marlin_launch_api_fixed_20260619.log	421982 bytes
+logs/week2_hardening/awq/awq_controlled_vllm_launch_20260619.log	5804 bytes
+logs/week2_hardening/awq/awq_fastapi_gateway_20260619.log	82073 bytes
+logs/week2_hardening/awq/awq_vllm_install_workspace_io_error_20260619.txt	624 bytes
+logs/week2_hardening/awq/gsm8k_awq_marlin_full_budget0_max768_20260619.log	125853 bytes
+logs/week2_hardening/awq/gsm8k_awq_marlin_smoke10_budget0_20260619.log	1506 bytes
+logs/week2_hardening/awq/gsm8k_awq_marlin_smoke10_budget0_max768_20260619.log	1519 bytes
+results/week2_hardening/awq/awq_direct_vllm_models_api_fixed_20260619.json	539 bytes
+results/week2_hardening/awq/awq_direct_vllm_models_middleware_500_20260619.txt	21 bytes
+results/week2_hardening/awq/awq_direct_vllm_smoke_api_fixed_20260619.json	756 bytes
+results/week2_hardening/awq/awq_direct_vllm_smoke_middleware_500_20260619.txt	21 bytes
+results/week2_hardening/awq/awq_fastapi_generate_smoke_20260619.json	379 bytes
+results/week2_hardening/awq/gsm8k_awq_marlin_full_budget0_max768_20260619.csv	1084849 bytes
+results/week2_hardening/awq/gsm8k_awq_marlin_full_budget0_max768_20260619_summary.json	489 bytes
+results/week2_hardening/awq/gsm8k_awq_marlin_smoke10_budget0_20260619.csv	8483 bytes
+results/week2_hardening/awq/gsm8k_awq_marlin_smoke10_budget0_20260619_summary.json	463 bytes
+results/week2_hardening/awq/gsm8k_awq_marlin_smoke10_budget0_max768_20260619.csv	8488 bytes
+results/week2_hardening/awq/gsm8k_awq_marlin_smoke10_budget0_max768_20260619_summary.json	467 bytes

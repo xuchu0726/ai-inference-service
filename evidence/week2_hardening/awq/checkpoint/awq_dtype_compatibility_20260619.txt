@@ -37,4 +37,4 @@ AWQ 的运行时 dtype 与 kernel 由量化后端约束，不能为了与 W8A8 �
 FP16 与 AWQ-Marlin 被视为 AWQ 量化后端的必要运行组合，而非未控制的实验变量。
 
 六、原始日志
-logs/week3_awq/awq_controlled_vllm_launch_20260619.log
+logs/week2_hardening/awq/awq_controlled_vllm_launch_20260619.log

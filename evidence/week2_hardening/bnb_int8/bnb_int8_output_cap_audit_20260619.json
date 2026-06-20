@@ -2,8 +2,8 @@
   "生成时间（generated_at_utc）": "2026-06-19T22:07:55.571344+00:00",
   "审计目的（purpose）": "审计 BnB INT8 在 max_new_tokens=256 条件下的输出上限触顶情况，用于区分 output truncation（输出截断）与 quantization quality regression（量化质量回归）的影响。",
   "原始结果文件（source_csvs）": [
-    "results/week3_native_int8/bnb_int8_full/gsm8k_bnb_int8_gpu0_cases_0001_0660.csv",
-    "results/week3_native_int8/bnb_int8_full/gsm8k_bnb_int8_gpu1_cases_0661_1319.csv"
+    "results/week2_hardening/bnb_int8/bnb_int8_full/gsm8k_bnb_int8_gpu0_cases_0001_0660.csv",
+    "results/week2_hardening/bnb_int8/bnb_int8_full/gsm8k_bnb_int8_gpu1_cases_0661_1319.csv"
   ],
   "评测协议（evaluation_protocol）": {
     "最大生成长度（max_new_tokens）": 256,

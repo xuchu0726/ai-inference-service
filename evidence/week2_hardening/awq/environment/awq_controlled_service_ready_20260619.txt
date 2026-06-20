@@ -19,4 +19,4 @@ AWQ-Marlin 受控服务启动结果
 - GPU KV cache 容量为 489072 tokens。
 
 原始日志：
-logs/week3_awq/awq_controlled_awq_marlin_launch_20260619.log
+logs/week2_hardening/awq/awq_controlled_awq_marlin_launch_20260619.log

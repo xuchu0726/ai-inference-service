@@ -10,7 +10,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 MODEL_PATH = "/workspace/models/Seed-OSS-36B-Instruct"
 RESULT_PATH = Path(
-    "/workspace/ai-inference-service/results/week3_native_int8/"
+    "/workspace/ai-inference-service/results/week2_hardening/bnb_int8/"
     "seed_oss_bnb_int8_smoke_20260619.json"
 )
 

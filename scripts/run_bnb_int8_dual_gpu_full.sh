@@ -5,9 +5,9 @@ ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT_DIR"
 
 PYTHON_BIN="/workspace/venvs/bnb-int8/bin/python"
-RUN_DIR="results/week3_native_int8/bnb_int8_full"
-LOG_DIR="logs/week3_native_int8/bnb_int8_full"
-SHARD_DIR="data/eval/gsm8k_bnb_int8_shards"
+RUN_DIR="results/week2_hardening/bnb_int8/bnb_int8_full"
+LOG_DIR="logs/week2_hardening/bnb_int8/bnb_int8_full"
+SHARD_DIR="data/eval/week2_quantization_validation/bnb_int8_full_shards"
 
 mkdir -p "$RUN_DIR" "$LOG_DIR" "$SHARD_DIR"
 

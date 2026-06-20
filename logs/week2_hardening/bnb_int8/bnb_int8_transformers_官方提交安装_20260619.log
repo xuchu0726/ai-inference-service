@@ -1,0 +1,21 @@
+Collecting git+https://github.com/huggingface/transformers.git@56d68c6706ee052b445e1e476056ed92ac5eb383
+  Cloning https://github.com/huggingface/transformers.git (to revision 56d68c6706ee052b445e1e476056ed92ac5eb383) to /tmp/pip-req-build-5thgbgr8
+  Running command git clone --filter=blob:none --quiet https://github.com/huggingface/transformers.git /tmp/pip-req-build-5thgbgr8
+  Running command git rev-parse -q --verify 'sha^56d68c6706ee052b445e1e476056ed92ac5eb383'
+  Running command git fetch -q https://github.com/huggingface/transformers.git 56d68c6706ee052b445e1e476056ed92ac5eb383
+  Running command git checkout -q 56d68c6706ee052b445e1e476056ed92ac5eb383
+  Resolved https://github.com/huggingface/transformers.git to commit 56d68c6706ee052b445e1e476056ed92ac5eb383
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: transformers
+  Building wheel for transformers (pyproject.toml): started
+  Building wheel for transformers (pyproject.toml): finished with status 'done'
+  Created wheel for transformers: filename=transformers-4.56.0.dev0-py3-none-any.whl size=12589680 sha256=8ba8efec1ea002c3699b5e8157c659a86364303d866dc847d75b2d958f6998a2
+  Stored in directory: /root/.cache/pip/wheels/26/1d/69/2908baab998e693590e3360e90fed4207ee88f22f54a93317d
+Successfully built transformers
+Installing collected packages: transformers
+Successfully installed transformers-4.56.0.dev0

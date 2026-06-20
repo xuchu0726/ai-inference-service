@@ -1,0 +1,25 @@
+{
+  "total_cases": 10,
+  "successful_cases": 10,
+  "failed_cases": 0,
+  "accuracy": 0.7,
+  "batch_size": 1,
+  "batch_latency_avg_seconds": 59.214267,
+  "batch_latency_p50_seconds": 65.923337,
+  "batch_latency_p95_seconds": 69.627143,
+  "batch_total_output_tokens_avg": 217.3,
+  "reference_csv": "results/week3_native_int8/gsm8k_bnb_int8_serial_partial_20260619.csv",
+  "reference_prediction_mismatch_cases": 0,
+  "memory_snapshot": {
+    "cuda:0": {
+      "allocated_gib": 15.082,
+      "reserved_gib": 15.848,
+      "peak_allocated_gib": 15.231
+    },
+    "cuda:1": {
+      "allocated_gib": 20.115,
+      "reserved_gib": 22.256,
+      "peak_allocated_gib": 20.765
+    }
+  }
+}

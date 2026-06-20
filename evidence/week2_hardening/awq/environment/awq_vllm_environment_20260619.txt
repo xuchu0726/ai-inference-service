@@ -3,8 +3,8 @@ Fri Jun 19 16:23:46 UTC 2026
 
 ===== GIT =====
 0e21ffaec660fe0f5a8b9040c34882b535a37820
-?? evidence/week3_awq/
-?? logs/week3_awq/
+?? evidence/week2_hardening/awq/
+?? logs/week2_hardening/awq/
 
 ===== GPU =====
 Fri Jun 19 16:23:46 2026       
