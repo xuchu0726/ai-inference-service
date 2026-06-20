@@ -1,0 +1,44 @@
+正在加载 Seed-OSS-36B BitsAndBytes LLM.int8() 模型。
+Loading checkpoint shards:   0%|          | 0/15 [00:00<?, ?it/s]Loading checkpoint shards:   7%|▋         | 1/15 [00:01<00:24,  1.75s/it]Loading checkpoint shards:  13%|█▎        | 2/15 [00:03<00:23,  1.83s/it]Loading checkpoint shards:  20%|██        | 3/15 [00:05<00:22,  1.89s/it]Loading checkpoint shards:  27%|██▋       | 4/15 [00:07<00:20,  1.84s/it]Loading checkpoint shards:  33%|███▎      | 5/15 [00:09<00:18,  1.86s/it]Loading checkpoint shards:  40%|████      | 6/15 [00:11<00:16,  1.84s/it]Loading checkpoint shards:  47%|████▋     | 7/15 [00:13<00:15,  1.92s/it]Loading checkpoint shards:  53%|█████▎    | 8/15 [00:14<00:13,  1.89s/it]Loading checkpoint shards:  60%|██████    | 9/15 [00:16<00:11,  1.93s/it]Loading checkpoint shards:  67%|██████▋   | 10/15 [00:18<00:09,  1.94s/it]Loading checkpoint shards:  73%|███████▎  | 11/15 [00:20<00:07,  1.93s/it]Loading checkpoint shards:  80%|████████  | 12/15 [00:22<00:05,  1.92s/it]Loading checkpoint shards:  87%|████████▋ | 13/15 [00:24<00:03,  1.97s/it]Loading checkpoint shards:  93%|█████████▎| 14/15 [00:26<00:01,  2.00s/it]Loading checkpoint shards: 100%|██████████| 15/15 [00:27<00:00,  1.71s/it]Loading checkpoint shards: 100%|██████████| 15/15 [00:27<00:00,  1.86s/it]
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+/workspace/venvs/bnb-int8/lib/python3.11/site-packages/bitsandbytes/autograd/_functions.py:123: UserWarning: MatMul8bitLt: inputs will be cast from torch.bfloat16 to float16 during quantization
+  warnings.warn(f"MatMul8bitLt: inputs will be cast from {A.dtype} to float16 during quantization")
+模型加载完成，耗时: 32.625 秒
+batch_size: 1
+待评测样本数: 20
+输入设备: cuda:0
+[1-1/20] gsm8k_0001 expected=70000 predicted=70000 correct=True batch_tps=3.651
+[2-2/20] gsm8k_0002 expected=48 predicted=48 correct=True batch_tps=3.693
+[3-3/20] gsm8k_0003 expected=2050 predicted=2050 correct=True batch_tps=3.697
+[4-4/20] gsm8k_0004 expected=6 predicted=6 correct=True batch_tps=3.693
+[5-5/20] gsm8k_0005 expected=1800 predicted=1800 correct=True batch_tps=3.692
+[6-6/20] gsm8k_0006 expected=255 predicted=255 correct=True batch_tps=3.704
+[7-7/20] gsm8k_0007 expected=47 predicted=47 correct=True batch_tps=3.699
+[8-8/20] gsm8k_0008 expected=10 predicted=10 correct=True batch_tps=3.677
+[9-9/20] gsm8k_0009 expected=50 predicted=50 correct=True batch_tps=3.699
+[10-10/20] gsm8k_0010 expected=64 predicted=64 correct=True batch_tps=3.709
+[11-11/20] gsm8k_0011 expected=48 predicted=48 correct=True batch_tps=3.696
+[12-12/20] gsm8k_0012 expected=34 predicted=34 correct=True batch_tps=3.703
+[13-13/20] gsm8k_0013 expected=68 predicted=68 correct=True batch_tps=3.702
+[14-14/20] gsm8k_0014 expected=14 predicted=14 correct=True batch_tps=3.687
+[15-15/20] gsm8k_0015 expected=5 predicted=5 correct=True batch_tps=3.711
+[16-16/20] gsm8k_0016 expected=18 predicted=18 correct=True batch_tps=3.703
+[17-17/20] gsm8k_0017 expected=1 predicted=1 correct=True batch_tps=3.693
+[18-18/20] gsm8k_0018 expected=10 predicted=10 correct=True batch_tps=3.685
+[19-19/20] gsm8k_0019 expected=4 predicted=4 correct=True batch_tps=3.679
+[20-20/20] gsm8k_0020 expected=14 predicted=14 correct=True batch_tps=3.697
+
+===== BATCHED GSM8K SUMMARY =====
+total_cases: 20
+successful_cases: 20
+failed_cases: 0
+accuracy: 1.0
+batch_size: 1
+batch_latency_avg_seconds: 75.104513
+batch_latency_p50_seconds: 72.135613
+batch_latency_p95_seconds: 107.575463
+batch_total_output_tokens_avg: 277.4
+reference_csv: 
+reference_prediction_mismatch_cases: 0
+memory_snapshot: {'cuda:0': {'allocated_gib': 15.083, 'reserved_gib': 15.855, 'peak_allocated_gib': 15.231}, 'cuda:1': {'allocated_gib': 20.115, 'reserved_gib': 22.725, 'peak_allocated_gib': 20.758}}
+saved_summary: results/week2_hardening/bnb_int8/output_budget_validation/gsm8k_bnb_int8_fixed20_max768_summary_20260620.json

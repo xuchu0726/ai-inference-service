@@ -1,0 +1,199 @@
+nohup: ignoring input
+正在加载 Seed-OSS-36B BitsAndBytes LLM.int8() 模型。
+Loading checkpoint shards:   0%|          | 0/15 [00:00<?, ?it/s]Loading checkpoint shards:   7%|▋         | 1/15 [00:04<00:57,  4.08s/it]Loading checkpoint shards:  13%|█▎        | 2/15 [00:09<01:03,  4.88s/it]Loading checkpoint shards:  20%|██        | 3/15 [00:14<01:00,  5.00s/it]Loading checkpoint shards:  27%|██▋       | 4/15 [00:19<00:55,  5.04s/it]Loading checkpoint shards:  33%|███▎      | 5/15 [00:24<00:50,  5.10s/it]Loading checkpoint shards:  40%|████      | 6/15 [00:30<00:45,  5.10s/it]Loading checkpoint shards:  47%|████▋     | 7/15 [00:35<00:40,  5.08s/it]Loading checkpoint shards:  53%|█████▎    | 8/15 [00:39<00:35,  5.01s/it]Loading checkpoint shards:  60%|██████    | 9/15 [00:44<00:29,  4.99s/it]Loading checkpoint shards:  67%|██████▋   | 10/15 [00:49<00:24,  5.00s/it]Loading checkpoint shards:  73%|███████▎  | 11/15 [00:54<00:19,  5.00s/it]Loading checkpoint shards:  80%|████████  | 12/15 [01:00<00:15,  5.03s/it]Loading checkpoint shards:  87%|████████▋ | 13/15 [01:05<00:10,  5.01s/it]Loading checkpoint shards:  93%|█████████▎| 14/15 [01:09<00:04,  4.97s/it]Loading checkpoint shards: 100%|██████████| 15/15 [01:12<00:00,  4.27s/it]Loading checkpoint shards: 100%|██████████| 15/15 [01:12<00:00,  4.83s/it]
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+模型加载完成，耗时: 76.180 秒
+batch_size: 1
+待评测样本数: 174
+输入设备: cuda:0
+/workspace/venvs/bnb-int8/lib/python3.11/site-packages/bitsandbytes/autograd/_functions.py:123: UserWarning: MatMul8bitLt: inputs will be cast from torch.bfloat16 to float16 during quantization
+  warnings.warn(f"MatMul8bitLt: inputs will be cast from {A.dtype} to float16 during quantization")
+[1-1/174] gsm8k_0001 expected=70000 predicted=70000 correct=True batch_tps=4.014
+[2-2/174] gsm8k_0002 expected=160 predicted=160 correct=True batch_tps=4.127
+[3-3/174] gsm8k_0003 expected=45 predicted=45 correct=True batch_tps=4.146
+[4-4/174] gsm8k_0004 expected=13 predicted=13 correct=True batch_tps=4.143
+[5-5/174] gsm8k_0005 expected=60 predicted=60 correct=True batch_tps=4.144
+[6-6/174] gsm8k_0006 expected=6 predicted=6 correct=True batch_tps=4.148
+[7-7/174] gsm8k_0007 expected=15 predicted=15 correct=True batch_tps=4.153
+[8-8/174] gsm8k_0008 expected=2 predicted=2 correct=True batch_tps=4.162
+[9-9/174] gsm8k_0009 expected=109 predicted=109 correct=True batch_tps=4.159
+[10-10/174] gsm8k_0010 expected=18 predicted=18 correct=True batch_tps=4.154
+[11-11/174] gsm8k_0011 expected=48 predicted=48 correct=True batch_tps=4.150
+[12-12/174] gsm8k_0012 expected=104 predicted=104 correct=True batch_tps=4.162
+[13-13/174] gsm8k_0013 expected=800 predicted=800 correct=True batch_tps=4.148
+[14-14/174] gsm8k_0014 expected=15 predicted=15 correct=True batch_tps=4.160
+[15-15/174] gsm8k_0015 expected=40 predicted=40 correct=True batch_tps=4.147
+[16-16/174] gsm8k_0016 expected=25000 predicted=25000 correct=True batch_tps=4.165
+[17-17/174] gsm8k_0017 expected=1596 predicted=1596 correct=True batch_tps=4.140
+[18-18/174] gsm8k_0018 expected=88 predicted=88 correct=True batch_tps=4.123
+[19-19/174] gsm8k_0019 expected=60 predicted=60 correct=True batch_tps=4.147
+[20-20/174] gsm8k_0020 expected=5 predicted=5 correct=True batch_tps=4.120
+[21-21/174] gsm8k_0021 expected=100 predicted=100 correct=True batch_tps=4.109
+[22-22/174] gsm8k_0022 expected=6 predicted=6 correct=True batch_tps=4.130
+[23-23/174] gsm8k_0023 expected=9360 predicted=9360 correct=True batch_tps=4.131
+[24-24/174] gsm8k_0024 expected=4 predicted=4 correct=True batch_tps=4.112
+[25-25/174] gsm8k_0025 expected=175 predicted=175 correct=True batch_tps=4.120
+[26-26/174] gsm8k_0026 expected=500 predicted=500 correct=True batch_tps=4.102
+[27-27/174] gsm8k_0027 expected=72 predicted=72 correct=True batch_tps=4.104
+[28-28/174] gsm8k_0028 expected=3 predicted=3 correct=True batch_tps=4.132
+[29-29/174] gsm8k_0029 expected=16 predicted=16 correct=True batch_tps=4.119
+[30-30/174] gsm8k_0030 expected=90 predicted=90 correct=True batch_tps=4.118
+[31-31/174] gsm8k_0031 expected=95200 predicted=99077 correct=False batch_tps=4.133
+[32-32/174] gsm8k_0032 expected=48 predicted=55 correct=False batch_tps=4.153
+[33-33/174] gsm8k_0033 expected=880 predicted=880 correct=True batch_tps=4.144
+[34-34/174] gsm8k_0034 expected=10000 predicted=10000 correct=True batch_tps=4.133
+[35-35/174] gsm8k_0035 expected=29 predicted=29 correct=True batch_tps=4.140
+[36-36/174] gsm8k_0036 expected=105 predicted=105 correct=True batch_tps=4.140
+[37-37/174] gsm8k_0037 expected=20 predicted=20 correct=True batch_tps=4.145
+[38-38/174] gsm8k_0038 expected=75 predicted=75 correct=True batch_tps=4.142
+[39-39/174] gsm8k_0039 expected=4 predicted=4 correct=True batch_tps=4.137
+[40-40/174] gsm8k_0040 expected=48 predicted=48 correct=True batch_tps=4.145
+[41-41/174] gsm8k_0041 expected=280 predicted=280 correct=True batch_tps=4.144
+[42-42/174] gsm8k_0042 expected=80 predicted=80 correct=True batch_tps=4.146
+[43-43/174] gsm8k_0043 expected=92 predicted=766.75 correct=False batch_tps=4.171
+[44-44/174] gsm8k_0044 expected=51 predicted=51 correct=True batch_tps=4.154
+[45-45/174] gsm8k_0045 expected=350 predicted=350 correct=True batch_tps=4.138
+[46-46/174] gsm8k_0046 expected=25 predicted=25 correct=True batch_tps=4.151
+[47-47/174] gsm8k_0047 expected=5 predicted=5 correct=True batch_tps=4.161
+[48-48/174] gsm8k_0048 expected=106 predicted=106.12 correct=False batch_tps=4.147
+[49-49/174] gsm8k_0049 expected=34 predicted=34 correct=True batch_tps=4.155
+[50-50/174] gsm8k_0050 expected=7500 predicted=7500 correct=True batch_tps=4.130
+[51-51/174] gsm8k_0051 expected=98 predicted=191 correct=False batch_tps=4.162
+[52-52/174] gsm8k_0052 expected=2600 predicted=2600 correct=True batch_tps=4.141
+[53-53/174] gsm8k_0053 expected=8 predicted=8 correct=True batch_tps=4.135
+[54-54/174] gsm8k_0054 expected=45 predicted=45 correct=True batch_tps=4.155
+[55-55/174] gsm8k_0055 expected=54 predicted=54 correct=True batch_tps=4.154
+[56-56/174] gsm8k_0056 expected=33 predicted=33 correct=True batch_tps=4.162
+[57-57/174] gsm8k_0057 expected=9 predicted=9 correct=True batch_tps=4.133
+[58-58/174] gsm8k_0058 expected=276000 predicted=276000 correct=True batch_tps=4.135
+[59-59/174] gsm8k_0059 expected=20 predicted=20 correct=True batch_tps=4.156
+[60-60/174] gsm8k_0060 expected=27000 predicted=27000 correct=True batch_tps=4.129
+[61-61/174] gsm8k_0061 expected=5600 predicted=5600 correct=True batch_tps=4.149
+[62-62/174] gsm8k_0062 expected=168 predicted=168 correct=True batch_tps=4.151
+[63-63/174] gsm8k_0063 expected=9500 predicted=9500 correct=True batch_tps=4.117
+[64-64/174] gsm8k_0064 expected=118000 predicted=118000 correct=True batch_tps=4.104
+[65-65/174] gsm8k_0065 expected=91 predicted=91 correct=True batch_tps=4.138
+[66-66/174] gsm8k_0066 expected=315 predicted=315 correct=True batch_tps=4.137
+[67-67/174] gsm8k_0067 expected=138 predicted=138 correct=True batch_tps=4.142
+[68-68/174] gsm8k_0068 expected=9 predicted=9 correct=True batch_tps=3.963
+[69-69/174] gsm8k_0069 expected=2450 predicted=2450 correct=True batch_tps=4.016
+[70-70/174] gsm8k_0070 expected=360 predicted=360 correct=True batch_tps=4.029
+[71-71/174] gsm8k_0071 expected=370 predicted=370 correct=True batch_tps=4.019
+[72-72/174] gsm8k_0072 expected=500 predicted=450 correct=False batch_tps=4.127
+[73-73/174] gsm8k_0073 expected=31800 predicted=31800 correct=True batch_tps=4.131
+[74-74/174] gsm8k_0074 expected=1300 predicted=1300 correct=True batch_tps=4.148
+[75-75/174] gsm8k_0075 expected=3200 predicted=4800 correct=False batch_tps=4.133
+[76-76/174] gsm8k_0076 expected=16 predicted=16 correct=True batch_tps=4.144
+[77-77/174] gsm8k_0077 expected=2050 predicted=2050 correct=True batch_tps=4.138
+[78-78/174] gsm8k_0078 expected=120000 predicted=120000 correct=True batch_tps=4.157
+[79-79/174] gsm8k_0079 expected=14 predicted=14 correct=True batch_tps=4.146
+[80-80/174] gsm8k_0080 expected=224000 predicted=224000 correct=True batch_tps=4.142
+[81-81/174] gsm8k_0081 expected=8400 predicted=8400 correct=True batch_tps=4.135
+[82-82/174] gsm8k_0082 expected=100 predicted=100 correct=True batch_tps=4.126
+[83-83/174] gsm8k_0083 expected=160 predicted=160 correct=True batch_tps=4.152
+[84-84/174] gsm8k_0084 expected=260 predicted=260 correct=True batch_tps=4.134
+[85-85/174] gsm8k_0085 expected=10 predicted=10 correct=True batch_tps=4.130
+[86-86/174] gsm8k_0086 expected=2640 predicted=2640 correct=True batch_tps=4.138
+[87-87/174] gsm8k_0087 expected=20 predicted=20 correct=True batch_tps=4.163
+[88-88/174] gsm8k_0088 expected=45 predicted=45 correct=True batch_tps=4.140
+[89-89/174] gsm8k_0089 expected=4 predicted=4 correct=True batch_tps=4.148
+[90-90/174] gsm8k_0090 expected=20 predicted=20 correct=True batch_tps=4.149
+[91-91/174] gsm8k_0091 expected=6 predicted=6 correct=True batch_tps=4.151
+[92-92/174] gsm8k_0092 expected=19 predicted=19 correct=True batch_tps=4.160
+[93-93/174] gsm8k_0093 expected=1198 predicted=1198 correct=True batch_tps=4.146
+[94-94/174] gsm8k_0094 expected=50 predicted=50 correct=True batch_tps=4.158
+[95-95/174] gsm8k_0095 expected=803 predicted=760 correct=False batch_tps=4.155
+[96-96/174] gsm8k_0096 expected=2 predicted=2 correct=True batch_tps=4.143
+[97-97/174] gsm8k_0097 expected=32 predicted=32 correct=True batch_tps=4.147
+[98-98/174] gsm8k_0098 expected=34 predicted=34 correct=True batch_tps=4.149
+[99-99/174] gsm8k_0099 expected=4 predicted=4 correct=True batch_tps=4.134
+[100-100/174] gsm8k_0100 expected=50 predicted=50 correct=True batch_tps=4.139
+[101-101/174] gsm8k_0101 expected=200 predicted=160 correct=False batch_tps=4.145
+[102-102/174] gsm8k_0102 expected=2000 predicted=2000 correct=True batch_tps=4.129
+[103-103/174] gsm8k_0103 expected=168000 predicted=42000 correct=False batch_tps=4.141
+[104-104/174] gsm8k_0104 expected=3 predicted=3 correct=True batch_tps=4.146
+[105-105/174] gsm8k_0105 expected=25 predicted=25 correct=True batch_tps=4.150
+[106-106/174] gsm8k_0106 expected=350 predicted=350 correct=True batch_tps=4.157
+[107-107/174] gsm8k_0107 expected=150 predicted=150 correct=True batch_tps=4.140
+[108-108/174] gsm8k_0108 expected=150 predicted=150 correct=True batch_tps=4.141
+[109-109/174] gsm8k_0109 expected=26 predicted=26 correct=True batch_tps=4.140
+[110-110/174] gsm8k_0110 expected=5 predicted=5 correct=True batch_tps=4.163
+[111-111/174] gsm8k_0111 expected=98 predicted=98 correct=True batch_tps=4.148
+[112-112/174] gsm8k_0112 expected=49 predicted=49 correct=True batch_tps=4.139
+[113-113/174] gsm8k_0113 expected=59 predicted=59 correct=True batch_tps=4.152
+[114-114/174] gsm8k_0114 expected=6 predicted=6 correct=True batch_tps=4.140
+[115-115/174] gsm8k_0115 expected=4 predicted=4 correct=True batch_tps=4.155
+[116-116/174] gsm8k_0116 expected=11050 predicted=11050 correct=True batch_tps=4.145
+[117-117/174] gsm8k_0117 expected=6400 predicted=6400 correct=True batch_tps=4.148
+[118-118/174] gsm8k_0118 expected=1920 predicted=1920 correct=True batch_tps=4.132
+[119-119/174] gsm8k_0119 expected=84 predicted=84 correct=True batch_tps=4.129
+[120-120/174] gsm8k_0120 expected=1 predicted=100 correct=False batch_tps=4.132
+[121-121/174] gsm8k_0121 expected=120 predicted=120 correct=True batch_tps=4.138
+[122-122/174] gsm8k_0122 expected=20 predicted=20 correct=True batch_tps=4.143
+[123-123/174] gsm8k_0123 expected=25 predicted=25 correct=True batch_tps=4.156
+[124-124/174] gsm8k_0124 expected=21 predicted=53 correct=False batch_tps=4.151
+[125-125/174] gsm8k_0125 expected=2 predicted=2 correct=True batch_tps=4.162
+[126-126/174] gsm8k_0126 expected=1600 predicted=1600 correct=True batch_tps=4.146
+[127-127/174] gsm8k_0127 expected=120 predicted=120 correct=True batch_tps=4.129
+[128-128/174] gsm8k_0128 expected=525 predicted=522 correct=False batch_tps=3.964
+[129-129/174] gsm8k_0129 expected=32 predicted=32 correct=True batch_tps=4.132
+[130-130/174] gsm8k_0130 expected=172 predicted=172 correct=True batch_tps=4.134
+[131-131/174] gsm8k_0131 expected=25 predicted=25 correct=True batch_tps=4.151
+[132-132/174] gsm8k_0132 expected=300 predicted=300 correct=True batch_tps=4.002
+[133-133/174] gsm8k_0133 expected=300 predicted=300 correct=True batch_tps=4.102
+[134-134/174] gsm8k_0134 expected=50 predicted=50 correct=True batch_tps=4.155
+[135-135/174] gsm8k_0135 expected=7 predicted=7 correct=True batch_tps=4.129
+[136-136/174] gsm8k_0136 expected=27 predicted=27 correct=True batch_tps=4.132
+[137-137/174] gsm8k_0137 expected=240 predicted=240 correct=True batch_tps=4.142
+[138-138/174] gsm8k_0138 expected=23 predicted=23 correct=True batch_tps=4.141
+[139-139/174] gsm8k_0139 expected=11232 predicted=11232 correct=True batch_tps=4.153
+[140-140/174] gsm8k_0140 expected=500 predicted=500 correct=True batch_tps=4.152
+[141-141/174] gsm8k_0141 expected=215 predicted=215 correct=True batch_tps=4.117
+[142-142/174] gsm8k_0142 expected=2 predicted=2 correct=True batch_tps=4.150
+[143-143/174] gsm8k_0143 expected=40 predicted=40 correct=True batch_tps=4.147
+[144-144/174] gsm8k_0144 expected=800 predicted=800 correct=True batch_tps=4.133
+[145-145/174] gsm8k_0145 expected=30 predicted=30 correct=True batch_tps=4.149
+[146-146/174] gsm8k_0146 expected=15 predicted=15 correct=True batch_tps=4.141
+[147-147/174] gsm8k_0147 expected=319 predicted=318 correct=False batch_tps=4.153
+[148-148/174] gsm8k_0148 expected=69 predicted=70 correct=False batch_tps=4.146
+[149-149/174] gsm8k_0149 expected=104 predicted=104 correct=True batch_tps=4.151
+[150-150/174] gsm8k_0150 expected=1800 predicted=1800 correct=True batch_tps=4.139
+[151-151/174] gsm8k_0151 expected=42 predicted=42 correct=True batch_tps=4.127
+[152-152/174] gsm8k_0152 expected=6 predicted=6 correct=True batch_tps=4.128
+[153-153/174] gsm8k_0153 expected=1450000 predicted=1450000 correct=True batch_tps=4.141
+[154-154/174] gsm8k_0154 expected=33 predicted=33 correct=True batch_tps=4.135
+[155-155/174] gsm8k_0155 expected=7 predicted=7 correct=True batch_tps=4.149
+[156-156/174] gsm8k_0156 expected=54 predicted=54 correct=True batch_tps=4.139
+[157-157/174] gsm8k_0157 expected=17500 predicted=17500 correct=True batch_tps=4.131
+[158-158/174] gsm8k_0158 expected=4 predicted=4 correct=True batch_tps=4.150
+[159-159/174] gsm8k_0159 expected=12 predicted=12 correct=True batch_tps=4.144
+[160-160/174] gsm8k_0160 expected=43500 predicted=43500 correct=True batch_tps=4.143
+[161-161/174] gsm8k_0161 expected=262500 predicted=262000 correct=False batch_tps=4.147
+[162-162/174] gsm8k_0162 expected=10800 predicted=10800 correct=True batch_tps=4.147
+[163-163/174] gsm8k_0163 expected=142 predicted=142 correct=True batch_tps=4.142
+[164-164/174] gsm8k_0164 expected=330000 predicted=330000 correct=True batch_tps=4.143
+[165-165/174] gsm8k_0165 expected=3 predicted=3 correct=True batch_tps=4.139
+[166-166/174] gsm8k_0166 expected=7 predicted=7 correct=True batch_tps=4.141
+[167-167/174] gsm8k_0167 expected=120 predicted=120 correct=True batch_tps=4.154
+[168-168/174] gsm8k_0168 expected=240 predicted=240 correct=True batch_tps=4.146
+[169-169/174] gsm8k_0169 expected=298 predicted=298 correct=True batch_tps=4.152
+[170-170/174] gsm8k_0170 expected=80 predicted=80 correct=True batch_tps=4.156
+[171-171/174] gsm8k_0171 expected=50 predicted=50 correct=True batch_tps=4.131
+[172-172/174] gsm8k_0172 expected=13 predicted=13 correct=True batch_tps=4.159
+[173-173/174] gsm8k_0173 expected=7 predicted=7 correct=True batch_tps=4.142
+[174-174/174] gsm8k_0174 expected=25 predicted=25 correct=True batch_tps=4.159
+
+===== BATCHED GSM8K SUMMARY =====
+total_cases: 174
+successful_cases: 174
+failed_cases: 0
+accuracy: 0.908046
+batch_size: 1
+batch_latency_avg_seconds: 73.427568
+batch_latency_p50_seconds: 70.455704
+batch_latency_p95_seconds: 96.485631
+batch_total_output_tokens_avg: 303.729885
+reference_csv: 
+reference_prediction_mismatch_cases: 0
+memory_snapshot: {'cuda:0': {'allocated_gib': 35.188, 'reserved_gib': 38.145, 'peak_allocated_gib': 35.914}}
+saved_summary: results/week2_hardening/bnb_int8/output_budget_validation/cap_hit_348_max768/gpu0_cases_0001_0174_summary.json

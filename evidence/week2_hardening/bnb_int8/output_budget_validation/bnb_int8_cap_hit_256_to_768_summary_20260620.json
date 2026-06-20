@@ -1,0 +1,34 @@
+{
+  "scope": "348 historical BnB INT8 max_new_tokens=256 cap-hit GSM8K cases",
+  "join_key": "exact question_preview equality",
+  "git_head": "73af1fa1936f9e0de82607977efdf2f269e926f5",
+  "historical_256_csv": "results/week2_hardening/bnb_int8/bnb_int8_full/gsm8k_bnb_int8_cap_hit_cases_20260619.csv",
+  "rerun_768_csvs": [
+    "results/week2_hardening/bnb_int8/output_budget_validation/cap_hit_348_max768/gpu0_cases_0001_0174.csv",
+    "results/week2_hardening/bnb_int8/output_budget_validation/cap_hit_348_max768/gpu1_cases_0175_0348.csv"
+  ],
+  "transition_csv": "results/week2_hardening/bnb_int8/output_budget_validation/cap_hit_348_max768/bnb_int8_cap_hit_256_to_768_transitions_20260620.csv",
+  "total_cases": 348,
+  "historical_256": {
+    "correct": 69,
+    "incorrect": 279,
+    "accuracy": 0.19827586206896552
+  },
+  "rerun_768": {
+    "correct": 316,
+    "incorrect": 32,
+    "accuracy": 0.9080459770114943,
+    "still_hit_max_new_tokens_768": 0
+  },
+  "transitions": {
+    "wrong_to_correct": 247,
+    "correct_to_correct": 69,
+    "wrong_to_wrong": 32
+  },
+  "derived_metrics": {
+    "wrong_to_correct_rate_among_historical_errors": 0.8853046594982079,
+    "wrong_to_wrong_rate_among_historical_errors": 0.11469534050179211,
+    "accuracy_gain_percentage_points": 70.97701149425288,
+    "correct_to_wrong_count": 0
+  }
+}

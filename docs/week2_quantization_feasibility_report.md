@@ -138,10 +138,11 @@ W8A8 的主要显存收益体现在模型权重加载显存下降和 KV cache he
 | 路线 | 当前状态 | 结论 |
 |---|---|---|
 | W8A8 compressed-tensors | 已完成 | 已完成离线量化、vLLM serving、smoke test 和 batch-profile benchmark |
-| bitsandbytes INT8 | 已探测 | 可作为 online low-bit loading 探测，但不能作为最终 strict INT8 指标闭环 |
+| bitsandbytes INT8 | 已完成定向质量复测 / 未形成稳定 serving | 已完成 Transformers + BitsAndBytes runtime quantization 下的 GSM8K 输出预算定向复测；不纳入 vLLM serving 性能闭环 |
 | INC INT8 | 已探测 | 对原始 BF16 checkpoint 不能直接形成稳定 serving |
 | compressed-tensors strict INT8 | 已探测 | 需要预量化 checkpoint 或明确 quantization_config，不能直接作用于原始 BF16 checkpoint |
-| AWQ / GPTQ | 未完成稳定 serving | 当前没有形成可复现 serving 闭环 |
+| AWQ | 已完成 external artifact serving-stack 验证 | 已完成 vLLM AWQ-Marlin、API smoke 与 GSM8K full evaluation；不纳入 BF16/W8A8 同源质量排名 |
+| GPTQ | 未完成 | 尚未通过 artifact、启动、API 与小样本 Gate |
 | FP8 KV cache | 未完成 | 与长上下文 KV cache capacity 强相关，但本阶段未完成实机验证 |
 
 对应 evidence：
@@ -179,6 +180,8 @@ W8A8 的主要显存收益体现在模型权重加载显存下降和 KV cache he
 | output tokens/s figure | [`figures/week2/quantization/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png`](../figures/week2/quantization/seed_oss_fp32_vs_w8a8_output_tokens_per_second.png) |
 | strict INT8 root-cause probe | [`logs/new_2xa100_seed_oss_strict_int8_root_cause_probe_20260528.txt`](../logs/new_2xa100_seed_oss_strict_int8_root_cause_probe_20260528.txt) |
 | quantization process appendix | [`logs/new_2xa100_seed_oss_quantization_process_appendix_20260528.txt`](../logs/new_2xa100_seed_oss_quantization_process_appendix_20260528.txt) |
+| BnB INT8 output-budget summary | [`evidence/week2_hardening/bnb_int8/output_budget_validation/bnb_int8_cap_hit_256_to_768_summary_20260620.json`](../evidence/week2_hardening/bnb_int8/output_budget_validation/bnb_int8_cap_hit_256_to_768_summary_20260620.json) |
+| AWQ GSM8K full summary | [`results/week2_hardening/awq/gsm8k_awq_marlin_full_budget0_max768_20260619_summary.json`](../results/week2_hardening/awq/gsm8k_awq_marlin_full_budget0_max768_20260619_summary.json) |
 
 ## 10. 阶段结论
 
@@ -186,4 +189,4 @@ W8A8 的主要显存收益体现在模型权重加载显存下降和 KV cache he
 
 显存方面，W8A8 将 model loading memory 从 67.5901 GiB 降至 17.7109 GiB，下降约 73.8%；available KV cache memory 从 9.43 GiB 增至 53.04 GiB，约 5.63×；GPU KV cache size 从 38,624 tokens 增至 434,480 tokens，约 11.25×。由于 vLLM 会将释放出的显存用于 KV cache，运行时 `nvidia-smi` 总显存不一定同比下降，因此本报告将显存收益定义为模型权重加载显存下降和 KV cache/concurrency headroom 增加。
 
-本阶段未将 bitsandbytes INT8、INC INT8、compressed-tensors strict INT8、AWQ、GPTQ 或 FP8 KV cache 包装为已完成稳定 serving。相关探测保留为兼容性边界和后续优化方向。最终可复现、可对比、可写入性能报告的量化闭环为 FP32 baseline vs W8A8 compressed-tensors serving。
+本阶段稳定、同源且可用于性能与显存对比的 serving 闭环仍为 FP32 baseline vs W8A8 compressed-tensors serving。BitsAndBytes INT8 已完成运行时量化路径下的 GSM8K 输出预算定向复测，但未形成 vLLM serving 性能闭环。AWQ 已完成外部预量化 artifact 的 vLLM serving-stack 验证与 GSM8K full evaluation，但其 checkpoint provenance、dtype 与 kernel 不同于 BF16/W8A8 主线，不能作为同源量化性能排名。INC INT8、compressed-tensors strict INT8、GPTQ 与 FP8 KV cache 仍保留为兼容性边界或后续优化方向。

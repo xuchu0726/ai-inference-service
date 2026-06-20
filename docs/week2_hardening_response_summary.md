@@ -164,7 +164,7 @@
 
 该结果说明，原始 BF16 checkpoint 不能仅依靠运行时参数直接变成严格 INT8/W8A8 compressed-tensors serving；该路径需要预量化产物或完整离线量化流程。
 
-INT8、AWQ、GPTQ 等其他量化路径当前只作为兼容性边界和失败日志记录，未形成稳定 serving 结果。
+BnB INT8 已完成 Transformers + BitsAndBytes runtime quantization 下的 GSM8K 定向质量复测，但不属于 vLLM stable serving。AWQ 已完成 external pre-quantized artifact 的 vLLM serving-stack 验证；GPTQ 与 strict INT8 路线仍未形成稳定 serving 结果。
 
 相关证据：
 
@@ -222,7 +222,7 @@ W8A8 结果如下：
 
 W8A8 compressed-tensors profile 在完整 GSM8K test split 上的原始 accuracy 为 74.7536%，相比 BF16/vLLM baseline 的 75.7392% 低 0.9856 个百分点。该差异保留为固定 `max_new_tokens=256` 条件下的历史观察结果，同时两条路线均保持 API error rate 为 0。
 
-后续输出上限审计发现，BF16 与 W8A8 的大量错误集中在 `output_tokens == 256` 的触顶样本中。因此，上述 0.9856 percentage points 不再作为最终 quantization quality regression 结论，而应解释为短输出预算下的原始 serving behavior。统一的协议边界、cap-hit 审计和后续定向复测规则见 `docs/week3_quantization_protocol_audit.md`。
+后续输出上限审计发现，BF16 与 W8A8 的大量错误集中在 `output_tokens == 256` 的触顶样本中。因此，上述 0.9856 percentage points 不再作为最终 quantization quality regression 结论，而应解释为短输出预算下的原始 serving behavior。统一的协议边界、cap-hit 审计和后续定向复测规则见 `docs/week2_quantization_protocol_audit.md`。
 
 该结果仅适用于本次 Seed-OSS-36B-Instruct、vLLM、compressed-tensors W8A8 checkpoint、GSM8K test split 和当前生成参数组合，不应泛化为所有任务、所有模型或所有量化格式上的固定精度损耗。
 
@@ -406,7 +406,7 @@ W8A8 量化实验中的显存收益需要区分“模型加载显存”和“运
 - 512K 长上下文 serving 已完成 4×A100 环境下的启动验证和 near-limit 请求验证；
 - FP8 KV Cache 已验证可显著提升 KV Cache 容量和 512K 请求并发余量，但不能解释为单请求 latency 优化；
 - W8A8 compressed-tensors 路径已完成离线量化、checkpoint 检查、serving、smoke test、并发压测和 GSM8K full benchmark；
-- INT8/AWQ/GPTQ 等其他量化路径未形成稳定 serving 结果，当前只作为兼容性边界和失败日志记录；
+- BnB INT8 已完成 Transformers + BitsAndBytes runtime quantization 下的 GSM8K 输出预算定向复测；AWQ 已完成 external pre-quantized artifact 的 vLLM serving-stack 验证与 GSM8K full evaluation；strict INT8 与 GPTQ 仍未形成稳定 serving 结果；
 - W8A8 显存收益对应模型加载显存下降，不代表运行时总 GPU 显存等比例下降；
 - W8A8 GSM8K accuracy 已完成补测，较 BF16/vLLM baseline 下降约 0.99 个百分点；
 - 50 题代码生成结果是轻量验证结果，不等同于官方 HumanEval 或 MBPP 完整 benchmark。

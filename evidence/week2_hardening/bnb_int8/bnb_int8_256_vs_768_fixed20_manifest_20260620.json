@@ -1,0 +1,199 @@
+{
+  "purpose": "Week2 BnB INT8 output-budget validation: fixed 20-case comparison between max_new_tokens=256 and max_new_tokens=768.",
+  "selection_rule": {
+    "cap_hit_wrong": 10,
+    "cap_hit_correct": 5,
+    "non_cap": 5
+  },
+  "mapping_rule": "question_preview uniquely maps to the original GSM8K question via startswith.",
+  "sampling_rule": "Within each stratum, select evenly spaced dataset_index positions after de-duplication.",
+  "source_cap_hit_csv": "results/week2_hardening/bnb_int8/bnb_int8_full/gsm8k_bnb_int8_cap_hit_cases_20260619.csv",
+  "source_full_csvs": [
+    "results/week2_hardening/bnb_int8/bnb_int8_full/gsm8k_bnb_int8_gpu0_cases_0001_0660.csv",
+    "results/week2_hardening/bnb_int8/bnb_int8_full/gsm8k_bnb_int8_gpu1_cases_0661_1319.csv"
+  ],
+  "source_dataset": "data/eval/gsm8k_test.jsonl",
+  "git_head": "73af1fa1936f9e0de82607977efdf2f269e926f5",
+  "selected_cases": [
+    {
+      "group": "cap_hit_wrong",
+      "dataset_index": 2,
+      "historical_case_id": "gsm8k_0003",
+      "historical_correct": "False",
+      "historical_output_tokens": "256",
+      "expected_answer": "70000",
+      "historical_predicted_answer": "3"
+    },
+    {
+      "group": "cap_hit_wrong",
+      "dataset_index": 153,
+      "historical_case_id": "gsm8k_0154",
+      "historical_correct": "False",
+      "historical_output_tokens": "256",
+      "expected_answer": "48",
+      "historical_predicted_answer": "7"
+    },
+    {
+      "group": "cap_hit_wrong",
+      "dataset_index": 310,
+      "historical_case_id": "gsm8k_0311",
+      "historical_correct": "False",
+      "historical_output_tokens": "256",
+      "expected_answer": "2050",
+      "historical_predicted_answer": "5"
+    },
+    {
+      "group": "cap_hit_wrong",
+      "dataset_index": 445,
+      "historical_case_id": "gsm8k_0446",
+      "historical_correct": "False",
+      "historical_output_tokens": "256",
+      "expected_answer": "6",
+      "historical_predicted_answer": "4"
+    },
+    {
+      "group": "cap_hit_wrong",
+      "dataset_index": 603,
+      "historical_case_id": "gsm8k_0604",
+      "historical_correct": "False",
+      "historical_output_tokens": "256",
+      "expected_answer": "1800",
+      "historical_predicted_answer": "90"
+    },
+    {
+      "group": "cap_hit_wrong",
+      "dataset_index": 779,
+      "historical_case_id": "gsm8k_0120",
+      "historical_correct": "False",
+      "historical_output_tokens": "256",
+      "expected_answer": "255",
+      "historical_predicted_answer": "5"
+    },
+    {
+      "group": "cap_hit_wrong",
+      "dataset_index": 920,
+      "historical_case_id": "gsm8k_0261",
+      "historical_correct": "False",
+      "historical_output_tokens": "256",
+      "expected_answer": "47",
+      "historical_predicted_answer": "9"
+    },
+    {
+      "group": "cap_hit_wrong",
+      "dataset_index": 1037,
+      "historical_case_id": "gsm8k_0378",
+      "historical_correct": "False",
+      "historical_output_tokens": "256",
+      "expected_answer": "10",
+      "historical_predicted_answer": "50"
+    },
+    {
+      "group": "cap_hit_wrong",
+      "dataset_index": 1159,
+      "historical_case_id": "gsm8k_0500",
+      "historical_correct": "False",
+      "historical_output_tokens": "256",
+      "expected_answer": "50",
+      "historical_predicted_answer": "5"
+    },
+    {
+      "group": "cap_hit_wrong",
+      "dataset_index": 1310,
+      "historical_case_id": "gsm8k_0651",
+      "historical_correct": "False",
+      "historical_output_tokens": "256",
+      "expected_answer": "64",
+      "historical_predicted_answer": "4"
+    },
+    {
+      "group": "cap_hit_correct",
+      "dataset_index": 43,
+      "historical_case_id": "gsm8k_0044",
+      "historical_correct": "True",
+      "historical_output_tokens": "256",
+      "expected_answer": "48",
+      "historical_predicted_answer": "48"
+    },
+    {
+      "group": "cap_hit_correct",
+      "dataset_index": 392,
+      "historical_case_id": "gsm8k_0393",
+      "historical_correct": "True",
+      "historical_output_tokens": "256",
+      "expected_answer": "34",
+      "historical_predicted_answer": "34"
+    },
+    {
+      "group": "cap_hit_correct",
+      "dataset_index": 693,
+      "historical_case_id": "gsm8k_0034",
+      "historical_correct": "True",
+      "historical_output_tokens": "256",
+      "expected_answer": "68",
+      "historical_predicted_answer": "68"
+    },
+    {
+      "group": "cap_hit_correct",
+      "dataset_index": 990,
+      "historical_case_id": "gsm8k_0331",
+      "historical_correct": "True",
+      "historical_output_tokens": "256",
+      "expected_answer": "14",
+      "historical_predicted_answer": "14"
+    },
+    {
+      "group": "cap_hit_correct",
+      "dataset_index": 1317,
+      "historical_case_id": "gsm8k_0658",
+      "historical_correct": "True",
+      "historical_output_tokens": "256",
+      "expected_answer": "5",
+      "historical_predicted_answer": "5"
+    },
+    {
+      "group": "non_cap",
+      "dataset_index": 0,
+      "historical_case_id": "gsm8k_0001",
+      "historical_correct": "True",
+      "historical_output_tokens": "191",
+      "expected_answer": "18",
+      "historical_predicted_answer": "18"
+    },
+    {
+      "group": "non_cap",
+      "dataset_index": 321,
+      "historical_case_id": "gsm8k_0322",
+      "historical_correct": "True",
+      "historical_output_tokens": "138",
+      "expected_answer": "1",
+      "historical_predicted_answer": "1"
+    },
+    {
+      "group": "non_cap",
+      "dataset_index": 647,
+      "historical_case_id": "gsm8k_0648",
+      "historical_correct": "True",
+      "historical_output_tokens": "225",
+      "expected_answer": "10",
+      "historical_predicted_answer": "10"
+    },
+    {
+      "group": "non_cap",
+      "dataset_index": 977,
+      "historical_case_id": "gsm8k_0318",
+      "historical_correct": "True",
+      "historical_output_tokens": "190",
+      "expected_answer": "4",
+      "historical_predicted_answer": "4"
+    },
+    {
+      "group": "non_cap",
+      "dataset_index": 1318,
+      "historical_case_id": "gsm8k_0659",
+      "historical_correct": "True",
+      "historical_output_tokens": "137",
+      "expected_answer": "14",
+      "historical_predicted_answer": "14"
+    }
+  ]
+}
