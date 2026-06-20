@@ -220,9 +220,11 @@ W8A8 结果如下：
 - 正确题数减少：13；
 - API error rate：0.0%。
 
-W8A8 compressed-tensors profile 在完整 GSM8K test split 上的 accuracy 为 74.7536%，相比 BF16/vLLM baseline 的 75.7392% 下降 0.9856 个百分点。该结果表明，本次 W8A8 量化在数学推理任务上的精度损耗较小，同时保持了稳定的 API 成功率。
+W8A8 compressed-tensors profile 在完整 GSM8K test split 上的原始 accuracy 为 74.7536%，相比 BF16/vLLM baseline 的 75.7392% 低 0.9856 个百分点。该差异保留为固定 `max_new_tokens=256` 条件下的历史观察结果，同时两条路线均保持 API error rate 为 0。
 
-该结论只适用于本次 Seed-OSS-36B-Instruct、vLLM、compressed-tensors W8A8 checkpoint、GSM8K test split 和当前生成参数组合，不应泛化为所有任务、所有模型或所有量化格式上的固定精度损耗。
+后续输出上限审计发现，BF16 与 W8A8 的大量错误集中在 `output_tokens == 256` 的触顶样本中。因此，上述 0.9856 percentage points 不再作为最终 quantization quality regression 结论，而应解释为短输出预算下的原始 serving behavior。统一的协议边界、cap-hit 审计和后续定向复测规则见 `docs/week3_quantization_protocol_audit.md`。
+
+该结果仅适用于本次 Seed-OSS-36B-Instruct、vLLM、compressed-tensors W8A8 checkpoint、GSM8K test split 和当前生成参数组合，不应泛化为所有任务、所有模型或所有量化格式上的固定精度损耗。
 
 相关证据：
 
