@@ -1,0 +1,7 @@
+日志来源：RunPod Container Logs
+实验：GPTQ direct loading 边界验证
+模型目录：/workspace/models/Seed-OSS-36B-Instruct
+启动参数：--quantization gptq
+
+pydantic_core._pydantic_core.ValidationError: 1 validation error for VllmConfig
+Value error, Cannot find the config file for gptq
