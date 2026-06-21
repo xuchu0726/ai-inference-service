@@ -2,7 +2,7 @@
 
 ## 最终结论
 
-'EOF'' BF16、W8A8 compressed-tensors、BnB INT8 与 AWQ 四条量化/部署路线的真实验证，但它们的 checkpoint 来源、dtype、kernel、prompt 模板与 serving runtime 不完全一致，因此不能合并成单一“量化精度排行榜”。
+本阶段已完成 BF16、W8A8 compressed-tensors、BnB INT8 与 AWQ 四条量化/部署路线的真实验证，但它们的 checkpoint 来源、dtype、kernel、prompt 模板与 serving runtime 不完全一致，因此不能合并成单一“量化精度排行榜”。
 
 W8A8 compressed-tensors 是当前主推荐路线。该 artifact 由本项目完成离线量化，已形成 vLLM + FastAPI serving 闭环，并具备受控吞吐、P95 延迟、模型加载显存、KV Cache headroom、完整 GSM8K 与 output-cap 定向复测证据。
 
@@ -10,11 +10,11 @@ W8A8 compressed-tensors 是当前主推荐路线。该 artifact 由本项目完�
 
 | 路线 | Full GSM8K 结果 | 输出预算证据 | 运行栈边界 | 可得结论 |
 |---|---|---|---|---|
-| BF16 / vLLM | 1319 条，999 正确，75.7392%，max_new_tokens=256 | 366 条 cap-hit 复测至 768；333 正确，90.9836%；263 条错误恢复为正确 | 同源 vLLM 基线 | 原始 full 结果仅代'EOF' serving 行为，不是最终数学推理质量 |
+| BF16 / vLLM | 1319 条，999 正确，75.7392%，max_new_tokens=256 | 366 条 cap-hit 复测至 768；333 正确，90.9836%；263 条错误恢复为正确 | 同源 vLLM 基线 | 原始 full 结果仅代表短输出预算下的 serving 行为，不是最终数学推理质量 |
 | W8A8 compressed-tensors / vLLM | 1319 条，986 正确，74.7536%，max_new_tokens=256 | 395 条 cap-hit 复测至 768；353 正确，89.3671%；272 条错误恢复为正确；1 条仍触顶 | 自主离线量化 artifact；vLLM + FastAPI | 主 serving 路线，已完成性能、显存、KV Cache 与质量边界验证 |
 | BnB INT8 / Transformers | 1319 条，1009 正确，76.4973%；0 API failed | 348 条 cap-hit 复测至 768；316 正确，90.8046%；247 条错误恢复为正确 | Transformers + BitsAndBytes，不是 vLLM TP=2 benchmark | 已完成运行时量化质量与截断诊断；不得进入 vLLM 吞吐排名 |
 | AWQ external artifact / AWQ-Marlin | 1319 条，1258 正确，95.3753%；max_new_tokens=768；0 API failed | 10 条 smoke 从 256 下的 5/10 恢复为 768 下的 10/10 | 第三方 AWQ artifact；vLLM FP16 + AWQ-Marlin | 已验证外部 AWQ serving stack；不能解释为单纯“4-bit 优于 8-bit” |
-| 'EOF' | 未完成 | 未形成稳定 artifact 或 serving | 明确未完成，不纳入结果比较 |
+| GPTQ | 未形成真实评测结果 | 未完成 | 未形成稳定 artifact 或 serving | 明确未完成，不纳入结果比较 |
 
 ## 可比性与解释边界
 
@@ -28,7 +28,7 @@ W8A8 compressed-tensors 是当前主推荐路线。该 artifact 由本项目完�
 
 ## 当前选型
 
-from pathlib import PathW8A8 compressed-tensors + vLLM + FastAPI。
+- 主 serving 路线：W8A8 compressed-tensors + vLLM + FastAPI。
 - 同源基线：BF16 + vLLM。
 - 运行时量化诊断路线：BnB INT8 + Transformers。
 - 外部部署替代方案：AWQ artifact + vLLM FP16 + AWQ-Marlin。
