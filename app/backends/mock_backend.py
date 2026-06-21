@@ -28,3 +28,11 @@ class MockBackend:
             "thinking_budget": thinking_budget,
             "backend": "mock",
         }
+
+
+    def check_ready(self) -> dict:
+        return {
+            "ready": True,
+            "backend": "mock",
+            "detail": "mock backend is available",
+        }

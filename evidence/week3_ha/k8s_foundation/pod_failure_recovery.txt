@@ -1,0 +1,50 @@
+采集时间：2026-06-21T23:11:29Z
+
+===== Pods after recovery =====
+NAME                                 READY   STATUS    RESTARTS   AGE     IP           NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-6dbfc969dd-9f2jc   1/1     Running   0          9s      10.244.1.4   desktop-worker2   <none>           <none>
+inference-gateway-6dbfc969dd-d5ngf   1/1     Running   0          2m14s   10.244.2.3   desktop-worker    <none>           <none>
+
+===== Deployment =====
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           4m38s
+
+===== EndpointSlice after recovery =====
+NAME                      ADDRESSTYPE   PORTS   ENDPOINTS               AGE
+inference-gateway-shvms   IPv4          8000    10.244.2.3,10.244.1.4   4m38s
+
+===== Recent events =====
+LAST SEEN   TYPE      REASON              OBJECT                                    MESSAGE
+4m38s       Normal    Scheduled           pod/inference-gateway-6dbfc969dd-hvlhx    Successfully assigned ai-inference/inference-gateway-6dbfc969dd-hvlhx to desktop-worker
+4m38s       Normal    ScalingReplicaSet   deployment/inference-gateway              Scaled up replica set inference-gateway-6dbfc969dd from 0 to 2
+4m38s       Normal    SuccessfulCreate    replicaset/inference-gateway-6dbfc969dd   Created pod: inference-gateway-6dbfc969dd-r8jc6
+4m38s       Normal    SuccessfulCreate    replicaset/inference-gateway-6dbfc969dd   Created pod: inference-gateway-6dbfc969dd-hvlhx
+4m38s       Normal    Scheduled           pod/inference-gateway-6dbfc969dd-r8jc6    Successfully assigned ai-inference/inference-gateway-6dbfc969dd-r8jc6 to desktop-worker2
+2m36s       Warning   Failed              pod/inference-gateway-6dbfc969dd-hvlhx    Error: ErrImageNeverPull
+2m36s       Warning   ErrImageNeverPull   pod/inference-gateway-6dbfc969dd-hvlhx    Container image "ai-inference-gateway:week3-foundation" is not present with pull policy of Never
+2m29s       Warning   Failed              pod/inference-gateway-6dbfc969dd-r8jc6    Error: ErrImageNeverPull
+2m29s       Warning   ErrImageNeverPull   pod/inference-gateway-6dbfc969dd-r8jc6    Container image "ai-inference-gateway:week3-foundation" is not present with pull policy of Never
+2m23s       Normal    Started             pod/inference-gateway-6dbfc969dd-hvlhx    Started container gateway
+2m23s       Normal    Created             pod/inference-gateway-6dbfc969dd-hvlhx    Created container: gateway
+2m23s       Normal    Pulled              pod/inference-gateway-6dbfc969dd-hvlhx    Container image "ai-inference-gateway:week3-foundation" already present on machine
+2m16s       Normal    Created             pod/inference-gateway-6dbfc969dd-r8jc6    Created container: gateway
+2m16s       Normal    Pulled              pod/inference-gateway-6dbfc969dd-r8jc6    Container image "ai-inference-gateway:week3-foundation" already present on machine
+2m15s       Normal    Started             pod/inference-gateway-6dbfc969dd-r8jc6    Started container gateway
+2m14s       Normal    SuccessfulCreate    replicaset/inference-gateway-6dbfc969dd   Created pod: inference-gateway-6dbfc969dd-7bsq8
+2m14s       Normal    SuccessfulCreate    replicaset/inference-gateway-6dbfc969dd   Created pod: inference-gateway-6dbfc969dd-d5ngf
+2m14s       Normal    Scheduled           pod/inference-gateway-6dbfc969dd-d5ngf    Successfully assigned ai-inference/inference-gateway-6dbfc969dd-d5ngf to desktop-worker
+2m14s       Normal    Scheduled           pod/inference-gateway-6dbfc969dd-7bsq8    Successfully assigned ai-inference/inference-gateway-6dbfc969dd-7bsq8 to desktop-worker2
+2m14s       Normal    Killing             pod/inference-gateway-6dbfc969dd-hvlhx    Stopping container gateway
+2m13s       Normal    Created             pod/inference-gateway-6dbfc969dd-7bsq8    Created container: gateway
+2m13s       Normal    Killing             pod/inference-gateway-6dbfc969dd-r8jc6    Stopping container gateway
+2m13s       Normal    Started             pod/inference-gateway-6dbfc969dd-7bsq8    Started container gateway
+2m13s       Normal    Started             pod/inference-gateway-6dbfc969dd-d5ngf    Started container gateway
+2m13s       Normal    Pulled              pod/inference-gateway-6dbfc969dd-d5ngf    Container image "ai-inference-gateway:week3-foundation" already present on machine
+2m13s       Normal    Created             pod/inference-gateway-6dbfc969dd-d5ngf    Created container: gateway
+2m13s       Normal    Pulled              pod/inference-gateway-6dbfc969dd-7bsq8    Container image "ai-inference-gateway:week3-foundation" already present on machine
+9s          Normal    Scheduled           pod/inference-gateway-6dbfc969dd-9f2jc    Successfully assigned ai-inference/inference-gateway-6dbfc969dd-9f2jc to desktop-worker2
+9s          Normal    Killing             pod/inference-gateway-6dbfc969dd-7bsq8    Stopping container gateway
+9s          Normal    Pulled              pod/inference-gateway-6dbfc969dd-9f2jc    Container image "ai-inference-gateway:week3-foundation" already present on machine
+9s          Normal    Created             pod/inference-gateway-6dbfc969dd-9f2jc    Created container: gateway
+9s          Normal    Started             pod/inference-gateway-6dbfc969dd-9f2jc    Started container gateway
+9s          Normal    SuccessfulCreate    replicaset/inference-gateway-6dbfc969dd   Created pod: inference-gateway-6dbfc969dd-9f2jc

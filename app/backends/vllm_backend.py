@@ -132,3 +132,32 @@ class VLLMBackend:
             "device": "vllm_server",
             "total_tokens": total_tokens,
         }
+
+
+    def check_ready(self) -> dict:
+        request = urllib.request.Request(
+            url=f"{self.base_url}/models",
+            method="GET",
+        )
+
+        try:
+            with urllib.request.urlopen(
+                request,
+                timeout=min(self.timeout_seconds, 10),
+            ) as response:
+                payload = json.loads(response.read().decode("utf-8"))
+
+            return {
+                "ready": True,
+                "backend": "vllm",
+                "model_name": self.model_name,
+                "models": len(payload.get("data", [])),
+            }
+
+        except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError) as exc:
+            return {
+                "ready": False,
+                "backend": "vllm",
+                "model_name": self.model_name,
+                "detail": str(exc),
+            }

@@ -1,23 +1,83 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, status
 from prometheus_fastapi_instrumentator import Instrumentator
 
+from app.config import INFERENCE_BACKEND
+from app.inference import backend, generate_text
+from app.metrics.prometheus_metrics import record_backend_readiness
 from app.schemas import GenerateRequest, GenerateResponse
-from app.inference import generate_text
 
-app = FastAPI(title="AI Inference Service", version="0.1.0")
+
+app = FastAPI(title="AI Inference Service", version="0.2.0")
 
 Instrumentator().instrument(app).expose(app)
 
 
+def _backend_readiness() -> dict:
+    checker = getattr(backend, "check_ready", None)
+
+    if checker is None:
+        result = {
+            "ready": True,
+            "backend": INFERENCE_BACKEND,
+            "detail": "backend does not expose an active readiness check",
+        }
+    else:
+        result = checker()
+
+    record_backend_readiness(result)
+    return result
+
+
+@app.get("/livez")
+def livez():
+    return {
+        "status": "live",
+        "backend": INFERENCE_BACKEND,
+    }
+
+
+@app.get("/readyz")
+def readyz():
+    result = _backend_readiness()
+
+    if not result["ready"]:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=result,
+        )
+
+    return {
+        "status": "ready",
+        **result,
+    }
+
+
 @app.get("/health")
 def health_check():
-    return {"status": "ok"}
+    result = _backend_readiness()
+
+    if not result["ready"]:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail={
+                "status": "degraded",
+                **result,
+            },
+        )
+
+    return {
+        "status": "ok",
+        **result,
+    }
 
 
 @app.post("/generate", response_model=GenerateResponse)
 def generate(request: GenerateRequest):
     if not request.prompt.strip():
-        raise HTTPException(status_code=400, detail="Prompt cannot be empty.")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="prompt must not be empty",
+        )
 
     return generate_text(
         prompt=request.prompt,

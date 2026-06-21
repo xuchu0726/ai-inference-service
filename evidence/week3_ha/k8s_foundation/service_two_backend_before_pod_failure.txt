@@ -1,0 +1,14 @@
+采集时间：2026-06-21T23:11:14Z
+
+===== Pods =====
+NAME                                 READY   STATUS    RESTARTS   AGE    IP           NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-6dbfc969dd-7bsq8   1/1     Running   0          119s   10.244.1.3   desktop-worker2   <none>           <none>
+inference-gateway-6dbfc969dd-d5ngf   1/1     Running   0          119s   10.244.2.3   desktop-worker    <none>           <none>
+
+===== Service =====
+NAME                TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE     SELECTOR
+inference-gateway   ClusterIP   10.96.122.253   <none>        8000/TCP   4m23s   app=inference-gateway
+
+===== EndpointSlice =====
+NAME                      ADDRESSTYPE   PORTS   ENDPOINTS               AGE
+inference-gateway-shvms   IPv4          8000    10.244.1.3,10.244.2.3   4m23s

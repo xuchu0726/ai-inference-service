@@ -1,5 +1,4 @@
 from app.backends.mock_backend import MockBackend
-from app.backends.transformers_backend import TransformersBackend
 from app.backends.vllm_backend import VLLMBackend
 from app.config import (
     INFERENCE_BACKEND,
@@ -14,24 +13,32 @@ from app.config import (
 )
 
 
-if INFERENCE_BACKEND == "transformers":
-    backend = TransformersBackend(
-        model_name=MODEL_NAME,
-        load_in_8bit=TRANSFORMERS_LOAD_IN_8BIT,
-        device_map=TRANSFORMERS_DEVICE_MAP,
-        default_thinking_budget=TRANSFORMERS_DEFAULT_THINKING_BUDGET,
-    )
-elif INFERENCE_BACKEND == "vllm":
-    backend = VLLMBackend(
-        base_url=VLLM_BASE_URL,
-        model_name=VLLM_MODEL_NAME,
-        timeout_seconds=VLLM_TIMEOUT_SECONDS,
-        enable_seed_thinking_budget=VLLM_ENABLE_SEED_THINKING_BUDGET,
-    )
-elif INFERENCE_BACKEND == "mock":
-    backend = MockBackend()
-else:
+def _build_backend():
+    if INFERENCE_BACKEND == "transformers":
+        from app.backends.transformers_backend import TransformersBackend
+
+        return TransformersBackend(
+            model_name=MODEL_NAME,
+            load_in_8bit=TRANSFORMERS_LOAD_IN_8BIT,
+            device_map=TRANSFORMERS_DEVICE_MAP,
+            default_thinking_budget=TRANSFORMERS_DEFAULT_THINKING_BUDGET,
+        )
+
+    if INFERENCE_BACKEND == "vllm":
+        return VLLMBackend(
+            base_url=VLLM_BASE_URL,
+            model_name=VLLM_MODEL_NAME,
+            timeout_seconds=VLLM_TIMEOUT_SECONDS,
+            enable_seed_thinking_budget=VLLM_ENABLE_SEED_THINKING_BUDGET,
+        )
+
+    if INFERENCE_BACKEND == "mock":
+        return MockBackend()
+
     raise ValueError(f"Unsupported INFERENCE_BACKEND: {INFERENCE_BACKEND}")
+
+
+backend = _build_backend()
 
 
 def generate_text(
