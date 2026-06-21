@@ -1,0 +1,2 @@
+说明：原文件 gsm8k_awq_marlin_full_budget0_max768_20260619_summary.json 的内容实际为 CSV 格式。
+为避免后续工具按 JSON 解析失败，保留原文件作为历史产物，并新增同内容的 .csv 副本作为正式读取入口。
