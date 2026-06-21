@@ -1,0 +1,6 @@
+W8A8 定向复测运行溯源
+环境：2×A100-SXM4-80GB；vLLM 0.23.0；TP=2；bfloat16；compressed-tensors。
+加载：checkpoint 位于 FUSE 挂载路径，使用 safetensors_load_strategy=prefetch。
+链路：FastAPI /generate -> vLLM /v1/chat/completions -> Seed-OSS-36B-Instruct-W8A8。
+协议：395 条历史 cap-hit 样本；max_new_tokens=768；temperature=0；thinking_budget=0。
+结果：395/395 API 成功；353/395 正确；accuracy=89.3671%。

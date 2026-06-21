@@ -1,0 +1,5 @@
+W8A8 服务启动与网关集成问题记录
+1. FUSE 挂载读取 checkpoint 时，vLLM 初始停留在 safetensors shard 0/8。
+2. 加入 --safetensors-load-strategy prefetch 后，checkpoint 完成加载并启动 API server。
+3. gateway 初始 VLLM_BASE_URL 缺少 /v1，调用 /chat/completions 返回 HTTP 404。
+4. 修正为 http://127.0.0.1:8002/v1 后，FastAPI /generate 成功返回 W8A8 推理结果。

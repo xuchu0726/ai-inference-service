@@ -1,0 +1,33 @@
+time=2026-06-21T16:01:27+00:00
+
+===== python =====
+Python 3.12.13
+
+===== vLLM =====
+0.23.0
+
+===== GPU =====
+0, NVIDIA A100-SXM4-80GB, 73351 MiB, 81920 MiB, 0 %
+1, NVIDIA A100-SXM4-80GB, 73351 MiB, 81920 MiB, 0 %
+
+===== serving processes =====
+root           1       0  0 14:19 ?        00:00:00 /sbin/docker-init -- vllm serve --model /workspace/models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8 --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --dtype bfloat16 --quantization compressed-tensors --max-model-len 4096 --max-num-batched-tokens 8192 --max-num-seqs 16 --gpu-memory-utilization 0.90 --trust-remote-code --enforce-eager --safetensors-load-strategy prefetch
+root          57       1  0 14:19 ?        00:00:54 /usr/bin/python3 /usr/local/bin/vllm serve --model /workspace/models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8 --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --dtype bfloat16 --quantization compressed-tensors --max-model-len 4096 --max-num-batched-tokens 8192 --max-num-seqs 16 --gpu-memory-utilization 0.90 --trust-remote-code --enforce-eager --safetensors-load-strategy prefetch
+root        1179    1093  0 14:27 pts/0    00:00:12 python3 -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+
+===== final summary =====
+total_cases,successful_api_cases,failed_api_cases,api_error_rate,parseable_answer_cases,correct_cases,accuracy_all_cases,accuracy_successful_api_cases,client_latency_avg,client_latency_p50,client_latency_p95,server_latency_avg,server_latency_p50,server_latency_p95,tokens_per_second_avg,tokens_per_second_p50,tokens_per_second_p95,output_tokens_avg
+395,395,0,0.0,395,353,0.893671,0.893671,12.599227,12.126436,17.264309,12.597427,12.124692,17.262354,24.3897,24.4148,24.51985,307.296203
+
+===== transitions =====
+{
+  "total_targeted_cases": 395,
+  "missing_historical_cases": [],
+  "transitions": {
+    "False->False": 38,
+    "False->True": 272,
+    "True->False": 4,
+    "True->True": 81
+  },
+  "still_output_cap_hit_at_768": 1
+}

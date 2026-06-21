@@ -1,0 +1,16 @@
+time=2026-06-21T14:28:50+00:00
+
+===== vLLM model endpoint =====
+{"object":"list","data":[{"id":"Seed-OSS-36B-Instruct-W8A8","object":"model","created":1782052130,"owned_by":"vllm","root":"/workspace/models/Seed-OSS-36B-Instruct-W8A8","parent":null,"max_model_len":4096,"permission":[{"id":"modelperm-94cb70c329a0e07f","object":"model_permission","created":1782052130,"allow_create_engine":false,"allow_sampling":true,"allow_logprobs":true,"allow_search_indices":false,"allow_view":true,"allow_fine_tuning":false,"organization":"*","group":null,"is_blocking":false}]}]}
+
+===== gateway health =====
+{"status":"ok"}
+
+===== GPU =====
+0, 73349 MiB, 81920 MiB, 0 %
+1, 73349 MiB, 81920 MiB, 0 %
+
+===== serving processes =====
+root           1       0  0 14:19 ?        00:00:00 /sbin/docker-init -- vllm serve --model /workspace/models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8 --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --dtype bfloat16 --quantization compressed-tensors --max-model-len 4096 --max-num-batched-tokens 8192 --max-num-seqs 16 --gpu-memory-utilization 0.90 --trust-remote-code --enforce-eager --safetensors-load-strategy prefetch
+root          57       1  5 14:19 ?        00:00:31 /usr/bin/python3 /usr/local/bin/vllm serve --model /workspace/models/Seed-OSS-36B-Instruct-W8A8 --served-model-name Seed-OSS-36B-Instruct-W8A8 --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --dtype bfloat16 --quantization compressed-tensors --max-model-len 4096 --max-num-batched-tokens 8192 --max-num-seqs 16 --gpu-memory-utilization 0.90 --trust-remote-code --enforce-eager --safetensors-load-strategy prefetch
+root        1179    1093 14 14:27 pts/0    00:00:10 python3 -m uvicorn app.main:app --host 127.0.0.1 --port 8000

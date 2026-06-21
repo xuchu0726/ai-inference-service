@@ -1,0 +1,9 @@
+W8A8 output-cap-hit 定向复测最终结论
+
+1. 对历史 max_new_tokens=256 时输出触顶的 395 条样本执行 max_new_tokens=768 定向复测。
+2. 运行链路为 FastAPI /generate -> vLLM /v1/chat/completions -> Seed-OSS-36B-Instruct-W8A8。
+3. 结果为 395/395 API 成功，353/395 正确，accuracy=89.3671%。
+4. transition：False->True=272，False->False=38，True->True=81，True->False=4。
+5. 仍有 1 条样本在 @768 达到输出上限。
+6. 结论：历史 cap-hit 子集的大部分错误由输出预算限制主导，不能直接归因于 W8A8 量化误差。
+7. 本结果仅适用于该 395 条定向子集，不替代完整 1319 条 GSM8K full benchmark。

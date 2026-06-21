@@ -191,3 +191,19 @@ W8A8 的主要显存收益体现在模型权重加载显存下降和 KV cache he
 显存方面，W8A8 将 model loading memory 从 67.5901 GiB 降至 17.7109 GiB，下降约 73.8%；available KV cache memory 从 9.43 GiB 增至 53.04 GiB，约 5.63×；GPU KV cache size 从 38,624 tokens 增至 434,480 tokens，约 11.25×。由于 vLLM 会将释放出的显存用于 KV cache，运行时 `nvidia-smi` 总显存不一定同比下降，因此本报告将显存收益定义为模型权重加载显存下降和 KV cache/concurrency headroom 增加。
 
 本阶段稳定、同源且可用于性能与显存对比的 serving 闭环仍为 FP32 baseline vs W8A8 compressed-tensors serving。BitsAndBytes INT8 已完成运行时量化路径下的 GSM8K 输出预算定向复测，但未形成 vLLM serving 性能闭环。BF16/vLLM 已完成全部 366 条历史 output-cap-hit 样本的 `@768` 定向复测；原始 75.7392% accuracy 仅保留为短输出预算下的历史 serving behavior，不作为最终数学推理质量结论。AWQ 已完成外部预量化 artifact 的 vLLM serving-stack 验证与 GSM8K full evaluation，但其 checkpoint provenance、dtype 与 kernel 不同于 BF16/W8A8 主线，不能作为同源量化性能排名。INC INT8、compressed-tensors strict INT8 与 GPTQ 仍保留为兼容性边界或后续优化方向。FP8 KV cache 已完成容量边界验证，但尚未形成统一 workload 下的完整性能收益结论。
+
+## W8A8 @768 定向复测
+
+针对历史 `max_new_tokens=256` 下的 395 条 W8A8 output-cap-hit 样本，完成 `max_new_tokens=768` 定向 serving 复测。395 条请求全部成功，353 条正确，准确率为 89.3671%。与同一批样本历史 `@256` 的 85/395 正确相比，272 条由错误转为正确，表明该子集的大部分错误由输出预算不足引起。
+
+该结果用于修正 output-cap-hit 子集的质量解释，不替代完整 GSM8K full benchmark 的 accuracy。详细协议、transition 与证据路径见 `docs/week2_quantization_protocol_audit.md`。
+
+## 11. 最终解释边界
+
+本报告中的“FP32 baseline”仅沿用历史文件命名。实际 serving 基线为 Seed-OSS-36B-Instruct 的 BF16 vLLM profile；后续正文统一按 BF16 baseline 理解。
+
+BF16 与 W8A8 的性能对比使用相同 workload、多重集合、batch-profile 参数和固定 64-token 输出：两侧各完成 160 条请求，全部 HTTP 200。该 microbenchmark 可用于解释 W8A8 的显存、KV Cache、QPS 与 P95 latency 收益。
+
+历史 BF16 与 W8A8 的 GSM8K full run 不构成严格的量化精度对照。W8A8 adapter 额外加入 system message 与 evaluation instruction，导致全部 1319 条样本固定多出 72 input tokens；同时原始 `max_new_tokens=256` 存在系统性输出截断。因此，历史 accuracy 仅保留为 route-level fixed-budget serving outcome，不解释为纯量化 quality loss。
+
+BnB INT8 用于 Transformers runtime 下的输出预算诊断；AWQ 用于外部 artifact 的 vLLM + AWQ-Marlin serving 验证；GPTQ 尚未形成稳定 serving 产物，不纳入完成结果。

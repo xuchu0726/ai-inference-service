@@ -1,0 +1,11 @@
+{
+  "route": "w8a8",
+  "source_result_csv": "results/week2_hardening/gsm8k_w8a8_full_budget0_fixed_20260616.csv",
+  "source_dataset_jsonl": "data/eval/gsm8k_test.jsonl",
+  "selection_rule": "output_tokens == max_new_tokens == 256",
+  "selected_cases": 395,
+  "first_case_id": "gsm8k_0003",
+  "last_case_id": "gsm8k_1318",
+  "subset_jsonl": "data/eval/week2_quantization_validation/w8a8_cap_hit_395_max768.jsonl",
+  "subset_sha256": "5c5cdc2067c5f595bd171f18c506083516937bee5f3a3b891eeecad862b48682"
+}

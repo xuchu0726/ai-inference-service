@@ -241,7 +241,7 @@ W8A8 结果如下：
 - 正确题数减少：13；
 - API error rate：0.0%。
 
-W8A8 compressed-tensors profile 在完整 GSM8K test split 上的原始 accuracy 为 74.7536%，相比 BF16/vLLM baseline 的 75.7392% 低 0.9856 个百分点。该差异保留为固定 `max_new_tokens=256` 条件下的历史观察结果，同时两条路线均保持 API error rate 为 0。
+W8A8 compressed-tensors 与 BF16/vLLM 的历史 GSM8K full run 均完成 1319 条样本和 0 API error，但两条路线的 prompt rendering 不一致：W8A8 adapter 额外加入 system message 与 evaluation instruction，使全部样本固定多出 72 input tokens。因此，这两组原始 accuracy 仅保留为 fixed-budget route-level serving outcome，不解释为纯 W8A8 quantization quality loss。
 
 后续输出上限审计发现，BF16 与 W8A8 的大量错误集中在 `output_tokens == 256` 的触顶样本中。因此，上述 0.9856 percentage points 不再作为最终 quantization quality regression 结论，而应解释为短输出预算下的原始 serving behavior。统一的协议边界、cap-hit 审计和后续定向复测规则见 `docs/week2_quantization_protocol_audit.md`。
 
@@ -429,5 +429,11 @@ W8A8 量化实验中的显存收益需要区分“模型加载显存”和“运
 - W8A8 compressed-tensors 路径已完成离线量化、checkpoint 检查、serving、smoke test、并发压测和 GSM8K full benchmark；
 - BnB INT8 已完成 Transformers + BitsAndBytes runtime quantization 下的 GSM8K 输出预算定向复测；AWQ 已完成 external pre-quantized artifact 的 vLLM serving-stack 验证与 GSM8K full evaluation；strict INT8 与 GPTQ 仍未形成稳定 serving 结果；
 - W8A8 显存收益对应模型加载显存下降，不代表运行时总 GPU 显存等比例下降；
-- W8A8 GSM8K accuracy 已完成补测，较 BF16/vLLM baseline 下降约 0.99 个百分点；
+- W8A8 GSM8K full run 已完成，但历史 BF16/W8A8 prompt rendering 不一致；该结果仅作为 route-level serving outcome 保存，不作为严格量化 accuracy delta。
 - 50 题代码生成结果是轻量验证结果，不等同于官方 HumanEval 或 MBPP 完整 benchmark。
+
+### W8A8 output-cap-hit 定向复测
+
+完成 395 条 W8A8 历史 output-cap-hit 样本的 `@768` 定向复测。结果为 395/395 API 成功、353/395 正确、89.3671% accuracy、平均 24.3897 tokens/s；历史 `@256` 同一子集为 85/395 正确。272 条错误在扩大输出预算后转为正确，说明该子集主要受生成上限影响。该结论不替代完整 GSM8K test split 的 full accuracy。
+
+证据位于 `results/week2_hardening/w8a8_controlled/cap_hit_395_max768/` 与 `evidence/week2_hardening/w8a8_controlled/`。

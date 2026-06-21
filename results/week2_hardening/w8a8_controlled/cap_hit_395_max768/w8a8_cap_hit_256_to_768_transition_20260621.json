@@ -1,0 +1,11 @@
+{
+  "total_targeted_cases": 395,
+  "missing_historical_cases": [],
+  "transitions": {
+    "False->False": 38,
+    "False->True": 272,
+    "True->False": 4,
+    "True->True": 81
+  },
+  "still_output_cap_hit_at_768": 1
+}

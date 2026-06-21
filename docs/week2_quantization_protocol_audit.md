@@ -205,3 +205,42 @@ behavior，不应作为 BF16 路线的最终数学推理质量结论。
 - 最终环境与结果溯源：`evidence/week2_hardening/bf16_controlled/bf16_cap_hit_final_provenance_20260621.txt`
 - 最终结论：`evidence/week2_hardening/bf16_controlled/bf16_cap_hit_final_findings_20260621.txt`
 - 关键文件 hash：`evidence/week2_hardening/bf16_controlled/bf16_cap_hit_evidence_bundle_20260621.sha256`
+
+## W8A8 输出预算定向复测（2026-06-21）
+
+历史 W8A8 full GSM8K 评测固定 `max_new_tokens=256`，其中 395 条样本在输出长度达到 256 token 时结束。本轮仅对这 395 条样本实施定向复测，以区分真实推理错误与输出预算不足导致的截断错误。
+
+复测使用 W8A8 compressed-tensors checkpoint，并通过 FastAPI `/generate`、vLLM OpenAI-compatible `/v1` 接口完成真实 serving 调用。运行组合为 2×A100-SXM4-80GB、vLLM 0.23.0、TP=2、bfloat16、`max_model_len=4096`、`max_num_batched_tokens=8192`、`max_num_seqs=16`、`gpu_memory_utilization=0.90`；由于 checkpoint 位于 FUSE 挂载路径，使用 `safetensors_load_strategy=prefetch` 完成权重加载。
+
+| 指标 | 历史 @256 | 定向 @768 |
+|---|---:|---:|
+| 样本数 | 395 | 395 |
+| API 成功数 | 395 | 395 |
+| 正确数 | 85 | 353 |
+| 准确率 | 21.5190% | 89.3671% |
+| 平均请求延迟 | - | 12.5992s |
+| P95 请求延迟 | - | 17.2643s |
+| 平均生成速度 | - | 24.3897 tokens/s |
+| 平均输出长度 | - | 307.2962 tokens |
+
+逐样例 transition 为：错误→正确 272 条，错误→错误 38 条，正确→正确 81 条，正确→错误 4 条。`@768` 后仍有 1 条样本输出长度达到上限。
+
+该结果说明：历史 W8A8 `@256` cap-hit 子集中的大部分错误受输出预算限制主导，而不能直接归因于 W8A8 量化误差。该定向结果不替代完整 1319 条 GSM8K 的 full accuracy；它仅修正被选中的 cap-hit 子集，并保留 38 条非截断错误、4 条回归错误和 1 条仍触顶样本作为后续分析边界。
+
+相关证据：
+
+- `data/eval/week2_quantization_validation/w8a8_cap_hit_395_max768.jsonl`
+- `results/week2_hardening/w8a8_controlled/cap_hit_395_max768/`
+- `logs/week2_hardening/w8a8_controlled/cap_hit_395_max768/`
+- `evidence/week2_hardening/w8a8_controlled/`
+## 10. 历史 BF16/W8A8 GSM8K 可比性更正（2026-06-21）
+
+历史 BF16 与 W8A8 full run 使用相同 GSM8K test split、相同 case ID、相同 expected answer、相同 `max_new_tokens=256` 和相同 `thinking_budget=0`。但结果审计显示，W8A8 的 `input_tokens` 在全部 1319 条样本上恒定比 BF16 多 72。
+
+该差异来自 W8A8 专用 adapter：它在 benchmark prompt 之外额外加入 evaluation instruction，并发送一条额外 system message。该差异不是 W8A8 量化本身导致，也不是随机 tokenizer 波动。
+
+因此：
+- 历史 BF16 与 W8A8 full-run accuracy 仅保留为 route-level fixed-budget serving outcome；
+- `75.7392%` 与 `74.7536%` 不解释为纯量化 accuracy loss；
+- shared cohort 分析仅作为 route-specific serving behavior diagnostic，不作为严格 prompt-identical quality ablation；
+- 后续严格质量对照需要固定同一 request renderer、chat template、tokenizer、payload 和 serving envelope。
