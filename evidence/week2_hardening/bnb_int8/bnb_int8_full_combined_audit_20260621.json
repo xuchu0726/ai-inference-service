@@ -1,0 +1,13 @@
+{
+  "bnb_int8_full_combined": {
+    "total_cases": 1319,
+    "successful_cases": 1319,
+    "failed_cases": 0,
+    "correct_cases": 1009,
+    "accuracy": 0.764973
+  },
+  "source_files": [
+    "results/week2_hardening/bnb_int8/bnb_int8_full/gsm8k_bnb_int8_gpu0_cases_0001_0660.csv",
+    "results/week2_hardening/bnb_int8/bnb_int8_full/gsm8k_bnb_int8_gpu1_cases_0661_1319.csv"
+  ]
+}
