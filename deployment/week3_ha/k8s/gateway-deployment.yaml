@@ -27,11 +27,16 @@ spec:
               topologyKey: kubernetes.io/hostname
       containers:
         - name: gateway
-          image: ai-inference-gateway:week3-foundation
+          image: ai-inference-gateway:week3-instance-v1
           imagePullPolicy: Never
           ports:
             - containerPort: 8000
               name: http
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
           envFrom:
             - configMapRef:
                 name: gateway-config

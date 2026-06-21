@@ -1,0 +1,1 @@
+pod "inference-gateway-78cbd9f4cc-jfshj" deleted from ai-inference namespace

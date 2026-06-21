@@ -1,0 +1,19 @@
+采集时间：2026-06-21T23:20:43Z
+
+===== 当前 Gateway Pod =====
+NAME                                 READY   STATUS    RESTARTS   AGE    IP           NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-78cbd9f4cc-6tmfp   1/1     Running   0          2m1s   10.244.2.5   desktop-worker    <none>           <none>
+inference-gateway-78cbd9f4cc-jfshj   1/1     Running   0          2m8s   10.244.1.6   desktop-worker2   <none>           <none>
+
+===== 单 Pod 实例标识核验 =====
+--- Pod: inference-gateway-78cbd9f4cc-6tmfp ---
+HTTP 状态: 200
+响应实例标识: inference-gateway-78cbd9f4cc-6tmfp
+--- Pod: inference-gateway-78cbd9f4cc-jfshj ---
+HTTP 状态: 200
+响应实例标识: inference-gateway-78cbd9f4cc-jfshj
+
+===== 经 Service 连续采样 40 次 =====
+请求总数: 40
+inference-gateway-78cbd9f4cc-6tmfp: 23 次，占比 57.5%
+inference-gateway-78cbd9f4cc-jfshj: 17 次，占比 42.5%

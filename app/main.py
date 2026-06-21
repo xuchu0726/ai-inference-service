@@ -1,4 +1,6 @@
-from fastapi import FastAPI, HTTPException, status
+import os
+
+from fastapi import FastAPI, HTTPException, Request, status
 from prometheus_fastapi_instrumentator import Instrumentator
 
 from app.config import INFERENCE_BACKEND
@@ -10,6 +12,14 @@ from app.schemas import GenerateRequest, GenerateResponse
 app = FastAPI(title="AI Inference Service", version="0.2.0")
 
 Instrumentator().instrument(app).expose(app)
+
+
+@app.middleware("http")
+async def add_gateway_instance_header(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Gateway-Instance"] = os.getenv("POD_NAME", "local")
+    return response
+
 
 
 def _backend_readiness() -> dict:

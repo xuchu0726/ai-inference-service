@@ -60,3 +60,12 @@ def test_readyz_and_health_are_degraded_when_backend_is_unready(monkeypatch):
     assert health_response.status_code == 503
     assert health_response.json()["detail"]["status"] == "degraded"
     assert health_response.json()["detail"]["backend"] == "test-unready"
+
+
+def test_gateway_instance_header_uses_environment(monkeypatch):
+    monkeypatch.setenv("POD_NAME", "gateway-test-instance")
+
+    response = TestClient(app).get("/livez")
+
+    assert response.status_code == 200
+    assert response.headers["X-Gateway-Instance"] == "gateway-test-instance"
