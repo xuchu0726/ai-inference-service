@@ -177,18 +177,39 @@ BnB INT8 已完成 Transformers + BitsAndBytes runtime quantization 下的 GSM8K
 
 ## 5. GSM8K baseline 与 W8A8 精度回归
 
-### 5.1 BF16/vLLM baseline
+### 5.1 BF16/vLLM 原始结果与输出预算定向复测
 
-仓库中已有完整 GSM8K baseline 结果：
+仓库中已有 BF16/vLLM 路线的完整 GSM8K 原始结果：
 
 - 文件：`results/week2_gsm8k_full_seed_oss_budget0_summary.csv`
 - 总题数：1319
 - 正确题数：999
-- accuracy：75.7392%
-- backend：vLLM
+- 原始 accuracy：75.7392%
+- backend：vLLM，TP=2
 - `max_new_tokens`：256
 
-该结果解释为 Seed-OSS-36B-Instruct 在 BF16/vLLM serving 路径下的数学推理 baseline。
+该原始结果用于记录固定短输出预算下的 serving behavior，不直接作为 BF16 路线的最终数学推理质量结论。
+
+后续审计发现，1319 条样本中有 366 条满足
+`output_tokens == max_new_tokens == 256`。对全部 366 条历史 output-cap-hit 样本，
+在保持模型、服务链路、题目、答案抽取规则、`temperature=0` 和
+`thinking_budget=0` 不变的前提下，仅将 `max_new_tokens` 提升至 768 后：
+
+- 正确数从 72 提升至 333；
+- 定向子集 accuracy 从 19.6721% 提升至 90.9836%；
+- `wrong_to_correct` 为 263；
+- `correct_to_wrong` 为 2；
+- 没有样本再次达到 768 token 上限；
+- API failure 为 0。
+
+因此，原始 75.7392% 不能直接解释为 BF16 模型能力或量化质量结论。输出预算截断是大量历史错误的主要影响因素，但不是唯一原因；仍有 31 条样本在 768 token 下完整输出后保持错误。
+
+相关 evidence：
+
+- `evidence/week2_hardening/bf16_controlled/bf16_cap_hit_final_findings_20260621.txt`
+- `evidence/week2_hardening/bf16_controlled/bf16_cap_hit_final_provenance_20260621.txt`
+- `results/week2_hardening/bf16_controlled/cap_hit_366_max768/gsm8k_bf16_cap_hit_366_max768_summary_20260621.csv`
+- `evidence/week2_hardening/quant_backend_compatibility/bf16_cap_hit_256_to_768_summary_20260621.json`
 
 ### 5.2 W8A8 GSM8K full benchmark
 

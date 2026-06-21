@@ -1,0 +1,11 @@
+{
+  "route": "bf16",
+  "source_result_csv": "results/week2_gsm8k_full_seed_oss_budget0.csv",
+  "source_dataset_jsonl": "data/eval/gsm8k_test.jsonl",
+  "selection_rule": "output_tokens == max_new_tokens == 256",
+  "selected_cases": 366,
+  "first_case_id": "gsm8k_0003",
+  "last_case_id": "gsm8k_1318",
+  "subset_jsonl": "data/eval/week2_quantization_validation/bf16_cap_hit_366_max768.jsonl",
+  "subset_sha256": "cac7c465f8fd4cde6acb3f513bc272e3be4e6b319c9828ded64d498276c5de9e"
+}

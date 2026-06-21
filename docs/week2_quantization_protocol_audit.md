@@ -69,7 +69,7 @@
 ## 6. 各路线执行状态与后续动作
 
 - BnB INT8：已完成 fixed20 行为验证和全部 348 个历史 cap-hit 样本的 `@768` 定向复测，结果见第 8 节。
-- BF16 / vLLM：复测全部 366 个 cap-hit 样本。
+- BF16 / vLLM：已完成全部 366 个历史 cap-hit 样本的 `@768` 定向复测，结果见第 9 节。
 - W8A8 / vLLM compressed-tensors：复测全部 395 个 cap-hit 样本。
 - 历史 `results/week2_gsm8k_full_seed_oss_max768.csv` 仅有 55 条样本，不构成完整 BF16 768 结果，不纳入正式结论。
 - AWQ 已完成 external pre-quantized artifact 的 `768-token` 评测，不纳入本表的同源 `256-token` baseline ranking。
@@ -77,7 +77,10 @@
 
 ## 7. 关联证据
 
-- BF16 summary: `results/week2_gsm8k_full_seed_oss_budget0_summary.csv`
+- BF16 原始 summary: `results/week2_gsm8k_full_seed_oss_budget0_summary.csv`
+- BF16 366 条 manifest: `evidence/week2_hardening/quant_backend_compatibility/bf16_cap_hit_366_manifest_20260621.json`
+- BF16 `@768` summary: `results/week2_hardening/bf16_controlled/cap_hit_366_max768/gsm8k_bf16_cap_hit_366_max768_summary_20260621.csv`
+- BF16 transition summary: `evidence/week2_hardening/quant_backend_compatibility/bf16_cap_hit_256_to_768_summary_20260621.json`
 - W8A8 summary: `results/week2_hardening/gsm8k_w8a8_full_budget0_fixed_summary_20260616.csv`
 - BnB INT8 cap-hit audit: `evidence/week2_hardening/bnb_int8/bnb_int8_output_cap_audit_20260619.json`
 - BnB INT8 provenance: `evidence/week2_hardening/bnb_int8/bnb_int8_final_provenance_20260619.txt`
@@ -142,3 +145,63 @@ BnB INT8 路线使用 Transformers 与 BitsAndBytes `LLM.int8()` 运行时量化
 - worker 运行日志：`logs/week2_hardening/bnb_int8/output_budget_validation/cap_hit_348_max768/`
 - 逐题 transition：`results/week2_hardening/bnb_int8/output_budget_validation/cap_hit_348_max768/bnb_int8_cap_hit_256_to_768_transitions_20260620.csv`
 - 汇总 JSON：`evidence/week2_hardening/bnb_int8/output_budget_validation/bnb_int8_cap_hit_256_to_768_summary_20260620.json`
+
+## 9. BF16 / vLLM 输出预算定向复测结果
+
+### 9.1 复测范围与执行口径
+
+BF16 路线使用 vLLM 0.11.2、TP=2 和 FastAPI `/generate` gateway。
+历史 full run 在 `max_new_tokens=256` 下完成 1319 条 GSM8K 样本，其中 366 条样本满足
+`output_tokens == max_new_tokens == 256`。这些样本构成定向复测对象。
+
+复测保持模型、服务链路、题目、答案抽取规则、`temperature=0` 和
+`thinking_budget=0` 不变，仅将 `max_new_tokens` 提升至 768。
+
+本次复测通过同一个 BF16 vLLM TP=2 serving stack 串行执行，不是 1319 条 GSM8K 的
+full `@768` rerun。
+
+### 9.2 全部 366 条 cap-hit 样本复测
+
+| 指标 | 历史 `max_new_tokens=256` | 定向复测 `max_new_tokens=768` |
+|---|---:|---:|
+| 样本数 | 366 | 366 |
+| 正确数 | 72 | 333 |
+| 错误数 | 294 | 33 |
+| accuracy | 19.6721% | 90.9836% |
+| API 失败数 | 未单独汇总 | 0 |
+| 输出触顶数 | 366 | 0 |
+
+逐题转移结果如下：
+
+| 转移类型 | 样本数 |
+|---|---:|
+| `wrong_to_correct` | 263 |
+| `correct_to_correct` | 70 |
+| `wrong_to_wrong` | 31 |
+| `correct_to_wrong` | 2 |
+
+定向子集正确数净增加 261，accuracy 提升 71.3115 个百分点。
+复测中没有样本再次达到 768 token 上限。
+
+### 9.3 结论与边界
+
+原始 BF16 full run 中，大量错误与 `max_new_tokens=256` 的输出预算限制高度相关。
+366 条历史 output-cap-hit 样本中，263 条在提高输出预算后由错误恢复为正确。
+
+但输出截断不是唯一误差来源：31 条样本在 768 token 下完整输出后仍然错误，
+另有 2 条样本从原始正确变为复测错误。因此，不能表述为全部历史错误均由截断造成。
+
+原始 full run 的 75.7392% accuracy 仅保留为固定短输出预算下的 historical serving
+behavior，不应作为 BF16 路线的最终数学推理质量结论。
+
+### 9.4 新增证据
+
+- 366 条输入集：`data/eval/week2_quantization_validation/bf16_cap_hit_366_max768.jsonl`
+- 366 条 manifest：`evidence/week2_hardening/quant_backend_compatibility/bf16_cap_hit_366_manifest_20260621.json`
+- 定向复测逐题结果：`results/week2_hardening/bf16_controlled/cap_hit_366_max768/gsm8k_bf16_cap_hit_366_max768_20260621.csv`
+- 定向复测 summary：`results/week2_hardening/bf16_controlled/cap_hit_366_max768/gsm8k_bf16_cap_hit_366_max768_summary_20260621.csv`
+- 逐题 transition：`results/week2_hardening/bf16_controlled/cap_hit_366_max768/bf16_cap_hit_256_to_768_transitions_20260621.csv`
+- transition summary：`evidence/week2_hardening/quant_backend_compatibility/bf16_cap_hit_256_to_768_summary_20260621.json`
+- 最终环境与结果溯源：`evidence/week2_hardening/bf16_controlled/bf16_cap_hit_final_provenance_20260621.txt`
+- 最终结论：`evidence/week2_hardening/bf16_controlled/bf16_cap_hit_final_findings_20260621.txt`
+- 关键文件 hash：`evidence/week2_hardening/bf16_controlled/bf16_cap_hit_evidence_bundle_20260621.sha256`

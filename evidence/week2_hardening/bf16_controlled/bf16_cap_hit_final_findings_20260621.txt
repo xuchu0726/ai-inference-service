@@ -1,0 +1,76 @@
+BF16 输出预算定向复测：最终结论
+
+一、实验对象与边界
+
+本次复测对象为原始 BF16 GSM8K full evaluation 中全部满足
+output_tokens == max_new_tokens == 256 的 366 条样本。
+
+原始 full evaluation 共包含 1319 条 GSM8K 样本，使用
+max_new_tokens=256、temperature=0、thinking_budget=0。
+
+本次复测保持模型、服务链路、题目、答案抽取规则、temperature 和
+thinking_budget 不变，仅将 max_new_tokens 提升至 768。
+
+本次结果属于 output-cap-hit 子集的 targeted corrected evaluation，
+不是 1319 条 GSM8K 的 full @768 rerun。
+
+二、最终结果
+
+原始 256 token 条件下：
+- 定向样本数：366
+- 正确数：72
+- accuracy：19.6721%
+- output-cap-hit 数：366
+
+768 token 定向复测后：
+- API 成功数：366
+- API 失败数：0
+- 正确数：333
+- accuracy：90.9836%
+- 仍然达到 768 token 上限的样本数：0
+- 平均 client latency：9.638070 秒
+- P50 client latency：9.328692 秒
+- P95 client latency：12.871107 秒
+- 平均生成速度：31.239419 tokens/s
+- 平均输出长度：301.013661 tokens
+
+三、逐题转移结果
+
+- wrong_to_correct：263
+- correct_to_correct：70
+- wrong_to_wrong：31
+- correct_to_wrong：2
+
+正确数净增加：261。
+定向子集 accuracy 提升：71.3115 个百分点。
+
+四、结论
+
+原始 BF16 GSM8K full evaluation 中，大量错误与
+max_new_tokens=256 的输出预算限制高度相关。
+
+366 条历史 output-cap-hit 样本中，263 条在提高输出预算后由错误恢复为正确；
+同时，所有样本均未再次达到 768 token 上限。
+
+因此，原始 full evaluation 的 75.7392% accuracy 只能作为固定短输出预算下的
+historical serving behavior，不应被直接解释为 BF16 路线的最终数学推理质量。
+
+仍有 31 条样本在 768 token 下完整输出后保持错误，说明输出截断不是唯一误差来源。
+另有 2 条样本从原始正确变为复测错误，因此本次结果不能表述为“所有错误均由截断造成”。
+
+五、关联证据
+
+- 原始 full CSV：
+  results/week2_gsm8k_full_seed_oss_budget0.csv
+- 366 条样本 manifest：
+  evidence/week2_hardening/quant_backend_compatibility/bf16_cap_hit_366_manifest_20260621.json
+- 定向复测逐题结果：
+  results/week2_hardening/bf16_controlled/cap_hit_366_max768/gsm8k_bf16_cap_hit_366_max768_20260621.csv
+- 定向复测 summary：
+  results/week2_hardening/bf16_controlled/cap_hit_366_max768/gsm8k_bf16_cap_hit_366_max768_summary_20260621.csv
+- 逐题转移结果：
+  results/week2_hardening/bf16_controlled/cap_hit_366_max768/bf16_cap_hit_256_to_768_transitions_20260621.csv
+- 转移汇总：
+  evidence/week2_hardening/quant_backend_compatibility/bf16_cap_hit_256_to_768_summary_20260621.json
+- 最终环境与结果溯源：
+  evidence/week2_hardening/bf16_controlled/bf16_cap_hit_final_provenance_20260621.txt

@@ -156,7 +156,12 @@ Evidence：
 | Average tokens/s | 38.30 |
 | Average output tokens | 206.77 |
 
-该实验基于 GSM8K test set 完成 1319 条样本的端到端评测，覆盖 API 稳定性、答案正确率、端到端延迟和生成吞吐等指标。结果可作为 Seed-OSS-36B-Instruct 在数学推理场景下的任务级性能基线。
+该实验基于 GSM8K test set 完成 1319 条样本的端到端评测，覆盖 API 稳定性、答案正确率、端到端延迟和生成吞吐等指标。
+
+本次 full run 使用 `max_new_tokens=256`。后续审计发现，366 条样本满足
+`output_tokens == max_new_tokens == 256`，因此表中的 75.74% accuracy 仅表示固定短输出预算下的历史 serving behavior，不直接作为最终数学推理质量结论。
+
+对全部 366 条历史 output-cap-hit 样本，在保持模型、服务链路、题目、答案抽取规则、`temperature=0` 和 `thinking_budget=0` 不变的前提下，仅将 `max_new_tokens` 提升至 768 后，正确数从 72 提升至 333，且没有样本再次达到 768 token 上限。完整协议与结果见 `docs/week2_quantization_protocol_audit.md`。
 
 Evidence：
 
@@ -206,9 +211,9 @@ Evidence：
 
 仍未完成或需要后续补强的部分如下：
 
-1. plain INT8 / AWQ / GPTQ 稳定 serving 尚未完成。本阶段已完成的是 W8A8 compressed-tensors 量化闭环；bitsandbytes INT8、INC INT8 和 compressed-tensors strict INT8 保留为兼容性边界记录。
-2. FP8 KV cache 尚未完成。当前已完成 vLLM KV cache、PagedAttention、Prefix Cache 和长上下文边界行为分析，但尚未实测 KV cache 低比特量化。
-3. 512K full-context 未完成实机验证。Week2 已完成 128K serving profile live boundary test，包括 conservative、near-limit 和 over-limit 三类请求。
+1. GPTQ 与 plain / strict INT8 稳定 serving 尚未完成。W8A8 compressed-tensors 已完成量化 serving 闭环；AWQ 已完成 external pre-quantized artifact 的 vLLM serving-stack 验证与 GSM8K full evaluation；BitsAndBytes INT8 已完成 runtime quantization 下的输出预算定向复测，但不属于 vLLM serving 性能闭环。
+2. FP8 KV cache 已完成近极限容量验证，但未形成同一 workload 下的完整性能收益结论。当前已完成 vLLM KV cache、PagedAttention、Prefix Cache、长上下文边界行为分析，以及 BF16 KV 与 FP8 KV 的容量/headroom 对照；单请求 latency 不作为 FP8 KV 的性能优化结论。
+3. 512K full-context 已完成 4×A100 环境下的启动与 near-limit 请求验证，但未覆盖不同并发、不同输入结构和持续负载下的完整 serving 性能评测。
 4. 代码生成测试使用的是 Seed-OSS-36B-Instruct，不是专门的 Seed-Coder 模型。Seed-Coder 专项验证仍是后续任务。
 5. Prometheus 配置、Grafana dashboard JSON 和一次 Grafana 实机导入/负载探测 evidence 已保存；后续仍可继续补充更完整的 dashboard、告警面板和长期监控截图。
 

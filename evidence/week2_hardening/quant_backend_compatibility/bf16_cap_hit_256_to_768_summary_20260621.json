@@ -1,0 +1,14 @@
+{
+  "route": "BF16 controlled vLLM TP=2",
+  "selection_rule": "output_tokens == max_new_tokens == 256",
+  "rerun_max_new_tokens": 768,
+  "selected_cases": 366,
+  "old_cap_hit_correct": 72,
+  "new_cap_hit_correct": 333,
+  "wrong_to_correct": 263,
+  "correct_to_wrong": 2,
+  "correct_to_correct": 70,
+  "wrong_to_wrong": 31,
+  "still_cap_hit_at_768": 0,
+  "transition_csv": "results/week2_hardening/bf16_controlled/cap_hit_366_max768/bf16_cap_hit_256_to_768_transitions_20260621.csv"
+}

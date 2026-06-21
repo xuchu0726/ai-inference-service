@@ -1,0 +1,87 @@
+BF16 输出预算定向复测：最终环境与结果溯源
+生成时间：2026-06-21T05:02:53-07:00
+
+===== 一、实验范围 =====
+实验路线：BF16 controlled vLLM TP=2 serving
+模型：Seed-OSS-36B-Instruct
+样本筛选规则：原始 GSM8K full 结果中 output_tokens == max_new_tokens == 256
+定向复测样本数：366
+复测输出上限：max_new_tokens=768
+温度：temperature=0
+思维预算：thinking_budget=0
+请求入口：http://127.0.0.1:8000/generate
+
+说明：本次为全部历史 output-cap-hit 样本的定向复测，不是完整 1319 条 GSM8K 的 full @768 rerun。
+
+===== 二、结果文件路径 =====
+原始 BF16 full CSV：results/week2_gsm8k_full_seed_oss_budget0.csv
+366 条样本 manifest：evidence/week2_hardening/quant_backend_compatibility/bf16_cap_hit_366_manifest_20260621.json
+定向复测逐题 CSV：results/week2_hardening/bf16_controlled/cap_hit_366_max768/gsm8k_bf16_cap_hit_366_max768_20260621.csv
+定向复测 summary：results/week2_hardening/bf16_controlled/cap_hit_366_max768/gsm8k_bf16_cap_hit_366_max768_summary_20260621.csv
+逐题转移结果：results/week2_hardening/bf16_controlled/cap_hit_366_max768/bf16_cap_hit_256_to_768_transitions_20260621.csv
+转移汇总：evidence/week2_hardening/quant_backend_compatibility/bf16_cap_hit_256_to_768_summary_20260621.json
+主运行日志：logs/week2_hardening/bf16_controlled/bf16_cap_hit_366_max768_20260621.log
+运行前 GPU 快照：logs/week2_hardening/bf16_controlled/bf16_cap_hit_366_gpu_before_20260621.txt
+运行后 GPU 快照：logs/week2_hardening/bf16_controlled/bf16_cap_hit_366_gpu_after_20260621.txt
+
+===== 三、版本与仓库状态 =====
+Git HEAD：eb7641a59b03207b6df81ceeddfcc8fcedc4f1a5
+
+Git 工作区状态：
+?? data/eval/week2_quantization_validation/bf16_cap_hit_366_max768.jsonl
+?? data/eval/week2_quantization_validation/w8a8_cap_hit_395_max768.jsonl
+?? evidence/week2_hardening/bf16_controlled/
+?? evidence/week2_hardening/environment/
+?? evidence/week2_hardening/quant_backend_compatibility/bf16_cap_hit_256_to_768_summary_20260621.json
+?? evidence/week2_hardening/quant_backend_compatibility/bf16_cap_hit_366_manifest_20260621.json
+?? evidence/week2_hardening/quant_backend_compatibility/bf16_w8a8_cap_hit_source_audit_20260621.txt
+?? evidence/week2_hardening/quant_backend_compatibility/current_pod_autostart_w8a8_blocker_20260617_155231.txt
+?? evidence/week2_hardening/quant_backend_compatibility/pre_awq_gptq_autostart_w8a8_snapshot_20260617_154824.txt
+?? evidence/week2_hardening/quant_backend_compatibility/runtime_entrypoint_check_20260617_154843.txt
+?? evidence/week2_hardening/quant_backend_compatibility/vllm0112_network_volume_install_failure_20260621.txt
+?? evidence/week2_hardening/quant_backend_compatibility/w8a8_cap_hit_395_manifest_20260621.json
+?? logs/week2_hardening/bf16_controlled/
+?? logs/week2_hardening/environment/
+?? logs/week2_hardening/vllm0112_install_20260621.log
+?? results/week2_gsm8k_full_seed_oss_summary.csv
+?? results/week2_hardening/bf16_controlled/
+?? results/week2_hardening/bnb_int8/output_budget_validation/cap_hit_348_max768/worker_pids_20260620.txt
+
+Python 与推理依赖：
+Python 3.12.12
+torch=2.9.0+cu129
+vllm=0.11.2
+cuda=12.9
+
+===== 四、当前服务进程 =====
+以下为生成本溯源文件时仍在运行的 vLLM / Uvicorn 进程：
+root           1       0  0 02:45 ?        00:00:00 /sbin/docker-init -- vllm serve --model /workspace/models/Seed-OSS-36B-Instruct --served-model-name Seed-OSS-36B-Instruct-BF16-Controlled --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --dtype bfloat16 --max-model-len 4096 --max-num-batched-tokens 8192 --max-num-seqs 16 --gpu-memory-utilization 0.90 --trust-remote-code --enforce-eager
+root          57       1  0 02:45 ?        00:00:47 /usr/bin/python3 /usr/local/bin/vllm serve --model /workspace/models/Seed-OSS-36B-Instruct --served-model-name Seed-OSS-36B-Instruct-BF16-Controlled --host 0.0.0.0 --port 8002 --tensor-parallel-size 2 --dtype bfloat16 --max-model-len 4096 --max-num-batched-tokens 8192 --max-num-seqs 16 --gpu-memory-utilization 0.90 --trust-remote-code --enforce-eager
+root        3737       1  0 03:41 ?        00:00:11 python3 -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+
+===== 五、GPU 环境快照 =====
+Sun Jun 21 05:02:58 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:07:00.0 Off |                    0 |
+| N/A   34C    P0             82W /  400W |   73901MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:90:00.0 Off |                    0 |
+| N/A   35C    P0             85W /  400W |   73901MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A             628      C   VLLM::Worker_TP0                      73892MiB |
+|    1   N/A  N/A             629      C   VLLM::Worker_TP1                      73892MiB |
++-----------------------------------------------------------------------------------------+
