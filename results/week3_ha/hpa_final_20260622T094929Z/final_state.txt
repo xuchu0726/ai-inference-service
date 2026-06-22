@@ -1,0 +1,59 @@
+===== 采集时间 =====
+2026-06-22T09:59:38Z
+
+===== HPA =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 3%/50%   2         4         2          10h
+
+===== HPA 描述与事件 =====
+Name:                                                  inference-gateway
+Namespace:                                             ai-inference
+Labels:                                                <none>
+Annotations:                                           <none>
+CreationTimestamp:                                     Mon, 22 Jun 2026 00:45:17 +0100
+Reference:                                             Deployment/inference-gateway
+Metrics:                                               ( current / target )
+  resource cpu on pods  (as a percentage of request):  3% (3m) / 50%
+Min replicas:                                          2
+Max replicas:                                          4
+Behavior:
+  Scale Up:
+    Stabilization Window: 0 seconds
+    Select Policy: Max
+    Policies:
+      - Type: Percent  Value: 100  Period: 15 seconds
+      - Type: Pods     Value: 2    Period: 15 seconds
+  Scale Down:
+    Stabilization Window: 60 seconds
+    Select Policy: Min
+    Policies:
+      - Type: Percent  Value: 50  Period: 30 seconds
+Deployment pods:       2 current / 2 desired
+Conditions:
+  Type            Status  Reason            Message
+  ----            ------  ------            -------
+  AbleToScale     True    ReadyForNewScale  recommended size matches current size
+  ScalingActive   True    ValidMetricFound  the HPA was able to successfully calculate a replica count from cpu resource utilization (percentage of request)
+  ScalingLimited  True    TooFewReplicas    the desired replica count is less than the minimum replica count
+Events:
+  Type     Reason                        Age                  From                       Message
+  ----     ------                        ----                 ----                       -------
+  Warning  FailedGetResourceMetric       10h                  horizontal-pod-autoscaler  failed to get cpu utilization: did not receive metrics for targeted pods (pods might be unready)
+  Warning  FailedComputeMetricsReplicas  10h                  horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: did not receive metrics for targeted pods (pods might be unready)
+  Warning  FailedGetScale                36m (x6 over 8h)     horizontal-pod-autoscaler  Unauthorized
+  Normal   SuccessfulRescale             8m48s (x2 over 31m)  horizontal-pod-autoscaler  New size: 4; reason: cpu resource utilization (percentage of request) above target
+  Normal   SuccessfulRescale             5m47s (x2 over 28m)  horizontal-pod-autoscaler  New size: 2; reason: All metrics below target
+
+===== Deployment =====
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+
+===== Gateway Pods =====
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+
+===== Gateway CPU =====
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   3m           40Mi            

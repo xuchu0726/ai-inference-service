@@ -1,0 +1,29 @@
+结论：Metrics Server 在本地 Docker Desktop / kind 集群中已恢复可用。
+说明：为解决 kind 节点 kubelet 证书缺少 InternalIP SAN 的本地兼容性问题，
+Metrics Server 使用 --kubelet-insecure-tls。该配置不作为生产部署建议。
+采集时间：2026-06-21T23:37:47Z
+
+===== Metrics Server 实际参数 =====
+      - args:
+        - --cert-dir=/tmp
+        - --secure-port=10250
+        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+        - --kubelet-use-node-status-port
+        - --metric-resolution=15s
+        - --kubelet-insecure-tls
+        image: registry.k8s.io/metrics-server/metrics-server:v0.8.1
+
+===== Metrics APIService =====
+NAME                     SERVICE                      AVAILABLE   AGE
+v1beta1.metrics.k8s.io   kube-system/metrics-server   True        7m40s
+
+===== 节点资源指标 =====
+NAME                    CPU(cores)   CPU(%)   MEMORY(bytes)   MEMORY(%)   
+desktop-control-plane   116m         1%       751Mi           9%          
+desktop-worker          22m          0%       239Mi           3%          
+desktop-worker2         28m          0%       264Mi           3%          
+
+===== Gateway Pod 资源指标 =====
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-78cbd9f4cc-6tmfp   4m           39Mi            
+inference-gateway-78cbd9f4cc-gm9b5   3m           39Mi            

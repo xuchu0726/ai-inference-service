@@ -1,0 +1,308 @@
+===== 2026-06-22T09:50:17Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 4%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   3m           40Mi            
+
+===== 2026-06-22T09:50:22Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 3%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   3m           40Mi            
+
+===== 2026-06-22T09:50:27Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 3%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   5m           40Mi            
+
+===== 2026-06-22T09:50:32Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 3%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   5m           40Mi            
+
+===== 2026-06-22T09:50:37Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 4%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   5m           40Mi            
+
+===== 2026-06-22T09:50:42Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 4%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   450m         40Mi            
+inference-gateway-5598489f5c-v65x6   437m         41Mi            
+
+===== 2026-06-22T09:50:47Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 4%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   450m         40Mi            
+inference-gateway-5598489f5c-v65x6   437m         41Mi            
+
+===== 2026-06-22T09:50:53Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 443%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/4     4            2           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   450m         40Mi            
+inference-gateway-5598489f5c-v65x6   437m         41Mi            
+
+===== 2026-06-22T09:50:58Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 443%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/4     4            2           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   499m         40Mi            
+inference-gateway-5598489f5c-v65x6   490m         41Mi            
+
+===== 2026-06-22T09:51:03Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 443%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   499m         40Mi            
+inference-gateway-5598489f5c-v65x6   490m         41Mi            
+
+===== 2026-06-22T09:51:08Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 494%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   499m         40Mi            
+inference-gateway-5598489f5c-v65x6   490m         41Mi            
+
+===== 2026-06-22T09:51:13Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 494%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-46tqw   306m         39Mi            
+inference-gateway-5598489f5c-nkdgq   356m         39Mi            
+inference-gateway-5598489f5c-qj46z   501m         40Mi            
+inference-gateway-5598489f5c-v65x6   494m         40Mi            
+
+===== 2026-06-22T09:51:18Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 494%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-46tqw   306m         39Mi            
+inference-gateway-5598489f5c-nkdgq   356m         39Mi            
+inference-gateway-5598489f5c-qj46z   501m         40Mi            
+inference-gateway-5598489f5c-v65x6   494m         40Mi            
+
+===== 2026-06-22T09:51:23Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 497%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-46tqw   306m         39Mi            
+inference-gateway-5598489f5c-nkdgq   356m         39Mi            
+inference-gateway-5598489f5c-qj46z   501m         40Mi            
+inference-gateway-5598489f5c-v65x6   494m         40Mi            
+
+===== 2026-06-22T09:51:28Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 497%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-46tqw   493m         39Mi            
+inference-gateway-5598489f5c-nkdgq   496m         39Mi            
+inference-gateway-5598489f5c-qj46z   479m         40Mi            
+inference-gateway-5598489f5c-v65x6   488m         40Mi            
+
+===== 2026-06-22T09:51:34Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 497%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-46tqw   493m         39Mi            
+inference-gateway-5598489f5c-nkdgq   496m         39Mi            
+inference-gateway-5598489f5c-qj46z   479m         40Mi            
+inference-gateway-5598489f5c-v65x6   488m         40Mi            
+
+===== 2026-06-22T09:51:39Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 489%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-46tqw   493m         39Mi            
+inference-gateway-5598489f5c-nkdgq   496m         39Mi            
+inference-gateway-5598489f5c-qj46z   479m         40Mi            
+inference-gateway-5598489f5c-v65x6   488m         40Mi            
+
+===== 2026-06-22T09:51:44Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 489%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-46tqw   486m         39Mi            
+inference-gateway-5598489f5c-nkdgq   484m         39Mi            
+inference-gateway-5598489f5c-qj46z   486m         40Mi            
+inference-gateway-5598489f5c-v65x6   498m         41Mi            
+
+===== 2026-06-22T09:51:49Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 489%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-46tqw   486m         39Mi            
+inference-gateway-5598489f5c-nkdgq   484m         39Mi            
+inference-gateway-5598489f5c-qj46z   486m         40Mi            
+inference-gateway-5598489f5c-v65x6   498m         41Mi            
+
+===== 2026-06-22T09:51:54Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 488%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-46tqw   486m         39Mi            
+inference-gateway-5598489f5c-nkdgq   484m         39Mi            
+inference-gateway-5598489f5c-qj46z   486m         40Mi            
+inference-gateway-5598489f5c-v65x6   498m         41Mi            
+
+===== 2026-06-22T09:51:59Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 488%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-46tqw   484m         40Mi            
+inference-gateway-5598489f5c-nkdgq   491m         39Mi            
+inference-gateway-5598489f5c-qj46z   480m         40Mi            
+inference-gateway-5598489f5c-v65x6   483m         40Mi            
+
+===== 2026-06-22T09:52:04Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 488%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-46tqw   484m         40Mi            
+inference-gateway-5598489f5c-nkdgq   491m         39Mi            
+inference-gateway-5598489f5c-qj46z   480m         40Mi            
+inference-gateway-5598489f5c-v65x6   483m         40Mi            
+
+===== 2026-06-22T09:52:09Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 484%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-46tqw   484m         40Mi            
+inference-gateway-5598489f5c-nkdgq   491m         39Mi            
+inference-gateway-5598489f5c-qj46z   480m         40Mi            
+inference-gateway-5598489f5c-v65x6   483m         40Mi            
+
+===== 2026-06-22T09:52:15Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 484%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-46tqw   494m         40Mi            
+inference-gateway-5598489f5c-nkdgq   479m         40Mi            
+inference-gateway-5598489f5c-qj46z   496m         40Mi            
+inference-gateway-5598489f5c-v65x6   494m         40Mi            
+
+===== 2026-06-22T09:52:20Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 484%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-46tqw   494m         40Mi            
+inference-gateway-5598489f5c-nkdgq   479m         40Mi            
+inference-gateway-5598489f5c-qj46z   496m         40Mi            
+inference-gateway-5598489f5c-v65x6   494m         40Mi            
+
+===== 2026-06-22T09:52:25Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 490%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-46tqw   494m         40Mi            
+inference-gateway-5598489f5c-nkdgq   479m         40Mi            
+inference-gateway-5598489f5c-qj46z   496m         40Mi            
+inference-gateway-5598489f5c-v65x6   494m         40Mi            
+
+===== 2026-06-22T09:52:30Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 490%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-46tqw   494m         40Mi            
+inference-gateway-5598489f5c-nkdgq   490m         40Mi            
+inference-gateway-5598489f5c-qj46z   496m         40Mi            
+inference-gateway-5598489f5c-v65x6   489m         40Mi            
+
+===== 2026-06-22T09:52:35Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 490%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-46tqw   494m         40Mi            
+inference-gateway-5598489f5c-nkdgq   490m         40Mi            
+inference-gateway-5598489f5c-qj46z   496m         40Mi            
+inference-gateway-5598489f5c-v65x6   489m         40Mi            
+
+===== 2026-06-22T09:52:40Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 492%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-46tqw   494m         40Mi            
+inference-gateway-5598489f5c-nkdgq   490m         40Mi            
+inference-gateway-5598489f5c-qj46z   496m         40Mi            
+inference-gateway-5598489f5c-v65x6   489m         40Mi            
+
+===== 2026-06-22T09:52:46Z =====
+NAME                REFERENCE                      TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 492%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           10h
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-46tqw   193m         40Mi            
+inference-gateway-5598489f5c-nkdgq   4m           39Mi            
+inference-gateway-5598489f5c-qj46z   224m         40Mi            
+inference-gateway-5598489f5c-v65x6   29m          40Mi            
+

@@ -69,3 +69,14 @@ def test_gateway_instance_header_uses_environment(monkeypatch):
 
     assert response.status_code == 200
     assert response.headers["X-Gateway-Instance"] == "gateway-test-instance"
+
+
+def test_mock_cpu_burn_can_be_disabled(monkeypatch):
+    monkeypatch.setattr("app.backends.mock_backend.MOCK_CPU_BURN_MS", 0)
+
+    from app.backends.mock_backend import MockBackend
+
+    result = MockBackend().generate("cpu burn disabled")
+
+    assert result["backend"] == "mock"
+    assert result["latency_seconds"] >= 0

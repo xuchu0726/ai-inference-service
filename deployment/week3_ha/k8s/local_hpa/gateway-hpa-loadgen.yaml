@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gateway-hpa-loadgen
+  namespace: ai-inference
+  labels:
+    app: gateway-hpa-loadgen
+spec:
+  restartPolicy: Never
+  containers:
+    - name: loadgen
+      image: ai-inference-gateway:week3-hpa-v1
+      imagePullPolicy: Never
+      command: ["sh", "-c", "sleep 3600"]
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 500m
+          memory: 128Mi

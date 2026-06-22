@@ -1,0 +1,16 @@
+结论：Metrics Server 未就绪，原因是 kind 节点 kubelet 证书缺少 InternalIP SAN。
+边界：该问题发生于本地 Docker Desktop / kind 集群。
+处理：仅为本地 HPA 验证追加 --kubelet-insecure-tls，不作为生产配置。
+
+===== 当前 Metrics Server 参数 =====
+      - args:
+        - --cert-dir=/tmp
+        - --secure-port=10250
+        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+        - --kubelet-use-node-status-port
+        - --metric-resolution=15s
+        image: registry.k8s.io/metrics-server/metrics-server:v0.8.1
+
+===== APIService =====
+NAME                     SERVICE                      AVAILABLE                  AGE
+v1beta1.metrics.k8s.io   kube-system/metrics-server   False (MissingEndpoints)   5m25s

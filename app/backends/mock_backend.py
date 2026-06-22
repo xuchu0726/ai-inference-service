@@ -1,5 +1,21 @@
 import time
 
+from app.config import MOCK_CPU_BURN_MS
+
+
+def _burn_cpu(milliseconds: int) -> None:
+    if milliseconds <= 0:
+        return
+
+    deadline = time.perf_counter() + milliseconds / 1000.0
+    value = 0
+
+    while time.perf_counter() < deadline:
+        value = (value * 31 + 17) % 1_000_003
+
+    if value == -1:
+        raise RuntimeError("unreachable")
+
 
 class MockBackend:
     def generate(
@@ -10,6 +26,8 @@ class MockBackend:
         thinking_budget: int | None = None,
     ) -> dict:
         start = time.time()
+
+        _burn_cpu(MOCK_CPU_BURN_MS)
 
         response = (
             f"[Mock Output] Received prompt with {len(prompt)} characters. "

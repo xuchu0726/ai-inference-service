@@ -26,6 +26,10 @@ VLLM_ENABLE_SEED_THINKING_BUDGET = (
     os.getenv("VLLM_ENABLE_SEED_THINKING_BUDGET", "false").lower() == "true"
 )
 
+MOCK_CPU_BURN_MS = int(
+    os.getenv("MOCK_CPU_BURN_MS", "0")
+)
+
 
 TRANSFORMERS_LOAD_IN_8BIT = (
     os.getenv("TRANSFORMERS_LOAD_IN_8BIT", "false").lower() == "true"

@@ -1,0 +1,20 @@
+实验名称：本地 Kubernetes Gateway HPA 自动扩缩容验证
+
+结论：Gateway 在持续 CPU 压力下从 2 个副本自动扩容至 4 个副本；
+压力结束后，HPA 自动将副本数回缩至 2 个。
+
+扩容观测：
+- HPA 最高观测到 CPU 492% / 目标 50%。
+- Deployment 达到 4/4 Ready、4/4 Available。
+- 4 个 Gateway Pod 均进入 Running 状态。
+
+缩容观测：
+- 压力结束后 HPA CPU 指标回落至约 3%–4% / 目标 50%。
+- Deployment 最终回到 2/2 Ready、2/2 Available。
+
+实验边界：
+- 后端为 MockBackend。
+- MOCK_CPU_BURN_MS=150，用于产生可控 CPU 压力。
+- 运行环境为本地 Docker Desktop / kind 集群。
+- 本实验验证 Gateway 服务层的指标链路与自动扩缩容行为，
+  不代表真实多机 GPU 推理吞吐、GPU 容灾或模型后端扩缩容能力。

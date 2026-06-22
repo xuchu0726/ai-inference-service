@@ -1,0 +1,16 @@
+spec:
+  template:
+    spec:
+      containers:
+        - name: gateway
+          image: ai-inference-gateway:week3-hpa-v1
+      affinity:
+        podAntiAffinity:
+          $patch: replace
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: inference-gateway
+                topologyKey: kubernetes.io/hostname

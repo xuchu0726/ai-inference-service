@@ -1,0 +1,290 @@
+===== 2026-06-22T09:53:52Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 3%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS      RESTARTS   AGE    IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-46tqw   0/1     Completed   0          3m1s   10.244.2.11   desktop-worker    <none>           <none>
+inference-gateway-5598489f5c-nkdgq   0/1     Completed   0          3m1s   10.244.2.10   desktop-worker    <none>           <none>
+inference-gateway-5598489f5c-qj46z   1/1     Running     0          10h    10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running     0          10h    10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   3m           40Mi            
+
+===== 2026-06-22T09:54:02Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 3%/50%   2         4         4          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   3m           40Mi            
+inference-gateway-5598489f5c-v65x6   7m           40Mi            
+
+===== 2026-06-22T09:54:12Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 5%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   3m           40Mi            
+
+===== 2026-06-22T09:54:23Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 3%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   3m           40Mi            
+
+===== 2026-06-22T09:54:33Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 3%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   4m           40Mi            
+
+===== 2026-06-22T09:54:43Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 4%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   4m           40Mi            
+
+===== 2026-06-22T09:54:54Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 4%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   4m           40Mi            
+
+===== 2026-06-22T09:55:04Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 4%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   4m           40Mi            
+
+===== 2026-06-22T09:55:14Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 4%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   3m           40Mi            
+
+===== 2026-06-22T09:55:24Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 3%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   3m           40Mi            
+
+===== 2026-06-22T09:55:34Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 3%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   4m           40Mi            
+
+===== 2026-06-22T09:55:45Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 4%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   4m           40Mi            
+
+===== 2026-06-22T09:55:55Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 4%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   4m           40Mi            
+
+===== 2026-06-22T09:56:05Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 4%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   4m           40Mi            
+
+===== 2026-06-22T09:56:15Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 4%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   4m           40Mi            
+
+===== 2026-06-22T09:56:25Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 4%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   4m           40Mi            
+
+===== 2026-06-22T09:56:36Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 4%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   3m           40Mi            
+
+===== 2026-06-22T09:56:46Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 3%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   4m           40Mi            
+
+===== 2026-06-22T09:56:56Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 4%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   4m           40Mi            
+
+===== 2026-06-22T09:57:06Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 4%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   4m           40Mi            
+
+===== 2026-06-22T09:57:17Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 4%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   3m           40Mi            
+
+===== 2026-06-22T09:57:27Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 3%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   3m           40Mi            
+inference-gateway-5598489f5c-v65x6   4m           40Mi            
+
+===== 2026-06-22T09:57:37Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 3%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   3m           40Mi            
+inference-gateway-5598489f5c-v65x6   4m           40Mi            
+
+===== 2026-06-22T09:57:47Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 3%/50%   2         4         2          10h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           10h
+NAME                                 READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-5598489f5c-qj46z   1/1     Running   0          10h   10.244.1.10   desktop-worker2   <none>           <none>
+inference-gateway-5598489f5c-v65x6   1/1     Running   0          10h   10.244.1.9    desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-5598489f5c-qj46z   4m           40Mi            
+inference-gateway-5598489f5c-v65x6   4m           40Mi            
+
