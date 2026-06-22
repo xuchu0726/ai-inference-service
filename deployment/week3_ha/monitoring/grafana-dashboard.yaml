@@ -1,0 +1,163 @@
+apiVersion: v1
+data:
+  week3-gateway-resilience.json: |
+    {
+      "uid": "week3-gateway-resilience",
+      "title": "Week3 Gateway Resilience",
+      "timezone": "browser",
+      "schemaVersion": 39,
+      "version": 1,
+      "refresh": "5s",
+      "time": {
+        "from": "now-15m",
+        "to": "now"
+      },
+      "panels": [
+        {
+          "id": 1,
+          "type": "stat",
+          "title": "Gateway Pods Up",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "sum(up{job=\"gateway-pods\"})",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 2
+                  }
+                ]
+              }
+            }
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 0,
+            "w": 6,
+            "h": 6
+          }
+        },
+        {
+          "id": 2,
+          "type": "stat",
+          "title": "Backend Ready",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "max(gateway_backend_ready)",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 1
+                  }
+                ]
+              }
+            }
+          },
+          "gridPos": {
+            "x": 6,
+            "y": 0,
+            "w": 6,
+            "h": 6
+          }
+        },
+        {
+          "id": 3,
+          "type": "timeseries",
+          "title": "Gateway Request Rate by Handler and Status",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "sum by (handler, status) (rate(http_requests_total{job=\"gateway-pods\"}[1m]))",
+              "legendFormat": "{{handler}} {{status}}",
+              "refId": "A"
+            }
+          ],
+          "gridPos": {
+            "x": 12,
+            "y": 0,
+            "w": 12,
+            "h": 6
+          }
+        },
+        {
+          "id": 4,
+          "type": "timeseries",
+          "title": "Backend Failures by Error Type",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "sum by (error_type) (increase(gateway_backend_failures_total[5m]))",
+              "legendFormat": "{{error_type}}",
+              "refId": "A"
+            }
+          ],
+          "gridPos": {
+            "x": 0,
+            "y": 6,
+            "w": 12,
+            "h": 8
+          }
+        },
+        {
+          "id": 5,
+          "type": "timeseries",
+          "title": "Readiness Checks by Result",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "sum by (result) (rate(gateway_readiness_checks_total[1m]))",
+              "legendFormat": "{{result}}",
+              "refId": "A"
+            }
+          ],
+          "gridPos": {
+            "x": 12,
+            "y": 6,
+            "w": 12,
+            "h": 8
+          }
+        }
+      ]
+    }
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-week3
+  namespace: ai-inference

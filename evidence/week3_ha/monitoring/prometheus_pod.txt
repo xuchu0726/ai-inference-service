@@ -1,0 +1,2 @@
+NAME                          READY   STATUS    RESTARTS   AGE   IP            NODE             NOMINATED NODE   READINESS GATES
+prometheus-6f6bb75db4-r2q6z   1/1     Running   0          31m   10.244.2.21   desktop-worker   <none>           <none>

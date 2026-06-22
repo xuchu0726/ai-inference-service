@@ -1,0 +1,2 @@
+NAME                       READY   STATUS    RESTARTS   AGE     IP            NODE             NOMINATED NODE   READINESS GATES
+grafana-548f88cb69-6j97x   1/1     Running   0          8m12s   10.244.2.22   desktop-worker   <none>           <none>

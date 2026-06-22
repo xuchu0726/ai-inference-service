@@ -1,0 +1,126 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus
+  namespace: ai-inference
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: prometheus-pod-discovery
+  namespace: ai-inference
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: prometheus-pod-discovery
+  namespace: ai-inference
+subjects:
+  - kind: ServiceAccount
+    name: prometheus
+    namespace: ai-inference
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: prometheus-pod-discovery
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: ai-inference
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 5s
+      scrape_timeout: 4s
+      evaluation_interval: 5s
+
+    scrape_configs:
+      - job_name: gateway-pods
+        metrics_path: /metrics
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [ai-inference]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: inference-gateway
+          - source_labels: [__meta_kubernetes_pod_phase]
+            action: keep
+            regex: Running
+          - source_labels: [__meta_kubernetes_pod_ready]
+            action: keep
+            regex: "true"
+          - source_labels: [__meta_kubernetes_pod_container_port_number]
+            action: keep
+            regex: "8000"
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: ai-inference
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      serviceAccountName: prometheus
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v3.12.0
+          imagePullPolicy: Never
+          args:
+            - --config.file=/etc/prometheus/prometheus.yml
+            - --storage.tsdb.path=/prometheus
+            - --storage.tsdb.retention.time=24h
+          ports:
+            - name: http
+              containerPort: 9090
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 768Mi
+          volumeMounts:
+            - name: config
+              mountPath: /etc/prometheus
+              readOnly: true
+            - name: storage
+              mountPath: /prometheus
+      volumes:
+        - name: config
+          configMap:
+            name: prometheus-config
+        - name: storage
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: ai-inference
+spec:
+  selector:
+    app: prometheus
+  ports:
+    - name: http
+      port: 9090
+      targetPort: http

@@ -1,0 +1,8 @@
+本地 kind 监控闭环验证
+
+Prometheus：通过 Kubernetes Pod discovery 抓取 2 个 inference-gateway Pod。
+Targets：2/2 health=up。
+Grafana：database=ok；Prometheus datasource 已 provision。
+Dashboard：Week3 Gateway Resilience 已 provision 到 Week3 folder。
+指标范围：Gateway Pod up、backend readiness、请求速率、backend failure 分类、readiness checks。
+边界：当前本地监控只采集 Gateway；未采集 RunPod GPU / vLLM runtime 指标。
