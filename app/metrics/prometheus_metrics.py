@@ -13,6 +13,12 @@ gateway_readiness_checks_total = Counter(
     ["backend", "result"],
 )
 
+gateway_backend_failures_total = Counter(
+    "gateway_backend_failures_total",
+    "Number of gateway backend failures.",
+    ["backend", "error_type"],
+)
+
 
 def record_backend_readiness(status: dict) -> None:
     backend = status.get("backend", "unknown")
@@ -23,4 +29,11 @@ def record_backend_readiness(status: dict) -> None:
     gateway_readiness_checks_total.labels(
         backend=backend,
         result=result,
+    ).inc()
+
+
+def record_backend_failure(backend: str, error_type: str) -> None:
+    gateway_backend_failures_total.labels(
+        backend=backend,
+        error_type=error_type,
     ).inc()

@@ -1,0 +1,12 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.5, pytest-8.3.5, pluggy-1.6.0 -- /Users/xc1225/Desktop/ai-inference-service/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/xc1225/Desktop/ai-inference-service
+plugins: anyio-4.14.0
+collecting ... collected 3 items
+
+tests/test_backend_resilience.py::test_generate_maps_backend_failures_to_stable_api_errors[error0-503-backend_unavailable] PASSED [ 33%]
+tests/test_backend_resilience.py::test_generate_maps_backend_failures_to_stable_api_errors[error1-504-backend_timeout] PASSED [ 66%]
+tests/test_backend_resilience.py::test_generate_maps_backend_failures_to_stable_api_errors[error2-502-upstream_protocol_error] PASSED [100%]
+
+============================== 3 passed in 0.20s ===============================

@@ -1,0 +1,8 @@
+Gateway backend resilience validation
+
+Scope: vLLM upstream error classification; no automatic retry; no mock fallback.
+Baseline: tests/ passed 8/8 in the isolated Gateway virtual environment.
+Change: unreachable upstream -> 503; timeout -> 504; invalid upstream response -> 502.
+Observability: gateway_backend_failures_total{backend,error_type} increments per classified failure.
+Validation: tests/ passed 11/11 after the change.
+Boundary: tests use controlled backend exceptions; this is API-contract validation, not a live vLLM outage measurement.

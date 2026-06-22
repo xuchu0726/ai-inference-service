@@ -1,7 +1,14 @@
 import json
+import socket
 import time
 import urllib.error
 import urllib.request
+
+from app.backends.errors import (
+    BackendTimeoutError,
+    BackendUnavailableError,
+    UpstreamProtocolError,
+)
 
 
 class VLLMBackend:
@@ -88,21 +95,37 @@ class VLLMBackend:
                 data = json.loads(raw_body)
 
         except urllib.error.HTTPError as exc:
-            error_body = exc.read().decode("utf-8", errors="replace")
-            raise RuntimeError(
-                f"vLLM request failed with HTTP {exc.code}: {error_body}"
+            raise UpstreamProtocolError(
+                f"vLLM returned HTTP {exc.code}"
+            ) from exc
+
+        except (TimeoutError, socket.timeout) as exc:
+            raise BackendTimeoutError(
+                f"vLLM request timed out after {self.timeout_seconds}s"
             ) from exc
 
         except urllib.error.URLError as exc:
-            raise RuntimeError(
-                f"vLLM server is not reachable at {self.base_url}: {exc}"
+            if isinstance(exc.reason, (TimeoutError, socket.timeout)):
+                raise BackendTimeoutError(
+                    f"vLLM request timed out after {self.timeout_seconds}s"
+                ) from exc
+
+            raise BackendUnavailableError(
+                f"vLLM server is unreachable at {self.base_url}"
+            ) from exc
+
+        except json.JSONDecodeError as exc:
+            raise UpstreamProtocolError(
+                "vLLM returned invalid JSON"
             ) from exc
 
         latency_seconds = time.time() - start_time
 
         choices = data.get("choices", [])
         if not choices:
-            raise RuntimeError(f"vLLM response has no choices: {data}")
+            raise UpstreamProtocolError(
+                "vLLM response contains no choices"
+            )
 
         message = choices[0].get("message", {})
         response_text = message.get("content", "")
