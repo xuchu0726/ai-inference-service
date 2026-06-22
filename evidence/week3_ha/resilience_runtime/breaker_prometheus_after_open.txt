@@ -1,0 +1,119 @@
+2026-06-22T16:46:35Z
+===== gateway_backend_failures_total =====
+{
+    "status": "success",
+    "data": {
+        "resultType": "vector",
+        "result": [
+            {
+                "metric": {
+                    "__name__": "gateway_backend_failures_total",
+                    "backend": "mock",
+                    "error_type": "backend_unavailable",
+                    "instance": "10.244.1.23:8000",
+                    "job": "gateway-pods",
+                    "namespace": "ai-inference",
+                    "pod": "inference-gateway-6fccb6449c-lq9q6"
+                },
+                "value": [
+                    1782146795.762,
+                    "1"
+                ]
+            },
+            {
+                "metric": {
+                    "__name__": "gateway_backend_failures_total",
+                    "backend": "mock",
+                    "error_type": "circuit_open",
+                    "instance": "10.244.1.23:8000",
+                    "job": "gateway-pods",
+                    "namespace": "ai-inference",
+                    "pod": "inference-gateway-6fccb6449c-lq9q6"
+                },
+                "value": [
+                    1782146795.762,
+                    "1"
+                ]
+            }
+        ]
+    }
+}
+===== gateway_circuit_breaker_state =====
+{
+    "status": "success",
+    "data": {
+        "resultType": "vector",
+        "result": [
+            {
+                "metric": {
+                    "__name__": "gateway_circuit_breaker_state",
+                    "backend": "mock",
+                    "instance": "10.244.1.23:8000",
+                    "job": "gateway-pods",
+                    "namespace": "ai-inference",
+                    "pod": "inference-gateway-6fccb6449c-lq9q6",
+                    "state": "closed"
+                },
+                "value": [
+                    1782146795.818,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "__name__": "gateway_circuit_breaker_state",
+                    "backend": "mock",
+                    "instance": "10.244.1.23:8000",
+                    "job": "gateway-pods",
+                    "namespace": "ai-inference",
+                    "pod": "inference-gateway-6fccb6449c-lq9q6",
+                    "state": "open"
+                },
+                "value": [
+                    1782146795.818,
+                    "1"
+                ]
+            },
+            {
+                "metric": {
+                    "__name__": "gateway_circuit_breaker_state",
+                    "backend": "mock",
+                    "instance": "10.244.1.23:8000",
+                    "job": "gateway-pods",
+                    "namespace": "ai-inference",
+                    "pod": "inference-gateway-6fccb6449c-lq9q6",
+                    "state": "half_open"
+                },
+                "value": [
+                    1782146795.818,
+                    "0"
+                ]
+            }
+        ]
+    }
+}
+===== gateway_circuit_breaker_transitions_total =====
+{
+    "status": "success",
+    "data": {
+        "resultType": "vector",
+        "result": [
+            {
+                "metric": {
+                    "__name__": "gateway_circuit_breaker_transitions_total",
+                    "backend": "mock",
+                    "from_state": "closed",
+                    "instance": "10.244.1.23:8000",
+                    "job": "gateway-pods",
+                    "namespace": "ai-inference",
+                    "pod": "inference-gateway-6fccb6449c-lq9q6",
+                    "to_state": "open"
+                },
+                "value": [
+                    1782146795.842,
+                    "1"
+                ]
+            }
+        ]
+    }
+}

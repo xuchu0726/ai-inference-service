@@ -1,0 +1,25 @@
+2026-06-22T19:09:10Z
+===== backend_timeout retry metric =====
+{
+    "status": "success",
+    "data": {
+        "resultType": "vector",
+        "result": [
+            {
+                "metric": {
+                    "__name__": "gateway_retry_attempts_total",
+                    "backend": "mock",
+                    "instance": "10.244.2.40:8000",
+                    "job": "gateway-pods",
+                    "namespace": "ai-inference",
+                    "pod": "inference-gateway-77fb69bbf9-br6mt",
+                    "reason": "backend_timeout"
+                },
+                "value": [
+                    1782155350.234,
+                    "1"
+                ]
+            }
+        ]
+    }
+}

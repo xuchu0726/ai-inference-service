@@ -1,0 +1,25 @@
+2026-06-22T16:49:23Z
+===== gateway_retry_attempts_total =====
+{
+    "status": "success",
+    "data": {
+        "resultType": "vector",
+        "result": [
+            {
+                "metric": {
+                    "__name__": "gateway_retry_attempts_total",
+                    "backend": "mock",
+                    "instance": "10.244.2.27:8000",
+                    "job": "gateway-pods",
+                    "namespace": "ai-inference",
+                    "pod": "inference-gateway-fdf6b4588-9g5bd",
+                    "reason": "backend_unavailable"
+                },
+                "value": [
+                    1782146963.282,
+                    "1"
+                ]
+            }
+        ]
+    }
+}

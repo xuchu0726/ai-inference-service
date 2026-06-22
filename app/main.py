@@ -1,6 +1,6 @@
 import os
 
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import FastAPI, HTTPException, Request, Response, status
 from prometheus_fastapi_instrumentator import Instrumentator
 
 from app.backends.errors import (
@@ -14,6 +14,7 @@ from app.metrics.prometheus_metrics import (
     record_backend_failure,
     record_backend_readiness,
 )
+from app.resilience import CircuitOpenError
 from app.schemas import GenerateRequest, GenerateResponse
 
 
@@ -107,7 +108,7 @@ def _raise_backend_error(
 
 
 @app.post("/generate", response_model=GenerateResponse)
-def generate(request: GenerateRequest):
+def generate(request: GenerateRequest, response: Response):
     if not request.prompt.strip():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -115,11 +116,20 @@ def generate(request: GenerateRequest):
         )
 
     try:
-        return generate_text(
+        result = generate_text(
             prompt=request.prompt,
             max_new_tokens=request.max_new_tokens,
             temperature=request.temperature,
             thinking_budget=request.thinking_budget,
+        )
+        response.headers["X-Request-ID"] = result["request_id"]
+        response.headers["X-Inference-Route"] = result["route"]
+        return result
+    except CircuitOpenError as exc:
+        _raise_backend_error(
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+            "circuit_open",
+            str(exc),
         )
     except BackendUnavailableError as exc:
         _raise_backend_error(

@@ -23,3 +23,9 @@ class GenerateResponse(BaseModel):
     tokens_per_second: Optional[float] = None
     model_name: Optional[str] = None
     device: Optional[str] = None
+    total_tokens: Optional[int] = None
+
+    request_id: Optional[str] = None
+    route: Optional[str] = None
+    primary_attempts: Optional[int] = None
+    fallback_thinking_budget: Optional[int] = None

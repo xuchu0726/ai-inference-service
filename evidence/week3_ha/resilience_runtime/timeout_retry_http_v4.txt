@@ -1,0 +1,10 @@
+HTTP/1.1 200 OK
+date: Mon, 22 Jun 2026 19:09:01 GMT
+server: uvicorn
+content-length: 474
+content-type: application/json
+x-request-id: 8351a30348364781990fb6e085bdb040
+x-inference-route: primary
+x-gateway-instance: inference-gateway-77fb69bbf9-br6mt
+
+{"response":"[Mock Output] Received prompt with 31 characters. max_new_tokens=8, temperature=0.0, thinking_budget=1024.","latency_seconds":6.437301635742188e-05,"input_chars":31,"max_new_tokens":8,"thinking_budget":1024,"backend":"mock","input_tokens":null,"output_tokens":null,"tokens_per_second":null,"model_name":null,"device":null,"total_tokens":null,"request_id":"8351a30348364781990fb6e085bdb040","route":"primary","primary_attempts":2,"fallback_thinking_budget":null}

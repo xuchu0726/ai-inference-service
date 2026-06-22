@@ -1,0 +1,16 @@
+2026-06-22T17:58:00Z
+===== DEPLOYMENT =====
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                                     SELECTOR
+inference-gateway   2/2     2            2           18h   gateway      ai-inference-gateway:week3-resilience-v2   app=inference-gateway
+
+===== HPA =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 5%/50%   2         4         2          67m
+
+===== GATEWAY PODS =====
+NAME                                READY   STATUS    RESTARTS   AGE     IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-f5c5d84d8-4rw76   1/1     Running   0          14m     10.244.2.31   desktop-worker    <none>           <none>
+inference-gateway-f5c5d84d8-dcx8f   1/1     Running   0          4m31s   10.244.1.28   desktop-worker2   <none>           <none>
+
+===== LIVE AFFINITY =====
+{"podAntiAffinity":{"preferredDuringSchedulingIgnoredDuringExecution":[{"podAffinityTerm":{"labelSelector":{"matchLabels":{"app":"inference-gateway"}},"topologyKey":"kubernetes.io/hostname"},"weight":100}]}}

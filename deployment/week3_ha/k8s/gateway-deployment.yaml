@@ -20,14 +20,16 @@ spec:
     spec:
       affinity:
         podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchLabels:
-                  app: inference-gateway
-              topologyKey: kubernetes.io/hostname
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: inference-gateway
+                topologyKey: kubernetes.io/hostname
       containers:
         - name: gateway
-          image: ai-inference-gateway:week3-resilience-v1
+          image: ai-inference-gateway:week3-resilience-v4
           imagePullPolicy: Never
           ports:
             - containerPort: 8000

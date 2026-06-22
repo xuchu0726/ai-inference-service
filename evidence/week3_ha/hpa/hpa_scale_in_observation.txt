@@ -1,0 +1,112 @@
+===== 2026-06-22T17:26:47Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 5%/50%   2         4         4          36m
+NAME                                 READY   STATUS    RESTARTS   AGE     IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-579fd5cc74-glpm9   1/1     Running   0          3m7s    10.244.2.29   desktop-worker    <none>           <none>
+inference-gateway-579fd5cc74-hhhvq   1/1     Running   0          3m      10.244.1.26   desktop-worker2   <none>           <none>
+inference-gateway-579fd5cc74-n2fh7   0/1     Pending   0          2m13s   <none>        <none>            <none>           <none>
+inference-gateway-579fd5cc74-xgmmk   0/1     Pending   0          2m13s   <none>        <none>            <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-579fd5cc74-glpm9   6m           41Mi            
+inference-gateway-579fd5cc74-hhhvq   6m           41Mi            
+===== 2026-06-22T17:26:57Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 6%/50%   2         4         4          36m
+NAME                                 READY   STATUS    RESTARTS   AGE     IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-579fd5cc74-glpm9   1/1     Running   0          3m17s   10.244.2.29   desktop-worker    <none>           <none>
+inference-gateway-579fd5cc74-hhhvq   1/1     Running   0          3m10s   10.244.1.26   desktop-worker2   <none>           <none>
+inference-gateway-579fd5cc74-n2fh7   0/1     Pending   0          2m23s   <none>        <none>            <none>           <none>
+inference-gateway-579fd5cc74-xgmmk   0/1     Pending   0          2m23s   <none>        <none>            <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-579fd5cc74-glpm9   6m           41Mi            
+inference-gateway-579fd5cc74-hhhvq   7m           41Mi            
+===== 2026-06-22T17:27:07Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 6%/50%   2         4         4          36m
+NAME                                 READY   STATUS    RESTARTS   AGE     IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-579fd5cc74-glpm9   1/1     Running   0          3m27s   10.244.2.29   desktop-worker    <none>           <none>
+inference-gateway-579fd5cc74-hhhvq   1/1     Running   0          3m20s   10.244.1.26   desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-579fd5cc74-glpm9   6m           41Mi            
+inference-gateway-579fd5cc74-hhhvq   7m           41Mi            
+===== 2026-06-22T17:27:18Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 6%/50%   2         4         4          36m
+NAME                                 READY   STATUS    RESTARTS   AGE     IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-579fd5cc74-glpm9   1/1     Running   0          3m38s   10.244.2.29   desktop-worker    <none>           <none>
+inference-gateway-579fd5cc74-hhhvq   1/1     Running   0          3m31s   10.244.1.26   desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-579fd5cc74-glpm9   6m           41Mi            
+inference-gateway-579fd5cc74-hhhvq   6m           41Mi            
+===== 2026-06-22T17:27:28Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 6%/50%   2         4         2          36m
+NAME                                 READY   STATUS    RESTARTS   AGE     IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-579fd5cc74-glpm9   1/1     Running   0          3m48s   10.244.2.29   desktop-worker    <none>           <none>
+inference-gateway-579fd5cc74-hhhvq   1/1     Running   0          3m41s   10.244.1.26   desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-579fd5cc74-glpm9   6m           41Mi            
+inference-gateway-579fd5cc74-hhhvq   6m           41Mi            
+===== 2026-06-22T17:27:38Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 6%/50%   2         4         2          36m
+NAME                                 READY   STATUS    RESTARTS   AGE     IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-579fd5cc74-glpm9   1/1     Running   0          3m58s   10.244.2.29   desktop-worker    <none>           <none>
+inference-gateway-579fd5cc74-hhhvq   1/1     Running   0          3m51s   10.244.1.26   desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-579fd5cc74-glpm9   6m           41Mi            
+inference-gateway-579fd5cc74-hhhvq   6m           41Mi            
+===== 2026-06-22T17:27:48Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 6%/50%   2         4         2          37m
+NAME                                 READY   STATUS    RESTARTS   AGE    IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-579fd5cc74-glpm9   1/1     Running   0          4m8s   10.244.2.29   desktop-worker    <none>           <none>
+inference-gateway-579fd5cc74-hhhvq   1/1     Running   0          4m1s   10.244.1.26   desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-579fd5cc74-glpm9   6m           41Mi            
+inference-gateway-579fd5cc74-hhhvq   6m           41Mi            
+===== 2026-06-22T17:27:58Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 6%/50%   2         4         2          37m
+NAME                                 READY   STATUS    RESTARTS   AGE     IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-579fd5cc74-glpm9   1/1     Running   0          4m18s   10.244.2.29   desktop-worker    <none>           <none>
+inference-gateway-579fd5cc74-hhhvq   1/1     Running   0          4m11s   10.244.1.26   desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-579fd5cc74-glpm9   8m           41Mi            
+inference-gateway-579fd5cc74-hhhvq   5m           41Mi            
+===== 2026-06-22T17:28:09Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 6%/50%   2         4         2          37m
+NAME                                 READY   STATUS    RESTARTS   AGE     IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-579fd5cc74-glpm9   1/1     Running   0          4m29s   10.244.2.29   desktop-worker    <none>           <none>
+inference-gateway-579fd5cc74-hhhvq   1/1     Running   0          4m22s   10.244.1.26   desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-579fd5cc74-glpm9   8m           41Mi            
+inference-gateway-579fd5cc74-hhhvq   5m           41Mi            
+===== 2026-06-22T17:28:19Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 6%/50%   2         4         2          37m
+NAME                                 READY   STATUS    RESTARTS   AGE     IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-579fd5cc74-glpm9   1/1     Running   0          4m39s   10.244.2.29   desktop-worker    <none>           <none>
+inference-gateway-579fd5cc74-hhhvq   1/1     Running   0          4m32s   10.244.1.26   desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-579fd5cc74-glpm9   5m           41Mi            
+inference-gateway-579fd5cc74-hhhvq   6m           42Mi            
+===== 2026-06-22T17:28:29Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 5%/50%   2         4         2          37m
+NAME                                 READY   STATUS    RESTARTS   AGE     IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-579fd5cc74-glpm9   1/1     Running   0          4m49s   10.244.2.29   desktop-worker    <none>           <none>
+inference-gateway-579fd5cc74-hhhvq   1/1     Running   0          4m42s   10.244.1.26   desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-579fd5cc74-glpm9   5m           41Mi            
+inference-gateway-579fd5cc74-hhhvq   5m           41Mi            
+===== 2026-06-22T17:28:39Z =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 5%/50%   2         4         2          37m
+NAME                                 READY   STATUS    RESTARTS   AGE     IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-579fd5cc74-glpm9   1/1     Running   0          5m      10.244.2.29   desktop-worker    <none>           <none>
+inference-gateway-579fd5cc74-hhhvq   1/1     Running   0          4m53s   10.244.1.26   desktop-worker2   <none>           <none>
+NAME                                 CPU(cores)   MEMORY(bytes)   
+inference-gateway-579fd5cc74-glpm9   5m           41Mi            
+inference-gateway-579fd5cc74-hhhvq   5m           41Mi            

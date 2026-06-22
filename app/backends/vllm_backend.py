@@ -13,11 +13,9 @@ from app.backends.errors import (
 
 class VLLMBackend:
     """
-    Backend that calls a vLLM OpenAI-compatible server.
+    调用 vLLM OpenAI-compatible 服务的后端。
 
-    This backend does not load the model inside the FastAPI process.
-    Instead, it sends HTTP requests to a separate vLLM server process,
-    which is closer to a real LLM serving architecture.
+    该后端不在 FastAPI 进程内加载模型，而是向独立的 vLLM 服务进程发送 HTTP 请求。
     """
 
     def __init__(
@@ -39,9 +37,8 @@ class VLLMBackend:
         if thinking_budget is None:
             return None
 
-        # Seed-OSS thinking budget follows model-specific chat template behavior.
-        # Very small non-zero budgets are normalized to 0 to avoid unsupported
-        # low-budget configurations.
+        # Seed-OSS 的 thinking budget 通过模型 chat template 生效。
+        # 非零且低于 512 的预算统一归零，避免使用未覆盖的低预算配置。
         if 0 < thinking_budget < 512:
             return 0
 
@@ -56,7 +53,7 @@ class VLLMBackend:
     ) -> dict:
         start_time = time.time()
 
-        # vLLM exposes an OpenAI-compatible chat completions API.
+        # vLLM 提供 OpenAI-compatible chat completions API。
         payload = {
             "model": self.model_name,
             "messages": [
@@ -69,8 +66,8 @@ class VLLMBackend:
             "temperature": temperature,
         }
 
-        # Seed-OSS uses chat_template_kwargs for native thinking-budget control.
-        # Do not send this field to generic/Qwen models to avoid compatibility issues.
+        # Seed-OSS 通过 chat_template_kwargs 控制原生 thinking budget。
+        # 通用模型和 Qwen 模型不发送该字段，避免兼容性问题。
         if self._should_use_seed_thinking_budget():
             normalized_budget = self._normalize_seed_thinking_budget(thinking_budget)
             if normalized_budget is not None:

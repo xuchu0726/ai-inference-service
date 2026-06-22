@@ -1,0 +1,21 @@
+2026-06-22T18:09:38Z
+===== SCALE-OUT KEY LINES =====
+inference-gateway   Deployment/inference-gateway   cpu: 305%/50%   2         4         2          70m
+inference-gateway   Deployment/inference-gateway   cpu: 475%/50%   2         4         4          70m
+inference-gateway   Deployment/inference-gateway   cpu: 475%/50%   2         4         4          71m
+inference-gateway   Deployment/inference-gateway   cpu: 460%/50%   2         4         4          71m
+inference-gateway   Deployment/inference-gateway   cpu: 443%/50%   2         4         4          71m
+inference-gateway   Deployment/inference-gateway   cpu: 443%/50%   2         4         4          71m
+inference-gateway   Deployment/inference-gateway   cpu: 397%/50%   2         4         4          71m
+
+===== FINAL HPA =====
+NAME                REFERENCE                      TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 5%/50%   2         4         2          78m
+
+===== FINAL PODS =====
+NAME                                READY   STATUS    RESTARTS   AGE   IP            NODE              NOMINATED NODE   READINESS GATES
+inference-gateway-f5c5d84d8-qlnsb   1/1     Running   0          81s   10.244.1.31   desktop-worker2   <none>           <none>
+inference-gateway-f5c5d84d8-z7p6j   1/1     Running   0          74s   10.244.2.35   desktop-worker    <none>           <none>
+
+===== LIVE AFFINITY =====
+{"podAntiAffinity":{"preferredDuringSchedulingIgnoredDuringExecution":[{"podAffinityTerm":{"labelSelector":{"matchLabels":{"app":"inference-gateway"}},"topologyKey":"kubernetes.io/hostname"},"weight":100}]}}

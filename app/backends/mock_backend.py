@@ -1,5 +1,10 @@
+import os
 import time
 
+from app.backends.errors import (
+    BackendTimeoutError,
+    BackendUnavailableError,
+)
 from app.config import MOCK_CPU_BURN_MS
 
 
@@ -18,6 +23,15 @@ def _burn_cpu(milliseconds: int) -> None:
 
 
 class MockBackend:
+    def __init__(self) -> None:
+        raw_sequence = os.getenv("MOCK_FAILURE_SEQUENCE", "").strip()
+        self._failure_sequence = [
+            item.strip()
+            for item in raw_sequence.split(",")
+            if item.strip()
+        ]
+        self._calls = 0
+
     def generate(
         self,
         prompt: str,
@@ -26,6 +40,26 @@ class MockBackend:
         thinking_budget: int | None = None,
     ) -> dict:
         start = time.time()
+        self._calls += 1
+
+        if self._calls <= len(self._failure_sequence):
+            failure = self._failure_sequence[self._calls - 1]
+
+            if failure == "unavailable":
+                raise BackendUnavailableError(
+                    f"mock backend unavailable on call {self._calls}"
+                )
+
+            if failure == "timeout":
+                raise BackendTimeoutError(
+                    f"mock backend timeout on call {self._calls}"
+                )
+
+            if failure != "success":
+                raise ValueError(
+                    "MOCK_FAILURE_SEQUENCE only supports: "
+                    "success, unavailable, timeout"
+                )
 
         _burn_cpu(MOCK_CPU_BURN_MS)
 

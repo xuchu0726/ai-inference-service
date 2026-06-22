@@ -1,0 +1,8 @@
+HTTP/1.1 504 Gateway Timeout
+date: Mon, 22 Jun 2026 18:27:21 GMT
+server: uvicorn
+content-length: 98
+content-type: application/json
+x-gateway-instance: inference-gateway-565c5659f7-cmhtv
+
+{"detail":{"error":"backend_timeout","backend":"mock","message":"mock backend timeout on call 1"}}
