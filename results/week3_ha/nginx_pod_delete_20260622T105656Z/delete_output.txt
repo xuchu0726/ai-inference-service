@@ -1,0 +1,1 @@
+pod "inference-nginx-5b4f9ddc57-czvgj" deleted from ai-inference namespace

@@ -1,0 +1,20 @@
+Nginx entry-layer failover validation
+
+Environment: local Docker Desktop kind cluster; two worker nodes; Nginx replicas=2.
+Placement: required pod anti-affinity by kubernetes.io/hostname.
+Rolling update: maxSurge=0; maxUnavailable=1.
+Probe: http://inference-nginx:8080/readyz; 35 seconds; 10 Hz; timeout 2 seconds.
+
+Before graceful termination:
+328 requests; 327 success; 1 failure; error=Connection refused.
+
+Graceful termination configuration:
+terminationGracePeriodSeconds=15; preStop=/bin/sh -c sleep 5.
+
+After graceful termination:
+Round 1: 329/329 success; 0 failures.
+Round 2: 329/329 success; 0 failures.
+Round 3: 329/329 success; 0 failures.
+Aggregate: 987/987 success; no failure observed under this local test protocol.
+
+Boundary: this is not a production zero-downtime guarantee.

@@ -1,0 +1,1 @@
+deployment "inference-nginx" successfully rolled out

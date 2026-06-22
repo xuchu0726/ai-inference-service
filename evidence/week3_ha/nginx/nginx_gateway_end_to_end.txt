@@ -1,0 +1,67 @@
+===== Nginx self health =====
+HTTP/1.1 200 OK
+Server: nginx/1.27.5
+Date: Mon, 22 Jun 2026 10:45:04 GMT
+Content-Type: text/plain
+Content-Length: 3
+Connection: keep-alive
+
+ok
+
+===== Gateway readiness through Nginx =====
+HTTP/1.1 200 OK
+Server: nginx/1.27.5
+Date: Mon, 22 Jun 2026 10:45:04 GMT
+Content-Type: application/json
+Content-Length: 85
+Connection: keep-alive
+x-gateway-instance: inference-gateway-78cbd9f4cc-p6prt
+
+{"status":"ready","ready":true,"backend":"mock","detail":"mock backend is available"}
+===== Generate through Nginx =====
+HTTP/1.1 200 OK
+Server: nginx/1.27.5
+Date: Mon, 22 Jun 2026 10:45:04 GMT
+Content-Type: application/json
+Content-Length: 336
+Connection: keep-alive
+x-gateway-instance: inference-gateway-78cbd9f4cc-bf52k
+
+{"response":"[Mock Output] Received prompt with 37 characters. max_new_tokens=8, temperature=0.0, thinking_budget=None.","latency_seconds":2.6226043701171875e-05,"input_chars":37,"max_new_tokens":8,"thinking_budget":null,"backend":"mock","input_tokens":null,"output_tokens":null,"tokens_per_second":null,"model_name":null,"device":null}
+===== Nginx pod placement =====
+NAME                               READY   STATUS    RESTARTS   AGE     IP            NODE              NOMINATED NODE   READINESS GATES
+inference-nginx-5b4f9ddc57-czvgj   1/1     Running   0          6m33s   10.244.2.15   desktop-worker    <none>           <none>
+inference-nginx-5b4f9ddc57-zwcbj   1/1     Running   0          115s    10.244.1.14   desktop-worker2   <none>           <none>
+
+===== Recent Nginx logs =====
+Found 2 pods, using pod/inference-nginx-5b4f9ddc57-czvgj
+/docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+/docker-entrypoint.sh: Configuration complete; ready for start up
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.002 upstream_time=0.002
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.002 upstream_time=0.002
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.004 upstream_time=0.004
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.003 upstream_time=0.003
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.003 upstream_time=0.003
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.003 upstream_time=0.003
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.003 upstream_time=0.003
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.005 upstream_time=0.005
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.002 upstream_time=0.003
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.002 upstream_time=0.002
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.002 upstream_time=0.002
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.003 upstream_time=0.004
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.003 upstream_time=0.003
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.003 upstream_time=0.003
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.003 upstream_time=0.003
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.004 upstream_time=0.003
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.004 upstream_time=0.003
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.002 upstream_time=0.003
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.003 upstream_time=0.002
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.003 upstream_time=0.003
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.003 upstream_time=0.002
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.002 upstream_time=0.001
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.003 upstream_time=0.003
+127.0.0.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.003 upstream_time=0.003
+127.0.0.1 POST /generate status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.011 upstream_time=0.010
+10.244.2.1 GET /readyz status=200 upstream=10.96.122.253:8000 upstream_status=200 request_time=0.002 upstream_time=0.002

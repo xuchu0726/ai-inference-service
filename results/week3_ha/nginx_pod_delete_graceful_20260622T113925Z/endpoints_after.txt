@@ -1,0 +1,2 @@
+NAME                    ADDRESSTYPE   PORTS   ENDPOINTS                 AGE
+inference-nginx-2t99v   IPv4          8080    10.244.1.15,10.244.2.19   64m
