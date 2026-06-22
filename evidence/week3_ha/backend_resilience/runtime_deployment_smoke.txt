@@ -1,0 +1,10 @@
+===== Gateway Pods and Image =====
+NAME                                 READY   IMAGE                                      NODE
+inference-gateway-7fb94f459f-6f9vn   true    ai-inference-gateway:week3-resilience-v1   desktop-worker
+inference-gateway-7fb94f459f-cqbd4   true    ai-inference-gateway:week3-resilience-v1   desktop-worker2
+
+===== Deployment Image =====
+ai-inference-gateway:week3-resilience-v1
+
+===== Rollout =====
+deployment "inference-gateway" successfully rolled out
