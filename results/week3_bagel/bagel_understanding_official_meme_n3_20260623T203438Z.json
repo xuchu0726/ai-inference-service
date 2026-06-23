@@ -1,0 +1,247 @@
+{
+  "case_id": "official_meme",
+  "endpoint": "http://127.0.0.1:8000/multimodal/generate",
+  "runs_requested": 3,
+  "runs_succeeded": 3,
+  "success_rate": 1.0,
+  "client_latency_seconds": {
+    "min": 5.4198587611317635,
+    "p50": 5.424427727237344,
+    "p95": 5.428464488685131,
+    "max": 5.428913017734885
+  },
+  "gpu_samples": [
+    {
+      "timestamp_utc": "2026-06-23T20:34:38.808084+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 0
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:39.331478+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 86
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:39.870198+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:40.410137+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:40.944316+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:41.468677+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:41.993675+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:42.531146+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:43.055316+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:43.580181+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:44.104221+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:44.651622+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 0
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:45.192524+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:45.757025+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:46.280535+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:46.804650+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:47.328441+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:47.853125+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:48.396015+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:48.963789+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:49.499509+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:50.023757+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 0
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:50.548159+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:51.072104+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:51.618656+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:52.142282+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:52.666615+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:53.195519+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:53.721296+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:54.257433+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:54.797098+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 40
+    }
+  ],
+  "records": [
+    {
+      "run_id": 1,
+      "http_status": 200,
+      "success": true,
+      "client_latency_seconds": 5.428913017734885,
+      "service_latency_seconds": 5.350275792181492,
+      "response_chars": 157,
+      "response": "这张图片是一张拼贴画，分为三个部分，每个部分都代表了考试中手写的不同阶段。顶部部分的标题是“我的考试手写”，暗示了手写在考试中的表现。中间部分的标题是“前两页”，展示了手写在考试开始时的状态。底部部分的标题是“最后两页”，展示了手写在考试结束时的状态。图片中没有其他可见的主体或场景，主要焦点是手写在考试中的表现。",
+      "error": ""
+    },
+    {
+      "run_id": 2,
+      "http_status": 200,
+      "success": true,
+      "client_latency_seconds": 5.4198587611317635,
+      "service_latency_seconds": 5.344827890396118,
+      "response_chars": 157,
+      "response": "这张图片是一张拼贴画，分为三个部分，每个部分都代表了考试中手写的不同阶段。顶部部分的标题是“我的考试手写”，暗示了手写在考试中的表现。中间部分的标题是“前两页”，展示了手写在考试开始时的状态。底部部分的标题是“最后两页”，展示了手写在考试结束时的状态。图片中没有其他可见的主体或场景，主要焦点是手写在考试中的表现。",
+      "error": ""
+    },
+    {
+      "run_id": 3,
+      "http_status": 200,
+      "success": true,
+      "client_latency_seconds": 5.424427727237344,
+      "service_latency_seconds": 5.348832363262773,
+      "response_chars": 157,
+      "response": "这张图片是一张拼贴画，分为三个部分，每个部分都代表了考试中手写的不同阶段。顶部部分的标题是“我的考试手写”，暗示了手写在考试中的表现。中间部分的标题是“前两页”，展示了手写在考试开始时的状态。底部部分的标题是“最后两页”，展示了手写在考试结束时的状态。图片中没有其他可见的主体或场景，主要焦点是手写在考试中的表现。",
+      "error": ""
+    }
+  ],
+  "manifest": {
+    "case_id": "official_meme",
+    "local_path": "data/week3_bagel/official_meme.jpg",
+    "sha256": "3a6e1d8373be257b5c5c3d7ab0fe53d71ec51bf63f10da388b946f2ebaa25a58",
+    "source": {
+      "repository_path": "vendor/BAGEL/test_images",
+      "repository_commit": "a2fa77dd8caeefc41e6607ae0ec17408d3f4ee9f"
+    },
+    "prompt": "请用中文描述图像中的主体、场景和可见细节。只依据图片中可见的信息回答；不要猜测姓名、年龄、身份、地点或图外事实。",
+    "show_thinking": false,
+    "do_sample": false,
+    "temperature": 0.3,
+    "max_new_tokens": 512
+  }
+}

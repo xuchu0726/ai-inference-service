@@ -1,0 +1,14 @@
+{
+  "case_id": "official_women",
+  "local_path": "data/week3_bagel/official_women.jpg",
+  "sha256": "fb094122abf5ffa86d9ff98811459ac1ccbc9d0962806a87a5613fa80c8ef028",
+  "source": {
+    "repository_path": "vendor/BAGEL/test_images",
+    "repository_commit": "a2fa77dd8caeefc41e6607ae0ec17408d3f4ee9f"
+  },
+  "prompt": "请用中文描述图像中的主体、场景和可见细节。只依据图片中可见的信息回答；不要猜测姓名、年龄、身份、地点或图外事实。",
+  "show_thinking": false,
+  "do_sample": false,
+  "temperature": 0.3,
+  "max_new_tokens": 512
+}

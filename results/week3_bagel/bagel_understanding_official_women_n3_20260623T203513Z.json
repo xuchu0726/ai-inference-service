@@ -1,0 +1,169 @@
+{
+  "case_id": "official_women",
+  "endpoint": "http://127.0.0.1:8000/multimodal/generate",
+  "runs_requested": 3,
+  "runs_succeeded": 3,
+  "success_rate": 1.0,
+  "client_latency_seconds": {
+    "min": 3.1195752881467342,
+    "p50": 3.122894210740924,
+    "p95": 3.1691830145195126,
+    "max": 3.174326214939356
+  },
+  "gpu_samples": [
+    {
+      "timestamp_utc": "2026-06-23T20:35:13.844346+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:14.368169+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29771,
+      "gpu_utilization_percent": 57
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:14.926980+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29771,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:15.479324+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29771,
+      "gpu_utilization_percent": 41
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:16.005973+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29771,
+      "gpu_utilization_percent": 41
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:16.530234+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29771,
+      "gpu_utilization_percent": 41
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:17.053967+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29771,
+      "gpu_utilization_percent": 41
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:17.577762+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29771,
+      "gpu_utilization_percent": 99
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:18.103105+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29771,
+      "gpu_utilization_percent": 41
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:18.640777+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29771,
+      "gpu_utilization_percent": 41
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:19.177605+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29771,
+      "gpu_utilization_percent": 41
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:19.705221+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29771,
+      "gpu_utilization_percent": 41
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:20.228042+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29771,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:20.752181+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29771,
+      "gpu_utilization_percent": 99
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:21.275467+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29771,
+      "gpu_utilization_percent": 41
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:21.799707+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29771,
+      "gpu_utilization_percent": 41
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:22.337025+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29771,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:22.886583+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29771,
+      "gpu_utilization_percent": 40
+    }
+  ],
+  "records": [
+    {
+      "run_id": 1,
+      "http_status": 200,
+      "success": true,
+      "client_latency_seconds": 3.174326214939356,
+      "service_latency_seconds": 3.0933134611696005,
+      "response_chars": 72,
+      "response": "图像中的主体是一位穿着红色外套的女性，外套上有一个白色的小狗刺绣。背景是一面灰色的石墙。女性的头发是深色的，梳理得整整齐齐，靠在墙上，手托着脸。",
+      "error": ""
+    },
+    {
+      "run_id": 2,
+      "http_status": 200,
+      "success": true,
+      "client_latency_seconds": 3.1195752881467342,
+      "service_latency_seconds": 3.0411454755812883,
+      "response_chars": 72,
+      "response": "图像中的主体是一位穿着红色外套的女性，外套上有一个白色的小狗刺绣。背景是一面灰色的石墙。女性的头发是深色的，梳理得整整齐齐，靠在墙上，手托着脸。",
+      "error": ""
+    },
+    {
+      "run_id": 3,
+      "http_status": 200,
+      "success": true,
+      "client_latency_seconds": 3.122894210740924,
+      "service_latency_seconds": 3.046381102874875,
+      "response_chars": 72,
+      "response": "图像中的主体是一位穿着红色外套的女性，外套上有一个白色的小狗刺绣。背景是一面灰色的石墙。女性的头发是深色的，梳理得整整齐齐，靠在墙上，手托着脸。",
+      "error": ""
+    }
+  ],
+  "manifest": {
+    "case_id": "official_women",
+    "local_path": "data/week3_bagel/official_women.jpg",
+    "sha256": "fb094122abf5ffa86d9ff98811459ac1ccbc9d0962806a87a5613fa80c8ef028",
+    "source": {
+      "repository_path": "vendor/BAGEL/test_images",
+      "repository_commit": "a2fa77dd8caeefc41e6607ae0ec17408d3f4ee9f"
+    },
+    "prompt": "请用中文描述图像中的主体、场景和可见细节。只依据图片中可见的信息回答；不要猜测姓名、年龄、身份、地点或图外事实。",
+    "show_thinking": false,
+    "do_sample": false,
+    "temperature": 0.3,
+    "max_new_tokens": 512
+  }
+}

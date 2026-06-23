@@ -1,0 +1,271 @@
+{
+  "case_id": "official_octupusy",
+  "endpoint": "http://127.0.0.1:8000/multimodal/generate",
+  "runs_requested": 3,
+  "runs_succeeded": 3,
+  "success_rate": 1.0,
+  "client_latency_seconds": {
+    "min": 6.123397633433342,
+    "p50": 6.124044626951218,
+    "p95": 6.214155998639763,
+    "max": 6.224168373271823
+  },
+  "gpu_samples": [
+    {
+      "timestamp_utc": "2026-06-23T20:34:55.243742+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 28
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:55.776135+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 77
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:56.306093+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:56.829915+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:57.354945+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:57.885701+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:58.433099+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:58.977455+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:34:59.504317+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:00.028747+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:00.552640+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:01.098071+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29149,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:01.648602+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 0
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:02.172850+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:02.697814+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:03.221597+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 38
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:03.773438+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 38
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:04.315339+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:04.839841+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:05.363652+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:05.904636+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:06.429038+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:06.955240+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:07.478962+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:08.005270+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 0
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:08.533033+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:09.076628+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:09.603692+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:10.128243+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:10.651912+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:11.175617+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 39
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:11.701726+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:12.240469+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:12.764618+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 40
+    },
+    {
+      "timestamp_utc": "2026-06-23T20:35:13.288086+00:00",
+      "gpu_index": 0,
+      "memory_used_mib": 29157,
+      "gpu_utilization_percent": 39
+    }
+  ],
+  "records": [
+    {
+      "run_id": 1,
+      "http_status": 200,
+      "success": true,
+      "client_latency_seconds": 6.123397633433342,
+      "service_latency_seconds": 6.045530891045928,
+      "response_chars": 193,
+      "response": "图像中的主体是一个玻璃雕塑，名为“章鱼”，由 Blake W. Toney 设计，年龄为 10 岁。雕塑是 2008 年制作的，由美国艺术家 Dante Marioni 制作，他出生于 1964 年。雕塑是用吹制玻璃制作的，并带有附加的玻璃部件。它被收藏在玻璃博物馆中，由 Janet 和 Mike Halvorson 赞助。雕塑的描述中提到，它是一个章鱼强盗，非常邪恶，因为它偷东西。",
+      "error": ""
+    },
+    {
+      "run_id": 2,
+      "http_status": 200,
+      "success": true,
+      "client_latency_seconds": 6.224168373271823,
+      "service_latency_seconds": 6.147322751581669,
+      "response_chars": 193,
+      "response": "图像中的主体是一个玻璃雕塑，名为“章鱼”，由 Blake W. Toney 设计，年龄为 10 岁。雕塑是 2008 年制作的，由美国艺术家 Dante Marioni 制作，他出生于 1964 年。雕塑是用吹制玻璃制作的，并带有附加的玻璃部件。它被收藏在玻璃博物馆中，由 Janet 和 Mike Halvorson 赞助。雕塑的描述中提到，它是一个章鱼强盗，非常邪恶，因为它偷东西。",
+      "error": ""
+    },
+    {
+      "run_id": 3,
+      "http_status": 200,
+      "success": true,
+      "client_latency_seconds": 6.124044626951218,
+      "service_latency_seconds": 6.046146083623171,
+      "response_chars": 193,
+      "response": "图像中的主体是一个玻璃雕塑，名为“章鱼”，由 Blake W. Toney 设计，年龄为 10 岁。雕塑是 2008 年制作的，由美国艺术家 Dante Marioni 制作，他出生于 1964 年。雕塑是用吹制玻璃制作的，并带有附加的玻璃部件。它被收藏在玻璃博物馆中，由 Janet 和 Mike Halvorson 赞助。雕塑的描述中提到，它是一个章鱼强盗，非常邪恶，因为它偷东西。",
+      "error": ""
+    }
+  ],
+  "manifest": {
+    "case_id": "official_octupusy",
+    "local_path": "data/week3_bagel/official_octupusy.jpg",
+    "sha256": "25c16c48e77770c88738c3fc19d3f0121dfc5bbdf2222f7f72c412ffa06d6cc5",
+    "source": {
+      "repository_path": "vendor/BAGEL/test_images",
+      "repository_commit": "a2fa77dd8caeefc41e6607ae0ec17408d3f4ee9f"
+    },
+    "prompt": "请用中文描述图像中的主体、场景和可见细节。只依据图片中可见的信息回答；不要猜测姓名、年龄、身份、地点或图外事实。",
+    "show_thinking": false,
+    "do_sample": false,
+    "temperature": 0.3,
+    "max_new_tokens": 512
+  }
+}

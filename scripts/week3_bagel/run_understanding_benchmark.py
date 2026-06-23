@@ -73,10 +73,14 @@ def main():
         "--endpoint",
         default="http://127.0.0.1:8000/multimodal/generate",
     )
+    parser.add_argument(
+        "--manifest",
+        default="data/week3_bagel/manifest.json",
+    )
     args = parser.parse_args()
 
     root = Path(__file__).resolve().parents[2]
-    manifest_path = root / "data/week3_bagel/manifest.json"
+    manifest_path = root / args.manifest
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     image_path = root / manifest["local_path"]
 
@@ -86,6 +90,10 @@ def main():
     evidence_dir.mkdir(parents=True, exist_ok=True)
 
     run_tag = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    case_slug = "".join(
+        char if char.isalnum() or char in ("-", "_") else "_"
+        for char in manifest["case_id"]
+    )
     records = []
     gpu_samples = []
 
@@ -186,9 +194,9 @@ def main():
         "manifest": manifest,
     }
 
-    json_path = results_dir / f"bagel_understanding_n{args.runs}_{run_tag}.json"
-    csv_path = results_dir / f"bagel_understanding_n{args.runs}_{run_tag}.csv"
-    evidence_path = evidence_dir / f"bagel_understanding_n{args.runs}_{run_tag}.txt"
+    json_path = results_dir / f"bagel_understanding_{case_slug}_n{args.runs}_{run_tag}.json"
+    csv_path = results_dir / f"bagel_understanding_{case_slug}_n{args.runs}_{run_tag}.csv"
+    evidence_path = evidence_dir / f"bagel_understanding_{case_slug}_n{args.runs}_{run_tag}.txt"
 
     json_path.write_text(
         json.dumps(summary, ensure_ascii=False, indent=2),
@@ -232,9 +240,10 @@ def main():
     evidence_path.write_text(
         "\n".join(
             [
-                "===== BAGEL 图文理解 n=5 基准摘要 =====",
+                "===== BAGEL 图文理解审计摘要 =====",
                 f"case_id={manifest['case_id']}",
                 f"endpoint={args.endpoint}",
+                f"manifest={manifest_path.relative_to(root)}",
                 f"runs_requested={args.runs}",
                 f"runs_succeeded={summary['runs_succeeded']}",
                 f"success_rate={summary['success_rate']:.3f}",

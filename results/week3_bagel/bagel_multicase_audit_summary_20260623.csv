@@ -1,0 +1,4 @@
+case_id,runs_requested,runs_succeeded,success_rate,p50_seconds,p95_seconds,peak_gpu_memory_mib,peak_gpu_utilization_percent,source_json
+official_meme,3,3,1.0,5.424427727237344,5.428464488685131,29149,86,results/week3_bagel/bagel_understanding_official_meme_n3_20260623T203438Z.json
+official_octupusy,3,3,1.0,6.124044626951218,6.214155998639763,29157,77,results/week3_bagel/bagel_understanding_official_octupusy_n3_20260623T203455Z.json
+official_women,3,3,1.0,3.122894210740924,3.1691830145195126,29771,99,results/week3_bagel/bagel_understanding_official_women_n3_20260623T203513Z.json
