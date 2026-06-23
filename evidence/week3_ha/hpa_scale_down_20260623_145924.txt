@@ -1,0 +1,162 @@
+===== HPA SCALE-DOWN OBSERVATION =====
+Tue Jun 23 14:59:24 BST 2026
+
+--- sample=1 ---
+14:59:24
+NAME                REFERENCE                      TARGETS              MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: <unknown>/50%   2         4         4          21h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           38h
+inference-gateway-57f4566558-6bgw2   1/1   Running   0     12s
+inference-gateway-57f4566558-ll8sf   1/1   Running   0     38s
+inference-gateway-57f4566558-mqv6s   1/1   Running   0     19s
+inference-gateway-57f4566558-sdcb8   1/1   Running   0     26s
+
+--- sample=2 ---
+14:59:30
+NAME                REFERENCE                      TARGETS              MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: <unknown>/50%   2         4         4          21h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           38h
+inference-gateway-57f4566558-6bgw2   1/1   Running   0     17s
+inference-gateway-57f4566558-ll8sf   1/1   Running   0     43s
+inference-gateway-57f4566558-mqv6s   1/1   Running   0     24s
+inference-gateway-57f4566558-sdcb8   1/1   Running   0     31s
+
+--- sample=3 ---
+14:59:35
+NAME                REFERENCE                      TARGETS              MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: <unknown>/50%   2         4         4          21h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           38h
+inference-gateway-57f4566558-6bgw2   1/1   Running   0     22s
+inference-gateway-57f4566558-ll8sf   1/1   Running   0     48s
+inference-gateway-57f4566558-mqv6s   1/1   Running   0     29s
+inference-gateway-57f4566558-sdcb8   1/1   Running   0     36s
+
+--- sample=4 ---
+14:59:40
+NAME                REFERENCE                      TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 13%/50%   2         4         4          21h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           38h
+inference-gateway-57f4566558-6bgw2   1/1   Running   0     27s
+inference-gateway-57f4566558-ll8sf   1/1   Running   0     53s
+inference-gateway-57f4566558-mqv6s   1/1   Running   0     34s
+inference-gateway-57f4566558-sdcb8   1/1   Running   0     41s
+
+--- sample=5 ---
+14:59:45
+NAME                REFERENCE                      TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 13%/50%   2         4         4          21h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           38h
+inference-gateway-57f4566558-6bgw2   1/1   Running   0     32s
+inference-gateway-57f4566558-ll8sf   1/1   Running   0     58s
+inference-gateway-57f4566558-mqv6s   1/1   Running   0     39s
+inference-gateway-57f4566558-sdcb8   1/1   Running   0     46s
+
+--- sample=6 ---
+14:59:50
+NAME                REFERENCE                      TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 13%/50%   2         4         4          21h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           38h
+inference-gateway-57f4566558-6bgw2   1/1   Running   0     38s
+inference-gateway-57f4566558-ll8sf   1/1   Running   0     64s
+inference-gateway-57f4566558-mqv6s   1/1   Running   0     45s
+inference-gateway-57f4566558-sdcb8   1/1   Running   0     52s
+
+--- sample=7 ---
+14:59:56
+NAME                REFERENCE                      TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 15%/50%   2         4         4          21h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           38h
+inference-gateway-57f4566558-6bgw2   1/1   Running   0     43s
+inference-gateway-57f4566558-ll8sf   1/1   Running   0     69s
+inference-gateway-57f4566558-mqv6s   1/1   Running   0     50s
+inference-gateway-57f4566558-sdcb8   1/1   Running   0     57s
+
+--- sample=8 ---
+15:00:01
+NAME                REFERENCE                      TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 15%/50%   2         4         4          21h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           38h
+inference-gateway-57f4566558-6bgw2   1/1   Running   0     48s
+inference-gateway-57f4566558-ll8sf   1/1   Running   0     74s
+inference-gateway-57f4566558-mqv6s   1/1   Running   0     55s
+inference-gateway-57f4566558-sdcb8   1/1   Running   0     62s
+
+--- sample=9 ---
+15:00:06
+NAME                REFERENCE                      TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 15%/50%   2         4         4          21h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   4/4     4            4           38h
+inference-gateway-57f4566558-6bgw2   1/1   Running   0     53s
+inference-gateway-57f4566558-ll8sf   1/1   Running   0     79s
+inference-gateway-57f4566558-mqv6s   1/1   Running   0     60s
+inference-gateway-57f4566558-sdcb8   1/1   Running   0     67s
+
+--- sample=10 ---
+15:00:11
+NAME                REFERENCE                      TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 13%/50%   2         4         4          21h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   3/3     3            3           38h
+inference-gateway-57f4566558-ll8sf   1/1   Running   0     84s
+inference-gateway-57f4566558-mqv6s   1/1   Running   0     65s
+inference-gateway-57f4566558-sdcb8   1/1   Running   0     72s
+
+--- sample=11 ---
+15:00:17
+NAME                REFERENCE                      TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 13%/50%   2         4         4          21h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   3/3     3            3           38h
+inference-gateway-57f4566558-ll8sf   1/1   Running   0     90s
+inference-gateway-57f4566558-mqv6s   1/1   Running   0     71s
+inference-gateway-57f4566558-sdcb8   1/1   Running   0     78s
+
+--- sample=12 ---
+15:00:22
+NAME                REFERENCE                      TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 12%/50%   2         4         3          21h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   3/3     3            3           38h
+inference-gateway-57f4566558-ll8sf   1/1   Running   0     95s
+inference-gateway-57f4566558-mqv6s   1/1   Running   0     76s
+inference-gateway-57f4566558-sdcb8   1/1   Running   0     83s
+
+--- sample=13 ---
+15:00:27
+NAME                REFERENCE                      TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 12%/50%   2         4         3          21h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   3/3     3            3           38h
+inference-gateway-57f4566558-ll8sf   1/1   Running   0     100s
+inference-gateway-57f4566558-mqv6s   1/1   Running   0     81s
+inference-gateway-57f4566558-sdcb8   1/1   Running   0     88s
+
+--- sample=14 ---
+15:00:32
+NAME                REFERENCE                      TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 12%/50%   2         4         3          21h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   3/3     3            3           38h
+inference-gateway-57f4566558-ll8sf   1/1   Running   0     105s
+inference-gateway-57f4566558-mqv6s   1/1   Running   0     86s
+inference-gateway-57f4566558-sdcb8   1/1   Running   0     93s
+
+--- sample=15 ---
+15:00:37
+NAME                REFERENCE                      TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 14%/50%   2         4         3          21h
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           38h
+inference-gateway-57f4566558-ll8sf   1/1   Running     0     111s
+inference-gateway-57f4566558-mqv6s   0/1   Completed   0     92s
+inference-gateway-57f4566558-sdcb8   1/1   Running     0     99s
+scale_down_complete=2

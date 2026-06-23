@@ -1,0 +1,15 @@
+===== runtime config =====
+INFERENCE_BACKEND=vllm
+MOCK_CPU_BURN_MS=0
+
+===== hpa =====
+NAME                REFERENCE                      TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+inference-gateway   Deployment/inference-gateway   cpu: 17%/50%   2         4         2          21h
+
+===== gateway replicas =====
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+inference-gateway   2/2     2            2           38h
+
+===== real vllm request =====
+{"response":"week3-ha-final-ok","latency_seconds":0.521531,"input_chars":37,"max_new_tokens":16,"thinking_budget":0,"backend":"vllm","input_tokens":92,"output_tokens":7,"tokens_per_second":13.422,"model_name":"Seed-OSS-36B-Instruct-W8A8","device":"vllm_server","total_tokens":99,"request_id":"435af08f3f6e43f78c9cea4ab8a8f319","route":"primary","primary_attempts":1,"fallback_thinking_budget":null}
+http=200
