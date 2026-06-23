@@ -29,6 +29,11 @@ def _configure_vllm(monkeypatch, primary_url, fallback_url):
     )
     monkeypatch.setattr(
         inference_module,
+        "VLLM_FALLBACK_TIMEOUT_SECONDS",
+        30,
+    )
+    monkeypatch.setattr(
+        inference_module,
         "VLLM_ENABLE_SEED_THINKING_BUDGET",
         True,
     )

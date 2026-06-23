@@ -1,0 +1,7 @@
+===== READY =====
+{"status":"ready","ready":true,"backend":"vllm","primary":{"ready":true,"backend":"vllm","model_name":"Seed-OSS-36B-Instruct-W8A8","models":1},"fallback":{"ready":true,"backend":"vllm","model_name":"Seed-OSS-36B-Instruct-W8A8-Fallback","models":1}}
+readyz_http=200
+
+===== PRIMARY REQUEST =====
+{"response":"primary-route-ok","latency_seconds":1.530558,"input_chars":36,"max_new_tokens":16,"thinking_budget":0,"backend":"vllm","input_tokens":91,"output_tokens":6,"tokens_per_second":3.9201,"model_name":"Seed-OSS-36B-Instruct-W8A8","device":"vllm_server","total_tokens":97,"request_id":"ddac11ad5f684eba9d859242f42e52c5","route":"primary","primary_attempts":1,"fallback_thinking_budget":null}
+generate_http=200

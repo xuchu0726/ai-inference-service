@@ -1,0 +1,42 @@
+gateway_pod=inference-gateway-5cf6fffb56-ghxhj
+
+===== request_1 =====
+{"response":"<seed:think>\nGot it, let's see. The user wants me to reply with","latency_seconds":1.421847,"input_chars":39,"max_new_tokens":16,"thinking_budget":512,"backend":"vllm","input_tokens":105,"output_tokens":16,"tokens_per_second":11.253,"model_name":"Seed-OSS-36B-Instruct-W8A8-Fallback","device":"vllm_server","total_tokens":121,"request_id":"aae7f7f49db04827aeb07cababc85f8f","route":"fallback","primary_attempts":2,"fallback_thinking_budget":512}
+http=200
+
+===== request_2 =====
+{"response":"<seed:think>\nGot it, let's see. The user wants me to reply with","latency_seconds":1.108337,"input_chars":39,"max_new_tokens":16,"thinking_budget":512,"backend":"vllm","input_tokens":105,"output_tokens":16,"tokens_per_second":14.436,"model_name":"Seed-OSS-36B-Instruct-W8A8-Fallback","device":"vllm_server","total_tokens":121,"request_id":"a586a677f0014987ae56a3cf3ed1e88d","route":"fallback","primary_attempts":2,"fallback_thinking_budget":512}
+http=200
+
+===== request_3 =====
+{"response":"<seed:think>\nGot it, let's see. The user wants me to reply with","latency_seconds":0.837636,"input_chars":39,"max_new_tokens":16,"thinking_budget":512,"backend":"vllm","input_tokens":105,"output_tokens":16,"tokens_per_second":19.1014,"model_name":"Seed-OSS-36B-Instruct-W8A8-Fallback","device":"vllm_server","total_tokens":121,"request_id":"6f70ca8e2b2348f8a832c2fcdd0830be","route":"fallback","primary_attempts":0,"fallback_thinking_budget":512}
+http=200
+
+===== request_4 =====
+{"response":"<seed:think>\nGot it, let's see. The user wants me to reply with","latency_seconds":0.826864,"input_chars":39,"max_new_tokens":16,"thinking_budget":512,"backend":"vllm","input_tokens":105,"output_tokens":16,"tokens_per_second":19.3502,"model_name":"Seed-OSS-36B-Instruct-W8A8-Fallback","device":"vllm_server","total_tokens":121,"request_id":"a7e744e6cf5343abb105f8f470fb2d51","route":"fallback","primary_attempts":0,"fallback_thinking_budget":512}
+http=200
+
+===== breaker metrics =====
+# HELP gateway_retry_attempts_total Number of bounded retry attempts issued by the gateway.
+# TYPE gateway_retry_attempts_total counter
+gateway_retry_attempts_total{backend="vllm",reason="backend_timeout"} 2.0
+# HELP gateway_retry_attempts_created Number of bounded retry attempts issued by the gateway.
+# TYPE gateway_retry_attempts_created gauge
+gateway_retry_attempts_created{backend="vllm",reason="backend_timeout"} 1.782221895138254e+09
+# HELP gateway_circuit_breaker_state Current process-local circuit breaker state encoded as one-hot labels.
+# TYPE gateway_circuit_breaker_state gauge
+gateway_circuit_breaker_state{backend="vllm",state="closed"} 0.0
+gateway_circuit_breaker_state{backend="vllm",state="open"} 1.0
+gateway_circuit_breaker_state{backend="vllm",state="half_open"} 0.0
+# HELP gateway_circuit_breaker_transitions_total Number of circuit breaker state transitions.
+# TYPE gateway_circuit_breaker_transitions_total counter
+gateway_circuit_breaker_transitions_total{backend="vllm",from_state="closed",to_state="open"} 1.0
+# HELP gateway_circuit_breaker_transitions_created Number of circuit breaker state transitions.
+# TYPE gateway_circuit_breaker_transitions_created gauge
+gateway_circuit_breaker_transitions_created{backend="vllm",from_state="closed",to_state="open"} 1.7822218974390285e+09
+# HELP gateway_fallback_requests_total Number of low-budget fallback requests.
+# TYPE gateway_fallback_requests_total counter
+gateway_fallback_requests_total{backend="vllm",result="succeeded"} 4.0
+# HELP gateway_fallback_requests_created Number of low-budget fallback requests.
+# TYPE gateway_fallback_requests_created gauge
+gateway_fallback_requests_created{backend="vllm",result="succeeded"} 1.782221896905213e+09

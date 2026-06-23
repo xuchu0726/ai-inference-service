@@ -32,6 +32,13 @@ VLLM_TIMEOUT_SECONDS = float(
     os.getenv("VLLM_TIMEOUT_SECONDS", "300")
 )
 
+VLLM_FALLBACK_TIMEOUT_SECONDS = float(
+    os.getenv(
+        "VLLM_FALLBACK_TIMEOUT_SECONDS",
+        str(VLLM_TIMEOUT_SECONDS),
+    )
+)
+
 VLLM_ENABLE_SEED_THINKING_BUDGET = (
     os.getenv("VLLM_ENABLE_SEED_THINKING_BUDGET", "false").lower() == "true"
 )

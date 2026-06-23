@@ -1,0 +1,7 @@
+===== readyz via nginx =====
+{"status":"ready","ready":true,"backend":"vllm","primary":{"ready":false,"backend":"vllm","model_name":"Seed-OSS-36B-Instruct-W8A8","detail":"HTTP Error 401: Unauthorized"},"fallback":{"ready":true,"backend":"vllm","model_name":"Seed-OSS-36B-Instruct-W8A8-Fallback","models":1}}
+readyz_http=200
+
+===== generate via nginx =====
+{"detail":{"error":"upstream_protocol_error","backend":"vllm","message":"vLLM returned HTTP 401"}}
+generate_http=502

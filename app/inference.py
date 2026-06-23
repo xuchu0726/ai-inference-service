@@ -21,6 +21,7 @@ from app.config import (
     VLLM_FALLBACK_API_KEY,
     VLLM_FALLBACK_BASE_URL,
     VLLM_FALLBACK_MODEL_NAME,
+    VLLM_FALLBACK_TIMEOUT_SECONDS,
     VLLM_MODEL_NAME,
     VLLM_TIMEOUT_SECONDS,
 )
@@ -75,7 +76,7 @@ def _build_fallback_backend():
     return VLLMBackend(
         base_url=VLLM_FALLBACK_BASE_URL,
         model_name=VLLM_FALLBACK_MODEL_NAME,
-        timeout_seconds=VLLM_TIMEOUT_SECONDS,
+        timeout_seconds=VLLM_FALLBACK_TIMEOUT_SECONDS,
         enable_seed_thinking_budget=VLLM_ENABLE_SEED_THINKING_BUDGET,
         api_key=VLLM_FALLBACK_API_KEY,
     )

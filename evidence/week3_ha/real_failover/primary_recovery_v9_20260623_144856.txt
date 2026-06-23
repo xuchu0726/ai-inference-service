@@ -1,0 +1,32 @@
+gateway_pod=inference-gateway-6cc5745bd5-kn8x5
+
+===== recovery_request =====
+{"response":"primary-recovered-ok","latency_seconds":1.391482,"input_chars":40,"max_new_tokens":16,"thinking_budget":0,"backend":"vllm","input_tokens":91,"output_tokens":6,"tokens_per_second":4.3119,"model_name":"Seed-OSS-36B-Instruct-W8A8","device":"vllm_server","total_tokens":97,"request_id":"cbda142c4e204434aadc3544325e89a6","route":"primary","primary_attempts":1,"fallback_thinking_budget":null}
+http=200
+
+===== breaker_metrics =====
+# HELP gateway_retry_attempts_total Number of bounded retry attempts issued by the gateway.
+# TYPE gateway_retry_attempts_total counter
+gateway_retry_attempts_total{backend="vllm",reason="backend_unavailable"} 2.0
+# HELP gateway_retry_attempts_created Number of bounded retry attempts issued by the gateway.
+# TYPE gateway_retry_attempts_created gauge
+gateway_retry_attempts_created{backend="vllm",reason="backend_unavailable"} 1.7822223948748698e+09
+# HELP gateway_circuit_breaker_state Current process-local circuit breaker state encoded as one-hot labels.
+# TYPE gateway_circuit_breaker_state gauge
+gateway_circuit_breaker_state{backend="vllm",state="closed"} 1.0
+gateway_circuit_breaker_state{backend="vllm",state="open"} 0.0
+gateway_circuit_breaker_state{backend="vllm",state="half_open"} 0.0
+# HELP gateway_circuit_breaker_transitions_total Number of circuit breaker state transitions.
+# TYPE gateway_circuit_breaker_transitions_total counter
+gateway_circuit_breaker_transitions_total{backend="vllm",from_state="closed",to_state="open"} 1.0
+gateway_circuit_breaker_transitions_total{backend="vllm",from_state="half_open",to_state="closed"} 1.0
+# HELP gateway_circuit_breaker_transitions_created Number of circuit breaker state transitions.
+# TYPE gateway_circuit_breaker_transitions_created gauge
+gateway_circuit_breaker_transitions_created{backend="vllm",from_state="closed",to_state="open"} 1.782222396975442e+09
+gateway_circuit_breaker_transitions_created{backend="vllm",from_state="half_open",to_state="closed"} 1.7822225403912735e+09
+# HELP gateway_fallback_requests_total Number of low-budget fallback requests.
+# TYPE gateway_fallback_requests_total counter
+gateway_fallback_requests_total{backend="vllm",result="succeeded"} 3.0
+# HELP gateway_fallback_requests_created Number of low-budget fallback requests.
+# TYPE gateway_fallback_requests_created gauge
+gateway_fallback_requests_created{backend="vllm",result="succeeded"} 1.7822223963730903e+09

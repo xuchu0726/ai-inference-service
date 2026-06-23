@@ -107,6 +107,11 @@ class VLLMBackend:
                 data = json.loads(raw_body)
 
         except urllib.error.HTTPError as exc:
+            if exc.code in {502, 503, 504}:
+                raise BackendUnavailableError(
+                    f"vLLM upstream is temporarily unavailable: HTTP {exc.code}"
+                ) from exc
+
             raise UpstreamProtocolError(
                 f"vLLM returned HTTP {exc.code}"
             ) from exc

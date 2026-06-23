@@ -1,0 +1,30 @@
+gateway_pod=inference-gateway-c696bd77f-ph4s8
+
+===== request_1 =====
+{"response":"timeout-fallback-ok","latency_seconds":0.511251,"input_chars":39,"max_new_tokens":16,"thinking_budget":0,"backend":"vllm","input_tokens":91,"output_tokens":6,"tokens_per_second":11.7359,"model_name":"Seed-OSS-36B-Instruct-W8A8","device":"vllm_server","total_tokens":97,"request_id":"971d331b6bde40f7b127f75e1a9c8465","route":"primary","primary_attempts":2,"fallback_thinking_budget":null}
+http=200
+
+===== request_2 =====
+{"response":"timeout-fallback-ok","latency_seconds":0.472447,"input_chars":39,"max_new_tokens":16,"thinking_budget":0,"backend":"vllm","input_tokens":91,"output_tokens":6,"tokens_per_second":12.6998,"model_name":"Seed-OSS-36B-Instruct-W8A8","device":"vllm_server","total_tokens":97,"request_id":"75630bd284f040269675eab371447215","route":"primary","primary_attempts":1,"fallback_thinking_budget":null}
+http=200
+
+===== request_3 =====
+{"response":"timeout-fallback-ok","latency_seconds":0.383018,"input_chars":39,"max_new_tokens":16,"thinking_budget":0,"backend":"vllm","input_tokens":91,"output_tokens":6,"tokens_per_second":15.665,"model_name":"Seed-OSS-36B-Instruct-W8A8","device":"vllm_server","total_tokens":97,"request_id":"9437a9cbbf3943aa8e2e797851337761","route":"primary","primary_attempts":1,"fallback_thinking_budget":null}
+http=200
+
+===== breaker metrics =====
+# HELP gateway_retry_attempts_total Number of bounded retry attempts issued by the gateway.
+# TYPE gateway_retry_attempts_total counter
+gateway_retry_attempts_total{backend="vllm",reason="backend_timeout"} 1.0
+# HELP gateway_retry_attempts_created Number of bounded retry attempts issued by the gateway.
+# TYPE gateway_retry_attempts_created gauge
+gateway_retry_attempts_created{backend="vllm",reason="backend_timeout"} 1.7822218127251909e+09
+# HELP gateway_circuit_breaker_state Current process-local circuit breaker state encoded as one-hot labels.
+# TYPE gateway_circuit_breaker_state gauge
+gateway_circuit_breaker_state{backend="vllm",state="closed"} 1.0
+gateway_circuit_breaker_state{backend="vllm",state="open"} 0.0
+gateway_circuit_breaker_state{backend="vllm",state="half_open"} 0.0
+# HELP gateway_circuit_breaker_transitions_total Number of circuit breaker state transitions.
+# TYPE gateway_circuit_breaker_transitions_total counter
+# HELP gateway_fallback_requests_total Number of low-budget fallback requests.
+# TYPE gateway_fallback_requests_total counter

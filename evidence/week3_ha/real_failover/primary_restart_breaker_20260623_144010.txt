@@ -1,0 +1,34 @@
+gateway_pod=inference-gateway-6d67f8d5cb-5c94r
+
+===== outage_request_1 =====
+{"detail":{"error":"upstream_protocol_error","backend":"vllm","message":"vLLM returned HTTP 502"}}
+http=502
+
+===== outage_request_2 =====
+{"detail":{"error":"upstream_protocol_error","backend":"vllm","message":"vLLM returned HTTP 502"}}
+http=502
+
+===== outage_request_3 =====
+{"response":"<seed:think>\nGot it, let's see. The user wants me to reply with","latency_seconds":1.089819,"input_chars":47,"max_new_tokens":16,"thinking_budget":512,"backend":"vllm","input_tokens":107,"output_tokens":16,"tokens_per_second":14.6813,"model_name":"Seed-OSS-36B-Instruct-W8A8-Fallback","device":"vllm_server","total_tokens":123,"request_id":"c01ab0d5631c4101b8ea05b4468207a8","route":"fallback","primary_attempts":0,"fallback_thinking_budget":512}
+http=200
+
+===== breaker metrics =====
+# HELP gateway_retry_attempts_total Number of bounded retry attempts issued by the gateway.
+# TYPE gateway_retry_attempts_total counter
+# HELP gateway_circuit_breaker_state Current process-local circuit breaker state encoded as one-hot labels.
+# TYPE gateway_circuit_breaker_state gauge
+gateway_circuit_breaker_state{backend="vllm",state="closed"} 0.0
+gateway_circuit_breaker_state{backend="vllm",state="open"} 1.0
+gateway_circuit_breaker_state{backend="vllm",state="half_open"} 0.0
+# HELP gateway_circuit_breaker_transitions_total Number of circuit breaker state transitions.
+# TYPE gateway_circuit_breaker_transitions_total counter
+gateway_circuit_breaker_transitions_total{backend="vllm",from_state="closed",to_state="open"} 1.0
+# HELP gateway_circuit_breaker_transitions_created Number of circuit breaker state transitions.
+# TYPE gateway_circuit_breaker_transitions_created gauge
+gateway_circuit_breaker_transitions_created{backend="vllm",from_state="closed",to_state="open"} 1.782222012740374e+09
+# HELP gateway_fallback_requests_total Number of low-budget fallback requests.
+# TYPE gateway_fallback_requests_total counter
+gateway_fallback_requests_total{backend="vllm",result="succeeded"} 1.0
+# HELP gateway_fallback_requests_created Number of low-budget fallback requests.
+# TYPE gateway_fallback_requests_created gauge
+gateway_fallback_requests_created{backend="vllm",result="succeeded"} 1.782222013864814e+09
