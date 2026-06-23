@@ -116,3 +116,9 @@ BAGEL 的统一多模态能力在项目中以联合输入接口体现：客户�
 - `evidence/week3_bagel/ecommerce_backpack_manual_validation_20260623.md`
 - `results/week3_bagel/bagel_understanding_ecommerce_backpack_listing_n3_20260623T211551Z.json`
 - `evidence/week3_bagel/ecommerce_backpack_source_and_license.md`
+
+### 统一多模态表征的工程优势
+
+统一多模态表征的工程价值在于：同一模型服务能够同时接收图像与文本，并在联合上下文中输出统一的理解结果。相比将 OCR、视觉分类、商品属性抽取和文本生成拆分为多个独立模型，统一模型减少了跨服务编排、接口转换和中间结果对齐的复杂度。
+
+本项目验证了这一优势在服务接口层的可用性：图像和文本 prompt 通过同一个多模态 API 进入 BAGEL Runtime，并返回面向图像描述、图中文字读取和商品文案草稿的文本结果。该结论仅覆盖接口级联合理解能力；不代表已复现或测量 BAGEL 内部视觉 token、共享表征、MoT 路由或生成解码机制。
