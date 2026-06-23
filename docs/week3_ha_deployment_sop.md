@@ -28,84 +28,87 @@ Gateway Deployment 启动前必须存在以下资源：
 
 ## 4. 部署顺序
 
-以下命令仅作为目标 Kubernetes 集群中的部署流程记录；不得在当前 RunPod Pod 中直接执行。
+以下命令只能在目标 Kubernetes 集群终端执行，不能在 RunPod BAGEL Pod 中执行。
 
-### 4.1 创建命名空间和运行时依赖
+1. 创建命名空间：
 
-先应用命名空间，然后在目标集群中创建或更新第 3 节列出的 ConfigMap 与 Secret。主、备 upstream 的 URL、模型名和 API key 必须指向两个独立且已健康的 vLLM 服务。
+    kubectl apply -f deployment/week3_ha/k8s/namespace.yaml
 
-### 4.2 部署 Gateway、HPA、Nginx 与监控组件
+2. 创建 Gateway 基础与韧性配置：
 
-```bash
-kubectl apply -f deployment/week3_ha/k8s/namespace.yaml
+    kubectl apply -f deployment/week3_ha/k8s/gateway-config.yaml
+    kubectl apply -f deployment/week3_ha/k8s/gateway-resilience-config.yaml
 
-kubectl apply -f deployment/week3_ha/k8s/gateway-config.yaml
-kubectl apply -f deployment/week3_ha/k8s/gateway-resilience-config.yaml
-kubectl apply -f deployment/week3_ha/k8s/gateway-service.yaml
-kubectl apply -f deployment/week3_ha/k8s/gateway-deployment.yaml
-kubectl apply -f deployment/week3_ha/k8s/local_hpa/gateway-hpa.yaml
+3. 在集群外部准备以下资源，并确认名称与 Gateway Deployment 的 `envFrom` 一致：
 
-kubectl apply -f deployment/week3_ha/nginx/nginx-config.yaml
-kubectl apply -f deployment/week3_ha/nginx/nginx-deployment.yaml
-kubectl apply -f deployment/week3_ha/nginx/nginx-service.yaml
+    - ConfigMap：`week3-primary-runtime`
+    - ConfigMap：`week3-fallback-runtime`
+    - Secret：`week3-primary-auth`
+    - Secret：`week3-fallback-auth`
 
-kubectl apply -f deployment/week3_ha/monitoring/prometheus.yaml
-kubectl apply -f deployment/week3_ha/monitoring/grafana-dashboard.yaml
-kubectl apply -f deployment/week3_ha/monitoring/grafana-core.yaml
-```
+4. 创建 Gateway Service、Deployment 与 HPA：
 
-部署顺序的原则是：先保证 Gateway 所依赖的运行时配置和 upstream 已存在，再创建 Gateway 与 HPA；Gateway Ready 后再部署 Nginx；最后部署 Prometheus 与 Grafana。
+    kubectl apply -f deployment/week3_ha/k8s/gateway-service.yaml
+    kubectl apply -f deployment/week3_ha/k8s/gateway-deployment.yaml
+    kubectl apply -f deployment/week3_ha/k8s/local_hpa/gateway-hpa.yaml
 
-## 5. 部署验收标准
+5. 创建 Nginx：
 
-```bash
-kubectl -n ai-inference rollout status deployment/inference-gateway --timeout=120s
-kubectl -n ai-inference rollout status deployment/inference-nginx --timeout=120s
-kubectl -n ai-inference rollout status deployment/prometheus --timeout=120s
-kubectl -n ai-inference rollout status deployment/grafana --timeout=120s
+    kubectl apply -f deployment/week3_ha/nginx/nginx-config.yaml
+    kubectl apply -f deployment/week3_ha/nginx/nginx-deployment.yaml
+    kubectl apply -f deployment/week3_ha/nginx/nginx-service.yaml
 
-kubectl -n ai-inference get deployment,pod,service,hpa -o wide
-kubectl -n ai-inference describe hpa inference-gateway
-kubectl top pods -n ai-inference
-```
+6. 创建监控资源：
+
+    kubectl apply -f deployment/week3_ha/monitoring/prometheus.yaml
+    kubectl apply -f deployment/week3_ha/monitoring/grafana-dashboard.yaml
+    kubectl apply -f deployment/week3_ha/monitoring/grafana-core.yaml
+
+## 5. 部署后验收
+
+执行：
+
+    kubectl -n ai-inference rollout status deployment/inference-gateway --timeout=120s
+    kubectl -n ai-inference rollout status deployment/inference-nginx --timeout=120s
+    kubectl -n ai-inference rollout status deployment/prometheus --timeout=120s
+    kubectl -n ai-inference rollout status deployment/grafana --timeout=120s
+    kubectl -n ai-inference get deployment,pod,service,hpa -o wide
+    kubectl -n ai-inference describe hpa inference-gateway
+    kubectl top pods -n ai-inference
 
 成功标准：
 
-- `inference-gateway` 至少有 2 个 Ready Pod。
-- `inference-nginx` 至少有 2 个 Ready Pod。
-- HPA 显示最小副本数 2、最大副本数 4，并能读取 CPU 指标。
-- Nginx 的 `/nginx-healthz` 返回 200；Gateway 的 `/livez`、`/readyz` 和 `/health` 可经 Nginx 访问。
-- Prometheus 中 Gateway Pod target 与 `bagel-runpod` target 均为 Up。
+- `inference-gateway` 至少有 2 个 Ready Pod；
+- `inference-nginx` 至少有 2 个 Ready Pod；
+- HPA 最小副本为 2、最大副本为 4、CPU 目标为 50%；
+- Nginx `/nginx-healthz` 返回 200，Gateway `/livez`、`/readyz`、`/health` 可经 Nginx 访问；
+- Prometheus Targets 页面中 Gateway Pod 与 `bagel-runpod` 均为 Up；
 - Grafana 可显示 `Week3 Gateway Resilience` 与 `Week3 BAGEL Multimodal Observability`。
 
 ## 6. 回滚与停止
 
-Gateway 或 Nginx 部署变更异常时，在目标 Kubernetes 集群执行以下回滚命令：
+Gateway 或 Nginx 变更异常时：
 
-```bash
-kubectl -n ai-inference rollout undo deployment/inference-gateway
-kubectl -n ai-inference rollout undo deployment/inference-nginx
-```
+    kubectl -n ai-inference rollout undo deployment/inference-gateway
+    kubectl -n ai-inference rollout undo deployment/inference-nginx
 
-停止 Gateway 负载前，先删除 HPA，避免控制器将副本数重新扩回目标值：
+停止 Gateway 前先删除 HPA，避免控制器重新扩容：
 
-```bash
-kubectl -n ai-inference delete hpa inference-gateway
-kubectl -n ai-inference scale deployment/inference-gateway --replicas=0
-```
+    kubectl -n ai-inference delete hpa inference-gateway
+    kubectl -n ai-inference scale deployment/inference-gateway --replicas=0
 
-恢复服务时，重新应用 HPA manifest，并等待 Gateway rollout 成功。
+恢复时重新应用 HPA manifest，并等待 Gateway rollout 成功。
 
 ## 7. 复现、学习与证据保存
 
-每次重新部署、扩缩容或故障演练后，保存以下高价值证据：
+每次重新部署、扩缩容或故障演练后，保存：
 
 - `kubectl -n ai-inference get deployment,pod,service,hpa -o wide`；
 - `kubectl -n ai-inference describe hpa inference-gateway`；
 - `kubectl top pods -n ai-inference`；
-- Nginx `/nginx-healthz`、Gateway `/livez`、`/readyz`、`/health` 的响应；
-- Prometheus target 状态、retry、circuit breaker、fallback 指标；
-- Grafana 截图与对应时间窗口；
-- 失败时的 `kubectl describe pod`、容器日志、HPA events 和当前 Git commit。
+- Nginx 和 Gateway 健康检查响应；
+- Prometheus Targets、retry、circuit breaker、fallback 指标；
+- Grafana 截图及对应时间窗口；
+- 故障时的 `kubectl describe pod`、容器日志、HPA events、Git commit。
 
-建议将同一轮验证的原始输出合并为一个高信息密度 evidence 文件，并在实验完成后及时提交 GitHub。
+同一轮验证应合并为少量高信息密度 evidence 文件，并及时提交 GitHub。
