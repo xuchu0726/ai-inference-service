@@ -1,0 +1,1 @@
+BAGEL runtime restart contract\nsource_pid=1647\nworking_directory=/workspace/bagel_week3\ncommand=/workspace/bagel_week3/venv/bin/python /workspace/bagel_week3/vendor/BAGEL/app.py --server_name 0.0.0.0 --server_port 7860 --model_path /workspace/bagel_week3/models/BAGEL-7B-MoT\nrestore_order=BAGEL :7860 first, then FastAPI :8000\n
