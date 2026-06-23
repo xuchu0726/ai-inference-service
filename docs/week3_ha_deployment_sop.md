@@ -50,13 +50,13 @@ Gateway Deployment 启动前必须存在以下资源：
 
     kubectl -n ai-inference rollout status deployment/inference-gateway --timeout=120s
     kubectl -n ai-inference rollout status deployment/inference-nginx --timeout=120s
-    kubectl -n ai-inference rollout status deployment/prometheus --timeot=120s
+    kubectl -n ai-inference rollout status deployment/prometheus --timeout=120s
     kubectl -n ai-inference rollout status deployment/grafana --timeout=120s
     kubectl -n ai-inference get deployment,pod,service,hpa -o wide
-    kubectl -n ai-inference describe hha inference-gateway
+    kubectl -n ai-inference describe hpa inference-gateway
     kubectl top pods -n ai-inference
 
-见收条件:
+验收条件:
 
 - Gateway Deployment 至少 2 个 Ready Pod。
 - Nginx Deployment 至少 2 个 Ready Pod。
@@ -65,13 +65,13 @@ Gateway Deployment 启动前必须存在以下资源：
 - Prometheus 中 Gateway Pod targets 可抓取；BAGEL 目标 `up{job="bagel-runpod"}` 为 1。
 - Grafana 可显示 Week3 Gateway Resilience 与 Week3 BAGEL Multimodal Observability。
 
-## 6. 负载均衡与容错訽逻辑
+## 6. 负载均衡与容错逻辑
 
 Nginx 仅负责将请求转发到 Kubernetes Service，不执行 upstream retry。
 
 Gateway 负责主后端超时控制、一次有界重试、失败阈值触发 process-local circuit breaker、恢复窗口后的恢复探测，以及主后端不可用或熔断时的 fallback 路由。fallback 请求固定使用低预算 `thinking budget=512`。
 
-该分层避免 Nginx 与 Gateway 双层重试造成重姍推理请求。
+该分层避免 Nginx 与 Gateway 双层重试造成重复推理请求。
 
 ## 7. 回滚与停止
 
@@ -85,18 +85,18 @@ Gateway 负责主后端超时控制、一次有界重试、失败阈值触发 pr
     kubectl -n ai-inference delete hpa inference-gateway
     kubectl -n ai-inference scale deployment/inference-gateway --replicas=0
 
-恢姍时重新 apply HPA manifest，并等待 Gateway rollout 完成。
+恢复时重新 apply HPA manifest，并等待 Gateway rollout 完成。
 
 ## 8. 证据保存与复盘
 
-每次重新部署或复现实验时，保存以下高价值杀料：
+每次重新部署或复现实验时，保存以下高价值材料：
 
 - `kubectl get deployment,pod,service,hpa -o wide`
 - `kubectl describe hpa inference-gateway`
 - `kubectl top pods -n ai-inference`
-- Nginx `/health`、Gateway `/readyz` 响应
+- Nginx `/nginx-healthz`、Gateway `/readyz` 响应
 - Prometheus targets 与 retry、circuit、fallback 指标
 - Grafana 截图
 - 失败时的 pod describe、container logs 和 HPA events
 
-这些证据用于复现、性能分析、简历追溯与面试深挛。
+这些证据用于复现、性能分析、简历追溯与面试深挖。

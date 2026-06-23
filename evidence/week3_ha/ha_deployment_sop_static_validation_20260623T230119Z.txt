@@ -1,0 +1,27 @@
+timestamp_utc=20260623T230119Z
+===== shell syntax =====
+PASS
+
+===== required SOP sections =====
+3:## 1. 适用范围
+15:## 2. 部署前置条件
+23:## 3. 上游运行时资源
+32:## 4. 部署顺序
+49:## 5. 部署成功标准
+68:## 6. 负载均衡与容错逻辑
+76:## 7. 回滚与停止
+90:## 8. 证据保存与复盘
+
+===== deployment manifests referenced =====
+36:    kubectl apply -f deployment/week3_ha/k8s/namespace.yaml
+37:    kubectl apply -f deployment/week3_ha/k8s/gateway-config.yaml
+38:    kubectl apply -f deployment/week3_ha/k8s/gateway-resilience-config.yaml
+39:    kubectl apply -f deployment/week3_ha/k8s/gateway-service.yaml
+40:    kubectl apply -f deployment/week3_ha/k8s/gateway-deployment.yaml
+41:    kubectl apply -f deployment/week3_ha/k8s/local_hpa/gateway-hpa.yaml
+42:    kubectl apply -f deployment/week3_ha/nginx/nginx-config.yaml
+43:    kubectl apply -f deployment/week3_ha/nginx/nginx-deployment.yaml
+44:    kubectl apply -f deployment/week3_ha/nginx/nginx-service.yaml
+45:    kubectl apply -f deployment/week3_ha/monitoring/prometheus.yaml
+46:    kubectl apply -f deployment/week3_ha/monitoring/grafana-dashboard.yaml
+47:    kubectl apply -f deployment/week3_ha/monitoring/grafana-core.yaml
