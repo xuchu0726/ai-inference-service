@@ -1,0 +1,38 @@
+===== Git =====
+91419dc 补充 Week3 高可用部署与回滚 SOP
+feature/week3-bagel-validation
+?? evidence/week3_bagel/pod_handover_20260623T214431Z.txt
+
+===== Workspace =====
+Filesystem                  Type  Size  Used Avail Use% Mounted on
+mfs#us-md-1.runpod.net:9421 fuse  334T  248T   87T  75% /workspace
+247M	/workspace/ai-inference-service
+45G	/workspace/bagel_week3
+693M	/workspace/venvs
+
+===== BAGEL source =====
+a2fa77dd8caeefc41e6607ae0ec17408d3f4ee9f
+
+===== BAGEL health =====
+{"status":"ready","backend":"bagel_gradio","model_name":"ByteDance-Seed/BAGEL-7B-MoT","base_url":"http://127.0.0.1:7860"}
+===== GPU =====
+Tue Jun 23 21:44:36 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:0F:00.0 Off |                    0 |
+| N/A   32C    P0             84W /  400W |   29773MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            1114      C   ...e/bagel_week3/venv/bin/python      29764MiB |
++-----------------------------------------------------------------------------------------+
