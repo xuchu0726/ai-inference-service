@@ -1,0 +1,37 @@
+flowchart LR
+    U[Client]
+
+    subgraph TEXT["Seed-OSS Text Serving: verified HA path"]
+        N1[Nginx replica A]
+        N2[Nginx replica B]
+        SVC[Kubernetes Service]
+        GW[Inference Gateway replicas<br/>HPA: 2 to 4]
+        P[Primary Seed-OSS vLLM]
+        F[Fallback Seed-OSS vLLM<br/>thinking budget = 512]
+
+        U --> N1
+        U --> N2
+        N1 --> SVC
+        N2 --> SVC
+        SVC --> GW
+        GW --> P
+        GW -. timeout / retry / circuit open .-> F
+    end
+
+    subgraph MM["BAGEL Image Understanding: verified path"]
+        RP[RunPod HTTPS Proxy]
+        API[FastAPI :8000<br/>/multimodal/generate]
+        GC[Gradio Client]
+        BR[BAGEL Runtime :7860<br/>BAGEL-7B-MoT]
+        GPU[A100 GPU]
+
+        U --> RP --> API --> GC --> BR --> GPU
+    end
+
+    subgraph OBS["Observability"]
+        PM[Prometheus in local kind]
+        GF[Grafana]
+        API -->|/metrics via HTTPS proxy| PM
+        GW -->|/metrics| PM
+        PM --> GF
+    end
