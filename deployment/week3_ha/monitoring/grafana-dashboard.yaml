@@ -157,6 +157,261 @@ data:
         }
       ]
     }
+  week3-bagel-multimodal.json: |
+    {
+      "uid": "week3-bagel-multimodal",
+      "title": "Week3 BAGEL Multimodal Observability",
+      "tags": [
+        "week3",
+        "bagel",
+        "runpod",
+        "multimodal"
+      ],
+      "timezone": "browser",
+      "schemaVersion": 39,
+      "version": 3,
+      "refresh": "5s",
+      "time": {
+        "from": "now-15m",
+        "to": "now"
+      },
+      "panels": [
+        {
+          "id": 1,
+          "type": "stat",
+          "title": "BAGEL Target",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "max(up{job=\"bagel-runpod\"})",
+              "refId": "A",
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "none",
+              "decimals": 0,
+              "noValue": "0"
+            }
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 0,
+            "w": 6,
+            "h": 5
+          }
+        },
+        {
+          "id": 2,
+          "type": "stat",
+          "title": "Successful Requests",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "sum(multimodal_requests_total{job=\"bagel-runpod\",outcome=\"success\"}) OR vector(0)",
+              "refId": "A",
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "none",
+              "decimals": 0,
+              "noValue": "0"
+            }
+          },
+          "gridPos": {
+            "x": 6,
+            "y": 0,
+            "w": 6,
+            "h": 5
+          }
+        },
+        {
+          "id": 3,
+          "type": "stat",
+          "title": "Recorded Errors",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "sum(multimodal_request_errors_total{job=\"bagel-runpod\"}) OR vector(0)",
+              "refId": "A",
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "none",
+              "decimals": 0,
+              "noValue": "0"
+            }
+          },
+          "gridPos": {
+            "x": 12,
+            "y": 0,
+            "w": 6,
+            "h": 5
+          }
+        },
+        {
+          "id": 4,
+          "type": "stat",
+          "title": "Error Rate (5m)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "(sum(rate(multimodal_request_errors_total{job=\"bagel-runpod\"}[5m])) OR vector(0)) / clamp_min(sum(rate(multimodal_requests_total{job=\"bagel-runpod\"}[5m])), 1e-9)",
+              "refId": "A",
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percentunit",
+              "decimals": 2,
+              "noValue": "0"
+            }
+          },
+          "gridPos": {
+            "x": 18,
+            "y": 0,
+            "w": 6,
+            "h": 5
+          }
+        },
+        {
+          "id": 7,
+          "type": "timeseries",
+          "title": "Request Rate by Outcome",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "sum by (outcome) (rate(multimodal_requests_total{job=\"bagel-runpod\"}[1m]))",
+              "legendFormat": "{{outcome}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "reqps",
+              "decimals": 2
+            }
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 5,
+            "w": 12,
+            "h": 7
+          }
+        },
+        {
+          "id": 8,
+          "type": "timeseries",
+          "title": "Gateway-to-BAGEL Latency: P50 / P95",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.50, sum by (le) (rate(multimodal_request_latency_seconds_bucket{job=\"bagel-runpod\"}[5m])))",
+              "legendFormat": "p50",
+              "refId": "A"
+            },
+            {
+              "expr": "histogram_quantile(0.95, sum by (le) (rate(multimodal_request_latency_seconds_bucket{job=\"bagel-runpod\"}[5m])))",
+              "legendFormat": "p95",
+              "refId": "B"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s",
+              "decimals": 2
+            }
+          },
+          "gridPos": {
+            "x": 12,
+            "y": 5,
+            "w": 12,
+            "h": 7
+          }
+        },
+        {
+          "id": 9,
+          "type": "timeseries",
+          "title": "GPU Memory Used Over Time",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "multimodal_gpu_memory_used_mib{job=\"bagel-runpod\"} / 1024",
+              "legendFormat": "GPU {{gpu_index}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "gibibytes",
+              "decimals": 2
+            }
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 12,
+            "w": 12,
+            "h": 7
+          }
+        },
+        {
+          "id": 10,
+          "type": "timeseries",
+          "title": "GPU Utilization Over Time",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "multimodal_gpu_utilization_percent{job=\"bagel-runpod\"} / 100",
+              "legendFormat": "GPU {{gpu_index}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percentunit",
+              "decimals": 2
+            }
+          },
+          "gridPos": {
+            "x": 12,
+            "y": 12,
+            "w": 12,
+            "h": 7
+          }
+        }
+      ]
+    }
+
 kind: ConfigMap
 metadata:
   name: grafana-dashboard-week3

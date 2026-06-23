@@ -64,6 +64,18 @@ data:
             target_label: namespace
           - source_labels: [__meta_kubernetes_pod_name]
             target_label: pod
+
+      - job_name: bagel-runpod
+        scheme: https
+        metrics_path: /metrics
+        scrape_interval: 5s
+        scrape_timeout: 4s
+        static_configs:
+          - targets:
+              - my1acead9y2dgr-8000.proxy.runpod.net
+            labels:
+              environment: runpod
+              service: bagel-multimodal
 ---
 apiVersion: apps/v1
 kind: Deployment
