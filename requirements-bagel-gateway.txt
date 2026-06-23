@@ -1,0 +1,5 @@
+-r requirements-gateway.txt
+pytest==8.3.5
+httpx==0.28.1
+gradio_client==1.11.0
+python-multipart==0.0.32

@@ -43,3 +43,6 @@ tmp/
 *.pyc
 *.pyo
 # Local temporary files
+
+# BAGEL local runtime logs
+logs/week3_bagel/*.log
