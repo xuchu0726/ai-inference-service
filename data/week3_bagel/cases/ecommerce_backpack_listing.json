@@ -1,0 +1,20 @@
+{
+  "case_id": "ecommerce_backpack_listing",
+  "local_path": "data/week3_bagel/ecommerce_backpack.jpg",
+  "sha256": "daf35bc9a0717501eccbbb2c857dff189ef7da2de02d403b32bc9a3e2e197e12",
+  "source": {
+    "provider": "Wikimedia Commons",
+    "file_page": "File:Canon-Deluxe_Backpack-200-EG.jpg",
+    "scenario": "受控电商商品图文理解验证；图片仅用于技术验证，不代表真实商品库存、价格或官方商品页。",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Canon-Deluxe_Backpack-200-EG.jpg",
+    "author_attribution": "Fir0002/Flagstaffotos",
+    "license": "CC BY-NC 3.0 / GFDL 1.2",
+    "image_binary_committed": false,
+    "license_note": "仓库不提交图片二进制；通过脚本按来源许可下载，仅用于非商业技术验证。"
+  },
+  "prompt": "你是电商商品内容助手。请根据图片中可见信息，用中文输出：1. 一个不超过20字的商品标题；2. 三条仅基于图片可见内容的卖点；3. 一条“不可从图片确认的信息”。不要猜测品牌、型号、价格、材质参数、容量、是否防水、库存或促销信息。",
+  "show_thinking": false,
+  "do_sample": false,
+  "temperature": 0.3,
+  "max_new_tokens": 512
+}
