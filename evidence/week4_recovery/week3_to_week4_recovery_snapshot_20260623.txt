@@ -1,0 +1,28 @@
+生成时间：2026-06-23T22:11:03Z
+
+===== Git =====
+feature/week3-bagel-validation
+332b48c 补充 Week3 高可用部署 SOP 与只读验收脚本
+ M docs/week3_ha_deployment_sop.md
+?? evidence/week3_bagel/bagel_runtime_environment_20260623.txt
+?? evidence/week4_recovery/
+
+===== Runtime paths =====
+repo=/workspace/ai-inference-service
+bagel_workspace=/workspace/bagel_week3
+bagel_model=/workspace/bagel_week3/models/BAGEL-7B-MoT
+gateway_venv=/workspace/venvs/week3-bagel-gateway
+
+===== GPU =====
+NVIDIA A100-SXM4-80GB, 81920 MiB, 29773 MiB, 580.126.16
+
+===== Week3 recovery entrypoints =====
+scripts/week3_bagel/restore_bagel_stack.sh
+scripts/week3_bagel/run_understanding_benchmark.py
+scripts/week3_bagel/start_bagel_runtime.sh
+scripts/week3_bagel/start_multimodal_api.sh
+
+===== Week3 key documents =====
+docs/week3_architecture.md
+docs/week3_operations_sop.md
+docs/week3_requirement_closure.md
