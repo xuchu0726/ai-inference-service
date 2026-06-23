@@ -1,0 +1,12 @@
+NAME                                  READY   STATUS      RESTARTS   AGE     IP            NODE              NOMINATED NODE   READINESS GATES
+grafana-548f88cb69-6j97x              1/1     Running     0          22h     10.244.2.22   desktop-worker    <none>           <none>
+inference-gateway-88f6b554d-fgkpf     1/1     Running     0          3m5s    10.244.2.42   desktop-worker    <none>           <none>
+inference-gateway-88f6b554d-zgp99     1/1     Running     0          3m12s   10.244.1.42   desktop-worker2   <none>           <none>
+inference-nginx-9d68cb7b4-c4j9t       1/1     Running     0          24h     10.244.1.17   desktop-worker2   <none>           <none>
+inference-nginx-9d68cb7b4-mlnbb       1/1     Running     0          24h     10.244.2.19   desktop-worker    <none>           <none>
+node-debugger-desktop-worker-8gr8g    0/1     Completed   0          17h     172.18.0.4    desktop-worker    <none>           <none>
+node-debugger-desktop-worker-gdwnl    0/1     Completed   0          17h     172.18.0.4    desktop-worker    <none>           <none>
+node-debugger-desktop-worker2-5gzkn   0/1     Completed   0          17h     172.18.0.3    desktop-worker2   <none>           <none>
+node-debugger-desktop-worker2-ltnhb   0/1     Completed   0          17h     172.18.0.3    desktop-worker2   <none>           <none>
+prometheus-6f6bb75db4-r2q6z           1/1     Running     0          22h     10.244.2.21   desktop-worker    <none>           <none>
+week3-primary-egress-check            0/1     Completed   0          24m     10.244.1.38   desktop-worker2   <none>           <none>

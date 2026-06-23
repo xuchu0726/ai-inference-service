@@ -1,0 +1,25 @@
+# 真实 W8A8 Primary 端到端健康基线
+
+链路：
+Mac → Docker Desktop Kubernetes Nginx Service → Gateway ×2
+→ RunPod HTTPS Proxy → vLLM 0.23.0 → Seed-OSS-36B-Instruct-W8A8（TP=2）
+
+GET /readyz
+- HTTP status: 200
+- backend: vllm
+- model_name: Seed-OSS-36B-Instruct-W8A8
+- models: 1
+
+POST /generate
+- HTTP status: 200
+- response: gateway-real-primary-ok
+- latency_seconds: 0.874477
+- input_tokens: 92
+- output_tokens: 8
+- tokens_per_second: 9.1483
+- route: primary
+- primary_attempts: 1
+- fallback_thinking_budget: null
+
+结论：
+Nginx、双副本 Gateway 与真实 RunPod W8A8 Primary 的健康检查和一次真实生成请求均成功。

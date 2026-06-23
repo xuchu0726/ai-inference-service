@@ -1,0 +1,32 @@
+# W8A8 Primary 公网验收
+
+## 服务身份
+
+- 模型：Seed-OSS-36B-Instruct-W8A8
+- serving runtime：vLLM 0.23.0
+- tensor parallel：2
+- GPU：2 × A100-SXM4-80GB
+- 认证方式：Bearer token
+- 公网代理：RunPod HTTP Proxy
+- 公网地址：已验证，地址不在仓库记录
+
+## 内部验收
+
+- GET /health：200
+- GET /v1/models，无认证：401
+- GET /v1/models，带认证：200
+- POST /v1/chat/completions，带认证：200
+- 返回模型 ID：Seed-OSS-36B-Instruct-W8A8
+
+## 公网验收
+
+- GET /v1/models，带认证：200
+- POST /v1/chat/completions，带认证：200
+- 请求参数：max_tokens=16，temperature=0，thinking_budget=0
+- 期望返回：public-primary-ok
+- 实际返回：public-primary-ok
+
+## 结论
+
+真实 W8A8 Primary 已完成公网 HTTPS、Bearer 认证、模型发现与最小生成请求验证。
+该 endpoint 可作为 Week3 Gateway 的真实 Primary upstream。

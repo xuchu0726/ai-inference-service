@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: week3-resilience-runtime
+  namespace: ai-inference
+data:
+  VLLM_TIMEOUT_SECONDS: "8"
+  RESILIENCE_RETRY_ATTEMPTS: "1"
+  RESILIENCE_RETRY_BACKOFF_SECONDS: "0.2"
+  RESILIENCE_FAILURE_THRESHOLD: "2"
+  RESILIENCE_RECOVERY_TIMEOUT_SECONDS: "20"
+  RESILIENCE_FALLBACK_THINKING_BUDGET: "512"

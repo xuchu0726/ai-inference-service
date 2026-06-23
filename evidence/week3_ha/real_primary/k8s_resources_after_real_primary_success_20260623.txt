@@ -1,0 +1,14 @@
+NAME                                READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/grafana             1/1     1            1           22h
+deployment.apps/inference-gateway   2/2     2            2           37h
+deployment.apps/inference-nginx     2/2     2            2           25h
+deployment.apps/prometheus          1/1     1            1           22h
+
+NAME                                                    REFERENCE                      TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/inference-gateway   Deployment/inference-gateway   cpu: 11%/50%   2         4         2          19h
+
+NAME                        TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+service/grafana             ClusterIP   10.96.61.15     <none>        3000/TCP   22h
+service/inference-gateway   ClusterIP   10.96.122.253   <none>        8000/TCP   37h
+service/inference-nginx     ClusterIP   10.96.141.177   <none>        8080/TCP   25h
+service/prometheus          ClusterIP   10.96.201.195   <none>        9090/TCP   22h

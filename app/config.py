@@ -18,6 +18,16 @@ VLLM_MODEL_NAME = os.getenv(
     MODEL_NAME,
 )
 
+VLLM_API_KEY = os.getenv(
+    "VLLM_API_KEY",
+    "",
+)
+
+VLLM_FALLBACK_API_KEY = os.getenv(
+    "VLLM_FALLBACK_API_KEY",
+    "",
+)
+
 VLLM_TIMEOUT_SECONDS = float(
     os.getenv("VLLM_TIMEOUT_SECONDS", "300")
 )

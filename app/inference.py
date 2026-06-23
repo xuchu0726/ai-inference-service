@@ -15,8 +15,10 @@ from app.config import (
     TRANSFORMERS_DEFAULT_THINKING_BUDGET,
     TRANSFORMERS_DEVICE_MAP,
     TRANSFORMERS_LOAD_IN_8BIT,
+    VLLM_API_KEY,
     VLLM_BASE_URL,
     VLLM_ENABLE_SEED_THINKING_BUDGET,
+    VLLM_FALLBACK_API_KEY,
     VLLM_FALLBACK_BASE_URL,
     VLLM_FALLBACK_MODEL_NAME,
     VLLM_MODEL_NAME,
@@ -52,6 +54,7 @@ def _build_backend():
             model_name=VLLM_MODEL_NAME,
             timeout_seconds=VLLM_TIMEOUT_SECONDS,
             enable_seed_thinking_budget=VLLM_ENABLE_SEED_THINKING_BUDGET,
+            api_key=VLLM_API_KEY,
         )
 
     if INFERENCE_BACKEND == "mock":
@@ -74,6 +77,7 @@ def _build_fallback_backend():
         model_name=VLLM_FALLBACK_MODEL_NAME,
         timeout_seconds=VLLM_TIMEOUT_SECONDS,
         enable_seed_thinking_budget=VLLM_ENABLE_SEED_THINKING_BUDGET,
+        api_key=VLLM_FALLBACK_API_KEY,
     )
 
 

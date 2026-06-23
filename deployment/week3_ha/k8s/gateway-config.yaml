@@ -4,4 +4,4 @@ metadata:
   name: gateway-config
   namespace: ai-inference
 data:
-  INFERENCE_BACKEND: mock
+  INFERENCE_BACKEND: vllm

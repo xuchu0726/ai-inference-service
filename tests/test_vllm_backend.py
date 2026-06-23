@@ -87,3 +87,62 @@ def test_seed_oss_low_nonzero_budget_is_normalized_to_zero(monkeypatch):
     assert captured["payload"]["chat_template_kwargs"] == {
         "thinking_budget": 0
     }
+
+
+def test_vllm_backend_sends_bearer_token_to_generate_and_readiness(
+    monkeypatch,
+):
+    captured = []
+
+    def fake_urlopen(request, timeout):
+        captured.append(
+            {
+                "url": request.full_url,
+                "authorization": request.headers.get("Authorization"),
+                "content_type": request.headers.get("Content-type"),
+                "user_agent": request.headers.get("User-agent"),
+                "timeout": timeout,
+            }
+        )
+
+        if request.full_url.endswith("/models"):
+            return FakeResponse(
+                {
+                    "data": [
+                        {
+                            "id": "ByteDance-Seed/Seed-OSS-36B-Instruct-W8A8"
+                        }
+                    ]
+                }
+            )
+
+        return FakeResponse(
+            {
+                "choices": [{"message": {"content": "ok"}}],
+                "usage": {},
+            }
+        )
+
+    monkeypatch.setattr(vllm_module.urllib.request, "urlopen", fake_urlopen)
+
+    backend = VLLMBackend(
+        base_url="https://primary.example/v1",
+        model_name="ByteDance-Seed/Seed-OSS-36B-Instruct-W8A8",
+        timeout_seconds=12,
+        api_key="test-primary-token",
+    )
+
+    backend.generate(prompt="auth validation")
+    readiness = backend.check_ready()
+
+    assert captured[0]["url"] == "https://primary.example/v1/chat/completions"
+    assert captured[0]["authorization"] == "Bearer test-primary-token"
+    assert captured[0]["content_type"] == "application/json"
+    assert captured[0]["user_agent"] == "ai-inference-gateway/1.0"
+
+    assert captured[1]["url"] == "https://primary.example/v1/models"
+    assert captured[1]["authorization"] == "Bearer test-primary-token"
+    assert captured[1]["content_type"] is None
+    assert captured[1]["user_agent"] == "ai-inference-gateway/1.0"
+
+    assert readiness["ready"] is True

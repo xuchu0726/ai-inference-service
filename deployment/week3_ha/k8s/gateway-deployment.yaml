@@ -29,7 +29,7 @@ spec:
                 topologyKey: kubernetes.io/hostname
       containers:
         - name: gateway
-          image: ai-inference-gateway:week3-resilience-v4
+          image: ai-inference-gateway:week3-resilience-v7
           imagePullPolicy: Never
           ports:
             - containerPort: 8000
@@ -42,6 +42,12 @@ spec:
           envFrom:
             - configMapRef:
                 name: gateway-config
+            - configMapRef:
+                name: week3-primary-runtime
+            - configMapRef:
+                name: week3-resilience-runtime
+            - secretRef:
+                name: week3-primary-auth
           resources:
             requests:
               cpu: 100m

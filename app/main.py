@@ -9,7 +9,7 @@ from app.backends.errors import (
     UpstreamProtocolError,
 )
 from app.config import INFERENCE_BACKEND
-from app.inference import backend, generate_text
+from app.inference import backend, fallback_backend, generate_text
 from app.metrics.prometheus_metrics import (
     record_backend_failure,
     record_backend_readiness,
@@ -31,8 +31,8 @@ async def add_gateway_instance_header(request: Request, call_next):
 
 
 
-def _backend_readiness() -> dict:
-    checker = getattr(backend, "check_ready", None)
+def _check_backend_readiness(candidate, role: str) -> dict:
+    checker = getattr(candidate, "check_ready", None)
 
     if checker is None:
         result = {
@@ -43,8 +43,32 @@ def _backend_readiness() -> dict:
     else:
         result = checker()
 
-    record_backend_readiness(result)
+    metric_status = dict(result)
+    metric_status["backend"] = f"{INFERENCE_BACKEND}_{role}"
+    record_backend_readiness(metric_status)
+
     return result
+
+
+def _service_readiness() -> dict:
+    primary = _check_backend_readiness(backend, "primary")
+
+    fallback = None
+    if fallback_backend is not None:
+        fallback = _check_backend_readiness(
+            fallback_backend,
+            "fallback",
+        )
+
+    fallback_ready = bool(fallback and fallback["ready"])
+    service_ready = bool(primary["ready"] or fallback_ready)
+
+    return {
+        "ready": service_ready,
+        "backend": primary.get("backend", INFERENCE_BACKEND),
+        "primary": primary,
+        "fallback": fallback,
+    }
 
 
 @app.get("/livez")
@@ -57,7 +81,7 @@ def livez():
 
 @app.get("/readyz")
 def readyz():
-    result = _backend_readiness()
+    result = _service_readiness()
 
     if not result["ready"]:
         raise HTTPException(
@@ -73,7 +97,7 @@ def readyz():
 
 @app.get("/health")
 def health_check():
-    result = _backend_readiness()
+    result = _service_readiness()
 
     if not result["ready"]:
         raise HTTPException(

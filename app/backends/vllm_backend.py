@@ -24,11 +24,26 @@ class VLLMBackend:
         model_name: str,
         timeout_seconds: float = 300,
         enable_seed_thinking_budget: bool = False,
+        api_key: str = "",
     ):
         self.base_url = base_url.rstrip("/")
         self.model_name = model_name
         self.timeout_seconds = timeout_seconds
         self.enable_seed_thinking_budget = enable_seed_thinking_budget
+        self.api_key = api_key
+
+    def _headers(self, *, include_content_type: bool = False) -> dict:
+        headers = {
+            "User-Agent": "ai-inference-gateway/1.0",
+        }
+
+        if include_content_type:
+            headers["Content-Type"] = "application/json"
+
+        if self.api_key:
+            headers["Authorization"] = f"Bearer {self.api_key}"
+
+        return headers
 
     def _should_use_seed_thinking_budget(self) -> bool:
         return self.enable_seed_thinking_budget or "Seed-OSS" in self.model_name
@@ -79,7 +94,7 @@ class VLLMBackend:
         request = urllib.request.Request(
             url=f"{self.base_url}/chat/completions",
             data=request_body,
-            headers={"Content-Type": "application/json"},
+            headers=self._headers(include_content_type=True),
             method="POST",
         )
 
@@ -158,6 +173,7 @@ class VLLMBackend:
         request = urllib.request.Request(
             url=f"{self.base_url}/models",
             method="GET",
+            headers=self._headers(),
         )
 
         try:
