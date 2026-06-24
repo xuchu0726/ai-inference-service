@@ -205,7 +205,7 @@ FP8 KV 将 GPU KV Cache size 从 909,360 提升到 1,807,008 tokens，并将 vLL
 | W8A8 compressed-tensors | 已完成 | 完成离线量化、vLLM serving、smoke、并发 sweep 与 GSM8K full evaluation | 当前稳定可复现的 8-bit 权重量化 serving 路线 |
 | BnB INT8 | 已完成质量评测 | 完成 Transformers + BitsAndBytes `LLM.int8()` runtime 的 GSM8K `@256` 全量 1319 题评测，以及 348 个历史 cap-hit 样本的 `@768` 定向复测 | 不属于 vLLM TP=2 serving 性能闭环 |
 | AWQ-Marlin | 已完成独立验证 | 完成 external pre-quantized artifact 的 FP16 + AWQ-Marlin serving-stack、API smoke 与 GSM8K full evaluation | 不纳入 BF16/W8A8 同源性能或纯量化质量排名 |
-| strict INT8 / GPTQ | 未完成 | 未形成 artifact、稳定服务启动、API 与完整评测闭环 | 保留兼容性与失败边界 |
+| compressed-tensors strict INT8 / GPTQ | 未完成 | 未形成可用于 vLLM 的稳定 artifact、服务启动、API 与性能评测闭环 | BnB INT8 runtime 的质量评测已完成；本行仅指 native compressed-tensors serving 路线与 GPTQ |
 | FP8 KV Cache | 已完成边界验证 | 完成 4×A100 下 BF16 KV 与 FP8 KV 的 512K near-limit 容量与 headroom 对照 | 未形成统一 workload 下的完整性能收益评测 |
 
 FP32 与 W8A8 的并发数据来自 2×NVIDIA A100-SXM4-80GB、vLLM 0.11.2、TP=2、`max_model_len=512`、`max_num_batched_tokens=512`、`max_num_seqs=1` 的服务配置。每个 concurrency=1/2/4/8/16 档位均执行 32 个请求；两侧 prompt 集合、completion token 分布和 HTTP 状态分布一致，但高并发档的记录顺序不同。
@@ -238,7 +238,7 @@ FP32 与 W8A8 的并发数据来自 2×NVIDIA A100-SXM4-80GB、vLLM 0.11.2、TP=
 
 已完成 BF16、W8A8、BnB INT8 与 AWQ 的 GSM8K 评测，但这些路线的 artifact、runtime、prompt rendering、dtype、kernel 与 output budget 不完全一致，因此不构成单一量化 accuracy 排名。
 
-BF16 原始 full run 在 `max_new_tokens=256` 下完成 1319/1319 API 成功、999 题正确、accuracy 为 75.7392%。W8A8 原始 full run在相同输出预算下完成 1319/1319 API 成功、986 题正确、accuracy 为 74.7536%。这两组结果保留为固定短输出预算下的 route-level serving outcome；由于两条路线的 prompt rendering 不完全一致，且大量样本触及 256-token output cap，不能将其差异解释为纯量化质量回归。
+BF16 原始 full run 在 `max_new_tokens=256` 下完成 1319/1319 API 成功、999 题正确、accuracy 为 75.7392%。W8A8 原始 full run 在相同输出预算下完成 1319/1319 API 成功、986 题正确、accuracy 为 74.7536%。这两组结果保留为固定短输出预算下的 route-level serving outcome；由于两条路线的 prompt rendering 不完全一致，且大量样本触及 256-token output cap，不能将其差异解释为纯量化质量回归。
 
 cap-hit 定向复测进一步验证了输出截断影响：
 
@@ -305,6 +305,7 @@ AWQ-Marlin 已完成独立 `@768` full evaluation：1319/1319 API 成功、1258 
     results/new_2xa100_seed_oss_128k_near_limit_context_test_20260529.csv
     results/new_2xa100_seed_oss_128k_over_limit_context_test_20260529.csv
     docs/week2/seed_oss_128k_context_boundary_review.md
+    evidence/week2_hardening/seed_oss_4xa100_512k_bf16_vs_fp8kv_summary_20260614.txt
 
 ### 5.3 量化可行性
 
@@ -312,6 +313,9 @@ AWQ-Marlin 已完成独立 `@768` full evaluation：1319/1319 API 成功、1258 
 
     results/new_2xa100_seed_oss_fp32_vs_w8a8_batchprofile_improvement_20260529.csv
     docs/week2_quantization_feasibility_report.md
+    docs/week2_quantization_protocol_audit.md
+    evidence/week2_hardening/bnb_int8/output_budget_validation/bnb_int8_cap_hit_256_to_768_summary_20260620.json
+    results/week2_hardening/awq/gsm8k_awq_marlin_full_budget0_max768_20260619_summary.json
     docs/week2_requirement_compliance_matrix.md
 
 ### 5.4 GSM8K
@@ -319,12 +323,19 @@ AWQ-Marlin 已完成独立 `@768` full evaluation：1319/1319 API 成功、1258 
 已完成文件：
 
     results/week2_gsm8k_full_seed_oss_budget0_summary.csv
+    results/week2_hardening/gsm8k_w8a8_full_budget0_fixed_summary_20260616.csv
+    evidence/week2_hardening/bnb_int8/output_budget_validation/bnb_int8_cap_hit_256_to_768_summary_20260620.json
+    results/week2_hardening/awq/gsm8k_awq_marlin_full_budget0_max768_20260619_summary.json
+    docs/week2_quantization_protocol_audit.md
 
 ### 5.5 代码生成
 
 已完成文件：
 
     results/week2_codegen_mini_seed_oss_budget0.csv
+    evidence/week2_hardening/seed_oss_codegen_eval_50_summary_20260615.txt
+    results/week2_hardening/seed_oss_codegen_eval_20_repair_summary_20260614.json
+    results/week2_hardening/seed_oss_codegen_eval_additional_30_summary_20260615.json
 
 ### 5.6 图表
 
@@ -495,7 +506,7 @@ W8A8 在该实际 serving envelope 中呈现更高 QPS、更高 aggregate output
 
 | 风险或边界 | 当前状态 | 处理原则 |
 |---|---|---|
-| strict INT8 / GPTQ 未形成稳定 serving | 未完成 | 保留 artifact、后端兼容性与失败证据；不纳入主 serving 结论 |
+| compressed-tensors strict INT8 / GPTQ 未形成稳定 serving | 未完成 | BnB INT8 runtime 质量评测已完成；本行仅保留 native compressed-tensors serving 与 GPTQ 的兼容性边界 |
 | AWQ 与 BF16/W8A8 的运行组合不同 | 已验证但不可直接合并排名 | 保留 AWQ-Marlin full evaluation；不将 accuracy 差异归因于量化位宽 |
 | FP32/W8A8 服务参数并非完全一致 | 已明确 | 以实际 deployment-stack 对比表述，不包装为严格单变量消融 |
 | 512K 多并发性能 | 未完成 | 当前仅完成单请求 near-limit、容量与 headroom 验证 |
