@@ -27,7 +27,9 @@
 
 客户端请求先进入 Nginx 入口代理层；Nginx 将请求转发至 inference-gateway Kubernetes Service，再由 Kubernetes Service 对后端 Gateway Pod Endpoint 进行分发。Nginx 配置 `proxy_next_upstream off`，不执行 upstream retry；Gateway 统一负责 Primary/Fallback 路由、超时、重试、熔断和 fallback 决策，避免双层重试造成重复推理。
 
-本地 kind 验证通过 `inference-nginx` Kubernetes Service 进入 Nginx，覆盖 Nginx Pod 优雅终止和 Gateway 后端路由。该验证不覆盖云负载均衡器、DNS failover 或跨可用区入口高可用。
+本地 kind 验证通过 `inference-nginx` Kubernetes Service 进入 Nginx，覆盖 Nginx Pod 优雅终止和 Gateway 后端路由。
+
+Nginx Deployment 配置 2 个副本，并使用按 `kubernetes.io/hostname` 的 required Pod anti-affinity；入口 Service 为 ClusterIP。因此，本阶段的 Nginx 高可用定义为 Kubernetes 内多副本入口代理与优雅终止验证，不等同于云 LoadBalancer、多可用区或 DNS 层高可用。
 
 Gateway 韧性参数如下：
 
@@ -52,7 +54,7 @@ BAGEL 图文理解请求经 RunPod HTTPS Proxy 到达 FastAPI `:8000`。FastAPI 
 
 完整架构图见 `docs/diagrams/week3_architecture.mmd`，架构说明见 `docs/week3_architecture.md`。
 
-## 3. 高并发、高可用与容错设计
+## 3. Gateway 弹性扩缩容、高可用与容错设计
 
 Gateway Deployment 使用多副本、readiness/liveness probes 和滚动更新。HPA 以 Gateway Deployment 为目标，使用 CPU 平均利用率目标值 50% 计算期望副本数；在本次受控负载验证中，Gateway 从 2 个副本扩展至 4 个副本，并在负载结束和 60 秒 scale-down stabilization window 后回落至 2 个副本。
 
@@ -60,7 +62,7 @@ Gateway Deployment 配置了基于 `kubernetes.io/hostname` 的 `preferredDuring
 
 该策略不是硬约束。当集群资源不足或仅有单节点时，Kubernetes 仍可能将副本放置到同一节点。因此，本项目不将其表述为严格的节点级副本隔离保证。
 
-HPA 以 Gateway Deployment 为目标，使用 CPU 平均利用率目标值 50% 计算期望副本数。在受控 CPU load generator 下，Gateway CPU utilisation 从 `305%/50%` 上升至 `475%/50%`，副本数由 2 扩展至 4；负载结束后，经过 60 秒 scale-down stabilization window 回落至 2。这里的 CPU utilisation 相对于 Gateway Pod 配置的 CPU request（`100m`）计算，不是宿主机 CPU 使用率或 GPU 利用率。
+HPA 以 Gateway Deployment 为目标，使用 CPU 平均利用率目标值 50% 计算期望副本数。受控 CPU load generator 下，HPA 先后观测到 Gateway Pod 平均 CPU utilisation 约为其 CPU request 的 `305%` 与 `475%`，均高于 `50%` target；副本数由 2 扩展至 4。负载结束后，经过 60 秒 scale-down stabilization window 回落至 2。这些数值不是宿主机 CPU 使用率，也不是 GPU 利用率。
 
 该 HPA 验证使用本地 kind 集群、MockBackend 和 CPU load generator，验证的是服务接入与路由层弹性，不是 GPU vLLM 模型实例自动扩缩容。
 
@@ -114,6 +116,8 @@ BAGEL 服务提供 `GET /multimodal/health` 与 `POST /multimodal/generate`。�
 | 成功响应 | `response`、`latency_seconds`、`backend`、`model_name`、`image_filename`、`image_bytes`、`max_new_tokens`、`temperature`、`show_thinking`、`do_sample` |
 
 该契约使调用方能够区分参数错误、Runtime 超时与上游失败，并将成功、超时和上游错误纳入 Prometheus 请求与错误指标。
+
+上述输入校验与状态码映射由 `app/multimodal/service.py` 的实现逻辑定义。当前仓库未建立覆盖每一类非法输入、超时和上游异常分支的独立自动化 API contract test suite；因此，本报告不将其表述为全分支自动化契约验证已完成。
 
 ### 统一多模态表征的工程优势
 
@@ -170,7 +174,7 @@ BAGEL Multimodal Observability Dashboard 覆盖：
 
 BAGEL benchmark 的 client latency 从本机向 FastAPI 发起请求开始计时，包含 FastAPI、Gradio Client 与 BAGEL 推理，不包含浏览器交互和 RunPod HTTPS Proxy 的公网网络开销。Benchmark 的 GPU memory 和 GPU utilization 由独立线程每 0.5 秒调用 `nvidia-smi` 采样，报告中的峰值为该采样窗口内的最大值。
 
-Prometheus 中的 BAGEL GPU memory 与 GPU utilization Gauge 在成功请求后采样，用于关联请求完成后的服务侧资源状态；它们不是完整请求生命周期的连续 GPU profiler 轨迹。Grafana P50/P95 用于运行期趋势观察；在小样本或短时间窗口下，不用于定义生产 SLA，也不替代离线 benchmark 的原始 client latency 统计。
+Prometheus 中的 BAGEL GPU memory 与 GPU utilization Gauge 在成功请求后采样，用于关联请求完成后的服务侧资源状态；它们不是完整请求生命周期的连续 GPU profiler 轨迹。Grafana P50/P95 用于运行期趋势观察；在小样本或短时间窗口下，不用于定义生产 SLA，也不替代离线 benchmark 的原始 client latency 统计。Dashboard 中的 P50/P95 由 `histogram_quantile()` 对 `multimodal_request_latency_seconds_bucket` 在 `[5m]` rate window 上估算；它与离线 JSON 的单次 client-side latency 记录不能直接混用。
 
 BAGEL Runtime 恢复、端口检查、日志定位和公网入口排障流程见 `docs/week3_operations_sop.md`。Seed-OSS 高可用推理栈部署、验收、回滚和证据保存流程见 `docs/week3_ha_deployment_sop.md`。
 
