@@ -1,6 +1,7 @@
 # Week2 交付完成度与证据索引
 
-> 补充说明：本文档保留 Week2 原始交付阶段的总结口径。后续已针对 512K 长上下文、FP8 KV Cache、W8A8 精度回归和环境复现边界完成补充验证，更新结果见 `docs/week2_hardening_response_summary.md`。
+> **当前口径（2026-06-24）**：本矩阵主体保留原始交付阶段状态。若下文与当前主报告冲突，以 `docs/week2_performance_optimization_report.md` 和 `docs/week2_hardening_response_summary.md` 为准。当前状态：512K / FP8 KV 单请求边界验证已完成；AWQ-Marlin 独立 serving-stack 与 full GSM8K 已完成；BnB INT8 runtime 已完成 GSM8K `@256` 全量 1319 题评测及 348 个 cap-hit 样本 `@768` 补测；compressed-tensors strict INT8 stable vLLM serving 与 GPTQ 未完成；代码生成已扩展至 50 个轻量任务，26/50 通过；FP32/W8A8 为实际 deployment-stack 对比，不是全参数严格单变量消融。
+
 
 ## 1. 总体结论
 

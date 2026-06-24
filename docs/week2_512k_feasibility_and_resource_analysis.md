@@ -1,5 +1,8 @@
 # Week2 Seed-OSS-36B 512K 长上下文可行性与资源分析
 
+> **历史阶段记录（2026-06-24）**：本文主要记录早期 2×A100 环境下的资源分析与可行性判断。后续已在 4×A100、TP=4、`max_model_len=524288` 下完成 BF16 KV 与 FP8 KV 的约 500K prompt tokens near-limit 真机验证。当前结论以 `docs/week2_performance_optimization_report.md` 和 `docs/week2_hardening_response_summary.md` 为准。
+
+
 ## 1. 背景
 
 Week1 交付中，Seed-OSS-36B-Instruct 以 `max_model_len=4096` 完成基础推理验证。该配置能够验证 FastAPI API 链路、VLLMBackend、Thinking Budget 参数传递和基础 serving 能力，但距离 Seed-OSS 原生 512K 长上下文能力仍有明显差距。
