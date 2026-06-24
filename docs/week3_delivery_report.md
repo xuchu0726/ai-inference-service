@@ -11,6 +11,18 @@
 
 两条路径共享项目级监控体系，但当前不是同一个统一网关服务。BAGEL 运行在单个 RunPod Pod 中，不属于 Kubernetes Gateway 的多副本数据平面。
 
+### 可复现环境与测量边界
+
+| 子系统 | 验证环境与版本/资源 | 测量边界 |
+|---|---|---|
+| Gateway HA | 本地 kind；`ai-inference-gateway:week3-resilience-v9`；初始 2 副本；CPU request=`100m`、limit=`500m`；memory request=`128Mi`、limit=`256Mi` | HPA 使用 MockBackend 与 CPU load generator，验证 Gateway 接入与路由层弹性，不验证 GPU vLLM 模型实例自动扩缩容 |
+| Gateway HPA | `minReplicas=2`、`maxReplicas=4`、CPU target=`50%`；scale-down stabilization window=`60s` | HPA CPU utilisation 相对 Gateway Pod CPU request 计算，不是宿主机 CPU 或 GPU 利用率 |
+| 真实 Primary | RunPod；Seed-OSS-36B-Instruct-W8A8；vLLM `0.23.0`；TP=2；`2 × A100-SXM4-80GB` | 用于 HTTPS、认证、模型发现与最小生成请求连通性验证，不作为性能 benchmark |
+| BAGEL Runtime | RunPod 单 Pod；`ByteDance-Seed/BAGEL-7B-MoT`；Python `3.10.12`；Torch `2.5.1+cu124`；`1 × A100-SXM4-80GB` | 图像加文本到文本理解输出；不代表 BAGEL 多副本高可用或模型内部机制白盒验证 |
+| 监控与资源采样 | Prometheus / Grafana；BAGEL 服务成功请求后更新 GPU Gauge；审计脚本每 `0.5s` 调用 `nvidia-smi` | Gauge 用于请求完成后的资源状态关联；审计峰值为采样窗口最大值，不是连续 profiler 全程轨迹 |
+
+主要环境证据见 `deployment/week3_ha/k8s/gateway-deployment.yaml`、`deployment/week3_ha/k8s/local_hpa/gateway-hpa.yaml`、`evidence/week3_ha/real_primary/nginx_gateway_real_primary_success_20260623.txt`、`evidence/week3_bagel/bagel_runtime_environment_20260623.txt`。
+
 ## 2. 系统架构与组件边界
 
 客户端请求先进入 Nginx 入口代理层；Nginx 将请求转发至 inference-gateway Kubernetes Service，再由 Kubernetes Service 对后端 Gateway Pod Endpoint 进行分发。Nginx 配置 `proxy_next_upstream off`，不执行 upstream retry；Gateway 统一负责 Primary/Fallback 路由、超时、重试、熔断和 fallback 决策，避免双层重试造成重复推理。
@@ -84,6 +96,25 @@ BAGEL 当前接入的是图像加文本到文本理解输出路径。客户端�
 | official_octupusy | 通过 | 主要验证 OCR 与图文联合理解；输出中的作品信息可由图中文字直接支持 |
 | official_women | 部分通过 | 正确描述主体、服装和背景；将局部白色图案命名为“小狗刺绣”，属于过度具体描述风险 |
 
+### 多模态 API 契约
+
+BAGEL 服务提供 `GET /multimodal/health` 与 `POST /multimodal/generate`。健康检查会验证本地 Gradio Runtime 可达性；Runtime 不可用时返回 HTTP `503`。
+
+`POST /multimodal/generate` 使用 multipart 请求，包含必填的 `image` 与 `prompt`，并支持 `show_thinking`、`do_sample`、`temperature` 和 `max_new_tokens` 参数。默认值分别为 `false`、`false`、`0.3` 和 `512`。
+
+| 契约项 | 当前实现 |
+|---|---|
+| 图像类型 | JPEG、PNG、WEBP |
+| 图片大小 | 最大 `10 MiB` |
+| temperature | `[0.0, 2.0]` |
+| max_new_tokens | `[1, 1024]` |
+| 参数或输入错误 | 空 prompt / 空图像返回 `400`；不支持图像类型返回 `415`；非法 temperature 或 max_new_tokens 返回 `422`；图片过大返回 `413` |
+| Runtime 超时 | HTTP `504` |
+| Gradio / BAGEL 上游错误 | HTTP `502` |
+| 成功响应 | `response`、`latency_seconds`、`backend`、`model_name`、`image_filename`、`image_bytes`、`max_new_tokens`、`temperature`、`show_thinking`、`do_sample` |
+
+该契约使调用方能够区分参数错误、Runtime 超时与上游失败，并将成功、超时和上游错误纳入 Prometheus 请求与错误指标。
+
 ### 统一多模态表征的工程优势
 
 BAGEL 的统一多模态能力在本项目中的工程价值是：同一服务接口可同时接收图像与文本，并在联合上下文下输出统一的理解结果。相比将 OCR、视觉分类、商品属性抽取和文本生成拆分为多个独立模型，这种统一接口设计可减少跨服务编排、接口转换和中间结果对齐的复杂度。
@@ -92,7 +123,7 @@ BAGEL 的统一多模态能力在本项目中的工程价值是：同一服务�
 
 在三个官方受控样例和一个电商商品图样例中，服务能够处理图像主体、场景与图中文字相关输入，并在固定输入与 `do_sample=false` 条件下稳定返回结果。
 
-## 6. 电商商品图文理解与文案草稿场景
+## 6. 电商商品图文条件文案草稿场景
 
 受控电商案例输入商品背包图片与文本约束，要求输出商品标题候选、可见卖点和不可确认信息提示。
 
