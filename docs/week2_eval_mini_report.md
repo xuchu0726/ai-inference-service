@@ -1,5 +1,8 @@
 # Week2 模型能力评测报告：GSM8K Full Benchmark 与代码生成 Mini Eval
 
+> **历史阶段记录（2026-06-24）**：本文记录早期 GSM8K 与少量代码生成 mini eval。当前代码生成结论已由后续自定义 50 题 HumanEval/MBPP-style 轻量验证覆盖：修正版 20 题通过 10/20，追加 30 题通过 16/30，合计 26/50。该结果不是官方 HumanEval、MBPP 或 Seed-Coder benchmark。当前 GSM8K 协议边界见 `docs/week2_quantization_protocol_audit.md`。
+
+
 ## 1. 文档目的
 
 Week2 任务要求验证 Seed 模型在数学推理和代码生成任务上的能力。本文记录 Seed-OSS-36B-Instruct 在当前 FastAPI + VLLMBackend + vLLM serving 架构下完成的 GSM8K 全量评测和代码生成 mini eval。

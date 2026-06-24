@@ -1,5 +1,8 @@
 # 量化优化方案：Seed-OSS-36B 推理显存与吞吐对比
 
+> **历史阶段记录（2026-06-24）**：本文保留早期量化路线规划。当前量化事实以 `docs/week2_quantization_feasibility_report.md`、`docs/week2_quantization_protocol_audit.md`、`docs/week2_quantization_route_selection_matrix.md` 和主报告为准。W8A8 为稳定主 serving 路线；AWQ-Marlin 已完成独立 serving-stack 验证；strict INT8 stable vLLM serving 与 GPTQ 未完成。
+
+
 ## 1. 文档目的
 
 本文档说明 Seed-OSS-36B-Instruct 推理服务的量化优化验证路线，并对比不同精度/量化方案对显存、延迟、吞吐和输出质量的影响。
