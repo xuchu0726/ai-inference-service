@@ -1,4 +1,9 @@
-# Week3 要求闭环说明
+# Week3 要求闭环附录
+
+> 本文件用于逐条核验 Week3 原始任务要求。
+> 正式工程交付报告见：`docs/week3_delivery_report.md`。
+> 架构、部署和运行附件见：`docs/week3_architecture.md`、`docs/week3_ha_deployment_sop.md`、`docs/week3_operations_sop.md`。
+
 
 ## 1. 高并发设计
 
@@ -84,17 +89,22 @@ BAGEL Dashboard 已展示 Target Up、请求数、错误数、错误率、请求
 
 ### 完成情况
 
-架构图源文件：`docs/diagrams/week3_architecture.mmd`。  
-架构说明：`docs/week3_architecture.md`。  
-操作 SOP：`docs/week3_operations_sop.md`。
+已完成。
 
-## 6. 统一多模态表示说明
+- 架构图源文件：`docs/diagrams/week3_architecture.mmd`；
+- 架构说明：`docs/week3_architecture.md`；
+- 高可用部署 SOP：`docs/week3_ha_deployment_sop.md`；
+- BAGEL 运行与恢复 SOP：`docs/week3_operations_sop.md`；
+- 只读部署验收脚本：`scripts/week3_ha/verify_deployment_stack.sh`；
+- Primary/Fallback HTTP 验证脚本：`scripts/week3_ha/verify_fallback_http.py`。
+
+## 6. BAGEL 图文联合理解范围
 
 BAGEL 官方能力范围包含统一多模态理解和生成。项目当前实际接入的是图像理解路径：图像与文本请求通过 FastAPI 接口进入 BAGEL Runtime，服务返回文本理解结果。
 
 项目未实现图像生成、图像编辑、统一多模态 agent、BAGEL 多副本 HA 或 BAGEL 接入文本 Nginx 网关。这些能力不得写成已完成。
 
-## 6. 统一多模态表示：项目级解释与验证边界
+## 7. 统一多模态表征：项目级解释与验证边界
 
 BAGEL 的统一多模态能力在项目中以联合输入接口体现：客户端同时提交图像文件和文本 prompt，FastAPI 将两者转交给 BAGEL Runtime，模型基于二者的联合条件生成文本结果。三案例中的雕塑说明牌读取表明，服务能够同时利用视觉主体与图中文字；人物图像案例则体现了基于视觉内容的文本描述。
 
@@ -102,7 +112,7 @@ BAGEL 的统一多模态能力在项目中以联合输入接口体现：客户�
 
 工程边界：当前接入仅覆盖图像加文本到文本理解输出，不覆盖图像生成、图像编辑、跨模态检索、统一多模态 agent 或 BAGEL 多副本高可用。
 
-## 7. 电商商品图文生成场景与技术难点
+## 8. 电商商品图文理解与文案草稿场景
 
 新增受控电商商品图案例：商品图片与文本约束共同输入 BAGEL，要求输出商品标题、可见卖点和不可确认信息。
 
@@ -122,5 +132,3 @@ BAGEL 的统一多模态能力在项目中以联合输入接口体现：客户�
 统一多模态表征的工程价值在于：同一模型服务能够同时接收图像与文本，并在联合上下文中输出统一的理解结果。相比将 OCR、视觉分类、商品属性抽取和文本生成拆分为多个独立模型，统一模型减少了跨服务编排、接口转换和中间结果对齐的复杂度。
 
 本项目验证了这一优势在服务接口层的可用性：图像和文本 prompt 通过同一个多模态 API 进入 BAGEL Runtime，并返回面向图像描述、图中文字读取和商品文案草稿的文本结果。该结论仅覆盖接口级联合理解能力；不代表已复现或测量 BAGEL 内部视觉 token、共享表征、MoT 路由或生成解码机制。
-
-- 高可用部署 SOP：`docs/week3_ha_deployment_sop.md`。
