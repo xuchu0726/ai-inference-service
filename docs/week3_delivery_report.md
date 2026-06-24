@@ -56,7 +56,7 @@ BAGEL 图文理解请求经 RunPod HTTPS Proxy 到达 FastAPI `:8000`。FastAPI 
 
 ## 3. Gateway 弹性扩缩容、高可用与容错设计
 
-Gateway Deployment 使用多副本、readiness/liveness probes 和滚动更新。HPA 以 Gateway Deployment 为目标，使用 CPU 平均利用率目标值 50% 计算期望副本数；在本次受控负载验证中，Gateway 从 2 个副本扩展至 4 个副本，并在负载结束和 60 秒 scale-down stabilization window 后回落至 2 个副本。
+Gateway Deployment 使用多副本、readiness/liveness probes 和滚动更新。HPA 的配置参数、受控负载结果与适用边界见本节后文及验证总表。
 
 Gateway Deployment 配置了基于 `kubernetes.io/hostname` 的 `preferredDuringSchedulingIgnoredDuringExecution` 软反亲和策略。调度器会优先将带有 `app=inference-gateway` 标签的 Gateway 副本放置到不同节点；HPA 验证结束时，两个 Gateway Pod 实际分别运行在 `desktop-worker` 与 `desktop-worker2`。
 
@@ -77,7 +77,7 @@ Circuit breaker 状态保存在单个 Gateway 进程内，不是 Redis、etcd �
 | Gateway HPA 扩缩容 | 通过 | 负载期间 CPU utilisation 相对 50% target 上升，HPA 随后将 Gateway 从 2 扩展至 4 副本；负载结束并经过 60 秒 scale-down stabilization window 后回落至 2 副本 | `evidence/week3_ha/hpa/hpa_scaleout_scalein_final_summary.txt` |
 | Gateway Pod 删除恢复 | 通过 | 探针运行在未删除 Gateway Pod 内；删除前 `46/46` 成功，删除后 `299/299` 成功；新副本首次命中发生在删除后 7.608 秒。该结果证明 Service 可持续路由到幸存副本，不等价于公网客户端、真实 GPU vLLM 后端或生产网络条件下的零中断保证 | `evidence/week3_ha/failover/pod_delete_failover_20260621T232310Z_summary.txt`；`evidence/week3_ha/failover/pod_delete_failover_20260621T232310Z_metadata.txt` |
 | Nginx 副本优雅终止 | 通过 | 初始终止测试为 `327/328` 成功，出现 1 次 `Connection refused`；增加 `preStop sleep 5` 与 `terminationGracePeriodSeconds=15` 后，三轮合计 `987/987` 成功。该结果仅覆盖本地 kind 测试协议，不构成生产零中断保证 | `evidence/week3_ha/nginx/failover_validation_summary.txt` |
-| 真实 Primary 基线 | 通过 | Nginx → Gateway×2 → RunPod W8A8 Primary 的 `/readyz` 与一次短输出 `/generate` 均返回 HTTP 200；该请求输出 8 tokens，端到端 latency=0.874s，tokens/s=9.1483。该基线仅证明端到端连通性，不构成模型性能 benchmark | `evidence/week3_ha/real_primary/nginx_gateway_real_primary_success_20260623.txt`；`evidence/week3_ha/real_primary/public_primary_validation_20260623.txt` |
+| 真实 Primary 连通性 smoke test | 通过 | Nginx → Gateway×2 → RunPod W8A8 Primary 的 `/readyz` 与一次短输出 `/generate` 均返回 HTTP 200；该请求仅输出 8 tokens，端到端 latency=0.874s、tokens/s=9.1483 仅用于确认请求链路与响应字段完整，不参与性能比较或吞吐结论 | `evidence/week3_ha/real_primary/nginx_gateway_real_primary_success_20260623.txt`；`evidence/week3_ha/real_primary/public_primary_validation_20260623.txt` |
 | 超时、重试、熔断、Fallback | 通过 | Primary 失败后请求切至 Fallback；首次两次请求 `primary_attempts=2`，熔断打开后后续请求 `primary_attempts=0`；Fallback budget=512 | `evidence/week3_ha/real_failover/timeout_fallback_breaker_20260623_143812.txt` |
 | Primary 恢复 | 通过 | 恢复探测后返回 `route=primary`，breaker 从 half_open 回到 closed | `evidence/week3_ha/real_failover/primary_recovery_v9_20260623_144856.txt` |
 | BAGEL 官方图文基线 | 通过 | 三案例审计前完成两轮独立 n=5 运行，均 `5/5` 成功，用于确认 Runtime、FastAPI 与 GPU 采样链路稳定 | `evidence/week3_bagel/bagel_understanding_n5_20260623T185745Z.txt`；`evidence/week3_bagel/bagel_understanding_n5_20260623T185952Z.txt` |
@@ -87,6 +87,9 @@ Circuit breaker 状态保存在单个 Gateway 进程内，不是 Redis、etcd �
 | Grafana 与 Prometheus | 通过 | Gateway 与 BAGEL 指标均可查询；覆盖请求、错误、P50/P95、GPU memory、GPU utilization、retry、breaker 和 fallback | `evidence/week3_ha/monitoring/validation_summary.txt`；`evidence/week3_bagel/figures/grafana_bagel_multicase_audit_14_requests_20260623.png` |
 
 ## 5. BAGEL 图文联合理解与 API 验证
+
+官方三图与电商图的选择覆盖不同输入风险：官方案例分别覆盖结构化文字与排版理解、图中文字读取与视觉主体联合解释、局部视觉细节判断；电商商品图进一步验证图像条件文案草稿场景，以及模型越过视觉证据生成属性描述的风险。
+
 
 BAGEL 当前接入的是图像加文本到文本理解输出路径。客户端同时提交图像文件和文本 prompt，FastAPI 将两者转交给 BAGEL Runtime，服务返回图像描述、图中文字读取或商品文案草稿。
 
@@ -127,7 +130,7 @@ BAGEL 的统一多模态能力在本项目中的工程价值是：同一服务�
 
 在三个官方受控样例和一个电商商品图样例中，服务能够处理图像主体、场景与图中文字相关输入，并在固定输入与 `do_sample=false` 条件下稳定返回结果。
 
-## 6. 电商商品图文条件文案草稿场景
+## 6. 电商商品图像条件文案草稿生成场景
 
 受控电商案例输入商品背包图片与文本约束，要求输出商品标题候选、可见卖点和不可确认信息提示。
 
@@ -149,17 +152,15 @@ BAGEL 的统一多模态能力在本项目中的工程价值是：同一服务�
 
 Gateway 与 BAGEL FastAPI 均暴露 Prometheus 指标。
 
-Gateway Resilience Dashboard 覆盖：
+Gateway Resilience Dashboard 当前展示：
 
 - Gateway Pod up；
 - backend readiness；
 - 请求速率；
 - backend failure 分类；
-- retry attempts；
-- circuit-breaker state；
-- circuit-breaker transition；
-- fallback requests；
-- fallback thinking budget。
+- readiness checks。
+
+retry、circuit breaker 与 fallback 指标已由 Prometheus 暴露，并在 timeout/failover evidence 中验证；当前未配置为独立 Grafana panel。
 
 BAGEL Multimodal Observability Dashboard 覆盖：
 
@@ -180,6 +181,9 @@ BAGEL Runtime 恢复、端口检查、日志定位和公网入口排障流程见
 
 ## 8. 已知边界与工程结论
 
+本阶段验证的是 Kubernetes 集群内接入层冗余、Pod 故障恢复、应用层上游切换与观测闭环；不构成跨区域、跨可用区或多 GPU serving replica 的生产级高可用承诺。
+
+
 本阶段完成了 Week3 要求的高可用接入层、服务容错、低预算降级、BAGEL 图文联合理解、资源观测、部署 SOP 和架构说明。
 
 以下能力未实现，不得写成已完成：
@@ -196,6 +200,9 @@ BAGEL Runtime 恢复、端口检查、日志定位和公网入口排障流程见
 工程上，当前结果证明了两件事：第一，Seed-OSS 文本推理路径可在多副本 Gateway、Nginx、HPA、retry、circuit breaker 和 Fallback 组合下完成可观测的服务韧性验证；第二，BAGEL 可以作为独立图文理解服务处理受控输入，但商品属性和局部视觉细节仍需外部校验与人工复核。
 
 ## 9. 交付与复现入口
+
+`verify_deployment_stack.sh` 是面向目标 Kubernetes 集群的只读复现与验收脚本。本次 RunPod BAGEL 单 Pod 环境未执行该脚本，避免对非目标 kubeconfig 产生误判。
+
 
 正式主报告：
 
