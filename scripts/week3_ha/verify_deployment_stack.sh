@@ -44,3 +44,5 @@ kubectl -n "$NS" top pods || true
 echo
 echo "===== result ====="
 if [ "$failed" -eq 0 ]; then echo "PASS"; else echo "FAIL"; fi
+
+exit "$failed"
