@@ -203,7 +203,7 @@ FP8 KV 将 GPU KV Cache size 从 909,360 提升到 1,807,008 tokens，并将 vLL
 | BF16 / vLLM | 已完成 | 作为主 serving baseline，完成并发、长上下文与 GSM8K 评测 | 原始 GSM8K `@256` 受输出截断影响 |
 | FP32 vs W8A8 | 已完成 | 完成实际部署组合下的 QPS、P95 latency、output tokens/s、model loading memory 与 KV Cache 对比 | 并非全参数严格单变量消融 |
 | W8A8 compressed-tensors | 已完成 | 完成离线量化、vLLM serving、smoke、并发 sweep 与 GSM8K full evaluation | 当前稳定可复现的 8-bit 权重量化 serving 路线 |
-| BnB INT8 | 部分完成 | 完成 Transformers + BitsAndBytes runtime 下的 GSM8K cap-hit 定向质量复测 | 不属于 vLLM TP=2 serving 性能闭环 |
+| BnB INT8 | 已完成质量评测 | 完成 Transformers + BitsAndBytes `LLM.int8()` runtime 的 GSM8K `@256` 全量 1319 题评测，以及 348 个历史 cap-hit 样本的 `@768` 定向复测 | 不属于 vLLM TP=2 serving 性能闭环 |
 | AWQ-Marlin | 已完成独立验证 | 完成 external pre-quantized artifact 的 FP16 + AWQ-Marlin serving-stack、API smoke 与 GSM8K full evaluation | 不纳入 BF16/W8A8 同源性能或纯量化质量排名 |
 | strict INT8 / GPTQ | 未完成 | 未形成 artifact、稳定服务启动、API 与完整评测闭环 | 保留兼容性与失败边界 |
 | FP8 KV Cache | 已完成边界验证 | 完成 4×A100 下 BF16 KV 与 FP8 KV 的 512K near-limit 容量与 headroom 对照 | 未形成统一 workload 下的完整性能收益评测 |
@@ -246,7 +246,7 @@ cap-hit 定向复测进一步验证了输出截断影响：
 |---|---:|---:|---:|---:|---|
 | BF16 / vLLM | 366 | 768 | 333 | 90.9836% | 历史 BF16 `@256` cap-hit 子集 |
 | W8A8 / vLLM | 395 | 768 | 353 | 89.3671% | 历史 W8A8 `@256` cap-hit 子集 |
-| BnB INT8 / Transformers | 348 | 768 | 316 | 90.8046% | 历史 BnB `@256` cap-hit 子集；无样本仍触顶 |
+| BnB INT8 / Transformers | 1319 | 256 | 1009 | 76.4973% | 完整 runtime INT8 评测，API 0 失败；348 个历史 cap-hit 样本另行 `@768` 复测为 316/348、90.8046%，无样本仍触顶 |
 
 AWQ-Marlin 已完成独立 `@768` full evaluation：1319/1319 API 成功、1258 题正确、accuracy 为 95.3753%。该结果证明 external AWQ artifact 在 FP16 + AWQ-Marlin serving stack 下完成完整评测，但其 serving envelope 与 BF16/W8A8 不同，不进入纯量化 accuracy 排名。
 
@@ -512,10 +512,10 @@ W8A8 在该实际 serving envelope 中呈现更高 QPS、更高 aggregate output
 
 3. 性能与量化方面，FP32 与 W8A8 的实际 deployment-stack 对比显示，在已记录的请求集合、并发档位和服务配置下，W8A8 的 QPS 与 aggregate output tokens/s 提升约 31.4% 至 126.1%，P95 latency 降低约 17.9% 至 58.4%。该结果包含 dtype、quantization backend 与 `gpu_memory_utilization` 差异，不能将全部收益严格归因于量化位宽。model loading memory 从 67.5901 GiB 降至 17.7109 GiB，下降约 73.8%；运行时总显存不使用该比例表述。
 
-4. GSM8K 方面，BF16/W8A8 原始 `@256` full run 保留为固定短输出预算下的 route-level serving outcome。cap-hit `@768` 定向复测证明大量历史错误受输出截断影响。AWQ-Marlin 已完成独立 `@768` full evaluation；strict INT8 vLLM serving 与 GPTQ 尚未形成稳定闭环。
+4. GSM8K 方面，BF16/W8A8 原始 `@256` full run 保留为固定短输出预算下的 route-level serving outcome。cap-hit `@768` 定向复测证明大量历史错误受输出截断影响。AWQ-Marlin 已完成独立 `@768` full evaluation；compressed-tensors strict INT8 的 vLLM serving 性能闭环与 GPTQ 尚未形成稳定闭环；BnB INT8 runtime 的完整 GSM8K 质量评测已完成。
 
 5. 代码生成方面，服务验证从早期 5 题 smoke 扩展至 50 个自定义 HumanEval/MBPP-style 轻量函数任务，最终 26/50 通过本地单元测试，pass rate 为 52.0%。该结果证明基础服务、代码提取与自动判题链路可运行，但不构成官方 HumanEval、MBPP 或 Seed-Coder 专项能力结论。
 
 6. 可观测性与证据链方面，仓库已保留 FastAPI metrics、vLLM `/metrics`、Prometheus 配置、Grafana dashboard、GPU sampling、启动日志、benchmark CSV、JSON summary 与图表。当前系统瓶颈应从模型权重、KV Cache 容量、长上下文 prefill 和 workload profile 的整体权衡理解，而不能仅以单次 GPU utilization 判断。
 
-综上，本阶段已形成可复现的推理 serving 与性能优化证据链；未完成边界明确为 strict INT8 stable vLLM serving、GPTQ、512K 多并发性能评测、官方代码 benchmark 与 Seed-Coder 对照。
+综上，本阶段已形成可复现的推理 serving 与性能优化证据链；未完成边界明确为 compressed-tensors strict INT8 stable vLLM serving、GPTQ、512K 多并发性能评测、官方代码 benchmark 与 Seed-Coder 对照；BnB INT8 runtime 质量评测不属于未完成项。
