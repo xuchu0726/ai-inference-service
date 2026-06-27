@@ -10,8 +10,13 @@ from app.config import (
     RESILIENCE_FAILURE_THRESHOLD,
     RESILIENCE_FALLBACK_THINKING_BUDGET,
     RESILIENCE_RECOVERY_TIMEOUT_SECONDS,
+    RESILIENCE_REDIS_KEY_PREFIX,
+    RESILIENCE_REDIS_PROBE_LEASE_MS,
+    RESILIENCE_REDIS_SOCKET_TIMEOUT_SECONDS,
+    RESILIENCE_REDIS_URL,
     RESILIENCE_RETRY_ATTEMPTS,
     RESILIENCE_RETRY_BACKOFF_SECONDS,
+    RESILIENCE_STATE_STORE,
     TRANSFORMERS_DEFAULT_THINKING_BUDGET,
     TRANSFORMERS_DEVICE_MAP,
     TRANSFORMERS_LOAD_IN_8BIT,
@@ -25,11 +30,13 @@ from app.config import (
     VLLM_MODEL_NAME,
     VLLM_TIMEOUT_SECONDS,
 )
+from app.redis_circuit_breaker import RedisCircuitBreaker
 from app.metrics.prometheus_metrics import (
     record_circuit_state,
     record_circuit_transition,
     record_fallback,
     record_retry,
+    record_resilience_state_store_operation,
 )
 from app.resilience import (
     CircuitBreaker,
@@ -85,10 +92,25 @@ def _build_fallback_backend():
 backend = _build_backend()
 fallback_backend = _build_fallback_backend()
 
-circuit_breaker = CircuitBreaker(
-    failure_threshold=RESILIENCE_FAILURE_THRESHOLD,
-    recovery_timeout_seconds=RESILIENCE_RECOVERY_TIMEOUT_SECONDS,
-)
+def _build_circuit_breaker():
+    if RESILIENCE_STATE_STORE == "redis":
+        return RedisCircuitBreaker(
+            failure_threshold=RESILIENCE_FAILURE_THRESHOLD,
+            recovery_timeout_seconds=RESILIENCE_RECOVERY_TIMEOUT_SECONDS,
+            redis_url=RESILIENCE_REDIS_URL,
+            key_prefix=RESILIENCE_REDIS_KEY_PREFIX,
+            socket_timeout_seconds=RESILIENCE_REDIS_SOCKET_TIMEOUT_SECONDS,
+            probe_lease_ms=RESILIENCE_REDIS_PROBE_LEASE_MS,
+            on_store_event=record_resilience_state_store_operation,
+        )
+
+    return CircuitBreaker(
+        failure_threshold=RESILIENCE_FAILURE_THRESHOLD,
+        recovery_timeout_seconds=RESILIENCE_RECOVERY_TIMEOUT_SECONDS,
+    )
+
+
+circuit_breaker = _build_circuit_breaker()
 
 resilience_controller = ResilienceController(
     breaker=circuit_breaker,

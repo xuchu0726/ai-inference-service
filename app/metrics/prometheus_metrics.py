@@ -46,7 +46,7 @@ gateway_retry_attempts_total = Counter(
 
 gateway_circuit_breaker_state = Gauge(
     "gateway_circuit_breaker_state",
-    "Current process-local circuit breaker state encoded as one-hot labels.",
+    "Current circuit breaker state encoded as one-hot labels.",
     ["backend", "state"],
 )
 
@@ -109,3 +109,19 @@ def record_fallback(
     gateway_fallback_thinking_budget.labels(
         backend=backend,
     ).set(thinking_budget)
+
+gateway_resilience_state_store_operations_total = Counter(
+    "gateway_resilience_state_store_operations_total",
+    "Number of resilience state-store operations by result.",
+    ["operation", "result"],
+)
+
+
+def record_resilience_state_store_operation(
+    operation: str,
+    result: str,
+) -> None:
+    gateway_resilience_state_store_operations_total.labels(
+        operation=operation,
+        result=result,
+    ).inc()

@@ -1,0 +1,23 @@
+===== timestamp =====
+2026-06-27T20:31:53Z
+
+===== branch =====
+feature/week4-redis-shared-resilience
+
+===== docker =====
+server=29.5.3
+image=redis:7.4.0-alpine status=running
+
+===== full test suite =====
+..................................                                       [100%]
+34 passed in 1.13s
+
+===== cross-process shared circuit proof =====
+0
+instance_a_type= RedisCircuitBreaker
+instance_a_transition= CircuitTransition(from_state=<CircuitState.CLOSED: 'closed'>, to_state=<CircuitState.OPEN: 'open'>)
+instance_a_snapshot= {'state': 'open', 'consecutive_failures': 1, 'retry_after_seconds': 59.999, 'store': 'redis'}
+instance_b_shared_open_blocked= True
+instance_b_retry_after_seconds= 59.89
+instance_b_snapshot= {'state': 'open', 'consecutive_failures': 1, 'retry_after_seconds': 59.889, 'store': 'redis'}
+1

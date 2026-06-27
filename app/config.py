@@ -90,3 +90,40 @@ VLLM_FALLBACK_MODEL_NAME = os.getenv(
 RESILIENCE_FALLBACK_THINKING_BUDGET = int(
     os.getenv("RESILIENCE_FALLBACK_THINKING_BUDGET", "512")
 )
+
+RESILIENCE_STATE_STORE = os.getenv(
+    "RESILIENCE_STATE_STORE",
+    "local",
+).strip().lower()
+
+if RESILIENCE_STATE_STORE not in {"local", "redis"}:
+    raise ValueError(
+        "RESILIENCE_STATE_STORE must be either 'local' or 'redis'"
+    )
+
+RESILIENCE_REDIS_URL = os.getenv(
+    "RESILIENCE_REDIS_URL",
+    "redis://127.0.0.1:6379/0",
+)
+
+RESILIENCE_REDIS_KEY_PREFIX = os.getenv(
+    "RESILIENCE_REDIS_KEY_PREFIX",
+    "ai-inference:resilience",
+).strip().rstrip(":")
+
+if not RESILIENCE_REDIS_KEY_PREFIX:
+    raise ValueError("RESILIENCE_REDIS_KEY_PREFIX must not be empty")
+
+RESILIENCE_REDIS_SOCKET_TIMEOUT_SECONDS = float(
+    os.getenv("RESILIENCE_REDIS_SOCKET_TIMEOUT_SECONDS", "0.2")
+)
+
+RESILIENCE_REDIS_PROBE_LEASE_MS = int(
+    os.getenv(
+        "RESILIENCE_REDIS_PROBE_LEASE_MS",
+        str(max(30_000, int(VLLM_TIMEOUT_SECONDS * 1000) + 10_000)),
+    )
+)
+
+if RESILIENCE_REDIS_PROBE_LEASE_MS <= 0:
+    raise ValueError("RESILIENCE_REDIS_PROBE_LEASE_MS must be positive")

@@ -5,7 +5,7 @@ import time
 import uuid
 from dataclasses import dataclass
 from enum import Enum
-from typing import Callable, Generic, TypeVar
+from typing import Callable, Generic, Protocol, TypeVar
 
 
 T = TypeVar("T")
@@ -30,6 +30,33 @@ class CircuitOpenError(RuntimeError):
 class CircuitTransition:
     from_state: CircuitState
     to_state: CircuitState
+
+
+@dataclass(frozen=True)
+class CircuitPermit:
+    state: CircuitState
+    version: int | None = None
+    probe_token: str | None = None
+    store: str = "local"
+
+
+class CircuitBreakerProtocol(Protocol):
+    @property
+    def state(self) -> CircuitState: ...
+
+    def allow_primary_call(self) -> CircuitPermit: ...
+
+    def record_success(
+        self,
+        permit: CircuitPermit | None = None,
+    ) -> CircuitTransition | None: ...
+
+    def record_failure(
+        self,
+        permit: CircuitPermit | None = None,
+    ) -> CircuitTransition | None: ...
+
+    def snapshot(self) -> dict[str, float | int | str]: ...
 
 
 @dataclass(frozen=True)
@@ -83,7 +110,7 @@ class CircuitBreaker:
             self._advance_open_state_if_ready()
             return self._state
 
-    def allow_primary_call(self) -> CircuitState:
+    def allow_primary_call(self) -> CircuitPermit:
         with self._lock:
             self._advance_open_state_if_ready()
 
@@ -96,9 +123,12 @@ class CircuitBreaker:
 
                 self._half_open_probe_in_flight = True
 
-            return self._state
+            return CircuitPermit(state=self._state)
 
-    def record_success(self) -> CircuitTransition | None:
+    def record_success(
+        self,
+        permit: CircuitPermit | None = None,
+    ) -> CircuitTransition | None:
         with self._lock:
             previous = self._state
             self._state = CircuitState.CLOSED
@@ -111,7 +141,10 @@ class CircuitBreaker:
 
             return None
 
-    def record_failure(self) -> CircuitTransition | None:
+    def record_failure(
+        self,
+        permit: CircuitPermit | None = None,
+    ) -> CircuitTransition | None:
         with self._lock:
             previous = self._state
             self._half_open_probe_in_flight = False
@@ -175,7 +208,7 @@ class ResilienceController:
 
     def __init__(
         self,
-        breaker: CircuitBreaker,
+        breaker: CircuitBreakerProtocol,
         retry_attempts: int,
         retry_backoff_seconds: float,
         sleep: Callable[[float], None] = time.sleep,
@@ -192,7 +225,7 @@ class ResilienceController:
         self._sleep = sleep
 
     @property
-    def breaker(self) -> CircuitBreaker:
+    def breaker(self) -> CircuitBreakerProtocol:
         return self._breaker
 
     def execute(
@@ -209,7 +242,8 @@ class ResilienceController:
         on_fallback: Callable[[str], None] | None = None,
     ) -> ResilienceOutcome[T]:
         try:
-            state_before_primary = self._breaker.allow_primary_call()
+            permit = self._breaker.allow_primary_call()
+            state_before_primary = permit.state
         except CircuitOpenError:
             return self._run_fallback_or_raise(
                 request_id=request_id,
@@ -237,7 +271,7 @@ class ResilienceController:
 
                     continue
 
-                transition = self._breaker.record_failure()
+                transition = self._breaker.record_failure(permit)
 
                 if transition is not None and on_transition is not None:
                     on_transition(transition)
@@ -254,7 +288,7 @@ class ResilienceController:
                 raise
 
             else:
-                transition = self._breaker.record_success()
+                transition = self._breaker.record_success(permit)
 
                 if transition is not None and on_transition is not None:
                     on_transition(transition)
