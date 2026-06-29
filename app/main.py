@@ -10,12 +10,21 @@ from app.backends.errors import (
 )
 from app.config import INFERENCE_BACKEND
 from app.inference import backend, fallback_backend, generate_text
+from app.job_runtime import job_queue
+from app.redis_stream_jobs import JobQueueUnavailableError
 from app.metrics.prometheus_metrics import (
+    record_async_job_status_transition,
+    record_async_job_submission,
     record_backend_failure,
     record_backend_readiness,
 )
 from app.resilience import CircuitOpenError
-from app.schemas import GenerateRequest, GenerateResponse
+from app.schemas import (
+    GenerateRequest,
+    GenerateResponse,
+    JobAcceptedResponse,
+    JobStatusResponse,
+)
 
 
 app = FastAPI(title="AI Inference Service", version="0.2.0")
@@ -129,6 +138,63 @@ def _raise_backend_error(
             "message": message,
         },
     )
+
+
+@app.post(
+    "/jobs",
+    response_model=JobAcceptedResponse,
+    status_code=status.HTTP_202_ACCEPTED,
+)
+def submit_job(request: GenerateRequest):
+    if not request.prompt.strip():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="prompt must not be empty",
+        )
+
+    model_dump = getattr(request, "model_dump", None)
+    payload = dict(model_dump()) if callable(model_dump) else dict(request.dict())
+
+    try:
+        accepted = job_queue.enqueue(payload)
+    except JobQueueUnavailableError as exc:
+        record_async_job_submission("queue_unavailable")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail={
+                "error": "job_queue_unavailable",
+                "message": str(exc),
+            },
+        ) from exc
+
+    record_async_job_submission("accepted")
+    record_async_job_status_transition("queued")
+    return accepted
+
+
+@app.get("/jobs/{job_id}", response_model=JobStatusResponse)
+def get_job(job_id: str):
+    try:
+        job = job_queue.get_job(job_id)
+    except JobQueueUnavailableError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail={
+                "error": "job_queue_unavailable",
+                "message": str(exc),
+            },
+        ) from exc
+
+    if job is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={
+                "error": "job_not_found",
+                "job_id": job_id,
+            },
+        )
+
+    return job
 
 
 @app.post("/generate", response_model=GenerateResponse)

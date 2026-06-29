@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import BaseModel
 
@@ -29,3 +29,23 @@ class GenerateResponse(BaseModel):
     route: Optional[str] = None
     primary_attempts: Optional[int] = None
     fallback_thinking_budget: Optional[int] = None
+
+JobStatus = Literal["queued", "running", "succeeded", "failed"]
+
+
+class JobAcceptedResponse(BaseModel):
+    job_id: str
+    status: Literal["queued"]
+    created_at_ms: int
+
+
+class JobStatusResponse(BaseModel):
+    job_id: str
+    status: JobStatus
+    created_at_ms: int
+    updated_at_ms: int
+    attempt_count: int = 0
+    worker: Optional[str] = None
+    result: Optional[GenerateResponse] = None
+    error_type: Optional[str] = None
+    error_message: Optional[str] = None

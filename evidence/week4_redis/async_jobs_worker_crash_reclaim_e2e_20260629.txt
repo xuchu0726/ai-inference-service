@@ -1,0 +1,68 @@
+# Redis Stream worker crash reclaim E2E
+
+## 验证目标
+
+验证 worker 在任务已进入 running 状态后异常终止时，任务保留在 Redis PEL，
+replacement worker 能通过 XAUTOCLAIM 接管并完成任务。
+
+## 运行配置
+
+- Redis prefix: ai-inference:week4:crash-reclaim-v2
+- Consumer group: crash-reclaim-workers-v2
+- Crash worker: self-kill-worker-v2
+- Replacement worker: replacement-worker-v2
+- Backend: mock
+- Reclaim idle threshold: 100 ms（仅本次故障注入验证覆盖；生产默认值保持不变）
+- Git commit: 8365b67c56ce17aa430adf6865ce841f59c0f32f
+
+## 故障注入前提
+
+Crash worker 日志出现 GENERATE_CALLBACK_REACHED_AFTER_RUNNING，说明任务已经：
+1. 被 consumer group 投递；
+2. 成功写入 running 状态；
+3. 已进入 generate_text 回调；
+4. 随后由回调内 SIGKILL 强制终止。
+
+## SIGKILL 后的 Redis 状态
+
+- Job status: running
+- attempt_count: 1
+- Worker: self-kill-worker-v2
+- PEL: 1 条 pending message，consumer 为 self-kill-worker-v2
+- Stream length: 1
+
+## Replacement worker 结果
+
+- Job status: succeeded
+- attempt_count: 2
+- Worker: replacement-worker-v2
+- PEL: []
+- Stream length: 0
+- gateway_async_job_reclaims_total: 1.0
+- gateway_async_job_status_transitions_total{status="running"}: 1.0
+- gateway_async_job_status_transitions_total{status="succeeded"}: 1.0
+- gateway_async_job_worker_results_total{result="succeeded"}: 1.0
+
+## 原始 crash worker 日志
+
+CRASH_WORKER_READY
+GENERATE_CALLBACK_REACHED_AFTER_RUNNING
+
+## 原始 replacement worker 日志
+
+2026-06-29 17:43:52,559 INFO job worker metrics listening on 127.0.0.1:9104
+2026-06-29 17:43:52,559 INFO job worker started
+2026-06-29 17:43:52,566 INFO batch reclaimed=1 new=0 succeeded=1 failed=0 skipped=0
+
+## 原始 replacement worker metrics
+
+# HELP gateway_async_job_status_transitions_total Number of asynchronous job status transitions.
+# TYPE gateway_async_job_status_transitions_total counter
+gateway_async_job_status_transitions_total{status="running"} 1.0
+gateway_async_job_status_transitions_total{status="succeeded"} 1.0
+# HELP gateway_async_job_reclaims_total Number of pending asynchronous jobs reclaimed by workers.
+# TYPE gateway_async_job_reclaims_total counter
+gateway_async_job_reclaims_total 1.0
+# HELP gateway_async_job_worker_results_total Number of asynchronous job worker processing results.
+# TYPE gateway_async_job_worker_results_total counter
+gateway_async_job_worker_results_total{result="succeeded"} 1.0

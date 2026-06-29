@@ -125,3 +125,44 @@ def record_resilience_state_store_operation(
         operation=operation,
         result=result,
     ).inc()
+
+
+gateway_async_job_submissions_total = Counter(
+    "gateway_async_job_submissions_total",
+    "Number of asynchronous job submission attempts.",
+    ["result"],
+)
+
+gateway_async_job_status_transitions_total = Counter(
+    "gateway_async_job_status_transitions_total",
+    "Number of asynchronous job status transitions.",
+    ["status"],
+)
+
+gateway_async_job_reclaims_total = Counter(
+    "gateway_async_job_reclaims_total",
+    "Number of pending asynchronous jobs reclaimed by workers.",
+)
+
+gateway_async_job_worker_results_total = Counter(
+    "gateway_async_job_worker_results_total",
+    "Number of asynchronous job worker processing results.",
+    ["result"],
+)
+
+
+def record_async_job_submission(result: str) -> None:
+    gateway_async_job_submissions_total.labels(result=result).inc()
+
+
+def record_async_job_status_transition(status: str) -> None:
+    gateway_async_job_status_transitions_total.labels(status=status).inc()
+
+
+def record_async_job_reclaims(count: int) -> None:
+    if count > 0:
+        gateway_async_job_reclaims_total.inc(count)
+
+
+def record_async_job_worker_result(result: str) -> None:
+    gateway_async_job_worker_results_total.labels(result=result).inc()

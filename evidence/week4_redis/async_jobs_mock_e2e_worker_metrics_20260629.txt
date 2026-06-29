@@ -1,0 +1,57 @@
+===== 验证范围 =====
+本记录验证本地 Redis Stream 异步任务正常路径：
+POST /jobs -> Redis Stream -> 独立 worker -> mock generate_text -> GET /jobs/{id}
+并验证 Gateway 与 worker 分别暴露异步任务指标。
+
+===== 采集时间 =====
+2026-06-29T12:08:39Z
+
+===== Git 状态 =====
+8365b67
+feature/week4-redis-shared-resilience
+
+===== Redis =====
+image=redis:7.4.0-alpine status=running
+
+===== Gateway / Worker 进程 =====
+ 6765 python -m uvicorn app.main:app --host 127.0.0.1 --port 8011
+ 6766 python -m app.job_worker
+
+===== 已提交任务 =====
+{"job_id":"0112a48613c247898f159f286a798389","status":"queued","created_at_ms":1782730291828}
+===== 最终任务状态 =====
+{"job_id":"0112a48613c247898f159f286a798389","status":"succeeded","created_at_ms":1782730291828,"updated_at_ms":1782730291840,"attempt_count":1,"worker":"e2e-metrics-worker-v2","result":{"response":"[Mock Output] Received prompt with 49 characters. max_new_tokens=8, temperature=0.0, thinking_budget=None.","latency_seconds":1.0967254638671875e-05,"input_chars":49,"max_new_tokens":8,"thinking_budget":null,"backend":"mock","input_tokens":null,"output_tokens":null,"tokens_per_second":null,"model_name":null,"device":null,"total_tokens":null,"request_id":"70f57c8f550549b6a637ff121d6ed427","route":"primary","primary_attempts":1,"fallback_thinking_budget":null},"error_type":null,"error_message":null}
+===== Gateway 异步指标 =====
+gateway_async_job_submissions_total{result="accepted"} 1.0
+gateway_async_job_submissions_created{result="accepted"} 1.7827302918363352e+09
+gateway_async_job_status_transitions_total{status="queued"} 1.0
+gateway_async_job_status_transitions_created{status="queued"} 1.782730291836343e+09
+gateway_async_job_reclaims_total 0.0
+gateway_async_job_reclaims_created 1.7827301497817159e+09
+
+===== Worker 异步指标 =====
+gateway_async_job_status_transitions_total{status="running"} 1.0
+gateway_async_job_status_transitions_total{status="succeeded"} 1.0
+gateway_async_job_status_transitions_created{status="running"} 1.7827302918390248e+09
+gateway_async_job_status_transitions_created{status="succeeded"} 1.782730291842568e+09
+gateway_async_job_reclaims_total 0.0
+gateway_async_job_reclaims_created 1.782730149532494e+09
+gateway_async_job_worker_results_total{result="succeeded"} 1.0
+gateway_async_job_worker_results_created{result="succeeded"} 1.7827302918425632e+09
+
+===== Worker 日志 =====
+2026-06-29 11:49:09,663 INFO job worker metrics listening on 127.0.0.1:9102
+2026-06-29 11:49:09,663 INFO job worker started
+2026-06-29 11:51:31,842 INFO batch reclaimed=0 new=1 succeeded=1 failed=0 skipped=0
+
+===== Gateway 日志 =====
+INFO:     Started server process [6765]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8011 (Press CTRL+C to quit)
+INFO:     127.0.0.1:56757 - "GET /livez HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57044 - "POST /jobs HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:57047 - "GET /jobs/0112a48613c247898f159f286a798389 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57048 - "GET /jobs/0112a48613c247898f159f286a798389 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57049 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59804 - "GET /jobs/0112a48613c247898f159f286a798389 HTTP/1.1" 200 OK

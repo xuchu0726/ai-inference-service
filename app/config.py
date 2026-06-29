@@ -127,3 +127,115 @@ RESILIENCE_REDIS_PROBE_LEASE_MS = int(
 
 if RESILIENCE_REDIS_PROBE_LEASE_MS <= 0:
     raise ValueError("RESILIENCE_REDIS_PROBE_LEASE_MS must be positive")
+
+JOB_QUEUE_REDIS_URL = os.getenv(
+    "JOB_QUEUE_REDIS_URL",
+    RESILIENCE_REDIS_URL,
+)
+
+JOB_QUEUE_KEY_PREFIX = os.getenv(
+    "JOB_QUEUE_KEY_PREFIX",
+    "ai-inference:jobs",
+).strip().rstrip(":")
+
+if not JOB_QUEUE_KEY_PREFIX:
+    raise ValueError("JOB_QUEUE_KEY_PREFIX must not be empty")
+
+JOB_QUEUE_CONSUMER_GROUP = os.getenv(
+    "JOB_QUEUE_CONSUMER_GROUP",
+    "inference-workers",
+).strip()
+
+if not JOB_QUEUE_CONSUMER_GROUP:
+    raise ValueError("JOB_QUEUE_CONSUMER_GROUP must not be empty")
+
+JOB_QUEUE_SOCKET_TIMEOUT_SECONDS = float(
+    os.getenv("JOB_QUEUE_SOCKET_TIMEOUT_SECONDS", "0.5")
+)
+
+if JOB_QUEUE_SOCKET_TIMEOUT_SECONDS <= 0:
+    raise ValueError("JOB_QUEUE_SOCKET_TIMEOUT_SECONDS must be positive")
+
+JOB_WORKER_BLOCK_MS = int(
+    os.getenv("JOB_WORKER_BLOCK_MS", "1000")
+)
+
+if JOB_WORKER_BLOCK_MS < 0:
+    raise ValueError("JOB_WORKER_BLOCK_MS must not be negative")
+
+_DEFAULT_JOB_WORKER_RECLAIM_IDLE_MS = max(
+    1_200_000,
+    int(
+        (RESILIENCE_RETRY_ATTEMPTS + 2)
+        * max(VLLM_TIMEOUT_SECONDS, VLLM_FALLBACK_TIMEOUT_SECONDS)
+        * 1000
+        + 60_000
+    ),
+)
+
+JOB_WORKER_RECLAIM_IDLE_MS = int(
+    os.getenv(
+        "JOB_WORKER_RECLAIM_IDLE_MS",
+        str(_DEFAULT_JOB_WORKER_RECLAIM_IDLE_MS),
+    )
+)
+
+if JOB_WORKER_RECLAIM_IDLE_MS <= 0:
+    raise ValueError("JOB_WORKER_RECLAIM_IDLE_MS must be positive")
+
+JOB_QUEUE_JOB_TTL_SECONDS = int(
+    os.getenv("JOB_QUEUE_JOB_TTL_SECONDS", "86400")
+)
+
+if JOB_QUEUE_JOB_TTL_SECONDS <= 0:
+    raise ValueError("JOB_QUEUE_JOB_TTL_SECONDS must be positive")
+
+JOB_WORKER_BATCH_SIZE = int(
+    os.getenv("JOB_WORKER_BATCH_SIZE", "10")
+)
+
+if JOB_WORKER_BATCH_SIZE <= 0:
+    raise ValueError("JOB_WORKER_BATCH_SIZE must be positive")
+
+_DEFAULT_JOB_WORKER_SOCKET_TIMEOUT_SECONDS = max(
+    JOB_QUEUE_SOCKET_TIMEOUT_SECONDS,
+    JOB_WORKER_BLOCK_MS / 1000.0 + 5.0,
+)
+
+JOB_WORKER_SOCKET_TIMEOUT_SECONDS = float(
+    os.getenv(
+        "JOB_WORKER_SOCKET_TIMEOUT_SECONDS",
+        str(_DEFAULT_JOB_WORKER_SOCKET_TIMEOUT_SECONDS),
+    )
+)
+
+if JOB_WORKER_SOCKET_TIMEOUT_SECONDS <= JOB_WORKER_BLOCK_MS / 1000.0:
+    raise ValueError(
+        "JOB_WORKER_SOCKET_TIMEOUT_SECONDS must exceed "
+        "JOB_WORKER_BLOCK_MS / 1000"
+    )
+
+JOB_WORKER_ERROR_BACKOFF_SECONDS = float(
+    os.getenv("JOB_WORKER_ERROR_BACKOFF_SECONDS", "1.0")
+)
+
+if JOB_WORKER_ERROR_BACKOFF_SECONDS <= 0:
+    raise ValueError("JOB_WORKER_ERROR_BACKOFF_SECONDS must be positive")
+
+
+JOB_WORKER_METRICS_HOST = os.getenv(
+    "JOB_WORKER_METRICS_HOST",
+    "0.0.0.0",
+).strip()
+
+if not JOB_WORKER_METRICS_HOST:
+    raise ValueError("JOB_WORKER_METRICS_HOST must not be empty")
+
+JOB_WORKER_METRICS_PORT = int(
+    os.getenv("JOB_WORKER_METRICS_PORT", "9101")
+)
+
+if not 1 <= JOB_WORKER_METRICS_PORT <= 65535:
+    raise ValueError(
+        "JOB_WORKER_METRICS_PORT must be between 1 and 65535"
+    )
