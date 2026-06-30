@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Week4：Gateway 接入同机双 TP=2 Seed-OSS W8A8 upstream。
+# Redis 必须在本机或可访问地址先启动；本脚本不负责启动 Redis。
+
+export INFERENCE_BACKEND="${INFERENCE_BACKEND:-vllm}"
+
+export VLLM_BASE_URL="${VLLM_BASE_URL:-http://127.0.0.1:8001/v1}"
+export VLLM_MODEL_NAME="${VLLM_MODEL_NAME:-Seed-OSS-36B-Instruct-W8A8-Primary}"
+export VLLM_TIMEOUT_SECONDS="${VLLM_TIMEOUT_SECONDS:-300}"
+export VLLM_ENABLE_SEED_THINKING_BUDGET="${VLLM_ENABLE_SEED_THINKING_BUDGET:-true}"
+
+export VLLM_FALLBACK_BASE_URL="${VLLM_FALLBACK_BASE_URL:-http://127.0.0.1:8002/v1}"
+export VLLM_FALLBACK_MODEL_NAME="${VLLM_FALLBACK_MODEL_NAME:-Seed-OSS-36B-Instruct-W8A8-Fallback}"
+export VLLM_FALLBACK_TIMEOUT_SECONDS="${VLLM_FALLBACK_TIMEOUT_SECONDS:-300}"
+
+export RESILIENCE_STATE_STORE="${RESILIENCE_STATE_STORE:-redis}"
+export RESILIENCE_REDIS_URL="${RESILIENCE_REDIS_URL:-redis://127.0.0.1:6379/0}"
+export RESILIENCE_REDIS_KEY_PREFIX="${RESILIENCE_REDIS_KEY_PREFIX:-ai-inference:week4:resilience}"
+
+export JOB_QUEUE_REDIS_URL="${JOB_QUEUE_REDIS_URL:-$RESILIENCE_REDIS_URL}"
+export JOB_QUEUE_KEY_PREFIX="${JOB_QUEUE_KEY_PREFIX:-ai-inference:week4:jobs}"
+export JOB_QUEUE_CONSUMER_GROUP="${JOB_QUEUE_CONSUMER_GROUP:-week4-workers}"
+
+FASTAPI_HOST="${FASTAPI_HOST:-0.0.0.0}"
+FASTAPI_PORT="${FASTAPI_PORT:-8000}"
+
+echo "===== Week4 Gateway ====="
+echo "primary=$VLLM_BASE_URL"
+echo "fallback=$VLLM_FALLBACK_BASE_URL"
+echo "redis=$RESILIENCE_REDIS_URL"
+echo "gateway=$FASTAPI_HOST:$FASTAPI_PORT"
+
+exec python -m uvicorn app.main:app \
+  --host "$FASTAPI_HOST" \
+  --port "$FASTAPI_PORT"
