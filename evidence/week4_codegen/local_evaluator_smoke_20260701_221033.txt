@@ -1,0 +1,20 @@
+===== Week4 代码生成功能评测器本地验收 =====
+时间: 2026-07-01 22:10:33 BST
+脚本 SHA256:
+520633fbd7a4924c6d1715874805e735a6c292778624bd36987b6034fe2d005b  scripts/week4_cloud/evaluate_codegen_functional.py
+
+===== 语法检查 =====
+syntax=valid
+
+===== 基础分类 =====
+smoke_pass = passed
+smoke_syntax = syntax_error
+smoke_failed = test_failed
+smoke_missing = missing_response
+
+===== 超时分类与自动清理 =====
+smoke_timeout = timeout duration_seconds= 1.063961
+container_cleanup=passed
+
+===== 隔离边界 =====
+network=none; read-only rootfs; tmpfs=/tmp; memory=256m; cpus=0.5; pids-limit=64; cap-drop=ALL; no-new-privileges; non-root user

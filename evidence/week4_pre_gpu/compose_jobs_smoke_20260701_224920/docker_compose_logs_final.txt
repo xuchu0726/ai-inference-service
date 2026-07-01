@@ -1,0 +1,63 @@
+worker-1  | 2026-07-01 21:49:32,117 INFO job worker metrics listening on 0.0.0.0:9101
+worker-1  | 2026-07-01 21:49:32,117 INFO job worker started
+worker-1  | 2026-07-01 21:49:32,988 INFO batch reclaimed=0 new=1 succeeded=1 failed=0 skipped=0
+worker-1  | 2026-07-01 21:49:33,101 INFO batch reclaimed=0 new=1 succeeded=1 failed=0 skipped=0
+worker-1  | 2026-07-01 21:49:33,223 INFO batch reclaimed=0 new=1 succeeded=1 failed=0 skipped=0
+worker-1  | 2026-07-01 21:49:33,350 INFO batch reclaimed=0 new=1 succeeded=1 failed=0 skipped=0
+worker-1  | 2026-07-01 21:49:33,462 INFO batch reclaimed=0 new=1 succeeded=1 failed=0 skipped=0
+worker-1  | 2026-07-01 21:49:33,578 INFO batch reclaimed=0 new=1 succeeded=1 failed=0 skipped=0
+worker-1  | 2026-07-01 21:49:33,696 INFO batch reclaimed=0 new=1 succeeded=1 failed=0 skipped=0
+worker-1  | 2026-07-01 21:49:33,809 INFO batch reclaimed=0 new=1 succeeded=1 failed=0 skipped=0
+worker-1  | 2026-07-01 21:49:33,928 INFO batch reclaimed=0 new=1 succeeded=1 failed=0 skipped=0
+worker-1  | 2026-07-01 21:49:34,045 INFO batch reclaimed=0 new=1 succeeded=1 failed=0 skipped=0
+worker-1  | 2026-07-01 21:49:34,052 INFO batch reclaimed=0 new=1 succeeded=1 failed=0 skipped=0
+worker-1  | 2026-07-01 21:49:34,202 INFO batch reclaimed=0 new=1 succeeded=1 failed=0 skipped=0
+redis-1   | 1:C 01 Jul 2026 21:49:26.007 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+redis-1   | 1:C 01 Jul 2026 21:49:26.007 * Redis version=7.4.9, bits=64, commit=00000000, modified=0, pid=1, just started
+redis-1   | 1:C 01 Jul 2026 21:49:26.007 * Configuration loaded
+redis-1   | 1:M 01 Jul 2026 21:49:26.007 * monotonic clock: POSIX clock_gettime
+redis-1   | 1:M 01 Jul 2026 21:49:26.008 * Running mode=standalone, port=6379.
+redis-1   | 1:M 01 Jul 2026 21:49:26.008 * Server initialized
+redis-1   | 1:M 01 Jul 2026 21:49:26.010 * Creating AOF base file appendonly.aof.1.base.rdb on server start
+redis-1   | 1:M 01 Jul 2026 21:49:26.013 * Creating AOF incr file appendonly.aof.1.incr.aof on server start
+redis-1   | 1:M 01 Jul 2026 21:49:26.013 * Ready to accept connections tcp
+gateway-1  | INFO:     Started server process [1]
+gateway-1  | INFO:     Waiting for application startup.
+gateway-1  | INFO:     Application startup complete.
+gateway-1  | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+gateway-1  | INFO:     192.168.65.1:57336 - "GET /health HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:61223 - "POST /jobs HTTP/1.1" 202 Accepted
+gateway-1  | INFO:     192.168.65.1:54581 - "GET /jobs/327069a8e01a46d18273ed010e529b02 HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:24461 - "GET /jobs/327069a8e01a46d18273ed010e529b02 HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:60611 - "POST /jobs HTTP/1.1" 202 Accepted
+gateway-1  | INFO:     192.168.65.1:20633 - "GET /jobs/316951026e2f49758328bfd87c30728a HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:20402 - "GET /jobs/316951026e2f49758328bfd87c30728a HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:37834 - "POST /jobs HTTP/1.1" 202 Accepted
+gateway-1  | INFO:     192.168.65.1:24169 - "GET /jobs/26760f544a64468aa4e5be43fd501153 HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:52142 - "GET /jobs/26760f544a64468aa4e5be43fd501153 HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:54068 - "POST /jobs HTTP/1.1" 202 Accepted
+gateway-1  | INFO:     192.168.65.1:55600 - "GET /jobs/ccdfc77e76584268a1ec986191349916 HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:50398 - "GET /jobs/ccdfc77e76584268a1ec986191349916 HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:46911 - "POST /jobs HTTP/1.1" 202 Accepted
+gateway-1  | INFO:     192.168.65.1:39421 - "GET /jobs/73278bae49694910983a78fa7e4d9608 HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:17220 - "GET /jobs/73278bae49694910983a78fa7e4d9608 HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:37786 - "POST /jobs HTTP/1.1" 202 Accepted
+gateway-1  | INFO:     192.168.65.1:58398 - "GET /jobs/bf1c320753b34f2caabdb754eaf10937 HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:59407 - "GET /jobs/bf1c320753b34f2caabdb754eaf10937 HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:57899 - "POST /jobs HTTP/1.1" 202 Accepted
+gateway-1  | INFO:     192.168.65.1:65122 - "GET /jobs/2f61cf4c30934bbc9baa25e15f4a6fc0 HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:29437 - "GET /jobs/2f61cf4c30934bbc9baa25e15f4a6fc0 HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:55165 - "POST /jobs HTTP/1.1" 202 Accepted
+gateway-1  | INFO:     192.168.65.1:64056 - "GET /jobs/616110ae32a64e3e82a9e482dad815a1 HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:31040 - "GET /jobs/616110ae32a64e3e82a9e482dad815a1 HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:51995 - "POST /jobs HTTP/1.1" 202 Accepted
+gateway-1  | INFO:     192.168.65.1:31904 - "GET /jobs/bad1f7958ddb41a98d7bad88a6e2a441 HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:31583 - "GET /jobs/bad1f7958ddb41a98d7bad88a6e2a441 HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:30029 - "POST /jobs HTTP/1.1" 202 Accepted
+gateway-1  | INFO:     192.168.65.1:59993 - "GET /jobs/c810512c18e048c99e226fde87252a1a HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:58744 - "POST /jobs HTTP/1.1" 202 Accepted
+gateway-1  | INFO:     192.168.65.1:44758 - "GET /jobs/169c6cb03a194331aea0af31e25c163a HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:17415 - "GET /jobs/169c6cb03a194331aea0af31e25c163a HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:22255 - "POST /jobs HTTP/1.1" 202 Accepted
+gateway-1  | INFO:     192.168.65.1:31854 - "GET /jobs/9a7790c0f79e47ae8bb92b3a15324b78 HTTP/1.1" 200 OK
+gateway-1  | INFO:     192.168.65.1:61199 - "GET /jobs/9a7790c0f79e47ae8bb92b3a15324b78 HTTP/1.1" 200 OK

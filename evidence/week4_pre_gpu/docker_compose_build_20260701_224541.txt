@@ -1,0 +1,68 @@
+ Image ai-inference-week4-gateway Building 
+ Image ai-inference-week4-worker Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.05kB done
+#1 DONE 0.0s
+
+#2 [worker internal] load build definition from Dockerfile
+#2 transferring dockerfile: 490B done
+#2 DONE 0.0s
+
+#3 [worker internal] load metadata for docker.io/library/python:3.11-slim
+#3 DONE 1.1s
+
+#4 [gateway internal] load .dockerignore
+#4 transferring context: 355B done
+#4 DONE 0.0s
+
+#5 [gateway 1/6] FROM docker.io/library/python:3.11-slim@sha256:b27df5841f3355e9473f9a516d38a6783b6c8dfeacaf2d14a240f443b368ddb6
+#5 resolve docker.io/library/python:3.11-slim@sha256:b27df5841f3355e9473f9a516d38a6783b6c8dfeacaf2d14a240f443b368ddb6 done
+#5 DONE 0.0s
+
+#6 [gateway internal] load build context
+#6 transferring context: 128.72kB 0.0s done
+#6 DONE 0.0s
+
+#7 [worker 2/6] WORKDIR /app
+#7 CACHED
+
+#8 [worker 4/6] COPY requirements-gateway.txt ./
+#8 CACHED
+
+#9 [worker 3/6] RUN addgroup --system app     && adduser --system --ingroup app app
+#9 CACHED
+
+#10 [worker 5/6] RUN python -m pip install --no-cache-dir --upgrade pip     && python -m pip install --no-cache-dir -r requirements-gateway.txt
+#10 CACHED
+
+#11 [gateway 6/6] COPY app ./app
+#11 DONE 0.0s
+
+#12 [worker] exporting to image
+#12 exporting layers 0.0s done
+#12 exporting manifest sha256:f3381b9f72220ccf4e49ace4ebfb74b53d7fe6d0486856e0f3edf9c8f6c2d7f2 done
+#12 exporting config sha256:c8b87cd36c011692303b694e07b0d070c3785f3f68eb69d93745ff2db9c06005 done
+#12 exporting attestation manifest sha256:5dd273d82d6a206e5e625678b4f887fc91133238cde5e39ae2a1b4e7c64a2c4b 0.0s done
+#12 exporting manifest list sha256:850f78079e41ad39ebce963b94a408dc8a460827909421355081a23c9a467061
+#12 exporting manifest list sha256:850f78079e41ad39ebce963b94a408dc8a460827909421355081a23c9a467061 done
+#12 naming to docker.io/library/ai-inference-week4-worker:latest done
+#12 unpacking to docker.io/library/ai-inference-week4-worker:latest 0.0s done
+#12 DONE 0.1s
+
+#13 [gateway] exporting to image
+#13 exporting layers 0.0s done
+#13 exporting manifest sha256:a1f594a283f6faec083397708ef943292d9c2bc8bafc199982cc61c1202f5c8f done
+#13 exporting config sha256:85fedce9d11da679e15c20976309e50e4166318169abe32001a77e433dc485fa done
+#13 exporting attestation manifest sha256:bdcffda4c4a268fdbd98f2917bfe20a228aa0d1923fa732a05bdee3e46fbfd38 0.0s done
+#13 exporting manifest list sha256:9d31abc1554c4f2c20d461c888ab1ee93a50cdb2dfac788617928c0037f91c7b done
+#13 naming to docker.io/library/ai-inference-week4-gateway:latest done
+#13 unpacking to docker.io/library/ai-inference-week4-gateway:latest 0.0s done
+#13 DONE 0.1s
+
+#14 [gateway] resolving provenance for metadata file
+#14 DONE 0.0s
+
+#15 [worker] resolving provenance for metadata file
+#15 DONE 0.0s
+ Image ai-inference-week4-worker Built 
+ Image ai-inference-week4-gateway Built 

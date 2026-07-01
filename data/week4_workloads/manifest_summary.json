@@ -1,0 +1,8 @@
+{
+  "customer_service_short_count": 12,
+  "codegen_fixed_count": 5,
+  "bagel_reliability_count": 30,
+  "bagel_note": "n=30 是三个固定图文案例各重复十次，用于每个场景的稳定性、延迟和资源观测；不代表三十个独立图像覆盖场景。",
+  "long_context_case_count": 2,
+  "long_context_note": "文档按字符数固定；最终 input_tokens 必须在 GPU 环境用部署 tokenizer 实测。"
+}

@@ -1,0 +1,17 @@
+{
+  "manifest": "data/week4_workloads/customer_service_short.jsonl",
+  "mode": "jobs",
+  "base_url": "http://127.0.0.1:8000",
+  "started_at_epoch_seconds": 1782942572.9455302,
+  "case_count": 12,
+  "succeeded": 12,
+  "failed": 0,
+  "service_status_counts": {
+    "succeeded": 12
+  },
+  "artifacts": {
+    "records_jsonl": "evidence/week4_pre_gpu/compose_jobs_smoke_20260701_224920/workload/records.jsonl",
+    "request_metrics_csv": "evidence/week4_pre_gpu/compose_jobs_smoke_20260701_224920/workload/request_metrics.csv",
+    "codegen_responses_jsonl": "evidence/week4_pre_gpu/compose_jobs_smoke_20260701_224920/workload/codegen_responses.jsonl"
+  }
+}

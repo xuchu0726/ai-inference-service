@@ -1,0 +1,145 @@
+===== timestamp =====
+2026-07-01T22:45:35+01:00
+
+===== git diff check =====
+git_diff_check_exit=0
+
+===== full pytest =====
+...........................................ssssss.............           [100%]
+56 passed, 6 skipped in 2.17s
+full_pytest_exit=0
+
+===== Python compileall =====
+compileall_exit=0
+
+===== shell syntax =====
+bash_n_exit=0 file=scripts/run_week2_concurrency_matrix.sh
+bash_n_exit=0 file=scripts/week3_ha/verify_deployment_stack.sh
+bash_n_exit=0 file=scripts/sample_gpu_metrics.sh
+bash_n_exit=0 file=scripts/week4_cloud/run_real_vllm_failover_harness.sh
+bash_n_exit=0 file=scripts/week4_cloud/run_local_failover_harness.sh
+bash_n_exit=0 file=scripts/run_bnb_int8_dual_gpu_full.sh
+bash_n_exit=0 file=scripts/week3_bagel/run_multicase_audit.sh
+bash_n_exit=0 file=scripts/week3_bagel/fetch_ecommerce_backpack_sample.sh
+bash_n_exit=0 file=scripts/week3_bagel/start_bagel_runtime.sh
+bash_n_exit=0 file=scripts/week3_bagel/restore_bagel_stack.sh
+bash_n_exit=0 file=scripts/week3_bagel/start_multimodal_api.sh
+bash_n_exit=0 file=deployment/run_local.sh
+bash_n_exit=0 file=deployment/cloud/run_week4_job_worker.sh
+bash_n_exit=0 file=deployment/cloud/run_vllm_seed_oss_36b_tp.sh
+bash_n_exit=0 file=deployment/cloud/run_week4_gateway.sh
+bash_n_exit=0 file=deployment/cloud/run_week4_seed_w8a8_tp2_instance.sh
+bash_n_exit=0 file=deployment/cloud/run_vllm_qwen_1_5b.sh
+bash_n_exit=0 file=deployment/cloud/run_vllm_seed_oss_36b_tp2.sh
+bash_n_exit=0 file=deployment/cloud/run_fastapi_vllm.sh
+
+===== Week4 CLI help =====
+
+--- scripts/week4_cloud/run_text_workload_manifest.py ---
+usage: run_text_workload_manifest.py [-h] --base-url BASE_URL
+                                     --mode {generate,jobs}
+                                     --manifest MANIFEST
+                                     --output-dir OUTPUT_DIR
+                                     [--poll-seconds POLL_SECONDS]
+                                     [--job-timeout-seconds JOB_TIMEOUT_SECONDS]
+
+options:
+  -h, --help            show this help message and exit
+  --base-url BASE_URL
+  --mode {generate,jobs}
+  --manifest MANIFEST
+  --output-dir OUTPUT_DIR
+  --poll-seconds POLL_SECONDS
+  --job-timeout-seconds JOB_TIMEOUT_SECONDS
+help_exit=0
+
+--- scripts/week4_cloud/benchmark_gateway_capacity.py ---
+usage: benchmark_gateway_capacity.py [-h] --base-url BASE_URL
+                                     --mode {generate,jobs}
+                                     --requests REQUESTS
+                                     --concurrency CONCURRENCY
+                                     [--max-new-tokens MAX_NEW_TOKENS]
+                                     [--temperature TEMPERATURE]
+                                     [--thinking-budget THINKING_BUDGET]
+                                     [--poll-interval-seconds POLL_INTERVAL_SECONDS]
+                                     [--job-timeout-seconds JOB_TIMEOUT_SECONDS]
+                                     --output-dir OUTPUT_DIR
+
+options:
+  -h, --help            show this help message and exit
+  --base-url BASE_URL
+  --mode {generate,jobs}
+  --requests REQUESTS
+  --concurrency CONCURRENCY
+  --max-new-tokens MAX_NEW_TOKENS
+  --temperature TEMPERATURE
+  --thinking-budget THINKING_BUDGET
+  --poll-interval-seconds POLL_INTERVAL_SECONDS
+  --job-timeout-seconds JOB_TIMEOUT_SECONDS
+  --output-dir OUTPUT_DIR
+help_exit=0
+
+--- scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py ---
+help_exit=1
+
+--- scripts/week4_cloud/evaluate_codegen_functional.py ---
+usage: evaluate_codegen_functional.py [-h] --manifest MANIFEST
+                                      --responses RESPONSES --output OUTPUT
+                                      [--image IMAGE]
+                                      [--timeout-seconds TIMEOUT_SECONDS]
+
+options:
+  -h, --help            show this help message and exit
+  --manifest MANIFEST
+  --responses RESPONSES
+  --output OUTPUT
+  --image IMAGE
+  --timeout-seconds TIMEOUT_SECONDS
+help_exit=0
+
+--- scripts/week4_cloud/probe_gateway_failover.py ---
+usage: probe_gateway_failover.py [-h] --base-url BASE_URL
+                                 [--requests REQUESTS]
+                                 [--interval-seconds INTERVAL_SECONDS]
+                                 [--max-new-tokens MAX_NEW_TOKENS]
+                                 --output-dir OUTPUT_DIR
+
+options:
+  -h, --help            show this help message and exit
+  --base-url BASE_URL
+  --requests REQUESTS
+  --interval-seconds INTERVAL_SECONDS
+  --max-new-tokens MAX_NEW_TOKENS
+  --output-dir OUTPUT_DIR
+help_exit=0
+
+===== workload manifest JSON validation =====
+data/week4_workloads/bagel_reliability_n30.jsonl: records=30
+  keys=['case_id', 'do_sample', 'image_path', 'image_sha256', 'max_new_tokens', 'prompt', 'repeat_index', 'scenario', 'show_thinking', 'source_case_id', 'temperature']
+  id_field=case_id duplicates=0
+data/week4_workloads/codegen_fixed.jsonl: records=5
+  keys=['case_id', 'expected_keywords', 'max_new_tokens', 'prompt', 'scenario', 'source_dataset', 'temperature', 'thinking_budget']
+  id_field=case_id duplicates=0
+data/week4_workloads/codegen_functional_50.jsonl: records=50
+  keys=['case_id', 'function_name', 'max_new_tokens', 'prompt', 'scenario', 'task', 'temperature', 'tests', 'thinking_budget']
+  id_field=case_id duplicates=0
+data/week4_workloads/customer_service_short.jsonl: records=12
+  keys=['case_id', 'max_new_tokens', 'prompt', 'scenario', 'temperature', 'thinking_budget']
+  id_field=case_id duplicates=0
+data/week4_workloads/long_context_manifest.jsonl: records=2
+  keys=['case_id', 'document_characters', 'document_path', 'max_new_tokens', 'prompt_suffix', 'scenario', 'temperature', 'thinking_budget', 'token_count_rule']
+  id_field=case_id duplicates=0
+manifest_validation_exit=0
+
+===== requirements diff =====
+diff --git a/requirements.txt b/requirements.txt
+index c6d7882..14e6878 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -6,3 +6,5 @@ torch
+ transformers
+ accelerate
+ prometheus-fastapi-instrumentator
++
++numpy
+requirements_diff_exit=0

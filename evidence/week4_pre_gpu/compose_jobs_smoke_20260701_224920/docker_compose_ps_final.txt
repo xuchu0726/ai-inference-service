@@ -1,0 +1,4 @@
+NAME                           IMAGE                        COMMAND                   SERVICE   CREATED         STATUS                            PORTS
+ai-inference-week4-gateway-1   ai-inference-week4-gateway   "python -m uvicorn a…"   gateway   9 seconds ago   Up 3 seconds (health: starting)   0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
+ai-inference-week4-redis-1     redis:7.4-alpine             "docker-entrypoint.s…"   redis     9 seconds ago   Up 8 seconds (healthy)            6379/tcp
+ai-inference-week4-worker-1    ai-inference-week4-worker    "/bin/sh -c 'export …"   worker    9 seconds ago   Up 3 seconds                      0.0.0.0:9101->9101/tcp, [::]:9101->9101/tcp

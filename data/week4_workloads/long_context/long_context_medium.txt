@@ -1,0 +1,1002 @@
+[Section 00001: long_context_medium]
+Service policy record 1 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 1: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00002: long_context_medium]
+Service policy record 2 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 2: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00003: long_context_medium]
+Service policy record 3 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 3: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00004: long_context_medium]
+Service policy record 4 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 4: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00005: long_context_medium]
+Service policy record 5 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 5: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00006: long_context_medium]
+Service policy record 6 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 6: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00007: long_context_medium]
+Service policy record 7 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 7: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00008: long_context_medium]
+Service policy record 8 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 8: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00009: long_context_medium]
+Service policy record 9 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 9: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00010: long_context_medium]
+Service policy record 10 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 10: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00011: long_context_medium]
+Service policy record 11 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 11: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00012: long_context_medium]
+Service policy record 12 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 12: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00013: long_context_medium]
+Service policy record 13 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 13: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00014: long_context_medium]
+Service policy record 14 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 14: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00015: long_context_medium]
+Service policy record 15 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 15: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00016: long_context_medium]
+Service policy record 16 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 16: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00017: long_context_medium]
+Service policy record 17 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 17: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00018: long_context_medium]
+Service policy record 18 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 18: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00019: long_context_medium]
+Service policy record 19 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 19: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00020: long_context_medium]
+Service policy record 20 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 20: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00021: long_context_medium]
+Service policy record 21 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 21: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00022: long_context_medium]
+Service policy record 22 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 22: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00023: long_context_medium]
+Service policy record 23 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 23: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00024: long_context_medium]
+Service policy record 24 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 24: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00025: long_context_medium]
+Service policy record 25 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 25: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00026: long_context_medium]
+Service policy record 26 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 26: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00027: long_context_medium]
+Service policy record 27 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 27: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00028: long_context_medium]
+Service policy record 28 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 28: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00029: long_context_medium]
+Service policy record 29 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 29: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00030: long_context_medium]
+Service policy record 30 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 30: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00031: long_context_medium]
+Service policy record 31 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 31: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00032: long_context_medium]
+Service policy record 32 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 32: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00033: long_context_medium]
+Service policy record 33 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 33: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00034: long_context_medium]
+Service policy record 34 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 34: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00035: long_context_medium]
+Service policy record 35 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 35: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00036: long_context_medium]
+Service policy record 36 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 36: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00037: long_context_medium]
+Service policy record 37 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 37: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00038: long_context_medium]
+Service policy record 38 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 38: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00039: long_context_medium]
+Service policy record 39 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 39: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00040: long_context_medium]
+Service policy record 40 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 40: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00041: long_context_medium]
+Service policy record 41 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 41: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00042: long_context_medium]
+Service policy record 42 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 42: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00043: long_context_medium]
+Service policy record 43 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 43: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00044: long_context_medium]
+Service policy record 44 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 44: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00045: long_context_medium]
+Service policy record 45 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 45: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00046: long_context_medium]
+Service policy record 46 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 46: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00047: long_context_medium]
+Service policy record 47 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 47: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00048: long_context_medium]
+Service policy record 48 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 48: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00049: long_context_medium]
+Service policy record 49 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 49: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00050: long_context_medium]
+Service policy record 50 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 50: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00051: long_context_medium]
+Service policy record 51 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 51: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00052: long_context_medium]
+Service policy record 52 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 52: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00053: long_context_medium]
+Service policy record 53 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 53: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00054: long_context_medium]
+Service policy record 54 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 54: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00055: long_context_medium]
+Service policy record 55 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 55: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00056: long_context_medium]
+Service policy record 56 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 56: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00057: long_context_medium]
+Service policy record 57 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 57: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00058: long_context_medium]
+Service policy record 58 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 58: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00059: long_context_medium]
+Service policy record 59 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 59: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00060: long_context_medium]
+Service policy record 60 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 60: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00061: long_context_medium]
+Service policy record 61 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 61: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00062: long_context_medium]
+Service policy record 62 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 62: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00063: long_context_medium]
+Service policy record 63 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 63: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00064: long_context_medium]
+Service policy record 64 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 64: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00065: long_context_medium]
+Service policy record 65 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 65: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00066: long_context_medium]
+Service policy record 66 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 66: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00067: long_context_medium]
+Service policy record 67 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 67: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00068: long_context_medium]
+Service policy record 68 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 68: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00069: long_context_medium]
+Service policy record 69 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 69: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00070: long_context_medium]
+Service policy record 70 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 70: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00071: long_context_medium]
+Service policy record 71 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 71: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00072: long_context_medium]
+Service policy record 72 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 72: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00073: long_context_medium]
+Service policy record 73 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 73: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00074: long_context_medium]
+Service policy record 74 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 74: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00075: long_context_medium]
+Service policy record 75 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 75: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00076: long_context_medium]
+Service policy record 76 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 76: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00077: long_context_medium]
+Service policy record 77 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 77: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00078: long_context_medium]
+Service policy record 78 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 78: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00079: long_context_medium]
+Service policy record 79 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 79: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00080: long_context_medium]
+Service policy record 80 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 80: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00081: long_context_medium]
+Service policy record 81 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 81: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00082: long_context_medium]
+Service policy record 82 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 82: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00083: long_context_medium]
+Service policy record 83 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 83: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00084: long_context_medium]
+Service policy record 84 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 84: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00085: long_context_medium]
+Service policy record 85 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 85: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00086: long_context_medium]
+Service policy record 86 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 86: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00087: long_context_medium]
+Service policy record 87 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 87: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00088: long_context_medium]
+Service policy record 88 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 88: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00089: long_context_medium]
+Service policy record 89 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 89: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00090: long_context_medium]
+Service policy record 90 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 90: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00091: long_context_medium]
+Service policy record 91 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 91: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00092: long_context_medium]
+Service policy record 92 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 92: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00093: long_context_medium]
+Service policy record 93 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 93: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00094: long_context_medium]
+Service policy record 94 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 94: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00095: long_context_medium]
+Service policy record 95 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 95: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00096: long_context_medium]
+Service policy record 96 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 96: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00097: long_context_medium]
+Service policy record 97 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 97: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00098: long_context_medium]
+Service policy record 98 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 98: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00099: long_context_medium]
+Service policy record 99 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 99: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00100: long_context_medium]
+Service policy record 100 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 100: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00101: long_context_medium]
+Service policy record 101 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 101: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00102: long_context_medium]
+Service policy record 102 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 102: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00103: long_context_medium]
+Service policy record 103 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 103: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00104: long_context_medium]
+Service policy record 104 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 104: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00105: long_context_medium]
+Service policy record 105 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 105: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00106: long_context_medium]
+Service policy record 106 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 106: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00107: long_context_medium]
+Service policy record 107 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 107: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00108: long_context_medium]
+Service policy record 108 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 108: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00109: long_context_medium]
+Service policy record 109 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 109: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00110: long_context_medium]
+Service policy record 110 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 110: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00111: long_context_medium]
+Service policy record 111 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 111: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00112: long_context_medium]
+Service policy record 112 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 112: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00113: long_context_medium]
+Service policy record 113 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 113: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00114: long_context_medium]
+Service policy record 114 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 114: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00115: long_context_medium]
+Service policy record 115 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 115: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00116: long_context_medium]
+Service policy record 116 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 116: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00117: long_context_medium]
+Service policy record 117 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 117: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00118: long_context_medium]
+Service policy record 118 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 118: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00119: long_context_medium]
+Service policy record 119 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 119: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00120: long_context_medium]
+Service policy record 120 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 120: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00121: long_context_medium]
+Service policy record 121 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 121: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00122: long_context_medium]
+Service policy record 122 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 122: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00123: long_context_medium]
+Service policy record 123 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 123: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00124: long_context_medium]
+Service policy record 124 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 124: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00125: long_context_medium]
+Service policy record 125 describes order intake, payment verification,
+warehouse handling, delivery exception triage, return processing, and customer
+communication. The record requires agents to distinguish confirmed facts from
+assumptions, preserve traceable case identifiers, and avoid inventing status.
+Operational review item 125: identify the responsible step, the evidence
+required for escalation, and the next action for the customer.
+
+[Section 00126: long_context_medium]
+Service policy record 126 describes order intake, paym

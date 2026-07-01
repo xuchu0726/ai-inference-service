@@ -1,0 +1,712 @@
+===== audit timestamp =====
+2026-07-01T22:39:19+01:00
+
+===== git branch =====
+feature/week4-redis-shared-resilience
+
+===== git status =====
+ M requirements.txt
+?? app/kernels/
+?? data/week4_workloads/
+?? deployment/docker-compose.week4.yml
+?? docs/week4/
+?? docs/week4_system_validation_matrix.md
+?? evidence/week4_codegen/
+?? evidence/week4_pre_gpu/
+?? loadtest/
+?? scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py
+?? scripts/week4_cloud/evaluate_codegen_functional.py
+?? scripts/week4_cloud/mock_openai_upstream.py
+?? scripts/week4_cloud/probe_gateway_failover.py
+?? scripts/week4_cloud/run_local_failover_harness.sh
+?? scripts/week4_cloud/run_real_vllm_failover_harness.sh
+?? scripts/week4_cloud/run_text_workload_manifest.py
+?? scripts/week4_prepare_workloads.py
+?? tests/test_rmsnorm_int8.py
+
+===== latest commits =====
+e5bef25 (HEAD -> feature/week4-redis-shared-resilience, origin/feature/week4-redis-shared-resilience) 添加Week4双TP2云端部署与容量压测入口
+7eebd31 实现Redis Stream异步任务与故障接管
+8365b67 实现Redis共享熔断器与跨实例验证
+f30be11 (tag: week3-final-20260624-v2, main) 校正 Week3 监控边界与验证表述
+42cf3f5 (tag: week3-final-20260624) 完善 Week3 交付报告的复现边界与 API 契约
+d80d645 补充 Week3 环境边界与多模态 API 契约
+2f2e9af 完善 Week3 高可用与多模态交付报告
+dad368b 补充 Week2 BF16 服务验证与 Week3 BAGEL 审计截图
+40399f1 (origin/feature/week3-bagel-validation, feature/week3-bagel-validation) 补充 Week3 高可用部署 SOP 与只读验收脚本
+830ba06 补充 Week3 高可用部署 SOP 与只读验收脚本
+91036b3 补充 Week3 高可用部署 SOP 与静态验收脚本
+cf7a83d 保存 Week3 到 Week4 运行环境恢复快照
+
+===== diff check =====
+
+===== relevant files =====
+app/__pycache__/redis_circuit_breaker.cpython-313.pyc
+app/__pycache__/redis_stream_jobs.cpython-313.pyc
+app/__pycache__/resilience.cpython-313.pyc
+app/kernels/__pycache__/rmsnorm_int8.cpython-313.pyc
+app/kernels/rmsnorm_int8.py
+app/redis_circuit_breaker.py
+app/redis_stream_jobs.py
+app/resilience.py
+deployment/cloud/run_week4_gateway.sh
+deployment/cloud/run_week4_job_worker.sh
+deployment/cloud/run_week4_seed_w8a8_tp2_instance.sh
+deployment/docker-compose.week4.yml
+deployment/week3_ha/k8s/gateway-resilience-config.yaml
+docs/benchmark_report.md
+docs/vllm_benchmark_report.md
+docs/week4_system_validation_matrix.md
+docs/week4/codegen_functional_evaluation.md
+scripts/analyze_benchmark.py
+scripts/analyze_vllm_benchmark.py
+scripts/benchmark_concurrency.py
+scripts/benchmark_context_length.py
+scripts/benchmark_vllm_backend.py
+scripts/benchmark.py
+scripts/eval_week2_reasoning_codegen.py
+scripts/run_gsm8k_full_benchmark.py
+scripts/run_seed_oss_codegen_eval_20_20260614.py
+scripts/run_seed_oss_codegen_eval_20_repair_20260614.py
+scripts/run_seed_oss_codegen_eval_additional_30_20260615.py
+scripts/week3_bagel/restore_bagel_stack.sh
+scripts/week3_bagel/run_understanding_benchmark.py
+scripts/week3_bagel/start_bagel_runtime.sh
+scripts/week3_ha/__pycache__/run_nginx_failover_probe.cpython-313.pyc
+scripts/week3_ha/__pycache__/run_service_failover_probe.cpython-313.pyc
+scripts/week3_ha/run_nginx_failover_probe.py
+scripts/week3_ha/run_service_failover_probe.py
+scripts/week4_cloud/__pycache__/benchmark_gateway_capacity.cpython-313.pyc
+scripts/week4_cloud/__pycache__/benchmark_triton_rmsnorm_int8.cpython-313.pyc
+scripts/week4_cloud/__pycache__/evaluate_codegen_functional.cpython-313.pyc
+scripts/week4_cloud/__pycache__/probe_gateway_failover.cpython-313.pyc
+scripts/week4_cloud/__pycache__/run_text_workload_manifest.cpython-313.pyc
+scripts/week4_cloud/benchmark_gateway_capacity.py
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py
+scripts/week4_cloud/evaluate_codegen_functional.py
+scripts/week4_cloud/probe_gateway_failover.py
+scripts/week4_cloud/run_local_failover_harness.sh
+scripts/week4_cloud/run_real_vllm_failover_harness.sh
+scripts/week4_cloud/run_text_workload_manifest.py
+scripts/week4_prepare_workloads.py
+tests/__pycache__/test_backend_resilience.cpython-313-pytest-8.3.5.pyc
+tests/__pycache__/test_backend_resilience.cpython-313-pytest-9.0.2.pyc
+tests/__pycache__/test_gateway_resilience_integration.cpython-313-pytest-8.3.5.pyc
+tests/__pycache__/test_gateway_resilience_integration.cpython-313-pytest-9.0.2.pyc
+tests/__pycache__/test_gateway_resilience_integration.cpython-313.pyc
+tests/__pycache__/test_real_http_failover.cpython-313-pytest-8.3.5.pyc
+tests/__pycache__/test_real_http_failover.cpython-313-pytest-9.0.2.pyc
+tests/__pycache__/test_redis_circuit_breaker_integration.cpython-313-pytest-8.3.5.pyc
+tests/__pycache__/test_redis_stream_jobs_integration.cpython-313-pytest-8.3.5.pyc
+tests/__pycache__/test_redis_stream_jobs_integration.cpython-313.pyc
+tests/__pycache__/test_redis_stream_worker_integration.cpython-313-pytest-8.3.5.pyc
+tests/__pycache__/test_redis_stream_worker_integration.cpython-313.pyc
+tests/__pycache__/test_resilience_policy.cpython-313-pytest-8.3.5.pyc
+tests/__pycache__/test_resilience_policy.cpython-313.pyc
+tests/__pycache__/test_rmsnorm_int8.cpython-313-pytest-8.3.5.pyc
+tests/__pycache__/test_rmsnorm_int8.cpython-313.pyc
+tests/test_backend_resilience.py
+tests/test_gateway_resilience_integration.py
+tests/test_real_http_failover.py
+tests/test_redis_circuit_breaker_integration.py
+tests/test_redis_stream_jobs_integration.py
+tests/test_redis_stream_worker_integration.py
+tests/test_resilience_policy.py
+tests/test_rmsnorm_int8.py
+
+===== key implementation files =====
+[EXISTS] scripts/week4_cloud/run_text_workload_manifest.py
+[EXISTS] deployment/docker-compose.week4.yml
+[EXISTS] app/inference.py
+[MISSING] app/metrics.py
+[EXISTS] app/config.py
+
+===== workload manifests =====
+./data/eval/codegen_mini.jsonl
+./data/week4_workloads/bagel_reliability_n30.jsonl
+./data/week4_workloads/codegen_fixed.jsonl
+./data/week4_workloads/codegen_functional_50.jsonl
+./data/week4_workloads/customer_service_short.jsonl
+./data/week4_workloads/long_context_manifest.jsonl
+
+===== targeted feature search =====
+app/metrics/prometheus_metrics.py:59:gateway_fallback_requests_total = Counter(
+app/metrics/prometheus_metrics.py:60:    "gateway_fallback_requests_total",
+app/metrics/prometheus_metrics.py:61:    "Number of low-budget fallback requests.",
+app/metrics/prometheus_metrics.py:65:gateway_fallback_thinking_budget = Gauge(
+app/metrics/prometheus_metrics.py:66:    "gateway_fallback_thinking_budget",
+app/metrics/prometheus_metrics.py:67:    "Configured thinking budget used by the fallback route.",
+app/metrics/prometheus_metrics.py:99:def record_fallback(
+app/metrics/prometheus_metrics.py:102:    thinking_budget: int,
+app/metrics/prometheus_metrics.py:104:    gateway_fallback_requests_total.labels(
+app/metrics/prometheus_metrics.py:109:    gateway_fallback_thinking_budget.labels(
+app/metrics/prometheus_metrics.py:111:    ).set(thinking_budget)
+app/kernels/rmsnorm_int8.py:1:"""RMSNorm 后按行 INT8 量化的独立 Triton 微内核。
+app/kernels/rmsnorm_int8.py:16:    import triton
+app/kernels/rmsnorm_int8.py:17:    import triton.language as tl
+app/kernels/rmsnorm_int8.py:19:    triton = None
+app/kernels/rmsnorm_int8.py:27:def triton_is_available() -> bool:
+app/kernels/rmsnorm_int8.py:29:    return triton is not None and torch.cuda.is_available()
+app/kernels/rmsnorm_int8.py:103:if triton is not None:
+app/kernels/rmsnorm_int8.py:105:    @triton.jit
+app/kernels/rmsnorm_int8.py:166:    """执行 Triton fused RMSNorm + per-row INT8 quantization。
+app/kernels/rmsnorm_int8.py:172:    if not triton_is_available():
+app/kernels/rmsnorm_int8.py:195:    block_size = triton.next_power_of_2(hidden_size)
+app/redis_stream_jobs.py:37:class RedisStreamJobQueue:
+app/redis_stream_jobs.py:41:    Pending Entries List 中，并可由其他 worker 通过 XAUTOCLAIM 接管。
+app/redis_stream_jobs.py:263:                f"unexpected XAUTOCLAIM response: {claimed!r}"
+app/backends/vllm_backend.py:26:        enable_seed_thinking_budget: bool = False,
+app/backends/vllm_backend.py:32:        self.enable_seed_thinking_budget = enable_seed_thinking_budget
+app/backends/vllm_backend.py:48:    def _should_use_seed_thinking_budget(self) -> bool:
+app/backends/vllm_backend.py:49:        return self.enable_seed_thinking_budget or "Seed-OSS" in self.model_name
+app/backends/vllm_backend.py:51:    def _normalize_seed_thinking_budget(self, thinking_budget: int | None) -> int | None:
+app/backends/vllm_backend.py:52:        if thinking_budget is None:
+app/backends/vllm_backend.py:57:        if 0 < thinking_budget < 512:
+app/backends/vllm_backend.py:60:        return thinking_budget
+app/backends/vllm_backend.py:67:        thinking_budget: int | None = None,
+app/backends/vllm_backend.py:86:        if self._should_use_seed_thinking_budget():
+app/backends/vllm_backend.py:87:            normalized_budget = self._normalize_seed_thinking_budget(thinking_budget)
+app/backends/vllm_backend.py:90:                    "thinking_budget": normalized_budget,
+app/backends/vllm_backend.py:164:            "thinking_budget": thinking_budget,
+app/backends/mock_backend.py:40:        thinking_budget: int | None = None,
+app/backends/mock_backend.py:70:            f"thinking_budget={thinking_budget}."
+app/backends/mock_backend.py:80:            "thinking_budget": thinking_budget,
+app/backends/transformers_backend.py:19:        default_thinking_budget: int | None = None,
+app/backends/transformers_backend.py:24:        self.default_thinking_budget = default_thinking_budget
+app/backends/transformers_backend.py:78:        thinking_budget: int | None = None,
+app/backends/transformers_backend.py:91:        effective_thinking_budget = (
+app/backends/transformers_backend.py:92:            thinking_budget
+app/backends/transformers_backend.py:93:            if thinking_budget is not None
+app/backends/transformers_backend.py:94:            else self.default_thinking_budget
+app/backends/transformers_backend.py:104:        if effective_thinking_budget is not None:
+app/backends/transformers_backend.py:105:            template_kwargs["thinking_budget"] = effective_thinking_budget
+app/backends/transformers_backend.py:151:            "thinking_budget": effective_thinking_budget,
+app/backends/base.py:10:        thinking_budget: int | None = None,
+app/multimodal/service.py:16:    BAGEL_BASE_URL,
+app/multimodal/service.py:17:    BAGEL_MAX_IMAGE_BYTES,
+app/multimodal/service.py:18:    BAGEL_MODEL_NAME,
+app/multimodal/service.py:19:    BAGEL_TIMEOUT_SECONDS,
+app/multimodal/service.py:26:    "Number of multimodal requests handled by the BAGEL service.",
+app/multimodal/service.py:30:_BAGEL_LATENCY_BUCKETS = (
+app/multimodal/service.py:38:    "FastAPI gateway-to-BAGEL request latency.",
+app/multimodal/service.py:40:    buckets=_BAGEL_LATENCY_BUCKETS,
+app/multimodal/service.py:45:    "Sampled GPU memory used after a successful BAGEL request.",
+app/multimodal/service.py:51:    "Sampled GPU utilization after a successful BAGEL request.",
+app/multimodal/service.py:118:    return Client(BAGEL_BASE_URL)
+app/multimodal/service.py:164:            BAGEL_BASE_URL,
+app/multimodal/service.py:177:                "base_url": BAGEL_BASE_URL,
+app/multimodal/service.py:184:        "model_name": BAGEL_MODEL_NAME,
+app/multimodal/service.py:185:        "base_url": BAGEL_BASE_URL,
+app/multimodal/service.py:235:    if len(image_bytes) > BAGEL_MAX_IMAGE_BYTES:
+app/multimodal/service.py:238:            detail=f"image exceeds {BAGEL_MAX_IMAGE_BYTES} bytes",
+app/multimodal/service.py:255:            timeout=BAGEL_TIMEOUT_SECONDS,
+app/multimodal/service.py:272:            detail="BAGEL request timed out",
+app/multimodal/service.py:289:            detail=f"BAGEL upstream error: {exc}",
+app/multimodal/service.py:306:        model_name=BAGEL_MODEL_NAME,
+app/multimodal/config.py:3:BAGEL_BASE_URL = os.getenv(
+app/multimodal/config.py:4:    "BAGEL_BASE_URL",
+app/multimodal/config.py:8:BAGEL_TIMEOUT_SECONDS = float(
+app/multimodal/config.py:9:    os.getenv("BAGEL_TIMEOUT_SECONDS", "120")
+app/multimodal/config.py:12:BAGEL_MAX_IMAGE_BYTES = int(
+app/multimodal/config.py:13:    os.getenv("BAGEL_MAX_IMAGE_BYTES", str(10 * 1024 * 1024))
+app/multimodal/config.py:16:BAGEL_MODEL_NAME = os.getenv(
+app/multimodal/config.py:17:    "BAGEL_MODEL_NAME",
+app/multimodal/config.py:18:    "ByteDance-Seed/BAGEL-7B-MoT",
+app/multimodal/main.py:7:    title="BAGEL Multimodal Inference Service",
+app/schemas.py:10:    thinking_budget: Optional[int] = None
+app/schemas.py:18:    thinking_budget: Optional[int] = None
+app/schemas.py:31:    fallback_thinking_budget: Optional[int] = None
+app/inference.py:33:from app.redis_circuit_breaker import RedisCircuitBreaker
+app/inference.py:37:    record_fallback,
+app/inference.py:42:    CircuitBreaker,
+app/inference.py:56:            default_thinking_budget=TRANSFORMERS_DEFAULT_THINKING_BUDGET,
+app/inference.py:64:            enable_seed_thinking_budget=VLLM_ENABLE_SEED_THINKING_BUDGET,
+app/inference.py:74:def _build_fallback_backend():
+app/inference.py:87:        enable_seed_thinking_budget=VLLM_ENABLE_SEED_THINKING_BUDGET,
+app/inference.py:93:fallback_backend = _build_fallback_backend()
+app/inference.py:97:        return RedisCircuitBreaker(
+app/inference.py:107:    return CircuitBreaker(
+app/inference.py:133:def _is_fallback_safe(error: Exception) -> bool:
+app/inference.py:144:    thinking_budget: int | None = None,
+app/inference.py:153:            thinking_budget=thinking_budget,
+app/inference.py:156:    fallback_budget = RESILIENCE_FALLBACK_THINKING_BUDGET
+app/inference.py:158:    def fallback_operation():
+app/inference.py:159:        if fallback_backend is None:
+app/inference.py:160:            raise RuntimeError("fallback backend is not configured")
+app/inference.py:162:        return fallback_backend.generate(
+app/inference.py:166:            thinking_budget=fallback_budget,
+app/inference.py:189:    def on_fallback(result: str) -> None:
+app/inference.py:190:        record_fallback(
+app/inference.py:193:            thinking_budget=fallback_budget,
+app/inference.py:204:        fallback_operation=(
+app/inference.py:205:            fallback_operation
+app/inference.py:206:            if fallback_backend is not None
+app/inference.py:209:        fallback_budget=(
+app/inference.py:210:            fallback_budget
+app/inference.py:211:            if fallback_backend is not None
+app/inference.py:215:        is_fallback_safe=_is_fallback_safe,
+app/inference.py:218:        on_fallback=on_fallback,
+app/inference.py:232:            "fallback_thinking_budget": outcome.fallback_budget,
+app/job_worker.py:30:    RedisStreamJobQueue,
+app/job_worker.py:50:        queue: RedisStreamJobQueue,
+app/main.py:12:from app.inference import backend, fallback_backend, generate_text
+app/main.py:65:    fallback = None
+app/main.py:66:    if fallback_backend is not None:
+app/main.py:67:        fallback = _check_backend_readiness(
+app/main.py:68:            fallback_backend,
+app/main.py:69:            "fallback",
+app/main.py:72:    fallback_ready = bool(fallback and fallback["ready"])
+app/main.py:73:    service_ready = bool(primary["ready"] or fallback_ready)
+app/main.py:79:        "fallback": fallback,
+app/main.py:213:            thinking_budget=request.thinking_budget,
+app/job_runtime.py:8:from app.redis_stream_jobs import RedisStreamJobQueue
+app/job_runtime.py:14:) -> RedisStreamJobQueue:
+app/job_runtime.py:21:    return RedisStreamJobQueue(
+app/resilience.py:43:class CircuitBreakerProtocol(Protocol):
+app/resilience.py:69:    fallback_budget: int | None = None
+app/resilience.py:76:class CircuitBreaker:
+app/resilience.py:203:    Applies bounded retry, circuit breaking, and an optional fallback route.
+app/resilience.py:205:    Retry and fallback are caller-controlled through predicates because a
+app/resilience.py:211:        breaker: CircuitBreakerProtocol,
+app/resilience.py:228:    def breaker(self) -> CircuitBreakerProtocol:
+app/resilience.py:236:        fallback_operation: Callable[[], T] | None,
+app/resilience.py:237:        fallback_budget: int | None,
+app/resilience.py:239:        is_fallback_safe: Callable[[Exception], bool],
+app/resilience.py:242:        on_fallback: Callable[[str], None] | None = None,
+app/resilience.py:248:            return self._run_fallback_or_raise(
+app/resilience.py:250:                fallback_operation=fallback_operation,
+app/resilience.py:251:                fallback_budget=fallback_budget,
+app/resilience.py:252:                on_fallback=on_fallback,
+app/resilience.py:279:                if fallback_operation is not None and is_fallback_safe(exc):
+app/resilience.py:280:                    return self._run_fallback_or_raise(
+app/resilience.py:282:                        fallback_operation=fallback_operation,
+app/resilience.py:283:                        fallback_budget=fallback_budget,
+app/resilience.py:284:                        on_fallback=on_fallback,
+app/resilience.py:304:    def _run_fallback_or_raise(
+app/resilience.py:308:        fallback_operation: Callable[[], T] | None,
+app/resilience.py:309:        fallback_budget: int | None,
+app/resilience.py:310:        on_fallback: Callable[[str], None] | None,
+app/resilience.py:313:        if fallback_operation is None:
+app/resilience.py:319:            value = fallback_operation()
+app/resilience.py:321:            if on_fallback is not None:
+app/resilience.py:322:                on_fallback("failed")
+app/resilience.py:325:        if on_fallback is not None:
+app/resilience.py:326:            on_fallback("succeeded")
+app/resilience.py:330:            route="fallback",
+app/resilience.py:334:            fallback_budget=fallback_budget,
+app/redis_circuit_breaker.py:10:    CircuitBreaker,
+app/redis_circuit_breaker.py:265:class RedisCircuitBreaker:
+app/redis_circuit_breaker.py:267:    Redis-backed circuit breaker with a process-local availability fallback.
+app/redis_circuit_breaker.py:284:        fallback_breaker: CircuitBreaker | None = None,
+app/redis_circuit_breaker.py:323:        self._fallback_breaker = fallback_breaker or CircuitBreaker(
+app/redis_circuit_breaker.py:345:            return self._local_fallback_permit()
+app/redis_circuit_breaker.py:364:            return self._fallback_breaker.record_success()
+app/redis_circuit_breaker.py:378:            return self._fallback_breaker.record_success()
+app/redis_circuit_breaker.py:387:            return self._fallback_breaker.record_failure()
+app/redis_circuit_breaker.py:402:            return self._fallback_breaker.record_failure()
+app/redis_circuit_breaker.py:415:            snapshot = self._fallback_breaker.snapshot()
+app/redis_circuit_breaker.py:416:            snapshot["store"] = "local_fallback"
+app/redis_circuit_breaker.py:430:    def _local_fallback_permit(self) -> CircuitPermit:
+app/redis_circuit_breaker.py:431:        permit = self._fallback_breaker.allow_primary_call()
+app/redis_circuit_breaker.py:436:            store="local_fallback",
+app/redis_circuit_breaker.py:455:            self._emit_store_event(operation, "local_fallback")
+scripts/run_week2_eval_mini.py:63:    thinking_budget: int,
+scripts/run_week2_eval_mini.py:70:        "thinking_budget": thinking_budget,
+scripts/run_week2_eval_mini.py:133:        "thinking_budget",
+scripts/run_week2_eval_mini.py:151:                thinking_budget=args.thinking_budget,
+scripts/run_week2_eval_mini.py:175:                "thinking_budget": args.thinking_budget,
+scripts/run_gsm8k_full_benchmark.py:177:    thinking_budget: int,
+scripts/run_gsm8k_full_benchmark.py:184:        "thinking_budget": thinking_budget,
+scripts/run_gsm8k_full_benchmark.py:371:        "thinking_budget",
+scripts/run_gsm8k_full_benchmark.py:399:                thinking_budget=args.thinking_budget,
+scripts/run_gsm8k_full_benchmark.py:426:                "thinking_budget": args.thinking_budget,
+scripts/week3_ha/verify_deployment_stack.sh:20:check configmap week3-fallback-runtime
+scripts/week3_ha/verify_deployment_stack.sh:23:check secret week3-fallback-auth
+scripts/week3_ha/verify_fallback_http.py:44:                    "content": "Reply with exactly: fallback-direct-ok",
+scripts/benchmark.py:8:OUTPUT_PATH = Path("results/thinking_budget_benchmark.csv")
+scripts/benchmark.py:16:thinking_budgets = [0, 128, 512, 1024]
+scripts/benchmark.py:26:            "thinking_budget",
+scripts/benchmark.py:46:        for budget in thinking_budgets:
+scripts/benchmark.py:51:                "thinking_budget": budget,
+scripts/benchmark.py:63:                "thinking_budget": budget,
+scripts/benchmark_context_length.py:45:    thinking_budget: int,
+scripts/benchmark_context_length.py:52:        "thinking_budget": thinking_budget,
+scripts/benchmark_context_length.py:87:            "thinking_budget": thinking_budget,
+scripts/benchmark_context_length.py:111:            "thinking_budget": thinking_budget,
+scripts/benchmark_context_length.py:134:            "thinking_budget": thinking_budget,
+scripts/benchmark_context_length.py:159:        "thinking_budget",
+scripts/benchmark_context_length.py:207:    print(f"thinking_budget: {args.thinking_budget}")
+scripts/benchmark_context_length.py:228:            thinking_budget=args.thinking_budget,
+scripts/week2_hardening/vllm_generate_adapter.py:11:  "thinking_budget": 0
+scripts/week2_hardening/vllm_generate_adapter.py:63:            thinking_budget = int(req.get("thinking_budget", 0))
+scripts/week2_hardening/vllm_generate_adapter.py:88:                "chat_template_kwargs": {"thinking_budget": thinking_budget},
+scripts/eval_week2_reasoning_codegen.py:87:    thinking_budget: int,
+scripts/eval_week2_reasoning_codegen.py:94:        "thinking_budget": thinking_budget,
+scripts/eval_week2_reasoning_codegen.py:131:            "thinking_budget": thinking_budget,
+scripts/eval_week2_reasoning_codegen.py:154:            "thinking_budget": thinking_budget,
+scripts/eval_week2_reasoning_codegen.py:176:            "thinking_budget": thinking_budget,
+scripts/eval_week2_reasoning_codegen.py:200:        "thinking_budget",
+scripts/eval_week2_reasoning_codegen.py:250:            thinking_budget=args.thinking_budget,
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:2:"""A100 上的 RMSNorm + INT8 Triton 微内核正确性与性能实验。"""
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:19:    triton_is_available,
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:56:    if not triton_is_available():
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:124:    with (output_dir / "triton_rmsnorm_int8_results.csv").open(
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:145:    (output_dir / "triton_rmsnorm_int8_summary.json").write_text(
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:10:#   fallback : GPU 2,3 / port 8002
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:79:echo "fallback_gpus=$FALLBACK_GPUS"
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:93:start_fallback() {
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:99:    > "$RUN_DIR/fallback_vllm.log" 2>&1 &
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:154:start_fallback
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:157:wait_http "http://127.0.0.1:$FALLBACK_PORT/v1/models" "fallback" || exit 4
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:195:echo "===== phase breaker_open_fallback ====="
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:196:run_probe "breaker_open_fallback" 1
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:197:snapshot_phase "breaker_open_fallback"
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:219:    "primary_killed": [("fallback", 2)],
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:220:    "breaker_open_fallback": [("fallback", 0)],
+scripts/week4_cloud/run_text_workload_manifest.py:56:        "thinking_budget": record.get("thinking_budget", 0),
+scripts/week4_cloud/run_text_workload_manifest.py:196:            "fallback_thinking_budget": result.get(
+scripts/week4_cloud/run_text_workload_manifest.py:197:                "fallback_thinking_budget"
+scripts/week4_cloud/run_text_workload_manifest.py:264:        "fallback_thinking_budget",
+scripts/week4_cloud/probe_gateway_failover.py:82:                    "thinking_budget": 0,
+scripts/week4_cloud/run_local_failover_harness.sh:60:start_fallback() {
+scripts/week4_cloud/run_local_failover_harness.sh:63:    --name fallback \
+scripts/week4_cloud/run_local_failover_harness.sh:64:    > "$RUN_DIR/fallback.log" 2>&1 &
+scripts/week4_cloud/run_local_failover_harness.sh:119:start_fallback
+scripts/week4_cloud/run_local_failover_harness.sh:122:wait_http "http://127.0.0.1:$FALLBACK_PORT/v1/models" "fallback" || exit 4
+scripts/week4_cloud/run_local_failover_harness.sh:130:  VLLM_FALLBACK_MODEL_NAME="mock-fallback" \
+scripts/week4_cloud/run_local_failover_harness.sh:160:echo "===== phase breaker_open_fallback ====="
+scripts/week4_cloud/run_local_failover_harness.sh:161:run_probe "breaker_open_fallback" 1
+scripts/week4_cloud/run_local_failover_harness.sh:162:snapshot_phase "breaker_open_fallback"
+scripts/week4_cloud/run_local_failover_harness.sh:182:    "primary_killed": [("fallback", 2)],
+scripts/week4_cloud/run_local_failover_harness.sh:183:    "breaker_open_fallback": [("fallback", 0)],
+scripts/week4_cloud/benchmark_gateway_capacity.py:95:        "thinking_budget": args.thinking_budget,
+scripts/run_bnb_int8_gsm8k_batched.py:100:    thinking_budget: int,
+scripts/run_bnb_int8_gsm8k_batched.py:113:        thinking_budget=thinking_budget,
+scripts/run_bnb_int8_gsm8k_batched.py:303:                    thinking_budget=args.thinking_budget,
+scripts/quantization/smoke_seed_oss_bnb_int8.py:92:            thinking_budget=0,
+scripts/run_bnb_int8_dual_gpu_full.sh:73:thinking_budget=0
+scripts/benchmark_vllm_backend.py:53:    thinking_budget: int,
+scripts/benchmark_vllm_backend.py:63:        "thinking_budget": thinking_budget,
+scripts/benchmark_vllm_backend.py:85:            "thinking_budget": thinking_budget,
+scripts/benchmark_vllm_backend.py:109:            "thinking_budget": thinking_budget,
+scripts/benchmark_vllm_backend.py:132:            "thinking_budget": thinking_budget,
+scripts/benchmark_vllm_backend.py:157:        "thinking_budget",
+scripts/benchmark_vllm_backend.py:257:        for x in args.thinking_budgets.split(",")
+scripts/benchmark_vllm_backend.py:273:                        "thinking_budget": budget,
+scripts/benchmark_vllm_backend.py:284:    print(f"thinking_budgets: {budgets}")
+scripts/benchmark_vllm_backend.py:299:                task["thinking_budget"],
+scripts/week4_prepare_workloads.py:13:BAGEL_CASE_DIR = ROOT / "data" / "week3_bagel" / "cases"
+scripts/week4_prepare_workloads.py:59:            "thinking_budget": 0,
+scripts/week4_prepare_workloads.py:82:                "thinking_budget": 0,
+scripts/week4_prepare_workloads.py:100:            payload = json.loads((BAGEL_CASE_DIR / filename).read_text(encoding="utf-8"))
+scripts/week4_prepare_workloads.py:104:                raise FileNotFoundError(f"BAGEL image missing: {image_path}")
+scripts/week4_prepare_workloads.py:109:                    f"BAGEL image hash mismatch: {image_path}; "
+scripts/week4_prepare_workloads.py:183:                "thinking_budget": 0,
+scripts/analyze_benchmark.py:5:INPUT_PATH = Path("results/thinking_budget_benchmark.csv")
+scripts/week3_bagel/run_understanding_benchmark.py:243:                "===== BAGEL 图文理解审计摘要 =====",
+scripts/week3_bagel/run_understanding_benchmark.py:257:                "FastAPI、Gradio Client 与 BAGEL 推理；不包含浏览器",
+scripts/week3_bagel/start_bagel_runtime.sh:9:  echo "port 7860 is already in use; refusing to replace an existing BAGEL runtime"
+scripts/week3_bagel/start_bagel_runtime.sh:16:nohup /workspace/bagel_week3/venv/bin/python /workspace/bagel_week3/vendor/BAGEL/app.py --server_name 0.0.0.0 --server_port 7860 --model_path /workspace/bagel_week3/models/BAGEL-7B-MoT > "$LOG_FILE" 2>&1 < /dev/null &
+scripts/week3_bagel/start_multimodal_api.sh:5:PYTHON_BIN="${BAGEL_GATEWAY_PY:-/workspace/venvs/week3-bagel-gateway/bin/python}"
+scripts/week3_bagel/start_multimodal_api.sh:16:  BAGEL_BASE_URL="http://127.0.0.1:7860" \
+scripts/week3_bagel/start_multimodal_api.sh:17:  BAGEL_TIMEOUT_SECONDS="120" \
+deployment/week3_ha/k8s/fallback-runtime.template.yaml:4:  name: week3-fallback-runtime
+deployment/week3_ha/k8s/gateway-deployment.yaml:48:                name: week3-fallback-runtime
+deployment/week3_ha/k8s/gateway-deployment.yaml:54:                name: week3-fallback-auth
+deployment/week3_ha/monitoring/grafana-dashboard.yaml:163:      "title": "Week3 BAGEL Multimodal Observability",
+deployment/week3_ha/monitoring/grafana-dashboard.yaml:182:          "title": "BAGEL Target",
+deployment/week3_ha/monitoring/grafana-dashboard.yaml:326:          "title": "Gateway-to-BAGEL Latency: P50 / P95",
+deployment/vllm/qwen_1_5b_vllm_fastapi_e2e.pbs:185:    "thinking_budget": 512
+deployment/cloud/run_week4_gateway.sh:31:echo "fallback=$VLLM_FALLBACK_BASE_URL"
+deployment/cloud/smoke_test_generate.py:14:    "thinking_budget": 512,
+deployment/cloud/run_week4_seed_w8a8_tp2_instance.sh:6:# 两个实例分别占用 GPU 0,1 与 GPU 2,3，用作 primary / fallback。
+deployment/cloud/README.md:270:8. whether the failure is OOM, model access, dependency, architecture, or network related
+deployment/cloud/README.md:433:For generic models, the project records thinking_budget as an API-level field.
+deployment/cloud/README.md:435:For Seed-OSS-36B-Instruct, thinking_budget should be passed to vLLM through:
+deployment/cloud/README.md:437:    chat_template_kwargs.thinking_budget
+deployment/cloud/README.md:442:        "thinking_budget": <value>
+tests/test_redis_stream_worker_integration.py:10:from app.redis_stream_jobs import RedisStreamJobQueue
+tests/test_redis_stream_worker_integration.py:38:    instance = RedisStreamJobQueue(
+tests/test_redis_stream_worker_integration.py:62:            "thinking_budget": None,
+tests/test_redis_stream_worker_integration.py:111:            "thinking_budget": None,
+tests/test_job_worker.py:18:            "thinking_budget": None,
+tests/test_job_worker.py:110:            "thinking_budget": None,
+tests/test_gateway_resilience_integration.py:11:    CircuitBreaker,
+tests/test_gateway_resilience_integration.py:22:    breaker = CircuitBreaker(
+tests/test_gateway_resilience_integration.py:58:                "thinking_budget": None,
+tests/test_gateway_resilience_integration.py:63:    monkeypatch.setattr(inference_module, "fallback_backend", None)
+tests/test_gateway_resilience_integration.py:108:                "thinking_budget": None,
+tests/test_gateway_resilience_integration.py:117:    monkeypatch.setattr(inference_module, "fallback_backend", None)
+tests/test_gateway_resilience_integration.py:137:def test_generate_returns_circuit_open_when_no_fallback(monkeypatch):
+tests/test_gateway_resilience_integration.py:149:    monkeypatch.setattr(inference_module, "fallback_backend", None)
+tests/test_gateway_resilience_integration.py:169:def test_generate_uses_fallback_with_budget_512(monkeypatch):
+tests/test_gateway_resilience_integration.py:176:    fallback_budgets = []
+tests/test_gateway_resilience_integration.py:184:            fallback_budgets.append(kwargs["thinking_budget"])
+tests/test_gateway_resilience_integration.py:186:                "response": "fallback answer",
+tests/test_gateway_resilience_integration.py:190:                "thinking_budget": kwargs["thinking_budget"],
+tests/test_gateway_resilience_integration.py:191:                "backend": "fallback",
+tests/test_gateway_resilience_integration.py:197:        "fallback_backend",
+tests/test_gateway_resilience_integration.py:204:            "prompt": "fallback test",
+tests/test_gateway_resilience_integration.py:205:            "thinking_budget": 1024,
+tests/test_gateway_resilience_integration.py:212:    assert response.json()["route"] == "fallback"
+tests/test_gateway_resilience_integration.py:213:    assert response.json()["fallback_thinking_budget"] == 512
+tests/test_gateway_resilience_integration.py:214:    assert response.json()["thinking_budget"] == 512
+tests/test_gateway_resilience_integration.py:215:    assert fallback_budgets == [512]
+tests/test_async_jobs_api.py:54:            "thinking_budget": None,
+tests/test_async_jobs_api.py:69:            "thinking_budget": None,
+tests/test_redis_circuit_breaker_integration.py:11:from app.redis_circuit_breaker import RedisCircuitBreaker
+tests/test_redis_circuit_breaker_integration.py:48:    first = RedisCircuitBreaker(**common)
+tests/test_redis_circuit_breaker_integration.py:49:    second = RedisCircuitBreaker(**common)
+tests/test_redis_circuit_breaker_integration.py:114:    breaker = RedisCircuitBreaker(
+tests/test_redis_circuit_breaker_integration.py:125:    assert permit.store == "local_fallback"
+tests/test_redis_circuit_breaker_integration.py:132:    assert breaker.snapshot()["store"] == "local_fallback"
+tests/test_real_http_failover.py:11:from app.resilience import CircuitBreaker, ResilienceController
+tests/test_real_http_failover.py:36:def test_real_http_timeout_opens_breaker_and_routes_to_independent_fallback(
+tests/test_real_http_failover.py:41:        "fallback_payloads": [],
+tests/test_real_http_failover.py:75:            state["fallback_payloads"].append(payload)
+tests/test_real_http_failover.py:80:                    "choices": [{"message": {"content": "fallback answer"}}],
+tests/test_real_http_failover.py:90:    fallback_server, fallback_thread = _start_server(FallbackHandler)
+tests/test_real_http_failover.py:96:        fallback_url = (
+tests/test_real_http_failover.py:97:            f"http://127.0.0.1:{fallback_server.server_port}/v1"
+tests/test_real_http_failover.py:107:                enable_seed_thinking_budget=True,
+tests/test_real_http_failover.py:112:            "fallback_backend",
+tests/test_real_http_failover.py:114:                base_url=fallback_url,
+tests/test_real_http_failover.py:117:                enable_seed_thinking_budget=True,
+tests/test_real_http_failover.py:124:                breaker=CircuitBreaker(
+tests/test_real_http_failover.py:146:                "thinking_budget": 1024,
+tests/test_real_http_failover.py:155:                "thinking_budget": 1024,
+tests/test_real_http_failover.py:160:        assert first.json()["route"] == "fallback"
+tests/test_real_http_failover.py:162:        assert first.json()["fallback_thinking_budget"] == 512
+tests/test_real_http_failover.py:165:        assert second.json()["route"] == "fallback"
+tests/test_real_http_failover.py:169:        assert len(state["fallback_payloads"]) == 2
+tests/test_real_http_failover.py:171:        for payload in state["fallback_payloads"]:
+tests/test_real_http_failover.py:176:                "thinking_budget": 512
+tests/test_real_http_failover.py:181:        _stop_server(fallback_server, fallback_thread)
+tests/test_week3_fallback_readiness.py:18:def test_readyz_stays_ready_when_primary_is_down_but_fallback_is_ready(
+tests/test_week3_fallback_readiness.py:28:        "fallback_backend",
+tests/test_week3_fallback_readiness.py:29:        ReadyBackend(True, "fallback-vllm"),
+tests/test_week3_fallback_readiness.py:40:    assert payload["fallback"]["ready"] is True
+tests/test_week3_fallback_readiness.py:43:def test_readyz_is_unready_when_primary_and_fallback_are_both_down(
+tests/test_week3_fallback_readiness.py:53:        "fallback_backend",
+tests/test_week3_fallback_readiness.py:54:        ReadyBackend(False, "fallback-vllm"),
+tests/test_week3_fallback_readiness.py:64:    assert payload["fallback"]["ready"] is False
+tests/test_resilience_policy.py:3:    CircuitBreaker,
+tests/test_resilience_policy.py:21:        breaker=CircuitBreaker(
+tests/test_resilience_policy.py:32:        fallback_operation=None,
+tests/test_resilience_policy.py:33:        fallback_budget=None,
+tests/test_resilience_policy.py:35:        is_fallback_safe=lambda exc: False,
+tests/test_resilience_policy.py:55:        breaker=CircuitBreaker(
+tests/test_resilience_policy.py:67:            fallback_operation=None,
+tests/test_resilience_policy.py:68:            fallback_budget=None,
+tests/test_resilience_policy.py:70:            is_fallback_safe=lambda exc: False,
+tests/test_resilience_policy.py:82:        breaker=CircuitBreaker(
+tests/test_resilience_policy.py:98:                fallback_operation=None,
+tests/test_resilience_policy.py:99:                fallback_budget=None,
+tests/test_resilience_policy.py:101:                is_fallback_safe=lambda exc: False,
+tests/test_resilience_policy.py:112:            fallback_operation=None,
+tests/test_resilience_policy.py:113:            fallback_budget=None,
+tests/test_resilience_policy.py:115:            is_fallback_safe=lambda exc: False,
+tests/test_resilience_policy.py:123:def test_open_breaker_uses_fallback_budget_512():
+tests/test_resilience_policy.py:125:        breaker=CircuitBreaker(
+tests/test_resilience_policy.py:140:            fallback_operation=None,
+tests/test_resilience_policy.py:141:            fallback_budget=None,
+tests/test_resilience_policy.py:143:            is_fallback_safe=lambda exc: False,
+tests/test_resilience_policy.py:148:    fallback_budgets = []
+tests/test_resilience_policy.py:150:    def fallback():
+tests/test_resilience_policy.py:151:        fallback_budgets.append(512)
+tests/test_resilience_policy.py:152:        return {"backend": "fallback"}
+tests/test_resilience_policy.py:155:        request_id="fallback-request",
+tests/test_resilience_policy.py:157:        fallback_operation=fallback,
+tests/test_resilience_policy.py:158:        fallback_budget=512,
+tests/test_resilience_policy.py:160:        is_fallback_safe=lambda exc: isinstance(
+tests/test_resilience_policy.py:166:    assert result.route == "fallback"
+tests/test_resilience_policy.py:168:    assert result.fallback_budget == 512
+tests/test_resilience_policy.py:169:    assert fallback_budgets == [512]
+tests/test_resilience_policy.py:178:    breaker = CircuitBreaker(
+tests/test_resilience_policy.py:197:            fallback_operation=None,
+tests/test_resilience_policy.py:198:            fallback_budget=None,
+tests/test_resilience_policy.py:200:            is_fallback_safe=lambda exc: False,
+tests/test_resilience_policy.py:212:        fallback_operation=None,
+tests/test_resilience_policy.py:213:        fallback_budget=None,
+tests/test_resilience_policy.py:215:        is_fallback_safe=lambda exc: False,
+tests/test_resilience_policy.py:239:        breaker=CircuitBreaker(
+tests/test_resilience_policy.py:250:        fallback_operation=None,
+tests/test_resilience_policy.py:251:        fallback_budget=None,
+tests/test_resilience_policy.py:256:        is_fallback_safe=lambda exc: False,
+tests/test_vllm_backend.py:42:        base_url="http://fallback-vllm:8000/v1",
+tests/test_vllm_backend.py:48:        prompt="fallback validation",
+tests/test_vllm_backend.py:51:        thinking_budget=512,
+tests/test_vllm_backend.py:54:    assert captured["url"] == "http://fallback-vllm:8000/v1/chat/completions"
+tests/test_vllm_backend.py:58:        "thinking_budget": 512
+tests/test_vllm_backend.py:60:    assert result["thinking_budget"] == 512
+tests/test_vllm_backend.py:78:        base_url="http://fallback-vllm:8000/v1",
+tests/test_vllm_backend.py:84:        thinking_budget=256,
+tests/test_vllm_backend.py:88:        "thinking_budget": 0
+tests/test_rmsnorm_int8.py:8:    triton_is_available,
+tests/test_rmsnorm_int8.py:59:    not triton_is_available(),
+tests/test_fallback_configuration.py:7:def _configure_vllm(monkeypatch, primary_url, fallback_url):
+tests/test_fallback_configuration.py:13:        fallback_url,
+tests/test_fallback_configuration.py:42:def test_fallback_backend_uses_independent_vllm_endpoint(monkeypatch):
+tests/test_fallback_configuration.py:46:        fallback_url="http://fallback-vllm:8000/v1",
+tests/test_fallback_configuration.py:49:    fallback = inference_module._build_fallback_backend()
+tests/test_fallback_configuration.py:51:    assert isinstance(fallback, VLLMBackend)
+tests/test_fallback_configuration.py:52:    assert fallback.base_url == "http://fallback-vllm:8000/v1"
+tests/test_fallback_configuration.py:53:    assert fallback.model_name == "ByteDance-Seed/Seed-OSS-36B-Instruct-W8A8"
+tests/test_fallback_configuration.py:54:    assert fallback.timeout_seconds == 30
+tests/test_fallback_configuration.py:55:    assert fallback.enable_seed_thinking_budget is True
+tests/test_fallback_configuration.py:58:def test_fallback_backend_rejects_primary_endpoint_reuse(monkeypatch):
+tests/test_fallback_configuration.py:62:        fallback_url="http://shared-vllm:8000/v1",
+tests/test_fallback_configuration.py:69:        inference_module._build_fallback_backend()
+tests/test_redis_stream_jobs_integration.py:8:from app.redis_stream_jobs import RedisStreamJobQueue
+tests/test_redis_stream_jobs_integration.py:36:    instance = RedisStreamJobQueue(
+tests/test_redis_stream_jobs_integration.py:54:def _enqueue(queue: RedisStreamJobQueue) -> dict:
+tests/test_redis_stream_jobs_integration.py:60:            "thinking_budget": None,
+tests/test_redis_stream_jobs_integration.py:66:    queue: RedisStreamJobQueue,
+tests/test_redis_stream_jobs_integration.py:78:def _pending(queue: RedisStreamJobQueue):
+
+===== Python syntax check =====
+
+===== Docker Compose static validation =====
+name: ai-inference-week4
+services:
+  gateway:
+    build:
+      context: /Users/xc1225/Desktop/ai-inference-service
+      dockerfile: deployment/Dockerfile
+    depends_on:
+      redis:
+        condition: service_healthy
+        required: true
+    environment:
+      INFERENCE_BACKEND: vllm
+      JOB_QUEUE_CONSUMER_GROUP: week4-workers
+      JOB_QUEUE_KEY_PREFIX: ai-inference:week4:jobs
+      JOB_QUEUE_REDIS_URL: redis://redis:6379/0
+      RESILIENCE_REDIS_KEY_PREFIX: ai-inference:week4:resilience
+      RESILIENCE_REDIS_URL: redis://redis:6379/0
+      RESILIENCE_STATE_STORE: redis
+      VLLM_BASE_URL: http://host.docker.internal:8001/v1
+      VLLM_ENABLE_SEED_THINKING_BUDGET: "true"
+      VLLM_FALLBACK_BASE_URL: http://host.docker.internal:8002/v1
+      VLLM_FALLBACK_MODEL_NAME: Seed-OSS-36B-Instruct-W8A8-Fallback
+      VLLM_FALLBACK_TIMEOUT_SECONDS: "300"
+      VLLM_MODEL_NAME: Seed-OSS-36B-Instruct-W8A8-Primary
+      VLLM_TIMEOUT_SECONDS: "300"
+    extra_hosts:
+      - host.docker.internal=host-gateway
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)
+      timeout: 3s
+      interval: 10s
+      retries: 12
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 8000
+        published: "8000"
+        protocol: tcp
+  redis:
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      timeout: 3s
+      interval: 5s
+      retries: 12
+    image: redis:7.4-alpine
+    networks:
+      default: null
+    volumes:
+      - type: volume
+        source: redis-data
+        target: /data
+        volume: {}
+  worker:
+    build:
+      context: /Users/xc1225/Desktop/ai-inference-service
+      dockerfile: deployment/Dockerfile
+    command:
+      - /bin/sh
+      - -c
+      - export JOB_WORKER_NAME=week4-worker-$$HOSTNAME; exec python -m app.job_worker
+    depends_on:
+      redis:
+        condition: service_healthy
+        required: true
+    environment:
+      INFERENCE_BACKEND: vllm
+      JOB_QUEUE_CONSUMER_GROUP: week4-workers
+      JOB_QUEUE_KEY_PREFIX: ai-inference:week4:jobs
+      JOB_QUEUE_REDIS_URL: redis://redis:6379/0
+      JOB_WORKER_BATCH_SIZE: "10"
+      JOB_WORKER_METRICS_HOST: 0.0.0.0
+      JOB_WORKER_METRICS_PORT: "9101"
+      RESILIENCE_REDIS_KEY_PREFIX: ai-inference:week4:resilience
+      RESILIENCE_REDIS_URL: redis://redis:6379/0
+      RESILIENCE_STATE_STORE: redis
+      VLLM_BASE_URL: http://host.docker.internal:8001/v1
+      VLLM_ENABLE_SEED_THINKING_BUDGET: "true"
+      VLLM_FALLBACK_BASE_URL: http://host.docker.internal:8002/v1
+      VLLM_FALLBACK_MODEL_NAME: Seed-OSS-36B-Instruct-W8A8-Fallback
+      VLLM_FALLBACK_TIMEOUT_SECONDS: "300"
+      VLLM_MODEL_NAME: Seed-OSS-36B-Instruct-W8A8-Primary
+      VLLM_TIMEOUT_SECONDS: "300"
+    extra_hosts:
+      - host.docker.internal=host-gateway
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 9101
+        published: "9101"
+        protocol: tcp
+networks:
+  default:
+    name: ai-inference-week4_default
+volumes:
+  redis-data:
+    name: ai-inference-week4_redis-data
+x-service-env:
+  INFERENCE_BACKEND: vllm
+  JOB_QUEUE_CONSUMER_GROUP: week4-workers
+  JOB_QUEUE_KEY_PREFIX: ai-inference:week4:jobs
+  JOB_QUEUE_REDIS_URL: redis://redis:6379/0
+  RESILIENCE_REDIS_KEY_PREFIX: ai-inference:week4:resilience
+  RESILIENCE_REDIS_URL: redis://redis:6379/0
+  RESILIENCE_STATE_STORE: redis
+  VLLM_BASE_URL: http://host.docker.internal:8001/v1
+  VLLM_ENABLE_SEED_THINKING_BUDGET: "true"
+  VLLM_FALLBACK_BASE_URL: http://host.docker.internal:8002/v1
+  VLLM_FALLBACK_MODEL_NAME: Seed-OSS-36B-Instruct-W8A8-Fallback
+  VLLM_FALLBACK_TIMEOUT_SECONDS: "300"
+  VLLM_MODEL_NAME: Seed-OSS-36B-Instruct-W8A8-Primary
+  VLLM_TIMEOUT_SECONDS: "300"
+
+===== targeted test discovery =====
+tests/test_backend_resilience.py
+tests/test_gateway_resilience_integration.py
+tests/test_redis_circuit_breaker_integration.py
+tests/test_redis_stream_jobs_integration.py
+tests/test_redis_stream_worker_integration.py
+tests/test_resilience_policy.py
+tests/test_week3_fallback_readiness.py
+tests/test_week3_health.py
+
+===== Python environment =====
+Python 3.13.5
+executable: /Users/xc1225/Desktop/ai-inference-service/.venv/bin/python
+torch: available
+triton: unavailable (ModuleNotFoundError: No module named 'triton')
+fastapi: available
+redis: available
+prometheus_client: available

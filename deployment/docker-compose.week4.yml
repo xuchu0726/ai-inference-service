@@ -1,0 +1,75 @@
+name: ai-inference-week4
+
+x-service-env: &service-env
+  INFERENCE_BACKEND: vllm
+
+  VLLM_BASE_URL: ${VLLM_BASE_URL:-http://host.docker.internal:8001/v1}
+  VLLM_MODEL_NAME: ${VLLM_MODEL_NAME:-Seed-OSS-36B-Instruct-W8A8-Primary}
+  VLLM_TIMEOUT_SECONDS: ${VLLM_TIMEOUT_SECONDS:-300}
+  VLLM_ENABLE_SEED_THINKING_BUDGET: ${VLLM_ENABLE_SEED_THINKING_BUDGET:-true}
+
+  VLLM_FALLBACK_BASE_URL: ${VLLM_FALLBACK_BASE_URL:-http://host.docker.internal:8002/v1}
+  VLLM_FALLBACK_MODEL_NAME: ${VLLM_FALLBACK_MODEL_NAME:-Seed-OSS-36B-Instruct-W8A8-Fallback}
+  VLLM_FALLBACK_TIMEOUT_SECONDS: ${VLLM_FALLBACK_TIMEOUT_SECONDS:-300}
+
+  RESILIENCE_STATE_STORE: redis
+  RESILIENCE_REDIS_URL: redis://redis:6379/0
+  RESILIENCE_REDIS_KEY_PREFIX: ${RESILIENCE_REDIS_KEY_PREFIX:-ai-inference:week4:resilience}
+
+  JOB_QUEUE_REDIS_URL: redis://redis:6379/0
+  JOB_QUEUE_KEY_PREFIX: ${JOB_QUEUE_KEY_PREFIX:-ai-inference:week4:jobs}
+  JOB_QUEUE_CONSUMER_GROUP: ${JOB_QUEUE_CONSUMER_GROUP:-week4-workers}
+
+services:
+  redis:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  gateway:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile
+    environment: *service-env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "${GATEWAY_PORT:-8000}:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+
+  worker:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile
+    command:
+      - /bin/sh
+      - -c
+      - export JOB_WORKER_NAME=week4-worker-$$HOSTNAME; exec python -m app.job_worker
+    environment:
+      <<: *service-env
+      JOB_WORKER_BATCH_SIZE: ${JOB_WORKER_BATCH_SIZE:-10}
+      JOB_WORKER_METRICS_HOST: 0.0.0.0
+      JOB_WORKER_METRICS_PORT: 9101
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "${WORKER_METRICS_PORT:-9101}:9101"
+    depends_on:
+      redis:
+        condition: service_healthy
+
+volumes:
+  redis-data:
