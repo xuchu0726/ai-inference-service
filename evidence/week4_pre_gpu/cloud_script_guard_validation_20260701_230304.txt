@@ -1,0 +1,8 @@
+===== runtime missing asset guard =====
+required BAGEL asset missing: /tmp/week4_missing_bagel_20260701_230304/venv/bin/python
+runtime_guard_rc=4
+===== API missing Python guard =====
+BAGEL gateway Python is unavailable: /tmp/week4_missing_bagel_python_20260701_230304
+api_guard_rc=3
+===== validation =====
+GUARD_VALIDATION_PASSED

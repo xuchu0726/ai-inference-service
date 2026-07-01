@@ -1,0 +1,1809 @@
+===== git state =====
+?? evidence/week4_pre_gpu/cloud_execution_audit_20260701_225451.txt
+?? evidence/week4_pre_gpu/cloud_execution_audit_20260701_225505.txt
+2867f9c (HEAD -> feature/week4-redis-shared-resilience, origin/feature/week4-redis-shared-resilience) 完成Week4本地封板与云端实验入口
+e5bef25 添加Week4双TP2云端部署与容量压测入口
+7eebd31 实现Redis Stream异步任务与故障接管
+
+===== cloud deployment scripts =====
+
+========== deployment/cloud/run_week4_seed_w8a8_tp2_instance.sh ==========
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Week4：单个 Seed-OSS-36B W8A8 TP=2 vLLM 实例。
+# 调用方必须显式指定 CUDA_VISIBLE_DEVICES、VLLM_PORT、SERVED_MODEL_NAME。
+# 两个实例分别占用 GPU 0,1 与 GPU 2,3，用作 primary / fallback。
+
+MODEL_PATH="${MODEL_PATH:?MODEL_PATH is required}"
+CUDA_DEVICE_SET="${CUDA_VISIBLE_DEVICES:?CUDA_VISIBLE_DEVICES is required}"
+VLLM_PORT="${VLLM_PORT:?VLLM_PORT is required}"
+SERVED_MODEL_NAME="${SERVED_MODEL_NAME:?SERVED_MODEL_NAME is required}"
+
+TENSOR_PARALLEL_SIZE="${TENSOR_PARALLEL_SIZE:-2}"
+MAX_MODEL_LEN="${MAX_MODEL_LEN:-4096}"
+MAX_NUM_BATCHED_TOKENS="${MAX_NUM_BATCHED_TOKENS:-8192}"
+MAX_NUM_SEQS="${MAX_NUM_SEQS:-16}"
+GPU_MEMORY_UTILIZATION="${GPU_MEMORY_UTILIZATION:-0.90}"
+DTYPE="${DTYPE:-bfloat16}"
+
+export CUDA_VISIBLE_DEVICES="$CUDA_DEVICE_SET"
+export CUDA_DEVICE_ORDER=PCI_BUS_ID
+
+echo "===== Week4 Seed W8A8 TP=2 instance ====="
+echo "CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
+echo "MODEL_PATH=$MODEL_PATH"
+echo "VLLM_PORT=$VLLM_PORT"
+echo "SERVED_MODEL_NAME=$SERVED_MODEL_NAME"
+echo "TENSOR_PARALLEL_SIZE=$TENSOR_PARALLEL_SIZE"
+echo "MAX_MODEL_LEN=$MAX_MODEL_LEN"
+echo "MAX_NUM_BATCHED_TOKENS=$MAX_NUM_BATCHED_TOKENS"
+echo "MAX_NUM_SEQS=$MAX_NUM_SEQS"
+echo "GPU_MEMORY_UTILIZATION=$GPU_MEMORY_UTILIZATION"
+
+exec vllm serve "$MODEL_PATH" \
+  --served-model-name "$SERVED_MODEL_NAME" \
+  --host 0.0.0.0 \
+  --port "$VLLM_PORT" \
+  --tensor-parallel-size "$TENSOR_PARALLEL_SIZE" \
+  --dtype "$DTYPE" \
+  --quantization compressed-tensors \
+  --max-model-len "$MAX_MODEL_LEN" \
+  --max-num-batched-tokens "$MAX_NUM_BATCHED_TOKENS" \
+  --max-num-seqs "$MAX_NUM_SEQS" \
+  --gpu-memory-utilization "$GPU_MEMORY_UTILIZATION" \
+  --trust-remote-code \
+  --enforce-eager \
+  --safetensors-load-strategy prefetch
+
+========== deployment/cloud/run_week4_gateway.sh ==========
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Week4：Gateway 接入同机双 TP=2 Seed-OSS W8A8 upstream。
+# Redis 必须在本机或可访问地址先启动；本脚本不负责启动 Redis。
+
+export INFERENCE_BACKEND="${INFERENCE_BACKEND:-vllm}"
+
+export VLLM_BASE_URL="${VLLM_BASE_URL:-http://127.0.0.1:8001/v1}"
+export VLLM_MODEL_NAME="${VLLM_MODEL_NAME:-Seed-OSS-36B-Instruct-W8A8-Primary}"
+export VLLM_TIMEOUT_SECONDS="${VLLM_TIMEOUT_SECONDS:-300}"
+export VLLM_ENABLE_SEED_THINKING_BUDGET="${VLLM_ENABLE_SEED_THINKING_BUDGET:-true}"
+
+export VLLM_FALLBACK_BASE_URL="${VLLM_FALLBACK_BASE_URL:-http://127.0.0.1:8002/v1}"
+export VLLM_FALLBACK_MODEL_NAME="${VLLM_FALLBACK_MODEL_NAME:-Seed-OSS-36B-Instruct-W8A8-Fallback}"
+export VLLM_FALLBACK_TIMEOUT_SECONDS="${VLLM_FALLBACK_TIMEOUT_SECONDS:-300}"
+
+export RESILIENCE_STATE_STORE="${RESILIENCE_STATE_STORE:-redis}"
+export RESILIENCE_REDIS_URL="${RESILIENCE_REDIS_URL:-redis://127.0.0.1:6379/0}"
+export RESILIENCE_REDIS_KEY_PREFIX="${RESILIENCE_REDIS_KEY_PREFIX:-ai-inference:week4:resilience}"
+
+export JOB_QUEUE_REDIS_URL="${JOB_QUEUE_REDIS_URL:-$RESILIENCE_REDIS_URL}"
+export JOB_QUEUE_KEY_PREFIX="${JOB_QUEUE_KEY_PREFIX:-ai-inference:week4:jobs}"
+export JOB_QUEUE_CONSUMER_GROUP="${JOB_QUEUE_CONSUMER_GROUP:-week4-workers}"
+
+FASTAPI_HOST="${FASTAPI_HOST:-0.0.0.0}"
+FASTAPI_PORT="${FASTAPI_PORT:-8000}"
+
+echo "===== Week4 Gateway ====="
+echo "primary=$VLLM_BASE_URL"
+echo "fallback=$VLLM_FALLBACK_BASE_URL"
+echo "redis=$RESILIENCE_REDIS_URL"
+echo "gateway=$FASTAPI_HOST:$FASTAPI_PORT"
+
+exec python -m uvicorn app.main:app \
+  --host "$FASTAPI_HOST" \
+  --port "$FASTAPI_PORT"
+
+========== deployment/cloud/run_week4_job_worker.sh ==========
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Week4：异步任务 worker。必须与 Gateway 使用完全相同的 upstream 与 Redis 配置。
+
+export INFERENCE_BACKEND="${INFERENCE_BACKEND:-vllm}"
+
+export VLLM_BASE_URL="${VLLM_BASE_URL:-http://127.0.0.1:8001/v1}"
+export VLLM_MODEL_NAME="${VLLM_MODEL_NAME:-Seed-OSS-36B-Instruct-W8A8-Primary}"
+export VLLM_TIMEOUT_SECONDS="${VLLM_TIMEOUT_SECONDS:-300}"
+export VLLM_ENABLE_SEED_THINKING_BUDGET="${VLLM_ENABLE_SEED_THINKING_BUDGET:-true}"
+
+export VLLM_FALLBACK_BASE_URL="${VLLM_FALLBACK_BASE_URL:-http://127.0.0.1:8002/v1}"
+export VLLM_FALLBACK_MODEL_NAME="${VLLM_FALLBACK_MODEL_NAME:-Seed-OSS-36B-Instruct-W8A8-Fallback}"
+export VLLM_FALLBACK_TIMEOUT_SECONDS="${VLLM_FALLBACK_TIMEOUT_SECONDS:-300}"
+
+export RESILIENCE_STATE_STORE="${RESILIENCE_STATE_STORE:-redis}"
+export RESILIENCE_REDIS_URL="${RESILIENCE_REDIS_URL:-redis://127.0.0.1:6379/0}"
+export RESILIENCE_REDIS_KEY_PREFIX="${RESILIENCE_REDIS_KEY_PREFIX:-ai-inference:week4:resilience}"
+
+export JOB_QUEUE_REDIS_URL="${JOB_QUEUE_REDIS_URL:-$RESILIENCE_REDIS_URL}"
+export JOB_QUEUE_KEY_PREFIX="${JOB_QUEUE_KEY_PREFIX:-ai-inference:week4:jobs}"
+export JOB_QUEUE_CONSUMER_GROUP="${JOB_QUEUE_CONSUMER_GROUP:-week4-workers}"
+
+export JOB_WORKER_NAME="${JOB_WORKER_NAME:-week4-worker-$(hostname)}"
+export JOB_WORKER_BATCH_SIZE="${JOB_WORKER_BATCH_SIZE:-10}"
+export JOB_WORKER_METRICS_HOST="${JOB_WORKER_METRICS_HOST:-0.0.0.0}"
+export JOB_WORKER_METRICS_PORT="${JOB_WORKER_METRICS_PORT:-9101}"
+
+exec python -m app.job_worker
+
+========== scripts/week4_cloud/run_real_vllm_failover_harness.sh ==========
+#!/usr/bin/env bash
+# Week4：双 TP=2 Seed-OSS W8A8 upstream 的真实 failover / recovery 实验。
+#
+# 必填：
+#   MODEL_PATH=/workspace/models/Seed-OSS-36B-Instruct-W8A8 \
+#   bash scripts/week4_cloud/run_real_vllm_failover_harness.sh
+#
+# 默认：
+#   primary  : GPU 0,1 / port 8001
+#   fallback : GPU 2,3 / port 8002
+#   gateway  : port 8000
+#
+# 可选：
+#   KEEP_SERVICES=1  实验结束后保留 Gateway 与双 vLLM 实例，供后续压测复用。
+
+set -uo pipefail
+
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$REPO_ROOT"
+
+MODEL_PATH="${MODEL_PATH:?MODEL_PATH is required}"
+
+STAMP="$(date +%Y%m%d_%H%M%S)"
+RUN_DIR="${RUN_DIR:-evidence/week4_cloud_failover/$STAMP}"
+
+PRIMARY_GPUS="${PRIMARY_GPUS:-0,1}"
+FALLBACK_GPUS="${FALLBACK_GPUS:-2,3}"
+
+PRIMARY_PORT="${PRIMARY_PORT:-8001}"
+FALLBACK_PORT="${FALLBACK_PORT:-8002}"
+GATEWAY_PORT="${GATEWAY_PORT:-8000}"
+
+PRIMARY_MODEL_NAME="${PRIMARY_MODEL_NAME:-Seed-OSS-36B-Instruct-W8A8-Primary}"
+FALLBACK_MODEL_NAME="${FALLBACK_MODEL_NAME:-Seed-OSS-36B-Instruct-W8A8-Fallback}"
+
+REDIS_URL="${REDIS_URL:-redis://127.0.0.1:6379/0}"
+BREAKER_PREFIX="${BREAKER_PREFIX:-ai-inference:week4:cloud-failover:$STAMP}"
+
+VLLM_TIMEOUT_SECONDS="${VLLM_TIMEOUT_SECONDS:-5}"
+RECOVERY_TIMEOUT_SECONDS="${RECOVERY_TIMEOUT_SECONDS:-8}"
+KEEP_SERVICES="${KEEP_SERVICES:-0}"
+
+PRIMARY_PID=""
+FALLBACK_PID=""
+GATEWAY_PID=""
+
+cleanup() {
+  if [ "$KEEP_SERVICES" = "1" ]; then
+    return
+  fi
+
+  for pid in "$GATEWAY_PID" "$PRIMARY_PID" "$FALLBACK_PID"; do
+    if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+      kill -TERM "$pid" 2>/dev/null || true
+      wait "$pid" 2>/dev/null || true
+    fi
+  done
+}
+
+trap cleanup EXIT
+
+mkdir -p "$RUN_DIR"
+
+if ! python - "$REDIS_URL" <<'PY'
+import redis
+import sys
+
+redis.Redis.from_url(sys.argv[1], socket_timeout=2).ping()
+PY
+then
+  echo "redis_ready=no"
+  exit 2
+fi
+
+echo "redis_ready=yes"
+echo "run_dir=$RUN_DIR"
+echo "breaker_prefix=$BREAKER_PREFIX"
+echo "primary_gpus=$PRIMARY_GPUS"
+echo "fallback_gpus=$FALLBACK_GPUS"
+
+start_primary() {
+  local log_name="${1:?primary log name is required}"
+
+  MODEL_PATH="$MODEL_PATH" \
+  CUDA_VISIBLE_DEVICES="$PRIMARY_GPUS" \
+  VLLM_PORT="$PRIMARY_PORT" \
+  SERVED_MODEL_NAME="$PRIMARY_MODEL_NAME" \
+  bash deployment/cloud/run_week4_seed_w8a8_tp2_instance.sh \
+    > "$RUN_DIR/$log_name" 2>&1 &
+  PRIMARY_PID=$!
+}
+
+start_fallback() {
+  MODEL_PATH="$MODEL_PATH" \
+  CUDA_VISIBLE_DEVICES="$FALLBACK_GPUS" \
+  VLLM_PORT="$FALLBACK_PORT" \
+  SERVED_MODEL_NAME="$FALLBACK_MODEL_NAME" \
+  bash deployment/cloud/run_week4_seed_w8a8_tp2_instance.sh \
+    > "$RUN_DIR/fallback_vllm.log" 2>&1 &
+  FALLBACK_PID=$!
+}
+
+wait_http() {
+  local url="$1"
+  local label="$2"
+
+  for _ in $(seq 1 360); do
+    if curl -fsS "$url" >/dev/null 2>&1; then
+      echo "${label}_ready=yes"
+      return 0
+    fi
+    sleep 1
+  done
+
+  echo "${label}_ready=no"
+  return 1
+}
+
+snapshot_phase() {
+  local phase="$1"
+  local phase_dir="$RUN_DIR/$phase"
+
+  mkdir -p "$phase_dir"
+
+  bash loadtest/collect/snapshot_gateway_metrics.sh \
+    "http://127.0.0.1:$GATEWAY_PORT" \
+    "$phase_dir/gateway_metrics.txt" \
+    || true
+
+  python loadtest/collect/snapshot_redis_breaker_state.py \
+    --redis-url "$REDIS_URL" \
+    --key-prefix "$BREAKER_PREFIX" \
+    --output "$phase_dir/redis_breaker_state.json" \
+    || true
+
+  bash loadtest/collect/snapshot_runtime.sh \
+    "$phase_dir/runtime.txt" \
+    || true
+}
+
+run_probe() {
+  local phase="$1"
+  local requests="$2"
+
+  python scripts/week4_cloud/probe_gateway_failover.py \
+    --base-url "http://127.0.0.1:$GATEWAY_PORT" \
+    --requests "$requests" \
+    --interval-seconds 0.3 \
+    --max-new-tokens 8 \
+    --output-dir "$RUN_DIR/$phase"
+}
+
+start_primary primary_vllm_initial.log
+start_fallback
+
+wait_http "http://127.0.0.1:$PRIMARY_PORT/v1/models" "primary" || exit 3
+wait_http "http://127.0.0.1:$FALLBACK_PORT/v1/models" "fallback" || exit 4
+
+(
+  INFERENCE_BACKEND=vllm \
+  VLLM_BASE_URL="http://127.0.0.1:$PRIMARY_PORT/v1" \
+  VLLM_MODEL_NAME="$PRIMARY_MODEL_NAME" \
+  VLLM_TIMEOUT_SECONDS="$VLLM_TIMEOUT_SECONDS" \
+  VLLM_FALLBACK_BASE_URL="http://127.0.0.1:$FALLBACK_PORT/v1" \
+  VLLM_FALLBACK_MODEL_NAME="$FALLBACK_MODEL_NAME" \
+  VLLM_FALLBACK_TIMEOUT_SECONDS="$VLLM_TIMEOUT_SECONDS" \
+  VLLM_ENABLE_SEED_THINKING_BUDGET=true \
+  RESILIENCE_STATE_STORE=redis \
+  RESILIENCE_REDIS_URL="$REDIS_URL" \
+  RESILIENCE_REDIS_KEY_PREFIX="$BREAKER_PREFIX" \
+  RESILIENCE_FAILURE_THRESHOLD=1 \
+  RESILIENCE_RETRY_ATTEMPTS=1 \
+  RESILIENCE_RETRY_BACKOFF_SECONDS=0.2 \
+  RESILIENCE_RECOVERY_TIMEOUT_SECONDS="$RECOVERY_TIMEOUT_SECONDS" \
+  RESILIENCE_REDIS_PROBE_LEASE_MS=30000 \
+  FASTAPI_PORT="$GATEWAY_PORT" \
+  bash deployment/cloud/run_week4_gateway.sh
+) > "$RUN_DIR/gateway.log" 2>&1 &
+GATEWAY_PID=$!
+
+wait_http "http://127.0.0.1:$GATEWAY_PORT/health" "gateway" || exit 5
+
+echo "===== phase baseline_primary ====="
+run_probe "baseline_primary" 2
+snapshot_phase "baseline_primary"
+
+echo "===== phase primary_killed ====="
+kill -TERM "$PRIMARY_PID" 2>/dev/null || true
+wait "$PRIMARY_PID" 2>/dev/null || true
+PRIMARY_PID=""
+
+run_probe "primary_killed" 1
+snapshot_phase "primary_killed"
+
+echo "===== phase breaker_open_fallback ====="
+run_probe "breaker_open_fallback" 1
+snapshot_phase "breaker_open_fallback"
+
+echo "===== phase primary_recovered ====="
+start_primary primary_vllm_recovered.log
+wait_http "http://127.0.0.1:$PRIMARY_PORT/v1/models" "primary_restarted" || exit 6
+
+sleep "$((RECOVERY_TIMEOUT_SECONDS + 1))"
+
+run_probe "primary_recovered" 1
+snapshot_phase "primary_recovered"
+
+python - "$RUN_DIR" <<'PY'
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+
+run_dir = Path(sys.argv[1])
+
+expectations = {
+    "baseline_primary": [("primary", 1), ("primary", 1)],
+    "primary_killed": [("fallback", 2)],
+    "breaker_open_fallback": [("fallback", 0)],
+    "primary_recovered": [("primary", 1)],
+}
+
+errors: list[str] = []
+phase_summary: dict[str, object] = {}
+
+for phase, expected in expectations.items():
+    path = run_dir / phase / "probe_summary.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    actual = [
+        (item["route"], item["primary_attempts"])
+        for item in payload["results"]
+    ]
+    phase_summary[phase] = {
+        "expected": expected,
+        "actual": actual,
+        "success_count": payload["success_count"],
+        "failure_count": payload["failure_count"],
+    }
+
+    if actual != expected:
+        errors.append(f"{phase}: expected={expected}, actual={actual}")
+
+result = {
+    "validation_passed": not errors,
+    "errors": errors,
+    "phases": phase_summary,
+}
+
+(run_dir / "harness_validation.json").write_text(
+    json.dumps(result, ensure_ascii=False, indent=2) + "\n",
+    encoding="utf-8",
+)
+
+print(json.dumps(result, ensure_ascii=False, indent=2))
+
+if errors:
+    raise SystemExit(2)
+PY
+
+VALIDATION_RC=$?
+
+cat > "$RUN_DIR/service_pids.env" <<EOF
+PRIMARY_PID=$PRIMARY_PID
+FALLBACK_PID=$FALLBACK_PID
+GATEWAY_PID=$GATEWAY_PID
+PRIMARY_PORT=$PRIMARY_PORT
+FALLBACK_PORT=$FALLBACK_PORT
+GATEWAY_PORT=$GATEWAY_PORT
+EOF
+
+echo "===== experiment complete ====="
+echo "run_dir=$RUN_DIR"
+echo "keep_services=$KEEP_SERVICES"
+echo "validation_exit_code=$VALIDATION_RC"
+
+if [ "$VALIDATION_RC" -ne 0 ]; then
+  exit "$VALIDATION_RC"
+fi
+
+========== scripts/week4_cloud/benchmark_gateway_capacity.py ==========
+#!/usr/bin/env python3
+"""Week4 Gateway 容量实验：同步 generate 或异步 jobs 的受控并发压测。"""
+
+from __future__ import annotations
+
+import argparse
+import concurrent.futures
+import csv
+import json
+import math
+import statistics
+import time
+import urllib.error
+import urllib.request
+import uuid
+from dataclasses import asdict, dataclass
+from pathlib import Path
+from typing import Any
+
+
+@dataclass
+class RequestResult:
+    index: int
+    mode: str
+    success: bool
+    final_status: str
+    http_status: int | None
+    submit_latency_seconds: float | None
+    end_to_end_latency_seconds: float | None
+    route: str | None
+    primary_attempts: int | None
+    job_id: str | None
+    error: str | None
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--base-url", required=True)
+    parser.add_argument("--mode", choices=("generate", "jobs"), required=True)
+    parser.add_argument("--requests", type=int, required=True)
+    parser.add_argument("--concurrency", type=int, required=True)
+    parser.add_argument("--max-new-tokens", type=int, default=64)
+    parser.add_argument("--temperature", type=float, default=0.0)
+    parser.add_argument("--thinking-budget", type=int, default=0)
+    parser.add_argument("--poll-interval-seconds", type=float, default=0.2)
+    parser.add_argument("--job-timeout-seconds", type=float, default=360.0)
+    parser.add_argument("--output-dir", required=True)
+    return parser.parse_args()
+
+
+def request_json(
+    method: str,
+    url: str,
+    payload: dict[str, Any] | None = None,
+    timeout_seconds: float = 420.0,
+) -> tuple[int, dict[str, Any]]:
+    data = None if payload is None else json.dumps(payload).encode("utf-8")
+    request = urllib.request.Request(
+        url=url,
+        data=data,
+        method=method,
+        headers={"Content-Type": "application/json"},
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=timeout_seconds) as response:
+            raw = response.read().decode("utf-8")
+            return response.status, json.loads(raw)
+    except urllib.error.HTTPError as exc:
+        raw = exc.read().decode("utf-8", errors="replace")
+        try:
+            body = json.loads(raw)
+        except json.JSONDecodeError:
+            body = {"raw_error": raw}
+        return exc.code, body
+
+
+def percentile(values: list[float], percentile_value: float) -> float | None:
+    if not values:
+        return None
+    ordered = sorted(values)
+    index = max(0, math.ceil(percentile_value * len(ordered)) - 1)
+    return ordered[index]
+
+
+def run_one(index: int, args: argparse.Namespace) -> RequestResult:
+    base_url = args.base_url.rstrip("/")
+    payload = {
+        "prompt": (
+            "Week4 capacity validation request "
+            f"index={index} nonce={uuid.uuid4().hex}"
+        ),
+        "max_new_tokens": args.max_new_tokens,
+        "temperature": args.temperature,
+        "thinking_budget": args.thinking_budget,
+    }
+
+    started = time.perf_counter()
+
+    try:
+        if args.mode == "generate":
+            http_status, body = request_json(
+                "POST",
+                f"{base_url}/generate",
+                payload,
+            )
+            elapsed = time.perf_counter() - started
+            return RequestResult(
+                index=index,
+                mode=args.mode,
+                success=http_status == 200,
+                final_status="succeeded" if http_status == 200 else "failed",
+                http_status=http_status,
+                submit_latency_seconds=elapsed,
+                end_to_end_latency_seconds=elapsed,
+                route=body.get("route"),
+                primary_attempts=body.get("primary_attempts"),
+                job_id=None,
+                error=None if http_status == 200 else json.dumps(body),
+            )
+
+        submit_started = time.perf_counter()
+        http_status, body = request_json(
+            "POST",
+            f"{base_url}/jobs",
+            payload,
+        )
+        submit_latency = time.perf_counter() - submit_started
+
+        if http_status != 202:
+            return RequestResult(
+                index=index,
+                mode=args.mode,
+                success=False,
+                final_status="submission_failed",
+                http_status=http_status,
+                submit_latency_seconds=submit_latency,
+                end_to_end_latency_seconds=time.perf_counter() - started,
+                route=None,
+                primary_attempts=None,
+                job_id=None,
+                error=json.dumps(body),
+            )
+
+        job_id = body["job_id"]
+        deadline = time.monotonic() + args.job_timeout_seconds
+
+        while time.monotonic() < deadline:
+            status_code, state = request_json(
+                "GET",
+                f"{base_url}/jobs/{job_id}",
+                timeout_seconds=30.0,
+            )
+
+            status = state.get("status", "unknown")
+            if status in {"succeeded", "failed"}:
+                result = state.get("result") or {}
+                return RequestResult(
+                    index=index,
+                    mode=args.mode,
+                    success=status == "succeeded" and status_code == 200,
+                    final_status=status,
+                    http_status=status_code,
+                    submit_latency_seconds=submit_latency,
+                    end_to_end_latency_seconds=time.perf_counter() - started,
+                    route=result.get("route"),
+                    primary_attempts=result.get("primary_attempts"),
+                    job_id=job_id,
+                    error=state.get("error_message"),
+                )
+
+            time.sleep(args.poll_interval_seconds)
+
+        return RequestResult(
+            index=index,
+            mode=args.mode,
+            success=False,
+            final_status="poll_timeout",
+            http_status=None,
+            submit_latency_seconds=submit_latency,
+            end_to_end_latency_seconds=time.perf_counter() - started,
+            route=None,
+            primary_attempts=None,
+            job_id=job_id,
+            error=f"job did not finish within {args.job_timeout_seconds}s",
+        )
+
+    except Exception as exc:
+        return RequestResult(
+            index=index,
+            mode=args.mode,
+            success=False,
+            final_status="client_error",
+            http_status=None,
+            submit_latency_seconds=None,
+            end_to_end_latency_seconds=time.perf_counter() - started,
+            route=None,
+            primary_attempts=None,
+            job_id=None,
+            error=repr(exc),
+        )
+
+
+def main() -> None:
+    args = parse_args()
+
+    if args.requests <= 0 or args.concurrency <= 0:
+        raise ValueError("--requests and --concurrency must be positive")
+
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    wall_started = time.perf_counter()
+    with concurrent.futures.ThreadPoolExecutor(
+        max_workers=args.concurrency
+    ) as executor:
+        futures = [
+            executor.submit(run_one, index, args)
+            for index in range(args.requests)
+        ]
+        results = [future.result() for future in futures]
+    wall_seconds = time.perf_counter() - wall_started
+
+    rows = [asdict(result) for result in results]
+    with (output_dir / "requests.csv").open(
+        "w",
+        encoding="utf-8",
+        newline="",
+    ) as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+
+    end_to_end = [
+        value.end_to_end_latency_seconds
+        for value in results
+        if value.end_to_end_latency_seconds is not None
+    ]
+    submit_latencies = [
+        value.submit_latency_seconds
+        for value in results
+        if value.submit_latency_seconds is not None
+    ]
+    routes: dict[str, int] = {}
+    for result in results:
+        if result.route:
+            routes[result.route] = routes.get(result.route, 0) + 1
+
+    summary = {
+        "mode": args.mode,
+        "requests": args.requests,
+        "concurrency": args.concurrency,
+        "success_count": sum(result.success for result in results),
+        "failure_count": sum(not result.success for result in results),
+        "error_rate": round(
+            sum(not result.success for result in results) / args.requests,
+            6,
+        ),
+        "wall_seconds": round(wall_seconds, 6),
+        "completed_requests_per_second": round(
+            args.requests / wall_seconds,
+            6,
+        ),
+        "end_to_end_p50_seconds": percentile(end_to_end, 0.50),
+        "end_to_end_p95_seconds": percentile(end_to_end, 0.95),
+        "end_to_end_mean_seconds": (
+            round(statistics.mean(end_to_end), 6) if end_to_end else None
+        ),
+        "submission_p50_seconds": percentile(submit_latencies, 0.50),
+        "submission_p95_seconds": percentile(submit_latencies, 0.95),
+        "routes": routes,
+    }
+
+    (output_dir / "summary.json").write_text(
+        json.dumps(summary, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    print(json.dumps(summary, ensure_ascii=False, indent=2))
+
+
+if __name__ == "__main__":
+    main()
+
+========== scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py ==========
+#!/usr/bin/env python3
+"""A100 上的 RMSNorm + INT8 Triton 微内核正确性与性能实验。"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+import statistics
+import time
+from pathlib import Path
+import sys
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+import torch
+
+from app.kernels.rmsnorm_int8 import (
+    dequantize_per_row_int8,
+    rmsnorm_int8_fused,
+    rmsnorm_int8_reference,
+    triton_is_available,
+)
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--warmup", type=int, default=20)
+    parser.add_argument("--repetitions", type=int, default=100)
+    return parser.parse_args()
+
+
+def measure_ms(fn, warmup: int, repetitions: int) -> list[float]:
+    for _ in range(warmup):
+        fn()
+
+    torch.cuda.synchronize()
+
+    samples: list[float] = []
+    for _ in range(repetitions):
+        started = time.perf_counter()
+        fn()
+        torch.cuda.synchronize()
+        samples.append((time.perf_counter() - started) * 1000)
+
+    return samples
+
+
+def percentile(values: list[float], point: float) -> float:
+    ordered = sorted(values)
+    index = max(0, int(round((len(ordered) - 1) * point)))
+    return ordered[index]
+
+
+def main() -> None:
+    args = parse_args()
+
+    if not triton_is_available():
+        raise RuntimeError("CUDA + Triton are required")
+
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    cases = [
+        {"rows": 1, "hidden_size": 1024, "dtype": torch.float16},
+        {"rows": 8, "hidden_size": 4096, "dtype": torch.float16},
+        {"rows": 32, "hidden_size": 4096, "dtype": torch.bfloat16},
+        {"rows": 32, "hidden_size": 8192, "dtype": torch.bfloat16},
+    ]
+
+    rows: list[dict[str, object]] = []
+
+    for case in cases:
+        torch.manual_seed(20260701)
+
+        x = torch.randn(
+            case["rows"],
+            case["hidden_size"],
+            device="cuda",
+            dtype=case["dtype"],
+        )
+        weight = torch.randn(
+            case["hidden_size"],
+            device="cuda",
+            dtype=case["dtype"],
+        )
+
+        expected_q, expected_scales = rmsnorm_int8_reference(x, weight)
+        actual_q, actual_scales = rmsnorm_int8_fused(x, weight)
+
+        dequant_error = (
+            dequantize_per_row_int8(actual_q, actual_scales)
+            - dequantize_per_row_int8(expected_q, expected_scales)
+        ).abs().max().item()
+
+        reference_ms = measure_ms(
+            lambda: rmsnorm_int8_reference(x, weight),
+            args.warmup,
+            args.repetitions,
+        )
+        fused_ms = measure_ms(
+            lambda: rmsnorm_int8_fused(x, weight),
+            args.warmup,
+            args.repetitions,
+        )
+
+        rows.append(
+            {
+                "rows": case["rows"],
+                "hidden_size": case["hidden_size"],
+                "dtype": str(case["dtype"]),
+                "quantized_exact_match": bool(torch.equal(actual_q, expected_q)),
+                "scale_max_abs_error": float(
+                    (actual_scales - expected_scales).abs().max().item()
+                ),
+                "dequantized_max_abs_error": float(dequant_error),
+                "reference_p50_ms": percentile(reference_ms, 0.50),
+                "reference_p95_ms": percentile(reference_ms, 0.95),
+                "fused_p50_ms": percentile(fused_ms, 0.50),
+                "fused_p95_ms": percentile(fused_ms, 0.95),
+                "p50_speedup": percentile(reference_ms, 0.50)
+                / percentile(fused_ms, 0.50),
+            }
+        )
+
+    with (output_dir / "triton_rmsnorm_int8_results.csv").open(
+        "w",
+        newline="",
+        encoding="utf-8",
+    ) as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+
+    summary = {
+        "torch_version": torch.__version__,
+        "cuda_version": torch.version.cuda,
+        "device": torch.cuda.get_device_name(0),
+        "warmup": args.warmup,
+        "repetitions": args.repetitions,
+        "all_quantized_exact_match": all(
+            bool(row["quantized_exact_match"]) for row in rows
+        ),
+        "rows": rows,
+    }
+
+    (output_dir / "triton_rmsnorm_int8_summary.json").write_text(
+        json.dumps(summary, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    print(json.dumps(summary, ensure_ascii=False, indent=2))
+
+
+if __name__ == "__main__":
+    main()
+
+========== scripts/week4_cloud/run_text_workload_manifest.py ==========
+#!/usr/bin/env python3
+"""执行 Week4 固定文本 workload，支持 /generate 与 /jobs。"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+import time
+import urllib.error
+import urllib.request
+from pathlib import Path
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--base-url", required=True)
+    parser.add_argument("--mode", choices=("generate", "jobs"), required=True)
+    parser.add_argument("--manifest", required=True)
+    parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--poll-seconds", type=float, default=0.5)
+    parser.add_argument("--job-timeout-seconds", type=float, default=600.0)
+    return parser.parse_args()
+
+
+def request_json(method: str, url: str, payload: dict | None = None) -> tuple[int, dict]:
+    data = None if payload is None else json.dumps(payload).encode("utf-8")
+    request = urllib.request.Request(
+        url,
+        data=data,
+        method=method,
+        headers={"Content-Type": "application/json"},
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=660.0) as response:
+            return response.status, json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        raw = exc.read().decode("utf-8", errors="replace")
+        try:
+            return exc.code, json.loads(raw)
+        except json.JSONDecodeError:
+            return exc.code, {"raw_error": raw}
+
+def build_payload(record: dict) -> dict:
+    prompt = record["prompt"]
+
+    if "document_path" in record:
+        document = Path(record["document_path"]).read_text(encoding="utf-8")
+        prompt = document + record["prompt_suffix"]
+
+    return {
+        "prompt": prompt,
+        "max_new_tokens": record.get("max_new_tokens", 128),
+        "temperature": record.get("temperature", 0.0),
+        "thinking_budget": record.get("thinking_budget", 0),
+    }
+
+
+def run_generate(base_url: str, payload: dict) -> tuple[int, dict, float]:
+    started = time.perf_counter()
+    status_code, body = request_json(
+        "POST",
+        f"{base_url}/generate",
+        payload,
+    )
+    return status_code, body, time.perf_counter() - started
+
+
+def run_job(
+    base_url: str,
+    payload: dict,
+    poll_seconds: float,
+    timeout_seconds: float,
+) -> tuple[int | None, dict, float, float]:
+    started = time.perf_counter()
+    submit_started = time.perf_counter()
+
+    submit_status, accepted = request_json(
+        "POST",
+        f"{base_url}/jobs",
+        payload,
+    )
+    submit_latency = time.perf_counter() - submit_started
+
+    if submit_status != 202:
+        return submit_status, accepted, submit_latency, time.perf_counter() - started
+
+    job_id = accepted["job_id"]
+    deadline = time.monotonic() + timeout_seconds
+
+    while time.monotonic() < deadline:
+        status_code, state = request_json(
+            "GET",
+            f"{base_url}/jobs/{job_id}",
+        )
+
+        if state.get("status") in {"succeeded", "failed"}:
+            return status_code, state, submit_latency, time.perf_counter() - started
+
+        time.sleep(poll_seconds)
+
+    return None, {
+        "job_id": job_id,
+        "status": "poll_timeout",
+        "error_message": f"job exceeded {timeout_seconds}s",
+    }, submit_latency, time.perf_counter() - started
+def _result_from_body(mode: str, body: dict) -> dict:
+    if mode == "generate":
+        return body
+    result = body.get("result")
+    return result if isinstance(result, dict) else {}
+
+
+def main() -> None:
+    args = parse_args()
+    base_url = args.base_url.rstrip("/")
+    manifest_path = Path(args.manifest)
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    manifest_rows = [
+        json.loads(line)
+        for line in manifest_path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+
+    records_path = output_dir / "records.jsonl"
+    codegen_responses_path = output_dir / "codegen_responses.jsonl"
+    metrics_path = output_dir / "request_metrics.csv"
+    summary_path = output_dir / "summary.json"
+
+    records: list[dict] = []
+    started_at = time.time()
+
+    for index, source_record in enumerate(manifest_rows, start=1):
+        case_id = source_record["case_id"]
+        payload = build_payload(source_record)
+
+        try:
+            if args.mode == "generate":
+                status_code, body, end_to_end_latency = run_generate(
+                    base_url,
+                    payload,
+                )
+                submit_latency = None
+                service_status = (
+                    "succeeded"
+                    if 200 <= status_code < 300
+                    else "failed"
+                )
+            else:
+                status_code, body, submit_latency, end_to_end_latency = run_job(
+                    base_url,
+                    payload,
+                    args.poll_seconds,
+                    args.job_timeout_seconds,
+                )
+                service_status = body.get("status", "unknown")
+        except Exception as exc:
+            status_code = None
+            body = {
+                "status": "client_exception",
+                "error_type": type(exc).__name__,
+                "error_message": str(exc),
+            }
+            submit_latency = None
+            end_to_end_latency = 0.0
+            service_status = "client_exception"
+
+        result = _result_from_body(args.mode, body)
+        generated_response = result.get("response")
+
+        succeeded = (
+            service_status == "succeeded"
+            and isinstance(generated_response, str)
+        )
+
+        record = {
+            "case_id": case_id,
+            "scenario": source_record.get("scenario"),
+            "mode": args.mode,
+            "sequence": index,
+            "http_status_code": status_code,
+            "service_status": service_status,
+            "succeeded": succeeded,
+            "submit_latency_seconds": submit_latency,
+            "end_to_end_latency_seconds": end_to_end_latency,
+            "model_latency_seconds": result.get("latency_seconds"),
+            "input_tokens": result.get("input_tokens"),
+            "output_tokens": result.get("output_tokens"),
+            "total_tokens": result.get("total_tokens"),
+            "tokens_per_second": result.get("tokens_per_second"),
+            "route": result.get("route"),
+            "primary_attempts": result.get("primary_attempts"),
+            "fallback_thinking_budget": result.get(
+                "fallback_thinking_budget"
+            ),
+            "request_id": result.get("request_id"),
+            "model_name": result.get("model_name"),
+            "backend": result.get("backend"),
+            "error_type": body.get("error_type"),
+            "error_message": body.get("error_message"),
+            "response": generated_response,
+            "service_body": body,
+        }
+        records.append(record)
+
+        if source_record.get("scenario") == "code_generation_functional":
+            with codegen_responses_path.open(
+                "a",
+                encoding="utf-8",
+            ) as response_file:
+                response_file.write(
+                    json.dumps(
+                        {
+                            "case_id": case_id,
+                            "response": generated_response or "",
+                            "succeeded": succeeded,
+                            "http_status_code": status_code,
+                            "service_status": service_status,
+                        },
+                        ensure_ascii=False,
+                    )
+                    + "\n"
+                )
+
+        print(
+            json.dumps(
+                {
+                    "sequence": index,
+                    "case_id": case_id,
+                    "service_status": service_status,
+                    "succeeded": succeeded,
+                    "http_status_code": status_code,
+                },
+                ensure_ascii=False,
+            )
+        )
+
+    with records_path.open("w", encoding="utf-8") as records_file:
+        for record in records:
+            records_file.write(
+                json.dumps(record, ensure_ascii=False) + "\n"
+            )
+
+    csv_fields = [
+        "case_id",
+        "scenario",
+        "mode",
+        "sequence",
+        "http_status_code",
+        "service_status",
+        "succeeded",
+        "submit_latency_seconds",
+        "end_to_end_latency_seconds",
+        "model_latency_seconds",
+        "input_tokens",
+        "output_tokens",
+        "total_tokens",
+        "tokens_per_second",
+        "route",
+        "primary_attempts",
+        "fallback_thinking_budget",
+        "request_id",
+        "model_name",
+        "backend",
+        "error_type",
+        "error_message",
+    ]
+    with metrics_path.open("w", newline="", encoding="utf-8") as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=csv_fields)
+        writer.writeheader()
+        writer.writerows(
+            {field: record.get(field) for field in csv_fields}
+            for record in records
+        )
+
+    outcome_counts: dict[str, int] = {}
+    for record in records:
+        status = record["service_status"]
+        outcome_counts[status] = outcome_counts.get(status, 0) + 1
+
+    summary = {
+        "manifest": str(manifest_path),
+        "mode": args.mode,
+        "base_url": base_url,
+        "started_at_epoch_seconds": started_at,
+        "case_count": len(records),
+        "succeeded": sum(record["succeeded"] for record in records),
+        "failed": sum(not record["succeeded"] for record in records),
+        "service_status_counts": outcome_counts,
+        "artifacts": {
+            "records_jsonl": str(records_path),
+            "request_metrics_csv": str(metrics_path),
+            "codegen_responses_jsonl": str(codegen_responses_path),
+        },
+    }
+    summary_path.write_text(
+        json.dumps(summary, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    print(json.dumps(summary, ensure_ascii=False, indent=2))
+
+
+if __name__ == "__main__":
+    main()
+========== scripts/week4_cloud/evaluate_codegen_functional.py ==========
+#!/usr/bin/env python3
+"""隔离执行 Week4 代码生成任务的功能断言。"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import re
+import subprocess
+import tempfile
+import time
+from pathlib import Path
+
+
+def extract_code(text: str) -> str:
+    match = re.search(r"```(?:python)?\s*(.*?)```", text, re.DOTALL | re.IGNORECASE)
+    if match:
+        text = match.group(1)
+    text = re.sub(r"<seed:think>.*?</seed:think>", "", text, flags=re.DOTALL | re.IGNORECASE)
+    text = text.replace("<seed:think>", "").replace("</seed:think>", "")
+    start = text.find("def ")
+    return text[start:].split("```")[0].strip() if start >= 0 else text.strip()
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--manifest", required=True)
+    parser.add_argument("--responses", required=True)
+    parser.add_argument("--output", required=True)
+    parser.add_argument("--image", default="python:3.11-alpine")
+    parser.add_argument("--timeout-seconds", type=float, default=5.0)
+    return parser.parse_args()
+
+def load_jsonl(path: Path) -> list[dict]:
+    return [
+        json.loads(line)
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+
+
+def classify_failure(stderr: str, stdout: str) -> str:
+    text = stderr + "\n" + stdout
+    if "SyntaxError" in text:
+        return "syntax_error"
+    if "ImportError" in text or "ModuleNotFoundError" in text:
+        return "import_error"
+    if "AssertionError" in text:
+        return "test_failed"
+    return "runtime_error"
+
+
+def _tail(value: str | bytes | None, limit: int = 2000) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, bytes):
+        value = value.decode("utf-8", errors="replace")
+    return value[-limit:]
+
+
+def run_case(
+    code: str,
+    tests: list[str],
+    image: str,
+    timeout_seconds: float,
+) -> dict:
+    if not code:
+        return {
+            "outcome": "extraction_error",
+            "duration_seconds": 0.0,
+            "return_code": None,
+            "stdout": "",
+            "stderr": "",
+        }
+
+    with tempfile.TemporaryDirectory(prefix="week4_codegen_") as temp_dir:
+        work_dir = Path(temp_dir)
+        work_dir.chmod(0o755)
+        candidate_path = work_dir / "candidate.py"
+        test_path = work_dir / "tests.py"
+
+        candidate_path.write_text(code + "\n", encoding="utf-8")
+        test_path.write_text(
+            "from candidate import *\n" + "\n".join(tests) + "\n",
+            encoding="utf-8",
+        )
+        candidate_path.chmod(0o644)
+        test_path.chmod(0o644)
+
+        container_name = f"week4-codegen-{time.time_ns()}"
+        command = [
+            "docker", "run", "--rm", "--name", container_name,
+            "--network", "none",
+            "--read-only",
+            "--tmpfs", "/tmp:rw,nosuid,nodev,size=32m",
+            "--memory", "256m",
+            "--cpus", "0.5",
+            "--pids-limit", "64",
+            "--cap-drop", "ALL",
+            "--security-opt", "no-new-privileges",
+            "--user", "65534:65534",
+            "--env", "PYTHONDONTWRITEBYTECODE=1",
+            "--volume", f"{work_dir.resolve()}:/work:ro",
+            "--workdir", "/work",
+            image, "python", "tests.py",
+        ]
+
+        started = time.perf_counter()
+        try:
+            completed = subprocess.run(
+                command,
+                capture_output=True,
+                text=True,
+                timeout=timeout_seconds,
+                check=False,
+            )
+        except subprocess.TimeoutExpired as exc:
+            subprocess.run(
+                ["docker", "rm", "-f", container_name],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            return {
+                "outcome": "timeout",
+                "duration_seconds": round(time.perf_counter() - started, 6),
+                "return_code": None,
+                "stdout": _tail(exc.stdout),
+                "stderr": _tail(exc.stderr),
+            }
+
+        duration = round(time.perf_counter() - started, 6)
+        stdout = _tail(completed.stdout)
+        stderr = _tail(completed.stderr)
+
+        return {
+            "outcome": (
+                "passed"
+                if completed.returncode == 0
+                else classify_failure(stderr, stdout)
+            ),
+            "duration_seconds": duration,
+            "return_code": completed.returncode,
+            "stdout": stdout,
+            "stderr": stderr,
+        }
+
+
+def response_text(record: dict) -> str:
+    for key in ("response", "raw_response", "output", "text"):
+        value = record.get(key)
+        if isinstance(value, str):
+            return value
+
+    result = record.get("result")
+    if isinstance(result, dict):
+        value = result.get("response")
+        if isinstance(value, str):
+            return value
+
+    raise ValueError("response record has no supported text field")
+
+def main() -> None:
+    args = parse_args()
+    manifest_rows = load_jsonl(Path(args.manifest))
+    response_rows = load_jsonl(Path(args.responses))
+    responses = {
+        row["case_id"]: row
+        for row in response_rows
+        if isinstance(row.get("case_id"), str)
+    }
+
+    results: list[dict] = []
+
+    for case in manifest_rows:
+        case_id = case["case_id"]
+        response_record = responses.get(case_id)
+
+        if response_record is None:
+            raw_response = ""
+            evaluation = {
+                "outcome": "missing_response",
+                "duration_seconds": 0.0,
+                "return_code": None,
+                "stdout": "",
+                "stderr": "",
+            }
+        else:
+            raw_response = response_text(response_record)
+            evaluation = run_case(
+                extract_code(raw_response),
+                case["tests"],
+                args.image,
+                args.timeout_seconds,
+            )
+
+        results.append({
+            "case_id": case_id,
+            "function_name": case["function_name"],
+            "outcome": evaluation["outcome"],
+            "duration_seconds": evaluation["duration_seconds"],
+            "return_code": evaluation["return_code"],
+            "response_sha256": hashlib.sha256(raw_response.encode("utf-8")).hexdigest(),
+            "extracted_code": extract_code(raw_response),
+            "stdout": evaluation["stdout"],
+            "stderr": evaluation["stderr"],
+        })
+
+    output = Path(args.output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(results, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    outcomes: dict[str, int] = {}
+    for row in results:
+        outcomes[row["outcome"]] = outcomes.get(row["outcome"], 0) + 1
+
+    summary = {
+        "case_count": len(results),
+        "passed": outcomes.get("passed", 0),
+        "failed": len(results) - outcomes.get("passed", 0),
+        "outcomes": outcomes,
+    }
+
+    summary_path = output.with_name(output.stem + "_summary.json")
+    summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps(summary, ensure_ascii=False, indent=2))
+
+
+if __name__ == "__main__":
+    main()
+
+========== scripts/week3_bagel/start_bagel_runtime.sh ==========
+#!/usr/bin/env bash
+set -euo pipefail
+
+LOG_DIR="/workspace/ai-inference-service/logs/week3_bagel"
+LOG_FILE="$LOG_DIR/bagel_runtime.log"
+PID_FILE="$LOG_DIR/bagel_runtime.pid"
+
+if ss -ltn | grep -q ':7860 '; then
+  echo "port 7860 is already in use; refusing to replace an existing BAGEL runtime"
+  exit 1
+fi
+
+mkdir -p "$LOG_DIR"
+cd "/workspace/bagel_week3"
+
+nohup /workspace/bagel_week3/venv/bin/python /workspace/bagel_week3/vendor/BAGEL/app.py --server_name 0.0.0.0 --server_port 7860 --model_path /workspace/bagel_week3/models/BAGEL-7B-MoT > "$LOG_FILE" 2>&1 < /dev/null &
+echo $! > "$PID_FILE"
+echo "pid=$(cat "$PID_FILE")"
+
+========== scripts/week3_bagel/start_multimodal_api.sh ==========
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
+PYTHON_BIN="${BAGEL_GATEWAY_PY:-/workspace/venvs/week3-bagel-gateway/bin/python}"
+LOG_FILE="$ROOT_DIR/logs/week3_bagel/multimodal_api.log"
+PID_FILE="$ROOT_DIR/logs/week3_bagel/multimodal_api.pid"
+
+if ss -ltn | grep -q ':8000 '; then
+  echo "port 8000 is already in use; refusing to replace an existing service"
+  exit 1
+fi
+
+nohup env \
+  PYTHONPATH="$ROOT_DIR" \
+  BAGEL_BASE_URL="http://127.0.0.1:7860" \
+  BAGEL_TIMEOUT_SECONDS="120" \
+  "$PYTHON_BIN" -m uvicorn app.multimodal.main:app \
+  --host 0.0.0.0 \
+  --port 8000 \
+  > "$LOG_FILE" 2>&1 < /dev/null &
+
+echo $! > "$PID_FILE"
+echo "pid=$(cat "$PID_FILE")"
+
+===== cloud dependency and path references =====
+deployment/cloud/run_week4_job_worker.sh:6:export INFERENCE_BACKEND="${INFERENCE_BACKEND:-vllm}"
+deployment/cloud/run_week4_job_worker.sh:9:export VLLM_MODEL_NAME="${VLLM_MODEL_NAME:-Seed-OSS-36B-Instruct-W8A8-Primary}"
+deployment/cloud/run_week4_job_worker.sh:14:export VLLM_FALLBACK_MODEL_NAME="${VLLM_FALLBACK_MODEL_NAME:-Seed-OSS-36B-Instruct-W8A8-Fallback}"
+deployment/cloud/run_week4_job_worker.sh:17:export RESILIENCE_STATE_STORE="${RESILIENCE_STATE_STORE:-redis}"
+deployment/cloud/run_week4_job_worker.sh:18:export RESILIENCE_REDIS_URL="${RESILIENCE_REDIS_URL:-redis://127.0.0.1:6379/0}"
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:4:# Cloud vLLM Seed-OSS-36B-Instruct tensor-parallel server.
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:7:#   Start ByteDance-Seed/Seed-OSS-36B-Instruct with vLLM on a multi-GPU cloud instance.
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:10:#   1. This is the target-model deployment script for Seed-OSS.
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:13:#   4. Qwen baseline scripts are kept separate from this Seed-OSS script.
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:15:MODEL_NAME="${MODEL_NAME:-ByteDance-Seed/Seed-OSS-36B-Instruct}"
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:21:#   TENSOR_PARALLEL_SIZE=2 MAX_MODEL_LEN=4096 bash deployment/cloud/run_vllm_seed_oss_36b_tp.sh
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:24:# Seed-OSS supports long context, but first smoke test should use 4096 / 8192 / 16384.
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:31:export CUDA_DEVICE_ORDER=PCI_BUS_ID
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:59:    import torch
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:60:    print("torch:", torch.__version__)
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:61:    print("torch cuda:", torch.version.cuda)
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:62:    print("cuda available:", torch.cuda.is_available())
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:63:    print("device count:", torch.cuda.device_count())
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:64:    if torch.cuda.is_available():
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:65:        for i in range(torch.cuda.device_count()):
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:66:            print(f"device {i}:", torch.cuda.get_device_name(i))
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:68:    print("torch check failed:", repr(exc))
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:77:    import vllm
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:78:    print("vllm:", vllm.__version__)
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:80:    print("vllm check failed:", repr(exc))
+deployment/cloud/run_vllm_seed_oss_36b_tp.sh:85:vllm serve "${MODEL_NAME}" \
+deployment/cloud/run_week4_gateway.sh:4:# Week4：Gateway 接入同机双 TP=2 Seed-OSS W8A8 upstream。
+deployment/cloud/run_week4_gateway.sh:7:export INFERENCE_BACKEND="${INFERENCE_BACKEND:-vllm}"
+deployment/cloud/run_week4_gateway.sh:10:export VLLM_MODEL_NAME="${VLLM_MODEL_NAME:-Seed-OSS-36B-Instruct-W8A8-Primary}"
+deployment/cloud/run_week4_gateway.sh:15:export VLLM_FALLBACK_MODEL_NAME="${VLLM_FALLBACK_MODEL_NAME:-Seed-OSS-36B-Instruct-W8A8-Fallback}"
+deployment/cloud/run_week4_gateway.sh:18:export RESILIENCE_STATE_STORE="${RESILIENCE_STATE_STORE:-redis}"
+deployment/cloud/run_week4_gateway.sh:19:export RESILIENCE_REDIS_URL="${RESILIENCE_REDIS_URL:-redis://127.0.0.1:6379/0}"
+deployment/cloud/run_week4_gateway.sh:32:echo "redis=$RESILIENCE_REDIS_URL"
+deployment/cloud/run_week4_seed_w8a8_tp2_instance.sh:4:# Week4：单个 Seed-OSS-36B W8A8 TP=2 vLLM 实例。
+deployment/cloud/run_week4_seed_w8a8_tp2_instance.sh:5:# 调用方必须显式指定 CUDA_VISIBLE_DEVICES、VLLM_PORT、SERVED_MODEL_NAME。
+deployment/cloud/run_week4_seed_w8a8_tp2_instance.sh:8:MODEL_PATH="${MODEL_PATH:?MODEL_PATH is required}"
+deployment/cloud/run_week4_seed_w8a8_tp2_instance.sh:9:CUDA_DEVICE_SET="${CUDA_VISIBLE_DEVICES:?CUDA_VISIBLE_DEVICES is required}"
+deployment/cloud/run_week4_seed_w8a8_tp2_instance.sh:20:export CUDA_VISIBLE_DEVICES="$CUDA_DEVICE_SET"
+deployment/cloud/run_week4_seed_w8a8_tp2_instance.sh:21:export CUDA_DEVICE_ORDER=PCI_BUS_ID
+deployment/cloud/run_week4_seed_w8a8_tp2_instance.sh:24:echo "CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
+deployment/cloud/run_week4_seed_w8a8_tp2_instance.sh:25:echo "MODEL_PATH=$MODEL_PATH"
+deployment/cloud/run_week4_seed_w8a8_tp2_instance.sh:34:exec vllm serve "$MODEL_PATH" \
+deployment/cloud/run_vllm_qwen_1_5b.sh:7:#   This validates CUDA, vLLM, model download, OpenAI-compatible serving,
+deployment/cloud/run_vllm_qwen_1_5b.sh:8:#   and provides a baseline before switching to Seed-OSS-36B.
+deployment/cloud/run_vllm_qwen_1_5b.sh:16:export CUDA_DEVICE_ORDER=PCI_BUS_ID
+deployment/cloud/run_vllm_qwen_1_5b.sh:41:    import torch
+deployment/cloud/run_vllm_qwen_1_5b.sh:42:    print("torch:", torch.__version__)
+deployment/cloud/run_vllm_qwen_1_5b.sh:43:    print("torch cuda:", torch.version.cuda)
+deployment/cloud/run_vllm_qwen_1_5b.sh:44:    print("cuda available:", torch.cuda.is_available())
+deployment/cloud/run_vllm_qwen_1_5b.sh:45:    print("device count:", torch.cuda.device_count())
+deployment/cloud/run_vllm_qwen_1_5b.sh:46:    if torch.cuda.is_available():
+deployment/cloud/run_vllm_qwen_1_5b.sh:47:        for i in range(torch.cuda.device_count()):
+deployment/cloud/run_vllm_qwen_1_5b.sh:48:            print(f"device {i}:", torch.cuda.get_device_name(i))
+deployment/cloud/run_vllm_qwen_1_5b.sh:50:    print("torch check failed:", repr(exc))
+deployment/cloud/run_vllm_qwen_1_5b.sh:53:    import vllm
+deployment/cloud/run_vllm_qwen_1_5b.sh:54:    print("vllm:", vllm.__version__)
+deployment/cloud/run_vllm_qwen_1_5b.sh:56:    print("vllm check failed:", repr(exc))
+deployment/cloud/run_vllm_qwen_1_5b.sh:61:python -m vllm.entrypoints.openai.api_server \
+deployment/cloud/run_vllm_seed_oss_36b_tp2.sh:4:# Experimental low-resource Seed-OSS-36B-Instruct TP=2 smoke-test wrapper.
+deployment/cloud/run_vllm_seed_oss_36b_tp2.sh:12:bash "$(dirname "$0")/run_vllm_seed_oss_36b_tp.sh"
+deployment/cloud/README.md:13:3. Seed-OSS-36B tensor parallel smoke test
+deployment/cloud/README.md:32:2. CUDA / PyTorch validation
+deployment/cloud/README.md:42:5. Seed-OSS-36B deployment requires more predictable GPU resources than CX3 queue jobs
+deployment/cloud/README.md:48:### 3.1 run_vllm_qwen_1_5b.sh
+deployment/cloud/README.md:55:2. validate CUDA / torch / vLLM
+deployment/cloud/README.md:58:5. provide a baseline before switching to Seed-OSS-36B
+deployment/cloud/README.md:70:    bash deployment/cloud/run_vllm_qwen_1_5b.sh
+deployment/cloud/README.md:74:### 3.2 run_fastapi_vllm.sh
+deployment/cloud/README.md:80:    INFERENCE_BACKEND=vllm
+deployment/cloud/README.md:101:    bash deployment/cloud/run_fastapi_vllm.sh
+deployment/cloud/README.md:127:### 3.4 run_vllm_seed_oss_36b_tp2.sh
+deployment/cloud/README.md:129:Template for Seed-OSS-36B multi-GPU tensor parallel deployment with vLLM.
+deployment/cloud/README.md:146:Before cloud execution, verify the actual Seed-OSS-36B model ID, access permission and download method.
+deployment/cloud/README.md:153:    bash deployment/cloud/run_vllm_seed_oss_36b_tp2.sh
+deployment/cloud/README.md:165:    pip install -r requirements.txt
+deployment/cloud/README.md:166:    pip install -r requirements-vllm.txt
+deployment/cloud/README.md:168:If requirements-vllm.txt only pins vLLM, vLLM will install its own compatible dependencies.
+deployment/cloud/README.md:176:    bash deployment/cloud/run_vllm_qwen_1_5b.sh
+deployment/cloud/README.md:195:    bash deployment/cloud/run_fastapi_vllm.sh
+deployment/cloud/README.md:217:3. backend is vllm
+deployment/cloud/README.md:230:    scripts/benchmark_vllm_backend.py
+deployment/cloud/README.md:231:    scripts/analyze_vllm_benchmark.py
+deployment/cloud/README.md:232:    results/vllm_benchmark.csv
+deployment/cloud/README.md:233:    results/vllm_benchmark_summary.csv
+deployment/cloud/README.md:234:    docs/vllm_benchmark_report.md
+deployment/cloud/README.md:250:### Step 6: try Seed-OSS-36B tensor parallel
+deployment/cloud/README.md:259:    bash deployment/cloud/run_vllm_seed_oss_36b_tp2.sh
+deployment/cloud/README.md:299:    -> Seed-OSS-36B tensor parallel
+deployment/cloud/README.md:317:4. Seed-OSS-36B deployment preparation
+deployment/cloud/README.md:335:2. Seed-OSS-36B smoke test
+deployment/cloud/README.md:356:2. CUDA driver version
+deployment/cloud/README.md:358:4. torch version
+deployment/cloud/README.md:381:## 9. Seed-OSS-36B-Instruct target-model deployment
+deployment/cloud/README.md:385:    ByteDance-Seed/Seed-OSS-36B-Instruct
+deployment/cloud/README.md:395:| ByteDance-Seed/Seed-OSS-36B-Instruct | Target model for Seed-OSS deployment and later long-context validation |
+deployment/cloud/README.md:397:Seed-OSS-36B-Instruct requires a separate vLLM startup path because it uses Seed-specific serving options.
+deployment/cloud/README.md:401:    deployment/cloud/run_vllm_seed_oss_36b_tp.sh
+deployment/cloud/README.md:405:    deployment/cloud/run_vllm_seed_oss_36b_tp2.sh
+deployment/cloud/README.md:409:Seed-OSS vLLM startup uses:
+deployment/cloud/README.md:425:    bash deployment/cloud/run_vllm_seed_oss_36b_tp.sh
+deployment/cloud/README.md:431:## 10. Seed-OSS thinking budget
+deployment/cloud/README.md:435:For Seed-OSS-36B-Instruct, thinking_budget should be passed to vLLM through:
+deployment/cloud/README.md:439:The VLLMBackend now supports Seed-OSS-specific payload construction. When the model name contains Seed-OSS, or when VLLM_ENABLE_SEED_THINKING_BUDGET=true, the request payload includes:
+deployment/cloud/README.md:445:This keeps Qwen baseline compatibility while enabling Seed-OSS native thinking-budget control.
+deployment/cloud/run_fastapi_vllm.sh:6:export INFERENCE_BACKEND="${INFERENCE_BACKEND:-vllm}"
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:18:import torch
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:24:    triton_is_available,
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:40:    torch.cuda.synchronize()
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:46:        torch.cuda.synchronize()
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:61:    if not triton_is_available():
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:62:        raise RuntimeError("CUDA + Triton are required")
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:68:        {"rows": 1, "hidden_size": 1024, "dtype": torch.float16},
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:69:        {"rows": 8, "hidden_size": 4096, "dtype": torch.float16},
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:70:        {"rows": 32, "hidden_size": 4096, "dtype": torch.bfloat16},
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:71:        {"rows": 32, "hidden_size": 8192, "dtype": torch.bfloat16},
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:77:        torch.manual_seed(20260701)
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:79:        x = torch.randn(
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:85:        weight = torch.randn(
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:115:                "quantized_exact_match": bool(torch.equal(actual_q, expected_q)),
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:129:    with (output_dir / "triton_rmsnorm_int8_results.csv").open(
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:139:        "torch_version": torch.__version__,
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:140:        "cuda_version": torch.version.cuda,
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:141:        "device": torch.cuda.get_device_name(0),
+scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py:150:    (output_dir / "triton_rmsnorm_int8_summary.json").write_text(
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:2:# Week4：双 TP=2 Seed-OSS W8A8 upstream 的真实 failover / recovery 实验。
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:5:#   MODEL_PATH=/workspace/models/Seed-OSS-36B-Instruct-W8A8 \
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:6:#   bash scripts/week4_cloud/run_real_vllm_failover_harness.sh
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:21:MODEL_PATH="${MODEL_PATH:?MODEL_PATH is required}"
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:33:PRIMARY_MODEL_NAME="${PRIMARY_MODEL_NAME:-Seed-OSS-36B-Instruct-W8A8-Primary}"
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:34:FALLBACK_MODEL_NAME="${FALLBACK_MODEL_NAME:-Seed-OSS-36B-Instruct-W8A8-Fallback}"
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:36:REDIS_URL="${REDIS_URL:-redis://127.0.0.1:6379/0}"
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:65:import redis
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:68:redis.Redis.from_url(sys.argv[1], socket_timeout=2).ping()
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:71:  echo "redis_ready=no"
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:75:echo "redis_ready=yes"
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:84:  MODEL_PATH="$MODEL_PATH" \
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:85:  CUDA_VISIBLE_DEVICES="$PRIMARY_GPUS" \
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:94:  MODEL_PATH="$MODEL_PATH" \
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:95:  CUDA_VISIBLE_DEVICES="$FALLBACK_GPUS" \
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:99:    > "$RUN_DIR/fallback_vllm.log" 2>&1 &
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:130:  python loadtest/collect/snapshot_redis_breaker_state.py \
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:131:    --redis-url "$REDIS_URL" \
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:133:    --output "$phase_dir/redis_breaker_state.json" \
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:153:start_primary primary_vllm_initial.log
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:160:  INFERENCE_BACKEND=vllm \
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:168:  RESILIENCE_STATE_STORE=redis \
+scripts/week4_cloud/run_real_vllm_failover_harness.sh:200:start_primary primary_vllm_recovered.log
+scripts/week4_cloud/run_local_failover_harness.sh:17:REDIS_URL="${REDIS_URL:-redis://127.0.0.1:6379/0}"
+scripts/week4_cloud/run_local_failover_harness.sh:39:import redis
+scripts/week4_cloud/run_local_failover_harness.sh:41:redis.Redis.from_url(sys.argv[1], socket_timeout=1).ping()
+scripts/week4_cloud/run_local_failover_harness.sh:44:  echo "redis_ready=no"
+scripts/week4_cloud/run_local_failover_harness.sh:48:echo "redis_ready=yes"
+scripts/week4_cloud/run_local_failover_harness.sh:95:  python loadtest/collect/snapshot_redis_breaker_state.py \
+scripts/week4_cloud/run_local_failover_harness.sh:96:    --redis-url "$REDIS_URL" \
+scripts/week4_cloud/run_local_failover_harness.sh:98:    --output "$phase_dir/redis_breaker_state.json" \
+scripts/week4_cloud/run_local_failover_harness.sh:125:  INFERENCE_BACKEND=vllm \
+scripts/week4_cloud/run_local_failover_harness.sh:133:  RESILIENCE_STATE_STORE=redis \
+scripts/week3_bagel/run_understanding_benchmark.py:243:                "===== BAGEL 图文理解审计摘要 =====",
+scripts/week3_bagel/run_understanding_benchmark.py:257:                "FastAPI、Gradio Client 与 BAGEL 推理；不包含浏览器",
+scripts/week3_bagel/start_bagel_runtime.sh:4:LOG_DIR="/workspace/ai-inference-service/logs/week3_bagel"
+scripts/week3_bagel/start_bagel_runtime.sh:9:  echo "port 7860 is already in use; refusing to replace an existing BAGEL runtime"
+scripts/week3_bagel/start_bagel_runtime.sh:14:cd "/workspace/bagel_week3"
+scripts/week3_bagel/start_bagel_runtime.sh:16:nohup /workspace/bagel_week3/venv/bin/python /workspace/bagel_week3/vendor/BAGEL/app.py --server_name 0.0.0.0 --server_port 7860 --model_path /workspace/bagel_week3/models/BAGEL-7B-MoT > "$LOG_FILE" 2>&1 < /dev/null &
+scripts/week3_bagel/start_multimodal_api.sh:5:PYTHON_BIN="${BAGEL_GATEWAY_PY:-/workspace/venvs/week3-bagel-gateway/bin/python}"
+scripts/week3_bagel/start_multimodal_api.sh:16:  BAGEL_BASE_URL="http://127.0.0.1:7860" \
+scripts/week3_bagel/start_multimodal_api.sh:17:  BAGEL_TIMEOUT_SECONDS="120" \
+loadtest/collect/snapshot_redis_breaker_state.py:11:import redis
+loadtest/collect/snapshot_redis_breaker_state.py:16:    parser.add_argument("--redis-url", required=True)
+loadtest/collect/snapshot_redis_breaker_state.py:21:    client = redis.Redis.from_url(
+loadtest/collect/snapshot_redis_breaker_state.py:22:        args.redis_url,
+loadtest/collect/snapshot_redis_breaker_state.py:32:        "redis_url": args.redis_url,
+loadtest/collect/snapshot_redis_breaker_state.py:42:    except redis.RedisError as exc:
+loadtest/collect/snapshot_redis_breaker_state.py:43:        payload["redis_error"] = repr(exc)
+loadtest/collect/snapshot_redis_breaker_state.py:51:    print(f"redis_breaker_snapshot={output}")
+loadtest/collect/snapshot_redis_state.py:11:import redis
+loadtest/collect/snapshot_redis_state.py:16:    parser.add_argument("--redis-url", required=True)
+loadtest/collect/snapshot_redis_state.py:22:    client = redis.Redis.from_url(
+loadtest/collect/snapshot_redis_state.py:23:        args.redis_url,
+loadtest/collect/snapshot_redis_state.py:34:        "redis_url": args.redis_url,
+loadtest/collect/snapshot_redis_state.py:41:    except redis.RedisError as exc:
+loadtest/collect/snapshot_redis_state.py:52:    except redis.RedisError as exc:
+loadtest/collect/snapshot_redis_state.py:57:    except redis.RedisError as exc:
+loadtest/collect/snapshot_redis_state.py:64:    print(f"redis_state_snapshot={output_path}")
+loadtest/jmeter/generate_short.jmx:2:<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+loadtest/jmeter/generate_short.jmx:67:</jmeterTestPlan>
+loadtest/jmeter/jobs_admission.jmx:2:<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+loadtest/jmeter/jobs_admission.jmx:77:</jmeterTestPlan>
+loadtest/run_with_evidence.sh:7:#   redis://127.0.0.1:6379/0 ai-inference:week4:jobs week4-workers \
+loadtest/run_with_evidence.sh:15:REDIS_URL="${6:?redis_url is required}"
+loadtest/run_with_evidence.sh:48:  echo "redis_url=$REDIS_URL"
+loadtest/run_with_evidence.sh:66:python loadtest/collect/snapshot_redis_state.py \
+loadtest/run_with_evidence.sh:67:  --redis-url "$REDIS_URL" \
+loadtest/run_with_evidence.sh:70:  --output "$OUTPUT_DIR/redis_before.json"
+loadtest/run_with_evidence.sh:74:bash loadtest/run_jmeter.sh \
+loadtest/run_with_evidence.sh:81:  "$OUTPUT_DIR/jmeter"
+loadtest/run_with_evidence.sh:89:python loadtest/collect/snapshot_redis_state.py \
+loadtest/run_with_evidence.sh:90:  --redis-url "$REDIS_URL" \
+loadtest/run_with_evidence.sh:93:  --output "$OUTPUT_DIR/redis_after.json"
+loadtest/run_with_evidence.sh:100:if [ -f "$OUTPUT_DIR/jmeter/results.jtl" ]; then
+loadtest/run_with_evidence.sh:102:    --jtl "$OUTPUT_DIR/jmeter/results.jtl" \
+loadtest/run_with_evidence.sh:103:    --output "$OUTPUT_DIR/jmeter_summary.json" \
+loadtest/run_with_evidence.sh:110:    --jtl "$OUTPUT_DIR/jmeter/results.jtl" \
+loadtest/run_with_evidence.sh:127:echo "jmeter_exit_code=$JMETER_RC" \
+loadtest/run_with_evidence.sh:128:  | tee "$OUTPUT_DIR/jmeter_exit_code.txt"
+loadtest/README.md:10:- `wrk/`：最大吞吐补充测试；不作为固定 100 / 500 / 1000 QPS 的唯一验收工具。
+loadtest/run_jmeter.sh:5:# bash loadtest/run_jmeter.sh jobs 100 60 200 127.0.0.1 8000 results/week4/jobs_qps100
+loadtest/run_jmeter.sh:27:    SOURCE_PLAN="loadtest/jmeter/jobs_admission.jmx"
+loadtest/run_jmeter.sh:30:    SOURCE_PLAN="loadtest/jmeter/generate_short.jmx"
+loadtest/run_jmeter.sh:65:jmeter -n \
+loadtest/run_jmeter.sh:66:  -j "$OUTPUT_DIR/jmeter.log" \
+loadtest/run_jmeter.sh:76:  > "$OUTPUT_DIR/jmeter_stdout.log" 2>&1
+loadtest/wrk/jobs_admission.lua:2:--   wrk 饱和吞吐补充测试；不用于固定 QPS 结论。
+loadtest/wrk/jobs_admission.lua:5:--   wrk -t4 -c100 -d30s \
+loadtest/wrk/jobs_admission.lua:6:--     -s loadtest/wrk/jobs_admission.lua \
+loadtest/wrk/jobs_admission.lua:9:wrk.method = "POST"
+loadtest/wrk/jobs_admission.lua:11:wrk.headers["Content-Type"] = "application/json"
+loadtest/wrk/jobs_admission.lua:13:wrk.body = [[
+loadtest/wrk/jobs_admission.lua:15:  "prompt": "Week4 wrk admission saturation request",
+loadtest/wrk/jobs_admission.lua:23:  return wrk.format(
+loadtest/wrk/jobs_admission.lua:26:    wrk.headers,
+loadtest/wrk/jobs_admission.lua:27:    wrk.body
+loadtest/wrk/jobs_admission.lua:32:  io.write("\n===== wrk admission summary =====\n")
+requirements-gateway.txt:6:redis==7.4.0
+requirements-vllm.txt:1:vllm==0.11.2
+requirements.txt:5:torch
+docs/week4_system_validation_matrix.md:28:### 3.1 Seed-OSS 服务接入、长上下文与推理预算
+docs/week4_system_validation_matrix.md:32:| 能力 | 基于 FastAPI 和 vLLM 提供 Seed-OSS-36B 推理 API，支持 `thinking_budget` 控制与长上下文边界验证。 |
+docs/week4_system_validation_matrix.md:33:| 主要实现 | `app/main.py`、`app/inference.py`、`app/backends/vllm_backend.py`。 |
+docs/week4_system_validation_matrix.md:35:| 已有验证 | Seed-OSS vLLM serving、`thinking_budget` 传递、长上下文 near-limit / serving boundary 实验。 |
+docs/week4_system_validation_matrix.md:57:| 主要实现 | `app/redis_stream_jobs.py`、`app/job_worker.py`、`app/job_runtime.py`、`POST /jobs`、`GET /jobs/{job_id}`。 |
+docs/week4_system_validation_matrix.md:60:| 已有证据 | `evidence/week4_redis/async_jobs_mock_e2e_worker_metrics_20260629.txt`；`evidence/week4_redis/async_jobs_worker_crash_reclaim_e2e_20260629.txt`。 |
+docs/week4_system_validation_matrix.md:69:| 主要实现 | `deployment/week3_ha/`、`app/resilience.py`、`app/redis_circuit_breaker.py`、`app/inference.py`。 |
+docs/week4_system_validation_matrix.md:83:| 已有验证 | JMeter `/jobs` 固定 QPS 计划、稳定窗口校验、evidence wrapper 与 wrk admission smoke 已在本地 Mock 环境验证。 |
+docs/week4_system_validation_matrix.md:96:| 已有证据 | `evidence/week3_ha/real_failover/`；`evidence/week4_redis/`。 |
+docs/week4_system_validation_matrix.md:100:### 3.7 BAGEL 图文联合推理
+docs/week4_system_validation_matrix.md:105:| 主要实现 | `scripts/week3_bagel/`、BAGEL runtime / gateway 相关部署资产。 |
+docs/week4_system_validation_matrix.md:107:| 已有验证 | 历史 BAGEL understanding benchmark 与基础联通性验证。 |
+docs/week4_system_validation_matrix.md:108:| 已有证据 | `scripts/week3_bagel/run_understanding_benchmark.py`、历史 Week3 BAGEL evidence。 |
+docs/week4_system_validation_matrix.md:129:| 主要实现 | `app/kernels/rmsnorm_int8.py`、`tests/test_rmsnorm_int8.py`、`scripts/week4_cloud/benchmark_triton_rmsnorm_int8.py`。 |
+docs/week4_system_validation_matrix.md:131:| 当前事实 | 已实现 PyTorch reference、Triton kernel、CPU correctness tests 与 A100 benchmark 入口；CUDA/Triton correctness、性能和 profiling 尚未执行。 |
+docs/week4_system_validation_matrix.md:134:| 待完成工作 | 在 CUDA/Triton GPU 环境完成多 shape、多 dtype correctness、A100 latency/speedup/throughput、profiling 与原始 CSV/环境快照归档。 |
+docs/week4_system_validation_matrix.md:153:- [ ] 安装并验证 JMeter 和 wrk
+docs/week4_system_validation_matrix.md:158:- [ ] 固定 BAGEL 多模态样本 manifest
+docs/week4_system_validation_matrix.md:176:8. BAGEL 多模态场景矩阵；
+
+===== Week4 workload sizes =====
+      12 data/week4_workloads/customer_service_short.jsonl
+       2 data/week4_workloads/long_context_manifest.jsonl
+      50 data/week4_workloads/codegen_functional_50.jsonl
+      30 data/week4_workloads/bagel_reliability_n30.jsonl
+      94 total
+
+===== Cloud-facing CLI contracts =====
+usage: benchmark_gateway_capacity.py [-h] --base-url BASE_URL
+                                     --mode {generate,jobs}
+                                     --requests REQUESTS
+                                     --concurrency CONCURRENCY
+                                     [--max-new-tokens MAX_NEW_TOKENS]
+                                     [--temperature TEMPERATURE]
+                                     [--thinking-budget THINKING_BUDGET]
+                                     [--poll-interval-seconds POLL_INTERVAL_SECONDS]
+                                     [--job-timeout-seconds JOB_TIMEOUT_SECONDS]
+                                     --output-dir OUTPUT_DIR
+
+options:
+  -h, --help            show this help message and exit
+  --base-url BASE_URL
+  --mode {generate,jobs}
+  --requests REQUESTS
+  --concurrency CONCURRENCY
+  --max-new-tokens MAX_NEW_TOKENS
+  --temperature TEMPERATURE
+  --thinking-budget THINKING_BUDGET
+  --poll-interval-seconds POLL_INTERVAL_SECONDS
+  --job-timeout-seconds JOB_TIMEOUT_SECONDS
+  --output-dir OUTPUT_DIR
+usage: benchmark_triton_rmsnorm_int8.py [-h] --output-dir OUTPUT_DIR
+                                        [--warmup WARMUP]
+                                        [--repetitions REPETITIONS]
+
+options:
+  -h, --help            show this help message and exit
+  --output-dir OUTPUT_DIR
+  --warmup WARMUP
+  --repetitions REPETITIONS
+usage: run_text_workload_manifest.py [-h] --base-url BASE_URL
+                                     --mode {generate,jobs}
+                                     --manifest MANIFEST
+                                     --output-dir OUTPUT_DIR
+                                     [--poll-seconds POLL_SECONDS]
+                                     [--job-timeout-seconds JOB_TIMEOUT_SECONDS]
+
+options:
+  -h, --help            show this help message and exit
+  --base-url BASE_URL
+  --mode {generate,jobs}
+  --manifest MANIFEST
+  --output-dir OUTPUT_DIR
+  --poll-seconds POLL_SECONDS
+  --job-timeout-seconds JOB_TIMEOUT_SECONDS
+usage: evaluate_codegen_functional.py [-h] --manifest MANIFEST
+                                      --responses RESPONSES --output OUTPUT
+                                      [--image IMAGE]
+                                      [--timeout-seconds TIMEOUT_SECONDS]
+
+options:
+  -h, --help            show this help message and exit
+  --manifest MANIFEST
+  --responses RESPONSES
+  --output OUTPUT
+  --image IMAGE
+  --timeout-seconds TIMEOUT_SECONDS
+usage: probe_gateway_failover.py [-h] --base-url BASE_URL
+                                 [--requests REQUESTS]
+                                 [--interval-seconds INTERVAL_SECONDS]
+                                 [--max-new-tokens MAX_NEW_TOKENS]
+                                 --output-dir OUTPUT_DIR
+
+options:
+  -h, --help            show this help message and exit
+  --base-url BASE_URL
+  --requests REQUESTS
+  --interval-seconds INTERVAL_SECONDS
+  --max-new-tokens MAX_NEW_TOKENS
+  --output-dir OUTPUT_DIR
+
+===== Docker image dependency contract =====
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+RUN addgroup --system app \
+    && adduser --system --ingroup app app
+
+COPY requirements-gateway.txt ./
+RUN python -m pip install --no-cache-dir --upgrade pip \
+    && python -m pip install --no-cache-dir -r requirements-gateway.txt
+
+COPY app ./app
+
+USER app
+
+EXPOSE 8000
+
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+fastapi==0.115.12
+uvicorn[standard]==0.34.2
+pydantic==2.11.4
+prometheus-client==0.23.1
+prometheus-fastapi-instrumentator==7.1.0
+redis==7.4.0
+
+fastapi
+uvicorn
+pydantic
+requests
+torch
+transformers
+accelerate
+prometheus-fastapi-instrumentator
+
+numpy
