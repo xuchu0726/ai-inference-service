@@ -12,6 +12,7 @@ MODEL_PATH="${MODEL_PATH:-}"
 CHECK_BAGEL="${CHECK_BAGEL:-0}"
 
 FAILURES=0
+REQUIRE_LOADTOOLS="${REQUIRE_LOADTOOLS:-0}"
 
 check_command() {
   local name="$1"
@@ -20,6 +21,15 @@ check_command() {
   else
     echo "CHECK_FAIL command=$name reason=not_found"
     FAILURES=$((FAILURES + 1))
+  fi
+}
+
+check_optional_command() {
+  local name="$1"
+  if command -v "$name" >/dev/null 2>&1; then
+    echo "CHECK_OK optional_command=$name path=$(command -v "$name")"
+  else
+    echo "CHECK_WARN optional_command=$name reason=not_found"
   fi
 }
 
@@ -45,10 +55,28 @@ git rev-parse --short HEAD || true
 git status --short || true
 
 echo
-echo "===== commands ====="
-for command_name in nvidia-smi python redis-server redis-cli jmeter wrk docker; do
+echo "===== required commands ====="
+for command_name in nvidia-smi python redis-server redis-cli; do
   check_command "$command_name"
 done
+
+echo
+echo "===== load-test commands ====="
+if [ "$REQUIRE_LOADTOOLS" = "1" ]; then
+  for command_name in jmeter wrk; do
+    check_command "$command_name"
+  done
+else
+  for command_name in jmeter wrk; do
+    check_optional_command "$command_name"
+  done
+fi
+
+echo
+echo "===== Docker boundary ====="
+check_optional_command docker
+echo "docker_required=no"
+echo "codegen_functional_evaluation=run_locally_after_gpu_responses_are_collected"
 
 echo
 echo "===== GPU ====="
