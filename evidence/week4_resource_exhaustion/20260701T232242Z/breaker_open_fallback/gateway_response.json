@@ -1,0 +1,22 @@
+{
+  "phase": "breaker_open_fallback",
+  "http_status": 200,
+  "payload": {
+    "response": "success upstream response",
+    "latency_seconds": 0.000561,
+    "input_chars": 19,
+    "max_new_tokens": 8,
+    "thinking_budget": 512,
+    "backend": "vllm",
+    "input_tokens": 4,
+    "output_tokens": 4,
+    "tokens_per_second": 7133.1701,
+    "model_name": "Seed-OSS-fallback-controlled",
+    "device": "vllm_server",
+    "total_tokens": 8,
+    "request_id": "5498b19d71e546108db6683969db64b4",
+    "route": "fallback",
+    "primary_attempts": 0,
+    "fallback_thinking_budget": 512
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "validation_passed": true,
+  "errors": [],
+  "phases": {
+    "resource_exhausted_fallback": {
+      "expected": [
+        "fallback",
+        1,
+        512
+      ],
+      "actual": [
+        "fallback",
+        1,
+        512
+      ]
+    },
+    "breaker_open_fallback": {
+      "expected": [
+        "fallback",
+        0,
+        512
+      ],
+      "actual": [
+        "fallback",
+        0,
+        512
+      ]
+    },
+    "primary_recovered": {
+      "expected": [
+        "primary",
+        1,
+        null
+      ],
+      "actual": [
+        "primary",
+        1,
+        null
+      ]
+    }
+  },
+  "boundary": "确定性 HTTP 500 CUDA-OOM fault injection；验证错误分类、Redis breaker、fallback 与 recovery；不等同于真实 GPU OOM。"
+}

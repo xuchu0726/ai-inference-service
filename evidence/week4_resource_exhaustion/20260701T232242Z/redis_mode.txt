@@ -1,0 +1,1 @@
+redis_mode=docker_container

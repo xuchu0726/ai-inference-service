@@ -1,4 +1,5 @@
 from app.backends.errors import (
+    BackendResourceExhaustedError,
     BackendTimeoutError,
     BackendUnavailableError,
 )
@@ -133,7 +134,11 @@ def _is_retry_safe(error: Exception) -> bool:
 def _is_fallback_safe(error: Exception) -> bool:
     return isinstance(
         error,
-        (BackendUnavailableError, BackendTimeoutError),
+        (
+            BackendUnavailableError,
+            BackendTimeoutError,
+            BackendResourceExhaustedError,
+        ),
     )
 
 

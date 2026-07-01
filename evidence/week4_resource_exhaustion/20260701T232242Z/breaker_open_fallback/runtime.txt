@@ -1,0 +1,26 @@
+===== collected_at_utc =====
+2026-07-01T23:22:49Z
+
+===== uname =====
+Darwin IC-LF7RDWKPW6 24.6.0 Darwin Kernel Version 24.6.0: Tue Apr 21 20:18:13 PDT 2026; root:xnu-11417.140.69.710.16~1/RELEASE_ARM64_T8132 arm64
+
+===== process =====
+38827 38772 python -m uvicorn app.main:app --host 0.0.0.0 --port 18080
+
+===== nvidia_smi =====
+nvidia_smi=unavailable
+
+===== git_commit =====
+9a361e5c5a0ad6d474539c944ecc2da02edd1031
+
+===== git_status =====
+ M app/backends/errors.py
+ M app/backends/vllm_backend.py
+ M app/inference.py
+?? data/week4_workloads/bagel_image_prompt_matrix_n36.jsonl
+?? evidence/week4_resource_exhaustion/
+?? scripts/week4_cloud/mock_openai_fault_server.py
+?? scripts/week4_cloud/run_bagel_workload_manifest.py
+?? scripts/week4_cloud/run_controlled_resource_exhaustion_harness.sh
+?? tests/test_week4_bagel_workload_runner.py
+?? tests/test_week4_resource_exhaustion_policy.py

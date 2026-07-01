@@ -5,6 +5,7 @@ import urllib.error
 import urllib.request
 
 from app.backends.errors import (
+    BackendResourceExhaustedError,
     BackendTimeoutError,
     BackendUnavailableError,
     UpstreamProtocolError,
@@ -107,13 +108,38 @@ class VLLMBackend:
                 data = json.loads(raw_body)
 
         except urllib.error.HTTPError as exc:
+            try:
+                error_body = exc.read().decode("utf-8", errors="replace")
+            except OSError:
+                error_body = ""
+
+            normalized_error = error_body.lower()
+            resource_exhaustion_markers = (
+                "out of memory",
+                "cuda oom",
+                "cuda out of memory",
+                "memory exhausted",
+                "insufficient memory",
+                "resource exhausted",
+                "kv cache",
+            )
+
+            if exc.code == 500 and any(
+                marker in normalized_error
+                for marker in resource_exhaustion_markers
+            ):
+                raise BackendResourceExhaustedError(
+                    "vLLM upstream resource exhausted: "
+                    f"HTTP {exc.code}; body={error_body[:500]}"
+                ) from exc
+
             if exc.code in {502, 503, 504}:
                 raise BackendUnavailableError(
                     f"vLLM upstream is temporarily unavailable: HTTP {exc.code}"
                 ) from exc
 
             raise UpstreamProtocolError(
-                f"vLLM returned HTTP {exc.code}"
+                f"vLLM returned HTTP {exc.code}; body={error_body[:500]}"
             ) from exc
 
         except (TimeoutError, socket.timeout) as exc:

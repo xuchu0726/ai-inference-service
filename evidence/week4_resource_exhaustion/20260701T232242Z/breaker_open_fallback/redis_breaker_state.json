@@ -1,0 +1,15 @@
+{
+  "collected_at_utc": "2026-07-01T23:22:49.725479+00:00",
+  "redis_url": "redis://127.0.0.1:16379/0",
+  "key_prefix": "week4:resource-exhaustion",
+  "state_key": "{week4:resource-exhaustion}:circuit",
+  "probe_key": "{week4:resource-exhaustion}:probe",
+  "state_hash": {
+    "consecutive_failures": "1",
+    "state": "open",
+    "opened_at_ms": "1782948169346",
+    "version": "1"
+  },
+  "probe_value": null,
+  "probe_ttl_ms": -2
+}
