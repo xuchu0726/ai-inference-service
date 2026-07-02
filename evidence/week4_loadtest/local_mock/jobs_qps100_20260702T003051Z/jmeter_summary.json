@@ -1,0 +1,18 @@
+{
+  "mode": "jobs",
+  "target_qps": 100.0,
+  "configured_threads": 200,
+  "sample_count": 6189,
+  "success_count": 6189,
+  "failure_count": 0,
+  "error_rate": 0.0,
+  "response_codes": [
+    "202"
+  ],
+  "wall_seconds": 59.915,
+  "actual_requests_per_second": 103.296336,
+  "latency_p50_ms": 2.0,
+  "latency_p95_ms": 7.0,
+  "latency_max_ms": 65.0,
+  "latency_mean_ms": 2.927129
+}

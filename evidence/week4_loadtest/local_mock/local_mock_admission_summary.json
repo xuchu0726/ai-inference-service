@@ -1,0 +1,51 @@
+{
+  "experiment": "Week4 local MockBackend Redis Stream /jobs admission profile validation",
+  "boundary": "结果仅验证本地 Docker Compose 中 MockBackend 的 admission、Redis Stream queue、Worker 消费与 JMeter 固定 QPS 协议；不代表 Seed-OSS-36B 的端到端生成吞吐、模型推理延迟或 GPU 容量。",
+  "profiles": [
+    {
+      "run_dir": "evidence/week4_loadtest/local_mock/jobs_qps1000_20260702T003627Z",
+      "target_qps": 1000.0,
+      "stable_window_actual_qps": 1000.199988,
+      "stable_window_qps_relative_deviation": 0.0002,
+      "stable_window_error_rate": 0.0,
+      "stable_window_latency_p50_ms": 2.0,
+      "stable_window_latency_p95_ms": 10.0,
+      "stable_window_latency_max_ms": 136.0,
+      "profile_valid": true,
+      "full_run_actual_qps": 1016.949718,
+      "full_run_latency_p95_ms": 39.0,
+      "redis_pending": 0,
+      "redis_lag": 0
+    },
+    {
+      "run_dir": "evidence/week4_loadtest/local_mock/jobs_qps100_20260702T003051Z",
+      "target_qps": 100.0,
+      "stable_window_actual_qps": 100.088148,
+      "stable_window_qps_relative_deviation": 0.000881,
+      "stable_window_error_rate": 0.0,
+      "stable_window_latency_p50_ms": 2.0,
+      "stable_window_latency_p95_ms": 7.0,
+      "stable_window_latency_max_ms": 31.0,
+      "profile_valid": true,
+      "full_run_actual_qps": 103.296336,
+      "full_run_latency_p95_ms": 7.0,
+      "redis_pending": 0,
+      "redis_lag": 0
+    },
+    {
+      "run_dir": "evidence/week4_loadtest/local_mock/jobs_qps500_20260702T003315Z",
+      "target_qps": 500.0,
+      "stable_window_actual_qps": 500.309919,
+      "stable_window_qps_relative_deviation": 0.00062,
+      "stable_window_error_rate": 0.0,
+      "stable_window_latency_p50_ms": 1.0,
+      "stable_window_latency_p95_ms": 5.0,
+      "stable_window_latency_max_ms": 78.0,
+      "profile_valid": true,
+      "full_run_actual_qps": 512.955958,
+      "full_run_latency_p95_ms": 7.0,
+      "redis_pending": 0,
+      "redis_lag": 0
+    }
+  ]
+}

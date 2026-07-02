@@ -1,0 +1,18 @@
+{
+  "collected_at_utc": "2026-07-02T00:30:52.356975+00:00",
+  "redis_url": "redis://127.0.0.1:16379/0",
+  "stream_key": "{ai-inference:week4:jobs}:stream",
+  "consumer_group": "week4-workers",
+  "stream_length": 0,
+  "pending": [],
+  "groups": [
+    {
+      "name": "week4-workers",
+      "consumers": 2,
+      "pending": 0,
+      "last-delivered-id": "1782952202489-0",
+      "entries-read": 13,
+      "lag": 0
+    }
+  ]
+}

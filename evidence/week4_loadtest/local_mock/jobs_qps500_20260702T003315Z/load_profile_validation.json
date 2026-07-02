@@ -1,0 +1,21 @@
+{
+  "target_qps": 500.0,
+  "warmup_seconds": 10.0,
+  "max_relative_qps_deviation": 0.1,
+  "max_error_rate": 0.01,
+  "stable_window_sample_count": 25022,
+  "stable_window_seconds": 50.013,
+  "actual_qps": 500.309919,
+  "qps_relative_deviation": 0.00062,
+  "success_count": 25022,
+  "failure_count": 0,
+  "error_rate": 0.0,
+  "response_codes": [
+    "202"
+  ],
+  "latency_p50_ms": 1.0,
+  "latency_p95_ms": 5.0,
+  "latency_max_ms": 78.0,
+  "profile_valid": true,
+  "invalid_reasons": []
+}

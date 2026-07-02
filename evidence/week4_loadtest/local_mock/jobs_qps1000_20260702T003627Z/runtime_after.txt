@@ -1,0 +1,18 @@
+===== collected_at_utc =====
+2026-07-02T00:37:33Z
+
+===== uname =====
+Darwin IC-LF7RDWKPW6 24.6.0 Darwin Kernel Version 24.6.0: Tue Apr 21 20:18:13 PDT 2026; root:xnu-11417.140.69.710.16~1/RELEASE_ARM64_T8132 arm64
+
+===== process =====
+
+===== nvidia_smi =====
+nvidia_smi=unavailable
+
+===== git_commit =====
+eb536537e919aeb0bdff6e51f31323ff7092de86
+
+===== git_status =====
+ M deployment/docker-compose.week4.yml
+?? evidence/week4_loadtest/
+?? jmeter.log

@@ -1,0 +1,14 @@
+mode=jobs
+target_qps=1000
+duration_seconds=60
+threads=1200
+base_url=http://127.0.0.1:8000
+redis_url=redis://127.0.0.1:16379/0
+queue_prefix=ai-inference:week4:jobs
+consumer_group=week4-workers
+git_commit=eb536537e919aeb0bdff6e51f31323ff7092de86
+ramp_seconds=5
+warmup_seconds=10
+max_relative_qps_deviation=0.10
+max_error_rate=0.01
+min_stable_window_samples=1000

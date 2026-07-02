@@ -1,7 +1,7 @@
 name: ai-inference-week4
 
 x-service-env: &service-env
-  INFERENCE_BACKEND: vllm
+  INFERENCE_BACKEND: ${INFERENCE_BACKEND:-vllm}
 
   VLLM_BASE_URL: ${VLLM_BASE_URL:-http://host.docker.internal:8001/v1}
   VLLM_MODEL_NAME: ${VLLM_MODEL_NAME:-Seed-OSS-36B-Instruct-W8A8-Primary}
@@ -24,6 +24,8 @@ services:
   redis:
     image: redis:7.4-alpine
     command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "${REDIS_HOST_PORT:-16379}:6379"
     volumes:
       - redis-data:/data
     healthcheck:
