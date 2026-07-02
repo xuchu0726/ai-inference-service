@@ -1,0 +1,15 @@
+===== Week4 Gateway =====
+primary=http://127.0.0.1:18111/v1
+fallback=http://127.0.0.1:18112/v1
+redis=redis://127.0.0.1:16380/0
+gateway=0.0.0.0:18080
+INFO:     Started server process [7975]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:18080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:47590 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47604 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47614 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47618 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47620 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54750 - "GET /metrics HTTP/1.1" 200 OK

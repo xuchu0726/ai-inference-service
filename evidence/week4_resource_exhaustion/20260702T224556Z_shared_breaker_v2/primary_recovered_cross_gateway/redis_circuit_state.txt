@@ -1,0 +1,8 @@
+consecutive_failures
+0
+state
+closed
+opened_at_ms
+0
+version
+3

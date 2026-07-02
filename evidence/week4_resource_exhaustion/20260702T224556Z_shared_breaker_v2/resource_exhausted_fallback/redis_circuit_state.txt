@@ -1,0 +1,8 @@
+consecutive_failures
+1
+state
+open
+opened_at_ms
+1783032358381
+version
+1
