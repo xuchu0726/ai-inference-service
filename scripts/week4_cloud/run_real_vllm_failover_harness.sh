@@ -26,8 +26,8 @@ RUN_DIR="${RUN_DIR:-evidence/week4_cloud_failover/$STAMP}"
 PRIMARY_GPUS="${PRIMARY_GPUS:-0,1}"
 FALLBACK_GPUS="${FALLBACK_GPUS:-2,3}"
 
-PRIMARY_PORT="${PRIMARY_PORT:-8001}"
-FALLBACK_PORT="${FALLBACK_PORT:-8002}"
+PRIMARY_PORT="${PRIMARY_PORT:-8002}"
+FALLBACK_PORT="${FALLBACK_PORT:-8010}"
 GATEWAY_PORT="${GATEWAY_PORT:-8000}"
 
 PRIMARY_MODEL_NAME="${PRIMARY_MODEL_NAME:-Seed-OSS-36B-Instruct-W8A8-Primary}"
@@ -83,7 +83,7 @@ start_primary() {
 
   MODEL_PATH="$MODEL_PATH" \
   CUDA_VISIBLE_DEVICES="$PRIMARY_GPUS" \
-  VLLM_PORT="$PRIMARY_PORT" \
+  API_PORT="$PRIMARY_PORT" \
   SERVED_MODEL_NAME="$PRIMARY_MODEL_NAME" \
   bash deployment/cloud/run_week4_seed_w8a8_tp2_instance.sh \
     > "$RUN_DIR/$log_name" 2>&1 &
@@ -93,7 +93,7 @@ start_primary() {
 start_fallback() {
   MODEL_PATH="$MODEL_PATH" \
   CUDA_VISIBLE_DEVICES="$FALLBACK_GPUS" \
-  VLLM_PORT="$FALLBACK_PORT" \
+  API_PORT="$FALLBACK_PORT" \
   SERVED_MODEL_NAME="$FALLBACK_MODEL_NAME" \
   bash deployment/cloud/run_week4_seed_w8a8_tp2_instance.sh \
     > "$RUN_DIR/fallback_vllm.log" 2>&1 &

@@ -2,12 +2,12 @@
 set -euo pipefail
 
 # Week4：单个 Seed-OSS-36B W8A8 TP=2 vLLM 实例。
-# 调用方必须显式指定 CUDA_VISIBLE_DEVICES、VLLM_PORT、SERVED_MODEL_NAME。
+# 调用方必须显式指定 CUDA_VISIBLE_DEVICES、API_PORT、SERVED_MODEL_NAME。
 # 两个实例分别占用 GPU 0,1 与 GPU 2,3，用作 primary / fallback。
 
 MODEL_PATH="${MODEL_PATH:?MODEL_PATH is required}"
 CUDA_DEVICE_SET="${CUDA_VISIBLE_DEVICES:?CUDA_VISIBLE_DEVICES is required}"
-VLLM_PORT="${VLLM_PORT:?VLLM_PORT is required}"
+API_PORT="${API_PORT:?API_PORT is required}"
 SERVED_MODEL_NAME="${SERVED_MODEL_NAME:?SERVED_MODEL_NAME is required}"
 
 TENSOR_PARALLEL_SIZE="${TENSOR_PARALLEL_SIZE:-2}"
@@ -20,10 +20,14 @@ DTYPE="${DTYPE:-bfloat16}"
 export CUDA_VISIBLE_DEVICES="$CUDA_DEVICE_SET"
 export CUDA_DEVICE_ORDER=PCI_BUS_ID
 
+# VLLM_PORT / VLLM_HOST_IP 属于 vLLM 内部通信变量，不能复用为 API 端口。
+unset VLLM_PORT
+unset VLLM_HOST_IP
+
 echo "===== Week4 Seed W8A8 TP=2 instance ====="
 echo "CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
 echo "MODEL_PATH=$MODEL_PATH"
-echo "VLLM_PORT=$VLLM_PORT"
+echo "API_PORT=$API_PORT"
 echo "SERVED_MODEL_NAME=$SERVED_MODEL_NAME"
 echo "TENSOR_PARALLEL_SIZE=$TENSOR_PARALLEL_SIZE"
 echo "MAX_MODEL_LEN=$MAX_MODEL_LEN"
@@ -34,7 +38,7 @@ echo "GPU_MEMORY_UTILIZATION=$GPU_MEMORY_UTILIZATION"
 exec vllm serve "$MODEL_PATH" \
   --served-model-name "$SERVED_MODEL_NAME" \
   --host 0.0.0.0 \
-  --port "$VLLM_PORT" \
+  --port "$API_PORT" \
   --tensor-parallel-size "$TENSOR_PARALLEL_SIZE" \
   --dtype "$DTYPE" \
   --quantization compressed-tensors \
