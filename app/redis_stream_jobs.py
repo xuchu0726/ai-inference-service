@@ -38,7 +38,8 @@ class RedisStreamJobQueue:
     """基于 Redis Stream 的异步推理任务队列。
 
     语义为 at-least-once：worker 在 XACK 前异常退出时，消息保留在
-    Pending Entries List 中，并可由其他 worker 通过 XAUTOCLAIM 接管。
+    Pending Entries List 中，并可由其他 worker 通过 XAUTOCLAIM 接管；
+    对不支持 XAUTOCLAIM 的 Redis 6，回退到 XPENDING + XCLAIM。
     """
 
     _MARK_RUNNING_LUA = """
@@ -253,6 +254,17 @@ return 1
                 start_id=start_id,
                 count=count,
             )
+        except ResponseError as exc:
+            if not self._is_xautoclaim_unsupported(exc):
+                raise JobQueueUnavailableError(
+                    f"failed to reclaim pending jobs: {exc}"
+                ) from exc
+            return self._reclaim_idle_legacy(
+                consumer_name=consumer_name,
+                min_idle_time_ms=min_idle_time_ms,
+                start_id=start_id,
+                count=count,
+            )
         except RedisError as exc:
             raise JobQueueUnavailableError(
                 f"failed to reclaim pending jobs: {exc}"
@@ -269,6 +281,83 @@ return 1
             reclaimed=True,
         )
         return str(next_start_id), messages
+
+    @staticmethod
+    def _is_xautoclaim_unsupported(exc: ResponseError) -> bool:
+        message = str(exc).lower()
+        return "unknown command" in message and "xautoclaim" in message
+
+    def _reclaim_idle_legacy(
+        self,
+        *,
+        consumer_name: str,
+        min_idle_time_ms: int,
+        start_id: str,
+        count: int,
+    ) -> tuple[str, list[JobMessage]]:
+        scan_start = "-" if start_id == "0-0" else f"({start_id}"
+
+        try:
+            pending = self._client.xpending_range(
+                self._stream_key,
+                self._consumer_group,
+                min=scan_start,
+                max="+",
+                count=count,
+            )
+        except RedisError as exc:
+            raise JobQueueUnavailableError(
+                f"failed to inspect pending jobs for legacy reclaim: {exc}"
+            ) from exc
+
+        if not pending:
+            return "0-0", []
+
+        candidate_ids: list[str] = []
+        for entry in pending:
+            if not isinstance(entry, Mapping):
+                raise JobQueueProtocolError(
+                    f"unexpected XPENDING entry: {entry!r}"
+                )
+
+            message_id = entry.get("message_id")
+            idle_ms = entry.get("time_since_delivered")
+
+            if not isinstance(message_id, str) or not isinstance(idle_ms, int):
+                raise JobQueueProtocolError(
+                    f"unexpected XPENDING entry fields: {entry!r}"
+                )
+
+            if idle_ms >= min_idle_time_ms:
+                candidate_ids.append(message_id)
+
+        next_start_id = (
+            "0-0"
+            if len(pending) <= count
+            else str(pending[-1]["message_id"])
+        )
+
+        if not candidate_ids:
+            return next_start_id, []
+
+        try:
+            records = self._client.xclaim(
+                self._stream_key,
+                self._consumer_group,
+                consumer_name,
+                min_idle_time=min_idle_time_ms,
+                message_ids=candidate_ids,
+            )
+        except RedisError as exc:
+            raise JobQueueUnavailableError(
+                f"failed to legacy-claim pending jobs: {exc}"
+            ) from exc
+
+        messages = self._decode_records(
+            [(self._stream_key, records)],
+            reclaimed=True,
+        )
+        return next_start_id, messages
 
     def mark_running(
         self,
