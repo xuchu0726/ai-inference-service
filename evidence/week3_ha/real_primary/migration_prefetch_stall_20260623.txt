@@ -1,0 +1,14 @@
+# 迁移后 W8A8 Primary 启动异常记录
+
+- 环境：RunPod 自动迁移后的 2 × A100-SXM4-80GB Pod
+- 模型：Seed-OSS-36B-Instruct-W8A8
+- vLLM：0.23.0
+- 启动策略：--safetensors-load-strategy prefetch
+- 现象：checkpoint prefetch 完成后，worker 未进入正常完成加载阶段。
+- 观测：
+  - Worker TP0 长时间处于 D 状态；
+  - GPU memory 停留约 20 GiB / GPU；
+  - 8002 未监听，health=000；
+  - 后续观测中 TP0 rchar 增量仅约 262 KB，TP1 无增长。
+- 判断：迁移后 FUSE / 网络卷路径下 prefetch 加载策略发生停滞。
+- 后续处理：改用 --safetensors-load-strategy eager 重新启动。
