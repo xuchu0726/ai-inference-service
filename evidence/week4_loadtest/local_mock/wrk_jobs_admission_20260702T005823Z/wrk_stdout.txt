@@ -1,0 +1,23 @@
+Running 30s test @ http://127.0.0.1:8000
+  4 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    67.32ms    8.42ms 215.00ms   85.48%
+    Req/Sec   373.14     40.36   470.00     75.90%
+  Latency Distribution
+     50%   65.88ms
+     75%   69.80ms
+     90%   75.72ms
+     99%   90.37ms
+  44640 requests in 30.06s, 10.69MB read
+Requests/sec:   1484.83
+Transfer/sec:    363.97KB
+
+===== wrk admission summary =====
+requests=44640
+duration_us=30064095
+errors.connect=0
+errors.read=0
+errors.write=0
+errors.status=0
+latency_p50_us=65882
+latency_p95_us=80488

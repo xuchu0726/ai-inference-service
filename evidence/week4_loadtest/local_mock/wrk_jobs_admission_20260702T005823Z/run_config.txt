@@ -1,0 +1,10 @@
+tool=wrk
+endpoint=/jobs
+purpose=local_mock_admission_saturation_supplement
+threads=4
+connections=100
+duration_seconds=30
+backend=mock
+boundary=not_a_fixed_qps_test_and_not_real_seed_oss_throughput
+git_commit=5a948509af615033809af515ae048aca513c78ac
+wrk_exit_code=unavailable_due_to_zsh_pipeline_status_capture_error

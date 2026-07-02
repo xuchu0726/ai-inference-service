@@ -1,0 +1,43 @@
+{
+  "collected_at_utc": "2026-07-02T00:59:03.144489+00:00",
+  "redis_url": "redis://127.0.0.1:16379/0",
+  "stream_key": "{ai-inference:week4:jobs}:stream",
+  "consumer_group": "week4-workers",
+  "stream_length": 5694,
+  "pending": [
+    {
+      "message_id": "1782953939144-1",
+      "consumer": "week4-worker-26079251c4c1",
+      "time_since_delivered": 3,
+      "times_delivered": 1
+    },
+    {
+      "message_id": "1782953939145-0",
+      "consumer": "week4-worker-26079251c4c1",
+      "time_since_delivered": 3,
+      "times_delivered": 1
+    },
+    {
+      "message_id": "1782953939146-0",
+      "consumer": "week4-worker-26079251c4c1",
+      "time_since_delivered": 3,
+      "times_delivered": 1
+    },
+    {
+      "message_id": "1782953939146-1",
+      "consumer": "week4-worker-26079251c4c1",
+      "time_since_delivered": 3,
+      "times_delivered": 1
+    }
+  ],
+  "groups": [
+    {
+      "name": "week4-workers",
+      "consumers": 3,
+      "pending": 3,
+      "last-delivered-id": "1782953939146-1",
+      "entries-read": 137053,
+      "lag": 5690
+    }
+  ]
+}

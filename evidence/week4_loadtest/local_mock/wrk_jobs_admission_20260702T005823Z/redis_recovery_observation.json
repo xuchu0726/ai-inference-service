@@ -1,0 +1,13 @@
+{
+  "purpose": "wrk 饱和入队后的 Redis Stream backlog recovery observation",
+  "boundary": "该结果仅对应本地 Docker Compose MockBackend。wrk 为饱和吞吐补充测试，不是固定 QPS 验收。",
+  "recovered": true,
+  "samples": [
+    {
+      "observed_at_utc": "2026-07-02T00:59:49.257321+00:00",
+      "stream_length": 0,
+      "pending": 0,
+      "lag": 0
+    }
+  ]
+}

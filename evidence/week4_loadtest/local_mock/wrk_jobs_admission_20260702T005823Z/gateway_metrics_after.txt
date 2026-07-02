@@ -1,0 +1,176 @@
+===== collected_at_utc =====
+2026-07-02T00:59:02Z
+
+===== source =====
+http://127.0.0.1:8000/metrics
+
+===== metrics =====
+# HELP python_gc_objects_collected_total Objects collected during gc
+# TYPE python_gc_objects_collected_total counter
+python_gc_objects_collected_total{generation="0"} 1.07857e+06
+python_gc_objects_collected_total{generation="1"} 160419.0
+python_gc_objects_collected_total{generation="2"} 18286.0
+# HELP python_gc_objects_uncollectable_total Uncollectable objects found during GC
+# TYPE python_gc_objects_uncollectable_total counter
+python_gc_objects_uncollectable_total{generation="0"} 0.0
+python_gc_objects_uncollectable_total{generation="1"} 0.0
+python_gc_objects_uncollectable_total{generation="2"} 0.0
+# HELP python_gc_collections_total Number of times this generation was collected
+# TYPE python_gc_collections_total counter
+python_gc_collections_total{generation="0"} 4445.0
+python_gc_collections_total{generation="1"} 404.0
+python_gc_collections_total{generation="2"} 36.0
+# HELP python_info Python platform information
+# TYPE python_info gauge
+python_info{implementation="CPython",major="3",minor="11",patchlevel="15",version="3.11.15"} 1.0
+# HELP process_virtual_memory_bytes Virtual memory size in bytes.
+# TYPE process_virtual_memory_bytes gauge
+process_virtual_memory_bytes 3.281686528e+09
+# HELP process_resident_memory_bytes Resident memory size in bytes.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes 7.0664192e+07
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds 1.78295391118e+09
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total 36.81
+# HELP process_open_fds Number of open file descriptors.
+# TYPE process_open_fds gauge
+process_open_fds 54.0
+# HELP process_max_fds Maximum number of open file descriptors.
+# TYPE process_max_fds gauge
+process_max_fds 1.048576e+06
+# HELP gateway_backend_ready Whether the configured inference backend is ready.
+# TYPE gateway_backend_ready gauge
+gateway_backend_ready{backend="mock_primary"} 1.0
+# HELP gateway_readiness_checks_total Number of backend readiness checks.
+# TYPE gateway_readiness_checks_total counter
+gateway_readiness_checks_total{backend="mock_primary",result="ready"} 4.0
+# HELP gateway_readiness_checks_created Number of backend readiness checks.
+# TYPE gateway_readiness_checks_created gauge
+gateway_readiness_checks_created{backend="mock_primary",result="ready"} 1.7829539125381684e+09
+# HELP gateway_backend_failures_total Number of gateway backend failures.
+# TYPE gateway_backend_failures_total counter
+# HELP gateway_retry_attempts_total Number of bounded retry attempts issued by the gateway.
+# TYPE gateway_retry_attempts_total counter
+# HELP gateway_circuit_breaker_state Current circuit breaker state encoded as one-hot labels.
+# TYPE gateway_circuit_breaker_state gauge
+# HELP gateway_circuit_breaker_transitions_total Number of circuit breaker state transitions.
+# TYPE gateway_circuit_breaker_transitions_total counter
+# HELP gateway_fallback_requests_total Number of low-budget fallback requests.
+# TYPE gateway_fallback_requests_total counter
+# HELP gateway_fallback_thinking_budget Configured thinking budget used by the fallback route.
+# TYPE gateway_fallback_thinking_budget gauge
+# HELP gateway_resilience_state_store_operations_total Number of resilience state-store operations by result.
+# TYPE gateway_resilience_state_store_operations_total counter
+# HELP gateway_async_job_submissions_total Number of asynchronous job submission attempts.
+# TYPE gateway_async_job_submissions_total counter
+gateway_async_job_submissions_total{result="accepted"} 44740.0
+# HELP gateway_async_job_submissions_created Number of asynchronous job submission attempts.
+# TYPE gateway_async_job_submissions_created gauge
+gateway_async_job_submissions_created{result="accepted"} 1.782953912918777e+09
+# HELP gateway_async_job_status_transitions_total Number of asynchronous job status transitions.
+# TYPE gateway_async_job_status_transitions_total counter
+gateway_async_job_status_transitions_total{status="queued"} 44740.0
+# HELP gateway_async_job_status_transitions_created Number of asynchronous job status transitions.
+# TYPE gateway_async_job_status_transitions_created gauge
+gateway_async_job_status_transitions_created{status="queued"} 1.782953912918789e+09
+# HELP gateway_async_job_reclaims_total Number of pending asynchronous jobs reclaimed by workers.
+# TYPE gateway_async_job_reclaims_total counter
+gateway_async_job_reclaims_total 0.0
+# HELP gateway_async_job_reclaims_created Number of pending asynchronous jobs reclaimed by workers.
+# TYPE gateway_async_job_reclaims_created gauge
+gateway_async_job_reclaims_created 1.7829539118216338e+09
+# HELP gateway_async_job_worker_results_total Number of asynchronous job worker processing results.
+# TYPE gateway_async_job_worker_results_total counter
+# HELP http_requests_total Total number of requests by method, status and handler.
+# TYPE http_requests_total counter
+http_requests_total{handler="/health",method="GET",status="2xx"} 4.0
+http_requests_total{handler="/metrics",method="GET",status="2xx"} 1.0
+http_requests_total{handler="/jobs",method="POST",status="2xx"} 44740.0
+# HELP http_requests_created Total number of requests by method, status and handler.
+# TYPE http_requests_created gauge
+http_requests_created{handler="/health",method="GET",status="2xx"} 1.7829539125393856e+09
+http_requests_created{handler="/metrics",method="GET",status="2xx"} 1.7829539126621404e+09
+http_requests_created{handler="/jobs",method="POST",status="2xx"} 1.7829539129272285e+09
+# HELP http_request_size_bytes Content length of incoming requests by handler. Only value of header is respected. Otherwise ignored. No percentile calculated.
+# TYPE http_request_size_bytes summary
+http_request_size_bytes_count{handler="/health"} 4.0
+http_request_size_bytes_sum{handler="/health"} 0.0
+http_request_size_bytes_count{handler="/metrics"} 1.0
+http_request_size_bytes_sum{handler="/metrics"} 0.0
+http_request_size_bytes_count{handler="/jobs"} 44740.0
+http_request_size_bytes_sum{handler="/jobs"} 5.63724e+06
+# HELP http_request_size_bytes_created Content length of incoming requests by handler. Only value of header is respected. Otherwise ignored. No percentile calculated.
+# TYPE http_request_size_bytes_created gauge
+http_request_size_bytes_created{handler="/health"} 1.7829539125394108e+09
+http_request_size_bytes_created{handler="/metrics"} 1.7829539126621654e+09
+http_request_size_bytes_created{handler="/jobs"} 1.7829539129272368e+09
+# HELP http_response_size_bytes Content length of outgoing responses by handler. Only value of header is respected. Otherwise ignored. No percentile calculated.
+# TYPE http_response_size_bytes summary
+http_response_size_bytes_count{handler="/health"} 4.0
+http_response_size_bytes_sum{handler="/health"} 560.0
+http_response_size_bytes_count{handler="/metrics"} 1.0
+http_response_size_bytes_sum{handler="/metrics"} 8704.0
+http_response_size_bytes_count{handler="/jobs"} 44740.0
+http_response_size_bytes_sum{handler="/jobs"} 4.16082e+06
+# HELP http_response_size_bytes_created Content length of outgoing responses by handler. Only value of header is respected. Otherwise ignored. No percentile calculated.
+# TYPE http_response_size_bytes_created gauge
+http_response_size_bytes_created{handler="/health"} 1.7829539125394485e+09
+http_response_size_bytes_created{handler="/metrics"} 1.7829539126622117e+09
+http_response_size_bytes_created{handler="/jobs"} 1.782953912927245e+09
+# HELP http_request_duration_highr_seconds Latency with many buckets but no API specific labels. Made for more accurate percentile calculations.
+# TYPE http_request_duration_highr_seconds histogram
+http_request_duration_highr_seconds_bucket{le="0.01"} 2.0
+http_request_duration_highr_seconds_bucket{le="0.025"} 5.0
+http_request_duration_highr_seconds_bucket{le="0.05"} 145.0
+http_request_duration_highr_seconds_bucket{le="0.075"} 40532.0
+http_request_duration_highr_seconds_bucket{le="0.1"} 44596.0
+http_request_duration_highr_seconds_bucket{le="0.25"} 44745.0
+http_request_duration_highr_seconds_bucket{le="0.5"} 44745.0
+http_request_duration_highr_seconds_bucket{le="0.75"} 44745.0
+http_request_duration_highr_seconds_bucket{le="1.0"} 44745.0
+http_request_duration_highr_seconds_bucket{le="1.5"} 44745.0
+http_request_duration_highr_seconds_bucket{le="2.0"} 44745.0
+http_request_duration_highr_seconds_bucket{le="2.5"} 44745.0
+http_request_duration_highr_seconds_bucket{le="3.0"} 44745.0
+http_request_duration_highr_seconds_bucket{le="3.5"} 44745.0
+http_request_duration_highr_seconds_bucket{le="4.0"} 44745.0
+http_request_duration_highr_seconds_bucket{le="4.5"} 44745.0
+http_request_duration_highr_seconds_bucket{le="5.0"} 44745.0
+http_request_duration_highr_seconds_bucket{le="7.5"} 44745.0
+http_request_duration_highr_seconds_bucket{le="10.0"} 44745.0
+http_request_duration_highr_seconds_bucket{le="30.0"} 44745.0
+http_request_duration_highr_seconds_bucket{le="60.0"} 44745.0
+http_request_duration_highr_seconds_bucket{le="+Inf"} 44745.0
+http_request_duration_highr_seconds_count 44745.0
+http_request_duration_highr_seconds_sum 2957.4727271002193
+# HELP http_request_duration_highr_seconds_created Latency with many buckets but no API specific labels. Made for more accurate percentile calculations.
+# TYPE http_request_duration_highr_seconds_created gauge
+http_request_duration_highr_seconds_created 1.7829539118262177e+09
+# HELP http_request_duration_seconds Latency with only few buckets by handler. Made to be only used if aggregation by handler is important.
+# TYPE http_request_duration_seconds histogram
+http_request_duration_seconds_bucket{handler="/health",le="0.1",method="GET"} 4.0
+http_request_duration_seconds_bucket{handler="/health",le="0.5",method="GET"} 4.0
+http_request_duration_seconds_bucket{handler="/health",le="1.0",method="GET"} 4.0
+http_request_duration_seconds_bucket{handler="/health",le="+Inf",method="GET"} 4.0
+http_request_duration_seconds_count{handler="/health",method="GET"} 4.0
+http_request_duration_seconds_sum{handler="/health",method="GET"} 0.06096333297318779
+http_request_duration_seconds_bucket{handler="/metrics",le="0.1",method="GET"} 1.0
+http_request_duration_seconds_bucket{handler="/metrics",le="0.5",method="GET"} 1.0
+http_request_duration_seconds_bucket{handler="/metrics",le="1.0",method="GET"} 1.0
+http_request_duration_seconds_bucket{handler="/metrics",le="+Inf",method="GET"} 1.0
+http_request_duration_seconds_count{handler="/metrics",method="GET"} 1.0
+http_request_duration_seconds_sum{handler="/metrics",method="GET"} 0.0021402909769676626
+http_request_duration_seconds_bucket{handler="/jobs",le="0.1",method="POST"} 44591.0
+http_request_duration_seconds_bucket{handler="/jobs",le="0.5",method="POST"} 44740.0
+http_request_duration_seconds_bucket{handler="/jobs",le="1.0",method="POST"} 44740.0
+http_request_duration_seconds_bucket{handler="/jobs",le="+Inf",method="POST"} 44740.0
+http_request_duration_seconds_count{handler="/jobs",method="POST"} 44740.0
+http_request_duration_seconds_sum{handler="/jobs",method="POST"} 2957.409623476269
+# HELP http_request_duration_seconds_created Latency with only few buckets by handler. Made to be only used if aggregation by handler is important.
+# TYPE http_request_duration_seconds_created gauge
+http_request_duration_seconds_created{handler="/health",method="GET"} 1.782953912539497e+09
+http_request_duration_seconds_created{handler="/metrics",method="GET"} 1.782953912662304e+09
+http_request_duration_seconds_created{handler="/jobs",method="POST"} 1.782953912927259e+09

@@ -1,0 +1,16 @@
+===== collected_at_utc =====
+2026-07-02T00:59:03Z
+
+===== uname =====
+Darwin IC-LF7RDWKPW6 24.6.0 Darwin Kernel Version 24.6.0: Tue Apr 21 20:18:13 PDT 2026; root:xnu-11417.140.69.710.16~1/RELEASE_ARM64_T8132 arm64
+
+===== process =====
+
+===== nvidia_smi =====
+nvidia_smi=unavailable
+
+===== git_commit =====
+5a948509af615033809af515ae048aca513c78ac
+
+===== git_status =====
+?? evidence/week4_loadtest/local_mock/wrk_jobs_admission_20260702T005823Z/
