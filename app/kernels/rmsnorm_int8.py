@@ -135,7 +135,7 @@ if triton is not None:
         normalized = x * inverse_rms * weight
         scale = tl.maximum(
             tl.max(tl.abs(normalized), axis=0) / 127.0,
-            MIN_SCALE,
+            1.0e-8,
         )
 
         scaled = normalized / scale

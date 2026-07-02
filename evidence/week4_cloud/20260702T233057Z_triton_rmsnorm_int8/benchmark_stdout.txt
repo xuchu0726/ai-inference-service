@@ -1,0 +1,62 @@
+{
+  "torch_version": "2.9.0+cu128",
+  "cuda_version": "12.8",
+  "device": "NVIDIA A100-SXM4-80GB",
+  "warmup": 20,
+  "repetitions": 100,
+  "all_quantized_exact_match": true,
+  "rows": [
+    {
+      "rows": 1,
+      "hidden_size": 1024,
+      "dtype": "torch.float16",
+      "quantized_exact_match": true,
+      "scale_max_abs_error": 3.725290298461914e-09,
+      "dequantized_max_abs_error": 4.76837158203125e-07,
+      "reference_p50_ms": 0.26683323085308075,
+      "reference_p95_ms": 0.2790261059999466,
+      "fused_p50_ms": 0.05580484867095947,
+      "fused_p95_ms": 0.0626780092716217,
+      "p50_speedup": 4.781542056074766
+    },
+    {
+      "rows": 8,
+      "hidden_size": 4096,
+      "dtype": "torch.float16",
+      "quantized_exact_match": true,
+      "scale_max_abs_error": 1.1175870895385742e-08,
+      "dequantized_max_abs_error": 1.430511474609375e-06,
+      "reference_p50_ms": 0.26744604110717773,
+      "reference_p95_ms": 0.27740374207496643,
+      "fused_p50_ms": 0.05643628537654877,
+      "fused_p95_ms": 0.062426552176475525,
+      "p50_speedup": 4.7389022740024425
+    },
+    {
+      "rows": 32,
+      "hidden_size": 4096,
+      "dtype": "torch.bfloat16",
+      "quantized_exact_match": true,
+      "scale_max_abs_error": 7.450580596923828e-09,
+      "dequantized_max_abs_error": 9.5367431640625e-07,
+      "reference_p50_ms": 0.26865676045417786,
+      "reference_p95_ms": 0.2790093421936035,
+      "fused_p50_ms": 0.05546584725379944,
+      "fused_p95_ms": 0.06259605288505554,
+      "p50_speedup": 4.843642957888374
+    },
+    {
+      "rows": 32,
+      "hidden_size": 8192,
+      "dtype": "torch.bfloat16",
+      "quantized_exact_match": true,
+      "scale_max_abs_error": 7.450580596923828e-09,
+      "dequantized_max_abs_error": 9.5367431640625e-07,
+      "reference_p50_ms": 0.266101211309433,
+      "reference_p95_ms": 0.27533993124961853,
+      "fused_p50_ms": 0.05546584725379944,
+      "fused_p95_ms": 0.06260909140110016,
+      "p50_speedup": 4.797568674860635
+    }
+  ]
+}
