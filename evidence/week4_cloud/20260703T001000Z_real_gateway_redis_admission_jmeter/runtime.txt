@@ -1,0 +1,2 @@
+gateway_master_pid=23864
+root       23864   14579  9 00:10 pts/0    00:00:00 /opt/venvs/week4-gateway/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 18082 --workers 8

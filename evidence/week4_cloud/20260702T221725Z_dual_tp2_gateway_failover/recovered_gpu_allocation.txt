@@ -1,0 +1,5 @@
+===== recovered GPU allocation =====
+0, 73891 MiB, 0 %
+1, 73891 MiB, 0 %
+2, 73893 MiB, 0 %
+3, 73893 MiB, 0 %

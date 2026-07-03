@@ -72,7 +72,6 @@ jmeter -n \
   -Jduration_seconds="$DURATION_SECONDS" \
   -Jmax_new_tokens=8 \
   -l "$OUTPUT_DIR/results.jtl" \
-  -e -o "$OUTPUT_DIR/html-report" \
   > "$OUTPUT_DIR/jmeter_stdout.log" 2>&1
 
 echo "mode=$MODE"

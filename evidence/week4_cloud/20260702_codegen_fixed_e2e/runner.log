@@ -1,0 +1,22 @@
+{"sequence": 1, "case_id": "codegen_001", "service_status": "succeeded", "succeeded": true, "http_status_code": 200}
+{"sequence": 2, "case_id": "codegen_002", "service_status": "succeeded", "succeeded": true, "http_status_code": 200}
+{"sequence": 3, "case_id": "codegen_003", "service_status": "succeeded", "succeeded": true, "http_status_code": 200}
+{"sequence": 4, "case_id": "codegen_004", "service_status": "succeeded", "succeeded": true, "http_status_code": 200}
+{"sequence": 5, "case_id": "codegen_005", "service_status": "succeeded", "succeeded": true, "http_status_code": 200}
+{
+  "manifest": "data/week4_workloads/codegen_fixed.jsonl",
+  "mode": "generate",
+  "base_url": "http://127.0.0.1:8000",
+  "started_at_epoch_seconds": 1783004907.0716288,
+  "case_count": 5,
+  "succeeded": 5,
+  "failed": 0,
+  "service_status_counts": {
+    "succeeded": 5
+  },
+  "artifacts": {
+    "records_jsonl": "/opt/gateway-logs/codegen_fixed_20260702T150827Z/records.jsonl",
+    "request_metrics_csv": "/opt/gateway-logs/codegen_fixed_20260702T150827Z/request_metrics.csv",
+    "codegen_responses_jsonl": "/opt/gateway-logs/codegen_fixed_20260702T150827Z/codegen_responses.jsonl"
+  }
+}

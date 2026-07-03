@@ -1,0 +1,6 @@
+{
+  "prompt": "Answer with only the number: what is 17 plus 25?",
+  "max_new_tokens": 16,
+  "temperature": 0,
+  "thinking_budget": 0
+}

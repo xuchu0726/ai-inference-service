@@ -1,0 +1,7 @@
+{
+  "wall_latency_seconds": 1.862252,
+  "backend": "vllm",
+  "model_name": "Seed-OSS-36B-Instruct-W8A8-primary",
+  "response": "42",
+  "thinking_budget": 0
+}

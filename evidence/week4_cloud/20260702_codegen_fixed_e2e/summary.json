@@ -1,0 +1,17 @@
+{
+  "manifest": "data/week4_workloads/codegen_fixed.jsonl",
+  "mode": "generate",
+  "base_url": "http://127.0.0.1:8000",
+  "started_at_epoch_seconds": 1783004907.0716288,
+  "case_count": 5,
+  "succeeded": 5,
+  "failed": 0,
+  "service_status_counts": {
+    "succeeded": 5
+  },
+  "artifacts": {
+    "records_jsonl": "/opt/gateway-logs/codegen_fixed_20260702T150827Z/records.jsonl",
+    "request_metrics_csv": "/opt/gateway-logs/codegen_fixed_20260702T150827Z/request_metrics.csv",
+    "codegen_responses_jsonl": "/opt/gateway-logs/codegen_fixed_20260702T150827Z/codegen_responses.jsonl"
+  }
+}

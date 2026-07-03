@@ -1,0 +1,16 @@
+nohup: ignoring input
+===== Week4 Gateway =====
+primary=http://127.0.0.1:8002/v1
+fallback=http://127.0.0.1:8010/v1
+redis=redis://127.0.0.1:16379/0
+gateway=0.0.0.0:8000
+INFO:     Started server process [4172]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:33206 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49914 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49924 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40578 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34804 - "GET /health HTTP/1.1" 200 OK

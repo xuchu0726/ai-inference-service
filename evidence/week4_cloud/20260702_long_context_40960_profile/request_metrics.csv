@@ -1,0 +1,3 @@
+case_id,scenario,mode,sequence,http_status_code,service_status,succeeded,submit_latency_seconds,end_to_end_latency_seconds,model_latency_seconds,input_tokens,output_tokens,total_tokens,tokens_per_second,route,primary_attempts,fallback_thinking_budget,request_id,model_name,backend,error_type,error_message
+long_context_medium,long_context_summary,generate,1,200,succeeded,True,,11.515931135043502,11.510188,12809,256,13065,22.2412,primary,1,,3d0c4cde0eea428ba2321e1cddbc7890,Seed-OSS-36B-Instruct-W8A8-primary,vllm,,
+long_context_large,long_context_summary,generate,2,200,succeeded,True,,18.487919410690665,18.483492,38957,256,39213,13.8502,primary,1,,3306d82410634a4fa9201d56c304e9bf,Seed-OSS-36B-Instruct-W8A8-primary,vllm,,

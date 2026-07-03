@@ -1,0 +1,6 @@
+case_id,scenario,mode,sequence,http_status_code,service_status,succeeded,submit_latency_seconds,end_to_end_latency_seconds,model_latency_seconds,input_tokens,output_tokens,total_tokens,tokens_per_second,route,primary_attempts,fallback_thinking_budget,request_id,model_name,backend,error_type,error_message
+codegen_001,code_generation,generate,1,200,succeeded,True,,9.106996050104499,9.101293,110,256,366,28.1279,primary,1,,ec22d6468e3549fb918cd0c7195494ee,Seed-OSS-36B-Instruct-W8A8-primary,vllm,,
+codegen_002,code_generation,generate,2,200,succeeded,True,,9.084571547806263,9.081231,113,256,369,28.19,primary,1,,e0b735516c444c36b6c04876c0954825,Seed-OSS-36B-Instruct-W8A8-primary,vllm,,
+codegen_003,code_generation,generate,3,200,succeeded,True,,9.087040958926082,9.083754,107,256,363,28.1822,primary,1,,d20476628db5455886006433fab17e0e,Seed-OSS-36B-Instruct-W8A8-primary,vllm,,
+codegen_004,code_generation,generate,4,200,succeeded,True,,2.2296597212553024,2.226525,105,63,168,28.2952,primary,1,,32eff06abd714941adcb3af4e9dd6e00,Seed-OSS-36B-Instruct-W8A8-primary,vllm,,
+codegen_005,code_generation,generate,5,200,succeeded,True,,0.6702230609953403,0.667572,111,19,130,28.4613,primary,1,,8b1ee2b5652b4ec9bc5dddc83697bed3,Seed-OSS-36B-Instruct-W8A8-primary,vllm,,

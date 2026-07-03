@@ -1,0 +1,20 @@
+{
+  "tool": "Apache JMeter 5.6.3",
+  "target_qps": 100,
+  "endpoint": "/jobs",
+  "gateway_workers": 8,
+  "scope": "真实 app.main Gateway；真实 vLLM upstream 配置；Redis 16379 DB1隔离队列；未启动worker，不代表Seed-OSS生成吞吐。",
+  "sample_count": 6182,
+  "success_count": 6182,
+  "failure_count": 0,
+  "error_rate": 0.0,
+  "response_codes": [
+    "202"
+  ],
+  "observed_window_seconds": 59.896,
+  "observed_requests_per_second": 103.2122345398691,
+  "latency_p50_ms": 2.0,
+  "latency_p95_ms": 3.0,
+  "latency_max_ms": 77.0,
+  "latency_mean_ms": 2.23778712390812
+}

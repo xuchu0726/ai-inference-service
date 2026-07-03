@@ -1,0 +1,17 @@
+{
+  "manifest": "data/week4_workloads/long_context_manifest.jsonl",
+  "mode": "generate",
+  "base_url": "http://127.0.0.1:8000",
+  "started_at_epoch_seconds": 1783005440.189469,
+  "case_count": 2,
+  "succeeded": 2,
+  "failed": 0,
+  "service_status_counts": {
+    "succeeded": 2
+  },
+  "artifacts": {
+    "records_jsonl": "/opt/gateway-logs/long_context_20260702T151720Z/records.jsonl",
+    "request_metrics_csv": "/opt/gateway-logs/long_context_20260702T151720Z/request_metrics.csv",
+    "codegen_responses_jsonl": "/opt/gateway-logs/long_context_20260702T151720Z/codegen_responses.jsonl"
+  }
+}
