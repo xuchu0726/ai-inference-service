@@ -1,0 +1,1 @@
+{"status":"ok","ready":true,"backend":"vllm","primary":{"ready":true,"backend":"vllm","model_name":"Seed-OSS-36B-Instruct-W8A8-primary","models":1},"fallback":{"ready":true,"backend":"vllm","model_name":"Seed-OSS-36B-Instruct-W8A8-fallback","models":1}}
