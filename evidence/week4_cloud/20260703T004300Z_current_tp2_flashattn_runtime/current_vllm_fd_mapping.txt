@@ -1,0 +1,7 @@
+pid=1948
+stdout=/opt/vllm-logs/week4_fallback_tp2_8010.log
+stderr=/opt/vllm-logs/week4_fallback_tp2_8010.log
+
+pid=4368
+stdout=/opt/vllm-logs/week4_primary_tp2_8002_recovered.log
+stderr=/opt/vllm-logs/week4_primary_tp2_8002_recovered.log

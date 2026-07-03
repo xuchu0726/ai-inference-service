@@ -1,0 +1,8 @@
+/opt/vllm-logs/week4_fallback_tp2_8010.log:45:[1;36m(Worker_TP1 pid=3243)[0;0m INFO 07-02 22:14:09 [cuda.py:418] Valid backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION']
+/opt/vllm-logs/week4_fallback_tp2_8010.log:46:[1;36m(Worker_TP1 pid=3243)[0;0m INFO 07-02 22:14:09 [cuda.py:427] Using FLASH_ATTN backend.
+/opt/vllm-logs/week4_fallback_tp2_8010.log:47:[1;36m(Worker_TP0 pid=3242)[0;0m INFO 07-02 22:14:09 [cuda.py:418] Valid backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION']
+/opt/vllm-logs/week4_fallback_tp2_8010.log:48:[1;36m(Worker_TP0 pid=3242)[0;0m INFO 07-02 22:14:09 [cuda.py:427] Using FLASH_ATTN backend.
+/opt/vllm-logs/week4_primary_tp2_8002_recovered.log:45:[1;36m(Worker_TP1 pid=4764)[0;0m INFO 07-02 22:20:55 [cuda.py:418] Valid backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION']
+/opt/vllm-logs/week4_primary_tp2_8002_recovered.log:46:[1;36m(Worker_TP1 pid=4764)[0;0m INFO 07-02 22:20:55 [cuda.py:427] Using FLASH_ATTN backend.
+/opt/vllm-logs/week4_primary_tp2_8002_recovered.log:47:[1;36m(Worker_TP0 pid=4763)[0;0m INFO 07-02 22:20:55 [cuda.py:418] Valid backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION']
+/opt/vllm-logs/week4_primary_tp2_8002_recovered.log:48:[1;36m(Worker_TP0 pid=4763)[0;0m INFO 07-02 22:20:55 [cuda.py:427] Using FLASH_ATTN backend.
