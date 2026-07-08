@@ -1,5 +1,8 @@
 # Week3 要求闭环附录
 
+后续闭环说明：本文记录 Week3 阶段交付状态。Week4 已继续补充 Redis shared circuit breaker、真实双 TP=2 primary/fallback 验证、JMeter/wrk admission 压测、controlled CUDA-OOM fault injection、Triton A100 microbenchmark、FlashAttention runtime 证据和最终交付矩阵。最终状态请见 docs/week4_final_delivery_report.md 与 docs/week4_system_validation_matrix.md。
+
+
 > 本文件用于逐条核验 Week3 原始任务要求。
 > 正式工程交付报告见：`docs/week3_delivery_report.md`。
 > 架构、部署和运行附件见：`docs/week3_architecture.md`、`docs/week3_ha_deployment_sop.md`、`docs/week3_operations_sop.md`。

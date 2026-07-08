@@ -1,5 +1,8 @@
 # Week3 Seed-OSS Gateway 高可用接入层与 BAGEL 单 Pod 多模态服务交付报告
 
+后续闭环说明：本文记录 Week3 阶段交付状态。Week4 已继续补充 Redis shared circuit breaker、真实双 TP=2 primary/fallback 验证、JMeter/wrk admission 压测、controlled CUDA-OOM fault injection、Triton A100 microbenchmark、FlashAttention runtime 证据和最终交付矩阵。最终状态请见 docs/week4_final_delivery_report.md 与 docs/week4_system_validation_matrix.md。
+
+
 ## 1. 交付目标与范围
 
 本阶段目标是完成 Seed-OSS 文本推理服务的高可用接入层、容错与低预算降级机制，并完成 BAGEL 图像加文本理解 API、资源观测和受控业务场景验证。

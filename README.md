@@ -1,5 +1,27 @@
 # AI Inference Service
 
+## 0. 最终交付状态
+
+本仓库当前最终交付分支为 `feature/week4-redis-shared-resilience`。Week4 已补齐压测验收、真实主备验证、Redis shared circuit breaker、controlled CUDA-OOM fault injection、长文本 / 代码生成 / BAGEL 图文推理 E2E 验证、Triton RMSNorm-INT8 A100 microbenchmark，以及最终交付文档。
+
+最终交付入口：
+
+| 目的 | 文档 |
+|---|---|
+| Week4 最终交付主报告 | `docs/week4_final_delivery_report.md` |
+| Week4 最终系统验证矩阵 | `docs/week4_system_validation_matrix.md` |
+| 简历逐句证据矩阵 | `docs/week4_final_resume_evidence_matrix.md` |
+| Week3 阶段交付报告 | `docs/week3_delivery_report.md` |
+| Week3 要求闭环附录 | `docs/week3_requirement_closure.md` |
+
+重要边界：
+
+1. 1000 QPS、P95≤500ms、错误率≤1% 指 `/jobs` admission 场景，不代表 Seed-OSS-36B 完整生成达到 1000 QPS。
+2. 512K 长上下文来自历史 4×A100 profile 的 500K+ token 近上限验证；Week4 TP=2 主备 profile 用于主备、压测、队列和容错验证。
+3. OOM 验证为 controlled CUDA-OOM fault injection；节点故障验证为主推理 upstream 受控终止与恢复。
+4. FlashAttention 是 vLLM runtime 自动选择并实际启用的 backend；Triton RMSNorm-INT8 是独立 microkernel 验证。
+
+
 本项目是一个面向大模型推理服务、LLM Serving 和 AI Infra 场景的工程化推理系统。项目目标不是实现简单聊天机器人 demo，而是围绕真实大模型部署、API 服务化、vLLM serving、性能测试、长上下文验证、量化对比、Batch 调优和可观测性分析，构建一套可运行、可压测、可复现、可解释的推理服务实验平台。
 
 当前核心链路：
@@ -79,7 +101,7 @@
 | 128K near-limit | 130,608 | success, cache-affected | 10.089885s |
 | 128K over-limit | 134,991 | rejected by vLLM | 0.191030s |
 
-512K full-context 尚未完成实机验证。当前项目将其记录为后续资源与 KV cache optimization 方向，不将其包装为已完成结果。
+512K 长上下文已在历史 4×A100 profile 下完成 500K+ token 近上限验证；Week4 TP=2 主备 profile 用于主备、压测、队列和容错验证。
 
 ### 2.4 Batch-Token 调优
 
@@ -303,7 +325,7 @@ vLLM backend benchmark：
 
 ## 9. 当前边界
 
-1. 512K full-context 尚未完成实机验证。
+1. 512K 长上下文来自历史 4×A100 profile 的 500K+ token 近上限验证，不作为 Week4 TP=2 主备 profile 的常态 SLA。
 2. plain INT8 / AWQ / GPTQ 稳定 serving 尚未完成。
 3. FP8 KV cache 尚未完成。
 4. 代码生成测试使用 Seed-OSS-36B-Instruct，不是 Seed-Coder 专项模型。
