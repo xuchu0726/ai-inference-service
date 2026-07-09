@@ -1,6 +1,7 @@
 # Week2 交付摘要：Seed-OSS-36B 推理服务性能优化与长上下文验证
 
-> 补充说明：本文档保留 Week2 原始交付阶段的总结口径。后续已针对 512K 长上下文、FP8 KV Cache、W8A8 精度回归和环境复现边界完成补充验证，更新结果见 `docs/week2_hardening_response_summary.md`。
+> **当前口径（2026-06-24）**：本文保留原始交付阶段总结。当前 Week2 主报告为 `docs/week2_performance_optimization_report.md`，补充事实与原始证据索引见 `docs/week2_hardening_response_summary.md`。后续已完成 4×A100 下 BF16 KV / FP8 KV 的 512K near-limit 真机验证；AWQ-Marlin 独立 serving-stack 与 full GSM8K 已完成；BnB INT8 runtime 已完成 GSM8K `@256` 全量 1319 题评测及 348 个 cap-hit 样本 `@768` 补测；compressed-tensors strict INT8 stable vLLM serving 与 GPTQ 未完成；代码生成当前结果为自定义 50 题轻量验证，26/50 通过。
+
 
 ## 1. 本周交付目标
 
