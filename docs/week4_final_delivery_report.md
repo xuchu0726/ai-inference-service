@@ -12,7 +12,7 @@ Week3 反馈指出三个主要改进方向：
 2. circuit breaker 状态保存在单个 Gateway 进程内，未跨副本共享。
 3. BAGEL 测试样本量较小，不能作为生产 SLA。
 
-Week4 的补充目标是把系统推进到更完整的工程验收状态，包括真实双 TP=2 upstream、Redis shared breaker、JMeter/wrk admission 压测、controlled OOM fault injection、长文本、代码生成、多模态 workload 验证、Triton microkernel 和最终文档收口。
+Week4 的补充目标是把系统推进到更完整的工程验收状态，包括真实双 TP=2 upstream、Redis shared breaker、JMeter/wrk admission 压测、controlled OOM fault injection、长文本、代码生成、多模态 workload 验证、Triton microkernel 和最终文档整理。
 
 本项目仍定位为工程验证级交付，不表述为已经上线到真实用户流量的生产系统。
 
@@ -96,6 +96,19 @@ evidence/week4_cloud/20260703T002438Z_wrk_real_gateway_admission/
 
 边界：这些 workload 是端到端执行验证，不表述为三类 workload 都完成 1000 QPS 模型生成压测。
 
+### 4.4 Seed-OSS 超长上下文处理说明
+
+Seed-OSS 的超长上下文能力分为两个验证层级记录。历史 4×A100 profile 已完成 500K+ token 近上限请求验证，用于证明模型和 serving stack 在高资源配置下具备超长上下文执行边界。Week4 的 TP=2 primary/fallback profile 主要用于主备切换、admission 压测、队列行为、容错和真实 workload 验证，不将 512K 写成该 profile 的常态 SLA。
+
+工程上，长上下文处理不与 1000 QPS admission 指标混合解释。短任务 admission 用于验证高并发接入能力；长文本生成用于验证 prompt tokens、KV cache 占用、队列等待和长请求延迟边界。最终交付将两类指标分开记录，避免把接入层吞吐外推为完整模型生成吞吐。
+
+### 4.5 BAGEL 多模态对齐能力说明
+
+BAGEL 的验证范围是接口级图文联合理解能力。测试通过图像输入、文本 prompt 和模型响应之间的语义对应关系，观察模型是否能根据图像内容生成相关回答或商品文案草稿。该验证能够说明图像和文本在服务接口层形成了有效的多模态输入输出链路。
+
+本项目没有复现或训练 BAGEL 内部的 vision-language alignment 机制，也不将小样本 P50/P95 统计写成生产级多模态 SLA。最终报告仅将其表述为图文联合推理 API 与多案例行为验证。
+
+
 ## 5. 异常场景验证
 
 ### 5.1 主 upstream 故障与恢复
@@ -175,6 +188,6 @@ Week4 要求中的系统演示视频和技术总结 PPT 未单独整理进仓库
 
 ## 10. 最终结论
 
-Week4 补齐了 Week3 反馈中最关键的共享熔断和真实主备验证问题，并完成 admission 压测、controlled OOM、真实 workload E2E、Triton A100 验证和最终文档收口。
+Week4 补齐了 Week3 反馈中最关键的共享熔断和真实主备验证问题，并完成 admission 压测、controlled OOM、真实 workload E2E、Triton A100 验证和最终文档整理。
 
 系统满足 /jobs admission 场景下 1000 QPS、P95≤500ms、错误率≤1% 的验收指标。该指标的范围已经明确记录，不外推为完整 36B 模型生成的 1000 QPS SLA。
