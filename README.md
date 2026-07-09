@@ -2,7 +2,7 @@
 
 ## 0. 最终交付状态
 
-本仓库当前最终交付分支为 `feature/week4-redis-shared-resilience`。Week4 已补齐压测验收、真实主备验证、Redis shared circuit breaker、controlled CUDA-OOM fault injection、长文本 / 代码生成 / BAGEL 图文推理 E2E 验证、Triton RMSNorm-INT8 A100 microbenchmark，以及最终交付文档。
+本仓库当前最终交付版本已合并到默认分支 `main`。Week4 已补齐压测验收、真实主备验证、Redis shared circuit breaker、controlled CUDA-OOM fault injection、长文本 / 代码生成 / BAGEL 图文推理 E2E 验证、Triton RMSNorm-INT8 A100 microbenchmark，以及最终交付文档。
 
 最终交付入口：
 
@@ -274,7 +274,7 @@ vLLM backend benchmark：
 
     python scripts/benchmark_vllm_backend.py \
       --url http://127.0.0.1:8000/generate \
-      --output results/benchmark.csv \
+      --output <output_csv> \
       --concurrency 4 \
       --repeat 10 \
       --max-new-tokens 128 \
@@ -285,14 +285,14 @@ vLLM backend benchmark：
 生成 summary：
 
     python scripts/analyze_vllm_benchmark.py \
-      --input results/benchmark.csv \
+      --input <output_csv> \
       --output results/benchmark_summary.csv
 
 长上下文 benchmark：
 
     python scripts/benchmark_context_length.py \
       --url http://127.0.0.1:8000/generate \
-      --output results/week2_context_length_benchmark.csv \
+      --output <context_length_output_csv> \
       --context-targets 8k,16k,32k,64k \
       --max-new-tokens 128 \
       --thinking-budget 512
@@ -349,4 +349,4 @@ vLLM backend benchmark：
 10. Prometheus / Grafana / nvidia-smi 可观测性证据；
 11. 可复现文档、日志、CSV、图表和 evidence 归档。
 
-下一阶段重点是高可用架构、降级策略、多实例 serving profile、压测、告警规则、多模态或代码模型专项验证。
+后续如继续扩展，应重点补充真实生产流量接入、鉴权限流、多租户隔离、长期监控告警、GPU serving 自动扩缩容和更完整的模型横向对比。
