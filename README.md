@@ -10,7 +10,6 @@
 |---|---|
 | Week4 最终交付主报告 | `docs/week4_final_delivery_report.md` |
 | Week4 最终系统验证矩阵 | `docs/week4_system_validation_matrix.md` |
-| 简历逐句证据矩阵 | `docs/week4_final_resume_evidence_matrix.md` |
 | Week3 阶段交付报告 | `docs/week3_delivery_report.md` |
 | Week3 要求闭环附录 | `docs/week3_requirement_closure.md` |
 

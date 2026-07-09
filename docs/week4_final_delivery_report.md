@@ -133,7 +133,7 @@ evidence/week4_resource_exhaustion/20260702T224556Z_shared_breaker_v2/
 
 ## 6. 性能优化与量化策略
 
-W8A8 compressed-tensors serving 与 BF16 baseline 在固定协议下对比。模型加载显存从约 67.59 GiB 降至约 17.71 GiB，降低约 73.8%。同协议吞吐最低提升约 31.4%，支撑简历中的 29% 推理速度提升表述。
+W8A8 compressed-tensors serving 与 BF16 baseline 在固定协议下对比。模型加载显存从约 67.59 GiB 降至约 17.71 GiB，降低约 73.8%。同协议吞吐最低提升约 31.4%，用于说明量化部署在当前评测协议下的显存收益和吞吐收益。
 
 证据：
 
@@ -177,7 +177,6 @@ Week4 要求中对比开源竞品的完整横向竞品 benchmark 未作为最终
 |---|---|
 | 最终交付主报告 | docs/week4_final_delivery_report.md |
 | 最终系统验证矩阵 | docs/week4_system_validation_matrix.md |
-| 简历逐句证据矩阵 | docs/week4_final_resume_evidence_matrix.md |
 | Week3 阶段报告 | docs/week3_delivery_report.md |
 | Week3 要求闭环 | docs/week3_requirement_closure.md |
 | 架构说明 | docs/week3_architecture.md |

@@ -65,7 +65,6 @@
 |---|---|
 | 最终交付主报告 | docs/week4_final_delivery_report.md |
 | 最终系统验证矩阵 | docs/week4_system_validation_matrix.md |
-| 简历证据矩阵 | docs/week4_final_resume_evidence_matrix.md |
 | Week3 阶段交付报告 | docs/week3_delivery_report.md |
 | 架构说明 | docs/week3_architecture.md |
 | 高可用部署 SOP | docs/week3_ha_deployment_sop.md |
