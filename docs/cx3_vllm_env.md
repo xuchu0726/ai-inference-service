@@ -305,7 +305,7 @@ CX3 不适合作为长期 API 服务或最终高并发压测平台，但本次�
     3. 云平台部署命令
     4. Seed-OSS-36B 资源评估文档
     5. benchmark 实验设计
-    6. 简历和面试中的工程证据
+    6. 可复核的工程证据
 
 因此，CX3 的定位不是最终主战场，而是 proof-of-environment 和 proof-of-serving-pattern。
 

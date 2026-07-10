@@ -433,9 +433,9 @@ Command:
 
 ---
 
-## 13. 与 AI Infra 求职目标的关系
+## 13. Benchmark 工程能力覆盖
 
-该 benchmark 体系直接对应 AI 推理 / AI Infra 岗位中的核心能力：
+该 benchmark 体系覆盖 AI 推理 / AI Infra 中的以下核心工程能力：
 
 1. 推理服务性能基准建设
 2. latency / P95 / error_rate 指标体系

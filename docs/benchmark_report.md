@@ -625,9 +625,9 @@ request_id
 
 ---
 
-## 13. 与求职目标的对应关系
+## 13. 当前工程能力与验证结论
 
-当前阶段已经能够支持以下求职表述：
+当前阶段已经形成以下可验证的工程结论：
 
 ```text
 实现了一个基于 FastAPI 的 LLM 推理服务原型，支持 MockBackend / TransformersBackend 后端切换，并接入 Qwen2.5-0.5B-Instruct 完成本地真实推理。

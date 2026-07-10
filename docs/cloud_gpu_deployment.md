@@ -266,9 +266,9 @@ BF16 / FP16 权重显存粗略估算：
 
 ---
 
-## 7. 与 AI Infra 求职目标的关系
+## 7. 工程能力覆盖
 
-云 GPU 部署路线直接对应 AI 推理 / AI Infra 岗位能力：
+云 GPU 部署路线覆盖以下 AI 推理 / AI Infra 工程能力：
 
 1. 推理服务部署
 2. vLLM serving

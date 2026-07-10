@@ -362,7 +362,7 @@ vLLM log 显示当时模型仍在 loading checkpoint。
     7. error log 和环境问题记录
     8. 面向 Seed-OSS-36B 的资源评估与云 GPU 迁移计划
 
-下一阶段重点是将 E2E serving 链路、benchmark、metrics 和云 GPU 多卡部署串联起来，形成可用于 AI 推理 / AI Infra 求职展示的完整工程闭环。
+下一阶段重点是将 E2E serving 链路、benchmark、metrics 和云 GPU 多卡部署串联起来，形成可复现、可观测且可验证的完整工程闭环。
 
 ---
 

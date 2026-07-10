@@ -291,7 +291,7 @@ Continuous Batching:
 
 ---
 
-## 13. 与求职目标的关系
+## 13. 工程价值与设计问题
 
 该模块增强 AI 推理 / AI Infra 项目的系统深度。
 
@@ -309,7 +309,7 @@ Continuous Batching:
 6. vLLM 底层机制理解
 7. benchmark 与 simulation 的边界区分
 
-这有助于在面试中解释：
+该模块用于回答以下设计问题：
 
     为什么选择 vLLM？
     Continuous Batching 解决什么问题？
